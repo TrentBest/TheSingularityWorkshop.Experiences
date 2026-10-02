@@ -28,6 +28,13 @@ jobs:
         run: dotnet build "${{ matrix.project }}" --configuration Release --no-restore
       - name: Pack
         run: dotnet pack "${{ matrix.project }}" --configuration Release --no-build --output ./artifacts
+      - name: Stage assembly artifact
+        shell: bash
+        run: |
+          project="${{ matrix.project }}"
+          assembly="$(basename "${project}" .csproj).dll"
+          mkdir -p "./artifacts/assemblies/${{ matrix.project }}"
+          cp "$(dirname "${project}")/bin/Release/net8.0/${assembly}" "./artifacts/assemblies/${{ matrix.project }}/${assembly}"
 
   package:
     if: github.event_name == 'workflow_dispatch'
@@ -49,4 +56,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: experience-packages
-          path: artifacts/*.nupkg
+          path: artifacts
