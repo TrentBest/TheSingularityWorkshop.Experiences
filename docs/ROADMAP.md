@@ -11,6 +11,7 @@ The roadmap is ordered around a working path rather than repository completeness
 - [x] Define VR as another manifestation.
 - [x] Define creator-owned compute requirements and capability negotiation.
 - [ ] Review theory against existing WebApp, AnyApp, FSM_COS, and MicroBundleRepository implementations.
+- [ ] Define an atomic ontology test corpus using Elements, Digital Logic, and Software Design Patterns.
 
 ## Phase 1 — Independent artifacts
 
@@ -18,8 +19,8 @@ The roadmap is ordered around a working path rather than repository completeness
 - [x] Create independent Moniker MicroBundle project.
 - [x] Ensure they do not depend on AnyApp source projects.
 - [ ] Build deterministic assembly artifacts.
-- [ ] Wrap artifacts in the established MicroBundle binary envelope.
 - [ ] Calculate immutable content hashes.
+- [ ] Publish immutable artifacts to MicroBundleRepository.
 
 ## Phase 2 — Immutable Experience manifests
 
@@ -37,6 +38,7 @@ The roadmap is ordered around a working path rather than repository completeness
 - [ ] Bind them to FSM_COS on the composition side.
 - [ ] Evaluate Experience requirements against available manifestation capabilities.
 - [ ] Keep repository storage semantics independent of FSM_COS.
+- [ ] Compose an atomic corpus example from independently published MicroBundles.
 
 ## Phase 4 — WebApp to AnyApp
 
