@@ -57,7 +57,32 @@ The semantic element should not be duplicated for each visual style.
 
 The manifestation changes. The identity does not.
 
-The existing Workshop element data is a useful seed for extraction. Preserve semantic data independently from legacy renderer-specific presentation code.
+The first implementation pressure test is intentionally only one element:
+
+```text
+Iron
+  |
+  v
+Element semantic record
+  |
+  v
+ElementMicroBundle
+  |
+  v
+FSM_COS
+  |
+  v
+repository artifact
+  |
+  v
+Experience manifest
+  |
+  +--> WebApp
+  +--> AnyApp
+  +--> MyVR
+```
+
+The old WebPage Element work established a useful architectural precedent: Element identity was tested independently from its provider and manifestation. The new corpus retains that separation while removing the legacy host lifecycle and renderer assumptions.
 
 ## Corpus B — Digital Logic
 
