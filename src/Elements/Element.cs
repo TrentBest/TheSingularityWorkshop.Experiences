@@ -1,20 +1,26 @@
 namespace TheSingularityWorkshop.Experiences.Elements;
 
-public sealed record Element(
-    ulong AtomicNumber,
-    string Symbol,
-    string Name,
-    double AtomicWeight)
+public sealed record Element
 {
-    public Element
+    public Element(ulong atomicNumber, string symbol, string name, double atomicWeight)
     {
-        if (AtomicNumber == 0)
-            throw new ArgumentOutOfRangeException(nameof(AtomicNumber));
+        if (atomicNumber == 0)
+            throw new ArgumentOutOfRangeException(nameof(atomicNumber));
 
-        ArgumentException.ThrowIfNullOrWhiteSpace(Symbol);
-        ArgumentException.ThrowIfNullOrWhiteSpace(Name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(symbol);
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
-        if (AtomicWeight <= 0)
-            throw new ArgumentOutOfRangeException(nameof(AtomicWeight));
+        if (atomicWeight <= 0)
+            throw new ArgumentOutOfRangeException(nameof(atomicWeight));
+
+        AtomicNumber = atomicNumber;
+        Symbol = symbol;
+        Name = name;
+        AtomicWeight = atomicWeight;
     }
+
+    public ulong AtomicNumber { get; }
+    public string Symbol { get; }
+    public string Name { get; }
+    public double AtomicWeight { get; }
 }
