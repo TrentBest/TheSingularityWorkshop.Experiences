@@ -1,6 +1,10 @@
 # Manifestation Architecture
 
 ## One Experience, multiple doors
+![Manifestation architecture](assets/experience-manifestations.svg)
+
+The diagram is the compact view of the boundary described below: one Experience identity, several capability-bearing manifestations.
+
 
 The Workshop should not treat WebApp, AnyApp, and VR as three independent products.
 
