@@ -6,6 +6,12 @@ It is deliberately separate from WebApp/WebPage, AnyApp, FSM_COS, MicroBundleRep
 
 ## The central idea
 
+![One Experience, multiple manifestations](docs/assets/experience-manifestations.svg)
+
+The same Experience identity can be manifested through different clients because requirements and capabilities are negotiated above the renderer.
+
+## The central idea
+
 An Experience is not a WebApp, not a desktop window, and not a VR scene.
 
 An Experience can have multiple manifestations.
