@@ -12,6 +12,10 @@ That would make the platform decide what an Experience means.
 
 Instead, the **Experience creator defines the requirement envelope**.
 
+![Capability arrangement](assets/experience-manifestations.svg)
+
+The visual is deliberately about arrangement rather than ranking: each manifestation contributes capabilities, and the Experience requirements determine which combination is meaningful.
+
 ## Creator-owned requirements
 
 An Experience may declare that it can run:
