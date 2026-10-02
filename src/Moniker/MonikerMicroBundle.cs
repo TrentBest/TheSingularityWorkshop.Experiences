@@ -1,0 +1,68 @@
+using TheSingularityWorkshop.FSM_COS;
+using TheSingularityWorkshop.MicroBundleDomain;
+using TheSingularityWorkshop.Workshop.Gui;
+
+namespace TheSingularityWorkshop.Experiences.Moniker;
+
+public sealed class MonikerMicroBundle : IMicroBundle
+{
+    public const ulong BundleId = 3101;
+    public const string ProviderId = "workshop-moniker";
+
+    public MicroBundleDescriptor Descriptor { get; } =
+        new(BundleId, "1.0.0", providers: [new MicroBundleProvider(ProviderId)]);
+
+    public ulong Id => Descriptor.Id;
+    public IReadOnlyList<BundleRequest> Dependencies => [];
+    public GuiNode? Root { get; private set; }
+
+    public void Load(MicroBundleLoadContext context)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+
+        var builder = GuiBuilders.Column("moniker-column")
+            .Property("horizontalAlignment", "Center")
+            .Property("verticalAlignment", "Center")
+            .Property("padding", "24");
+
+        foreach (var (word, offset) in new[] { ("THE", 0), ("SINGULARITY", 3), ("WORKSHOP", 14) })
+        {
+            var row = GuiBuilders.Row($"moniker-{word.ToLowerInvariant()}")
+                .Property("horizontalAlignment", "Center");
+
+            for (var index = 0; index < word.Length; index++)
+            {
+                var phase = (offset + index) % 6;
+                var color = phase switch
+                {
+                    0 => "#FF3030",
+                    1 => "#FF7A00",
+                    2 => "#FFD34D",
+                    3 => "#52E05A",
+                    4 => "#00A8FF",
+                    _ => "#FF2CFF"
+                };
+
+                row.Child(GuiBuilders.Text(
+                    $"moniker-{word.ToLowerInvariant()}-{index}", word[index].ToString())
+                    .Property("foreground", color)
+                    .Property("fontSize", "76")
+                    .Property("fontWeight", "700")
+                    .Property("fontFamily", "Consolas"));
+            }
+
+            builder.Child(row);
+        }
+
+        Root = GuiBuilders.Panel("moniker-root")
+            .Property("background", "#020711")
+            .Child(builder)
+            .Build();
+    }
+
+    public bool Arbitrate(ArbitrationContext context, int roundIndex)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        return false;
+    }
+}
