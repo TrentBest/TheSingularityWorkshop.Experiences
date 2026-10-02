@@ -179,6 +179,10 @@ WPF, browser rendering, WebXR, and future native VR can realize this differently
 
 The semantic layer describes what is observable and interactive. The renderer decides how to realize it.
 
+## Publication
+
+See [`docs/PUBLICATION.md`](docs/PUBLICATION.md) for the artifact boundary from Experience build output to repository-backed composition.
+
 ## Independent package seeds
 
 The first independently buildable Experience payloads now live here rather than inside a host:
