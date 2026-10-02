@@ -1,0 +1,52 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project:
+          - src/Forge/TheSingularityWorkshop.Experiences.Forge.csproj
+          - src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore
+        run: dotnet restore "${{ matrix.project }}"
+      - name: Build
+        run: dotnet build "${{ matrix.project }}" --configuration Release --no-restore
+      - name: Pack
+        run: dotnet pack "${{ matrix.project }}" --configuration Release --no-build --output ./artifacts
+
+  package:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore and pack
+        run: |
+          dotnet restore src/Forge/TheSingularityWorkshop.Experiences.Forge.csproj
+          dotnet restore src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj
+          dotnet pack src/Forge/TheSingularityWorkshop.Experiences.Forge.csproj --configuration Release --output ./artifacts
+          dotnet pack src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj --configuration Release --output ./artifacts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: experience-packages
+          path: artifacts/*.nupkg
