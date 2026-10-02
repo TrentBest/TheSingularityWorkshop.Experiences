@@ -179,6 +179,15 @@ WPF, browser rendering, WebXR, and future native VR can realize this differently
 
 The semantic layer describes what is observable and interactive. The renderer decides how to realize it.
 
+## Independent package seeds
+
+The first independently buildable Experience payloads now live here rather than inside a host:
+
+- `TheSingularityWorkshop.Experiences.Forge` — Forge MicroBundle, Experience 3201.
+- `TheSingularityWorkshop.Experiences.Moniker` — Moniker MicroBundle and presentation, Experience 3101.
+
+They reference the published domain/composition/GUI contracts; they do not reference AnyApp source. AnyApp remains a host and consumer of published Experience artifacts.
+
 ## What belongs here?
 
 This repository should contain things that can be independently built, versioned, published, and addressed as Experiences.
