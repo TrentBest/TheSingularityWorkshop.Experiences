@@ -11,7 +11,7 @@ The roadmap is ordered around a working path rather than repository completeness
 - [x] Define VR as another manifestation.
 - [x] Define creator-owned compute requirements and capability negotiation.
 - [ ] Review theory against existing WebApp, AnyApp, FSM_COS, and MicroBundleRepository implementations.
-- [ ] Define an atomic ontology test corpus using Elements, Digital Logic, and Software Design Patterns.
+- [x] Define an atomic ontology test corpus using Elements, Digital Logic, and Software Design Patterns.
 
 ## Phase 1 — Independent artifacts
 
