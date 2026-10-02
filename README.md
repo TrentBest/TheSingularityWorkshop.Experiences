@@ -8,10 +8,6 @@ It is deliberately separate from WebApp/WebPage, AnyApp, FSM_COS, MicroBundleRep
 
 ![One Experience, multiple manifestations](docs/assets/experience-manifestations.svg)
 
-The same Experience identity can be manifested through different clients because requirements and capabilities are negotiated above the renderer.
-
-## The central idea
-
 An Experience is not a WebApp, not a desktop window, and not a VR scene.
 
 An Experience can have multiple manifestations.
@@ -191,6 +187,16 @@ The first independently buildable Experience payloads now live here rather than 
 - `TheSingularityWorkshop.Experiences.Moniker` — Moniker MicroBundle and presentation, Experience 3101.
 
 They reference the published domain/composition/GUI contracts; they do not reference AnyApp source. AnyApp remains a host and consumer of published Experience artifacts.
+
+## Atomic ontology corpus
+
+The next test corpus is intentionally made from small semantic things:
+
+- **Elements** — atomic element data with multiple possible presentations.
+- **Digital Logic** — composable physical, combinational, sequential, modular, timing, programmable, and visualization bundles.
+- **Software Design Patterns** — individually addressable patterns that can compose into larger pattern collections.
+
+The repository should let these atoms remain independent while larger Experiences compose them. See issue #3 for the working extraction and test plan.
 
 ## What belongs here?
 
