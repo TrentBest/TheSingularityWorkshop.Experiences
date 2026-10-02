@@ -14,9 +14,9 @@ The roadmap is ordered around a working path rather than repository completeness
 
 ## Phase 1 — Independent artifacts
 
-- [ ] Create independent Forge MicroBundle project.
-- [ ] Create independent Moniker MicroBundle project.
-- [ ] Ensure they do not depend on AnyApp source projects.
+- [x] Create independent Forge MicroBundle project.
+- [x] Create independent Moniker MicroBundle project.
+- [x] Ensure they do not depend on AnyApp source projects.
 - [ ] Build deterministic assembly artifacts.
 - [ ] Wrap artifacts in the established MicroBundle binary envelope.
 - [ ] Calculate immutable content hashes.
