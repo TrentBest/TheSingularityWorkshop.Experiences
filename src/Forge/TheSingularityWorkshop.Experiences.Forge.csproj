@@ -16,7 +16,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="TheSingularityWorkshop.FSM_COS" Version="0.1.0-alpha.4" />
-    <PackageReference Include="TheSingularityWorkshop.GUI.Core" Version="0.1.0-alpha.6" />
+    <PackageReference Include="TheSingularityWorkshop.GUI.Core" Version="0.1.0-alpha.4" />
     <PackageReference Include="TheSingularityWorkshop.MicroBundleDomain" Version="0.1.0-alpha.2" />
   </ItemGroup>
 </Project>
