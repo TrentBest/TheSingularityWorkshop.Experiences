@@ -1,4 +1,3 @@
-using TheSingularityWorkshop.FSM_COS;
 using TheSingularityWorkshop.MicroBundleDomain;
 
 namespace TheSingularityWorkshop.Experiences.Elements;
@@ -13,16 +12,16 @@ public sealed class ElementMicroBundle : IMicroBundle
 
     public ulong Id => Descriptor.Id;
 
-    public IReadOnlyList<BundleRequest> Dependencies => [];
+    public IReadOnlyList<MicroBundleDependencyRequest> Dependencies => [];
 
     public Element Definition => Iron.Definition;
 
-    public void Load(MicroBundleLoadContext context)
+    public void Load(IMicroBundleLoadContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
     }
 
-    public bool Arbitrate(ArbitrationContext context, int roundIndex)
+    public bool Arbitrate(IMicroBundleArbitrationContext context, int roundIndex)
     {
         ArgumentNullException.ThrowIfNull(context);
         return false;
