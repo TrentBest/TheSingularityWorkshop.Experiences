@@ -1,4 +1,3 @@
-using TheSingularityWorkshop.FSM_COS;
 using TheSingularityWorkshop.MicroBundleDomain;
 using TheSingularityWorkshop.Workshop.Gui;
 
@@ -15,11 +14,11 @@ public sealed class ForgeMicroBundle : IMicroBundle
         new(BundleId, "1.0.0", providers: [new MicroBundleProvider(ProviderId)]);
 
     public ulong Id => Descriptor.Id;
-    public IReadOnlyList<BundleRequest> Dependencies => [];
+    public IReadOnlyList<MicroBundleDependencyRequest> Dependencies => [];
 
     public GuiNode? Root { get; private set; }
 
-    public void Load(MicroBundleLoadContext context)
+    public void Load(IMicroBundleLoadContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
 
@@ -68,7 +67,7 @@ public sealed class ForgeMicroBundle : IMicroBundle
             .Build();
     }
 
-    public bool Arbitrate(ArbitrationContext context, int roundIndex)
+    public bool Arbitrate(IMicroBundleArbitrationContext context, int roundIndex)
     {
         ArgumentNullException.ThrowIfNull(context);
         return false;

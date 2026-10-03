@@ -1,172 +1,98 @@
-# Atomic Ontology Test Corpus
+# Atomic Ontology Corpus
 
-The Workshop should not have to invent a complete universal ontology before it can test composition.
+The Workshop ontology is not intended to become one universal monolithic database.
 
-Instead, start with things that are small enough to reason about and large enough to expose composition boundaries.
-
-## Why atoms?
-
-A MicroBundle should be able to stand on its own when its semantic boundary is meaningful.
-
-Larger concepts should not force their entire knowledge graph into one bundle merely because that is convenient for the first host.
-
-The useful test is:
-
-```text
-thing
- |
- +-- atomic enough?
- |      |
- |      +-- yes -> independent MicroBundle
- |      |
- |      +-- no
- |           |
- |           +-- identify constituent MicroBundles
- |           +-- identify relationships
- |           +-- identify required/preferred capabilities
- |           +-- compose
- |
- v
-Experience
-```
-
-This is a composition test, not a claim that the Workshop has discovered the one true ontology.
+An atom is a semantic boundary that can be independently identified, composed, represented, published, and manifested. Richer bodies of knowledge are built by relating those atoms.
 
 ## Corpus A — Elements
 
-The periodic table is an unusually clean first corpus.
+An Element is an atomic semantic identity, not a periodic-table UI card. The initial seed is intentionally tiny: atomic number, symbol, name, and atomic weight. That is the identity seed, not the boundary of the knowledge.
 
-An element can have a stable semantic identity and atomic data while supporting many manifestations:
+The Element corpus should be able to carry related semantic knowledge including:
 
-```text
-Element: Iron
-    |
-    +-- atomic number
-    +-- symbol
-    +-- name
-    +-- atomic weight
-    |
-    +-- textbook manifestation
-    +-- scientific manifestation
-    +-- sci-fi manifestation
-    +-- compact/debug manifestation
-    +-- interactive detail manifestation
-```
+- isotopes and nuclides
+- electron configuration, shells, oxidation states, valence, ionization energy, electron affinity, and electronegativity
+- density, phase-change data, critical points, heat capacity, thermal conductivity, diffusivity, and expansion
+- electrical, magnetic, optical, and mechanical properties
+- crystal structures, allotropes, and phase diagrams
+- chemical bonding, compounds, reactions, and stoichiometric relationships
+- corrosion and environmental interactions
+- strength, ductility, hardness, fracture behavior, fatigue, and related material behavior
+- radioactive isotopes, decay modes, half-lives, and nuclear properties
+- provenance, units, conditions, and temperature/pressure dependence
 
-The semantic element should not be duplicated for each visual style.
+The boundary matters: these are related semantic facts and behaviors, not fields that must all be stuffed into Element.
 
-The manifestation changes. The identity does not.
+Example semantic neighborhood:
 
-The existing Workshop element data is a useful seed for extraction. Preserve semantic data independently from legacy renderer-specific presentation code.
+    Iron
+      |
+      +--> isotope / nuclide relationships
+      +--> phase behavior
+      +--> thermal properties
+      +--> mechanical properties
+      +--> electrical properties
+      +--> magnetic properties
+      +--> chemical relationships
+      +--> nuclear relationships
+
+This gives later Experiences room to represent chemistry, materials science, thermodynamics, hydrodynamics, fracture, melting, and nuclear knowledge without coupling that knowledge to a renderer.
+
+### Multiple manifestations
+
+The same Element identity may be manifested as textbook/reference material, chemistry laboratory content, engineering/materials views, nuclear science, simulation, sci-fi/narrative, compact debug data, or interactive detail. The semantic data is not duplicated for each visual style.
+
+### First implementation pressure test
+
+    Iron -> Element semantic record -> ElementMicroBundle -> FSM_COS
+         -> repository artifact -> Experience manifest -> WebApp / AnyApp / MyVR
+
+The old WebPage Element work is architectural precedent. The new corpus keeps semantic identity independent from provider and manifestation while removing legacy host lifecycle and renderer assumptions.
 
 ## Corpus B — Digital Logic
 
-Digital Logic gives us a second useful scale because it naturally contains nested structure.
+Digital Logic applies the same test to constructed systems. The corpus should distinguish Physical, Combinational, Sequential, Modular Functional Units, Control and Timing, Programmable, and Visualization.
 
-A practical starting decomposition is:
+The important question is not merely what a NAND gate is. It is what composes it and what relationships exist between its abstraction levels:
 
-```text
-Digital Logic
- |
- +-- Physical
- +-- Combinational
- +-- Sequential
- +-- Modular Functional Units
- +-- Control and Timing
- +-- Programmable
- +-- Visualization
-```
+    NAND
+      +--> logical truth/function
+      +--> physical realization
+      |    +--> transistors / switching devices
+      |    +--> materials
+      |    +--> power
+      |    +--> propagation characteristics
+      |    +--> fabrication/process context
+      +--> composition into other gates and larger units
+      +--> timing / electrical behavior
+      +--> implementation variants
+      +--> visualization
 
-Each area can become a separately addressable composition boundary where that separation carries useful semantics.
+A NAND gate therefore need not be a terminal leaf. It can expose its construction and behavior at different levels of detail.
 
-For example, a larger logic Experience might compose gates, adders, registers, clocks, multiplexers, counters, and visualization independently.
+## Hardware observation — future extension
 
-The important test is that the larger Experience does not have to become one giant MicroBundle.
+The ontology should leave room for a hardware observation layer without making live telemetry a requirement of semantic atoms.
 
-## Corpus C — Software Design Patterns
+A future system may identify the available CPU/GPU and construct a representation of topology, cores/execution units, caches/memory hierarchy, work domains, and available telemetry. An observer can then manifest traffic/work, queue/utilization, timing/throughput, or architecture views.
 
-Software patterns provide a different kind of atom.
+The traffic-on-a-roadway metaphor is a manifestation idea: work enters, is routed through computational structures, waits, executes, and leaves. The actual telemetry available on a machine determines what can honestly be shown.
 
-A pattern can expose semantic knowledge such as:
+That is deliberately separate from the ontology. We should be able to understand CPU/GPU architecture without live telemetry, and observe a real machine without rewriting the semantic model.
 
-- identity;
-- intent;
-- structure;
-- participants;
-- relationships;
-- constraints;
-- examples;
-- alternative representations.
-
-A collection of patterns can then compose individual patterns without changing their identities.
-
-The same pattern could have documentation, diagrammatic, code-oriented, teaching, or sci-fi manifestations without becoming multiple semantic patterns.
-
-## The arbitrary-reality test
-
-Once the three seed corpora work, choose something arbitrary from reality.
-
-Ask:
+## Arbitrary-reality test
 
 1. Is it atomic enough to stand alone?
-2. If not, what smaller meaningful MicroBundles compose it?
-3. What relationships connect them?
-4. Which data is semantic and which is manifestation?
-5. Which bundles are required for the Experience?
-6. Which capabilities are required, preferred, optional, delegable, or frame-critical?
-7. Can the resulting closure be represented by immutable artifact identities?
-8. Can FSM_COS compose it without host-specific knowledge?
-
-If the answer to #8 is no, that is valuable information. The corpus is exposing an architectural gap.
-
-## What this corpus tests
-
-| Domain | Primary pressure |
-|---|---|
-| Elements | identity vs manifestation |
-| Digital Logic | nested composition and dependency closure |
-| Design Patterns | semantic knowledge vs presentation |
-| Arbitrary reality | whether the architecture generalizes |
-
-The corpus should eventually exercise:
-
-- MicroBundleDomain contracts;
-- FSM_COS arbitration;
-- immutable repository artifacts;
-- Experience manifests;
-- GUI manifestations;
-- creator-owned compute requirements;
-- WebApp/AnyApp/MyVR capability negotiation.
+2. If not, what smaller semantic bundles compose it?
+3. What relationships does it have to other atoms?
+4. Which data is semantic and which is manifestation-specific?
+5. Is a creator requiring, preferring, optionally using, delegating, or framing the atom?
+6. Which information is immutable identity and which is contextual or observed?
+7. Can FSM_COS compose it without knowing how a host renders it?
+8. Can the same identity survive WebApp, AnyApp, MyVR, laboratory, engineering, and future VR manifestations?
 
 ## Anti-monolith rule
 
-When a concept becomes large, do not immediately make a larger MicroBundle.
+Do not solve increasing complexity by adding every new concept as a property of an existing atom. Prefer a small semantic atom plus related atoms, relationships, contextual observations, capabilities, and manifestations.
 
-First ask what smaller semantic units it contains.
-
-A larger bundle is justified when it represents a meaningful reusable boundary, not merely because the host needs somewhere to put code.
-
-## The intended direction
-
-```text
-atomic semantic unit
-        |
-        v
-independent MicroBundle
-        |
-        v
-composed closure
-        |
-        v
-Experience
-        |
-        +--------+--------+
-        |        |        |
-      WebApp   AnyApp    MyVR
-```
-
-The ontology grows by composition.
-
-The platform remains responsible for composition and manifestation mechanics.
-
-The content remains responsible for what the things mean.
+This is how a periodic table can grow into chemistry/materials science, digital logic can grow into processors, and hardware observation can become a manifestation over the same semantic machinery rather than a second architecture.
