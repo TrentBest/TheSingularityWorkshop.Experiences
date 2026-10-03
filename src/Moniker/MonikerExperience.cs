@@ -1,6 +1,7 @@
 using System.Globalization;
 using TheSingularityWorkshop.FSM_API;
 using TheSingularityWorkshop.FSM_COS;
+using TheSingularityWorkshop.MicroBundleDomain;
 using TheSingularityWorkshop.Workshop.Gui;
 
 namespace TheSingularityWorkshop.Experiences.Moniker;
@@ -11,7 +12,7 @@ public static class MonikerExperience
     public const ulong RuntimeId = 3111;
 
     public static RuntimeManifest CreateManifest() =>
-        new(RuntimeId, [BundleRequest.Unconfigured(MonikerMicroBundle.BundleId)], new Context());
+        new(RuntimeId, [new MicroBundleDependencyRequest(MonikerMicroBundle.BundleId, null)], new Context());
 
     public static GuiNode ExecutePresentation(GuiNode root)
     {
