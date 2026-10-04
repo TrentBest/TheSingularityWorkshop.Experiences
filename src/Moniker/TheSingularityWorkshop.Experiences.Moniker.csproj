@@ -3,19 +3,24 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageId>TheSingularityWorkshop.Experiences.Moniker</PackageId>
-    <Version>0.1.0-alpha.1</Version>
+    <Version>0.1.0-alpha.2</Version>
     <Authors>The Singularity Workshop</Authors>
     <Company>The Singularity Workshop</Company>
-    <Description>The Workshop Moniker Experience MicroBundle and presentation.</Description>
-    <PackageTags>singularity;workshop;experience;microbundle;moniker</PackageTags>
+    <Description>The Workshop Moniker Experience MicroBundle and presentation surface.</Description>
+    <PackageTags>singularity;workshop;experience;microbundle;moniker;gui</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/TrentBest/TheSingularityWorkshop.Experiences</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="TheSingularityWorkshop.GUI.Core" Version="0.1.0-alpha.4" />
     <PackageReference Include="TheSingularityWorkshop.MicroBundleDomain" Version="1.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>
