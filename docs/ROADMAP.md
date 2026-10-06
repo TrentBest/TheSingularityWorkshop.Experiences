@@ -18,9 +18,11 @@ The roadmap is ordered around a working path rather than repository completeness
 - [x] Create independent Forge MicroBundle project.
 - [x] Create independent Moniker MicroBundle project.
 - [x] Ensure they do not depend on AnyApp source projects.
-- [ ] Build deterministic assembly artifacts.
-- [ ] Calculate immutable content hashes.
-- [ ] Publish immutable artifacts to MicroBundleRepository.
+- [x] Build deterministic assembly artifacts.
+- [x] Calculate immutable content hashes.
+- [x] Add controlled Azure publication tooling for immutable MicroBundle artifacts.
+- [ ] Execute the first Azure publication against the Workshop storage account.
+- [ ] Publish the Moniker Experience artifact and bootstrap identity alongside its MicroBundle.
 
 ## Phase 2 — Immutable Experience manifests
 
@@ -32,7 +34,7 @@ The roadmap is ordered around a working path rather than repository completeness
 
 ## Phase 3 — Capability-driven repository-backed composition
 
-- [ ] Retrieve MicroBundle artifacts from MicroBundleRepository.
+- [ ] Retrieve MicroBundle artifacts from MicroBundleRepository from the WebPage/AnyApp host.
 - [ ] Verify artifact identity.
 - [ ] Materialize verified assemblies.
 - [ ] Bind them to FSM_COS on the composition side.
