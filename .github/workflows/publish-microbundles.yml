@@ -17,12 +17,13 @@ on:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
   publish:
     runs-on: ubuntu-24.04
     environment: microbundle-publication
+    env:
+      MICROBUNDLE_REPOSITORY_URL: ${{ secrets.MICROBUNDLE_REPOSITORY_URL }}
     steps:
       - uses: actions/checkout@v7
 
@@ -30,10 +31,24 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Validate repository endpoint
+        shell: bash
+        run: |
+          test -n "$MICROBUNDLE_REPOSITORY_URL" || {
+            echo "::error::MICROBUNDLE_REPOSITORY_URL is not configured."
+            exit 1
+          }
+          curl --fail --silent --show-error --retry 3 --retry-delay 2 \
+            "$MICROBUNDLE_REPOSITORY_URL/health"
+
       - name: Build selected MicroBundle
         run: |
           dotnet restore "src/${{ inputs.project }}/TheSingularityWorkshop.Experiences.${{ inputs.project }}.csproj"
-          dotnet build "src/${{ inputs.project }}/TheSingularityWorkshop.Experiences.${{ inputs.project }}.csproj"             --configuration Release             --no-restore             /p:ContinuousIntegrationBuild=true             /p:Deterministic=true
+          dotnet build "src/${{ inputs.project }}/TheSingularityWorkshop.Experiences.${{ inputs.project }}.csproj" \
+            --configuration Release \
+            --no-restore \
+            /p:ContinuousIntegrationBuild=true \
+            /p:Deterministic=true
 
       - name: Read publication identity
         id: identity
@@ -47,7 +62,11 @@ jobs:
         run: |
           assembly="src/${{ inputs.project }}/bin/Release/net8.0/TheSingularityWorkshop.Experiences.${{ inputs.project }}.dll"
           mkdir -p artifacts
-          bash tools/publish-microbundle.sh             "$assembly"             "${{ steps.identity.outputs.bundle_id }}"             "${{ steps.identity.outputs.version }}"             "artifacts/${{ steps.identity.outputs.bundle_id }}.bundle"
+          bash tools/publish-microbundle.sh \
+            "$assembly" \
+            "${{ steps.identity.outputs.bundle_id }}" \
+            "${{ steps.identity.outputs.version }}" \
+            "artifacts/${{ steps.identity.outputs.bundle_id }}.bundle"
 
       - name: Calculate artifact identity
         id: artifact
@@ -55,21 +74,84 @@ jobs:
         run: |
           hash="$(sha256sum "artifacts/${{ steps.identity.outputs.bundle_id }}.bundle" | cut -d' ' -f1)"
           echo "sha256=$hash" >> "$GITHUB_OUTPUT"
-          echo "Artifact: ${{ steps.identity.outputs.bundle_id }}/${{ steps.identity.outputs.version }}/$hash.bundle"
+          echo "Artifact: ${{ steps.identity.outputs.bundle_id }}/${{ steps.identity.outputs.version }}/$hash"
 
-      - name: Azure login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Publish immutable artifact to Blob Storage
-        env:
-          STORAGE_ACCOUNT_NAME: ${{ secrets.MICROBUNDLE_STORAGE_ACCOUNT_NAME }}
-          CONTAINER_NAME: ${{ secrets.MICROBUNDLE_CONTAINER_NAME }}
+      - name: Publish through MicroBundle Repository
+        shell: bash
         run: |
-          az storage blob upload             --auth-mode login             --account-name "$STORAGE_ACCOUNT_NAME"             --container-name "$CONTAINER_NAME"             --name "artifacts/${{ steps.identity.outputs.bundle_id }}/${{ steps.identity.outputs.version }}/${{ steps.artifact.outputs.sha256 }}.bundle"             --file "artifacts/${{ steps.identity.outputs.bundle_id }}.bundle"             --overwrite false
+          bundle="artifacts/${{ steps.identity.outputs.bundle_id }}.bundle"
+          python3 - "$bundle" \
+            "${{ steps.identity.outputs.bundle_id }}" \
+            "${{ steps.identity.outputs.version }}" \
+            "${{ steps.artifact.outputs.sha256 }}" \
+            > artifacts/publication-request.json <<'PY'
+          import base64
+          import json
+          import pathlib
+          import sys
+
+          bundle_path = pathlib.Path(sys.argv[1])
+          bundle_id = int(sys.argv[2])
+          version = sys.argv[3]
+          content_hash = sys.argv[4]
+
+          print(json.dumps({
+              "bundleId": bundle_id,
+              "version": version,
+              "contentHash": content_hash,
+              "contentBase64": base64.b64encode(bundle_path.read_bytes()).decode("ascii")
+          }))
+          PY
+
+          curl --fail --silent --show-error --retry 3 --retry-delay 2 \
+            -X PUT \
+            -H "Content-Type: application/json" \
+            --data-binary @artifacts/publication-request.json \
+            "$MICROBUNDLE_REPOSITORY_URL/api/microbundles/${{ steps.identity.outputs.bundle_id }}/${{ steps.identity.outputs.version }}/${{ steps.artifact.outputs.sha256 }}"
+
+      - name: Retrieve and verify repository artifact
+        shell: bash
+        run: |
+          curl --fail --silent --show-error --retry 3 --retry-delay 2 \
+            "$MICROBUNDLE_REPOSITORY_URL/api/microbundles/${{ steps.identity.outputs.bundle_id }}/${{ steps.identity.outputs.version }}/${{ steps.artifact.outputs.sha256 }}" \
+            > artifacts/repository-response.json
+
+          python3 - \
+            artifacts/repository-response.json \
+            "artifacts/${{ steps.identity.outputs.bundle_id }}.bundle" \
+            "${{ steps.identity.outputs.bundle_id }}" \
+            "${{ steps.identity.outputs.version }}" \
+            "${{ steps.artifact.outputs.sha256 }}" <<'PY'
+          import base64
+          import hashlib
+          import json
+          import pathlib
+          import sys
+
+          response = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          local_path = pathlib.Path(sys.argv[2])
+          expected_id = int(sys.argv[3])
+          expected_version = sys.argv[4]
+          expected_hash = sys.argv[5]
+
+          if response["bundleId"] != expected_id:
+              raise SystemExit(f"Repository returned bundleId {response['bundleId']}, expected {expected_id}.")
+          if response["version"] != expected_version:
+              raise SystemExit(f"Repository returned version {response['version']}, expected {expected_version}.")
+          if response["contentHash"].lower() != expected_hash.lower():
+              raise SystemExit("Repository returned a different content hash.")
+
+          retrieved = base64.b64decode(response["contentBase64"])
+          if retrieved != local_path.read_bytes():
+              raise SystemExit("Repository returned different artifact bytes.")
+
+          actual_hash = hashlib.sha256(retrieved).hexdigest()
+          if actual_hash != expected_hash:
+              raise SystemExit("Retrieved artifact bytes do not match the requested SHA-256.")
+
+          pathlib.Path("artifacts/retrieved.bundle").write_bytes(retrieved)
+          print(f"Verified repository round trip: {expected_id}/{expected_version}/{expected_hash}")
+          PY
 
       - name: Publish artifact identity
         run: |
