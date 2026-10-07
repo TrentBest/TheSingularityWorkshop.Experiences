@@ -1,0 +1,10 @@
+{
+  "manifestId": "workshop-session",
+  "version": "0.1.0",
+  "moniker": {
+    "experienceId": 3101,
+    "version": "1.0.0",
+    "contentHash": "<published-sha256>"
+  },
+  "experiences": []
+}
