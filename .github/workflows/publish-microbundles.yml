@@ -1,0 +1,118 @@
+name: publish-microbundles
+
+on:
+  workflow_dispatch:
+    inputs:
+      project:
+        description: "Experience MicroBundle project to publish"
+        required: true
+        type: choice
+        options:
+          - Moniker
+      version:
+        description: "Immutable MicroBundle artifact version"
+        required: true
+        default: "1.0.0"
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    environment: microbundle-publication
+    env:
+      STORAGE_ACCOUNT_URI: ${{ secrets.MICROBUNDLE_STORAGE_ACCOUNT_URI }}
+      CONTAINER_NAME: ${{ secrets.MICROBUNDLE_CONTAINER_NAME }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Checkout repository implementation
+        uses: actions/checkout@v7
+        with:
+          repository: TrentBest/TheSingularityWorkshop.MicroBundleRepository
+          ref: feature/microbundle-publisher
+          path: repository
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Validate repository configuration
+        shell: bash
+        run: |
+          test -n "$STORAGE_ACCOUNT_URI" || {
+            echo "::error::MICROBUNDLE_STORAGE_ACCOUNT_URI is not configured."
+            exit 1
+          }
+          test -n "$CONTAINER_NAME" || {
+            echo "::error::MICROBUNDLE_CONTAINER_NAME is not configured."
+            exit 1
+          }
+
+      - name: Build selected MicroBundle
+        run: |
+          dotnet restore "src/${{ inputs.project }}/TheSingularityWorkshop.Experiences.${{ inputs.project }}.csproj"
+          dotnet build "src/${{ inputs.project }}/TheSingularityWorkshop.Experiences.${{ inputs.project }}.csproj" \
+            --configuration Release \
+            --no-restore \
+            /p:ContinuousIntegrationBuild=true \
+            /p:Deterministic=true
+
+      - name: Read publication identity
+        id: identity
+        shell: bash
+        run: |
+          bundle_id="$(python3 -c 'import json; print(json.load(open("src/'"${{ inputs.project }}"'/microbundle.json"))["bundleId"])')"
+          echo "bundle_id=$bundle_id" >> "$GITHUB_OUTPUT"
+          echo "version=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+
+      - name: Pack immutable repository artifact
+        run: |
+          assembly="src/${{ inputs.project }}/bin/Release/net8.0/TheSingularityWorkshop.Experiences.${{ inputs.project }}.dll"
+          mkdir -p artifacts
+          bash tools/publish-microbundle.sh \
+            "$assembly" \
+            "${{ steps.identity.outputs.bundle_id }}" \
+            "${{ steps.identity.outputs.version }}" \
+            "artifacts/${{ steps.identity.outputs.bundle_id }}.bundle"
+
+      - name: Calculate artifact identity
+        id: artifact
+        shell: bash
+        run: |
+          hash="$(sha256sum "artifacts/${{ steps.identity.outputs.bundle_id }}.bundle" | cut -d' ' -f1)"
+          echo "sha256=$hash" >> "$GITHUB_OUTPUT"
+          echo "Artifact: ${{ steps.identity.outputs.bundle_id }}/${{ steps.identity.outputs.version }}/$hash"
+
+      - name: Authenticate to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Publish, retrieve, and consume through repository
+        run: |
+          dotnet run \
+            --project repository/src/Tools/TheSingularityWorkshop.MicroBundleRepository.Publisher/TheSingularityWorkshop.MicroBundleRepository.Publisher.csproj \
+            --configuration Release \
+            -- \
+            "$STORAGE_ACCOUNT_URI" \
+            "$CONTAINER_NAME" \
+            "${{ steps.identity.outputs.bundle_id }}" \
+            "${{ steps.identity.outputs.version }}" \
+            "${{ github.workspace }}/artifacts/${{ steps.identity.outputs.bundle_id }}.bundle"
+
+      - name: Publish artifact identity
+        run: |
+          cat > "artifacts/publication.json" <<EOF
+          {
+            "bundleId": ${{ steps.identity.outputs.bundle_id }},
+            "version": "${{ steps.identity.outputs.version }}",
+            "contentHash": "${{ steps.artifact.outputs.sha256 }}"
+          }
+          EOF
+          cat "artifacts/publication.json"
