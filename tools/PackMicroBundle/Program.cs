@@ -24,12 +24,6 @@ if (string.IsNullOrWhiteSpace(version))
 var outputPath = args[3];
 var assembly = await File.ReadAllBytesAsync(assemblyPath);
 
-if (assembly.Length > uint.MaxValue)
-{
-    Console.Error.WriteLine("Assembly is too large for the FSMB v1 payload format.");
-    return 2;
-}
-
 var payload = new byte[4 + 4 + 8 + 4 + assembly.Length];
 var offset = 0;
 
