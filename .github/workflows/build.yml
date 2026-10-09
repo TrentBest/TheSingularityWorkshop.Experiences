@@ -18,6 +18,7 @@ jobs:
           - src/Forge/TheSingularityWorkshop.Experiences.Forge.csproj
           - src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj
           - src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
+          - src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
@@ -53,9 +54,11 @@ jobs:
           dotnet restore src/Forge/TheSingularityWorkshop.Experiences.Forge.csproj
           dotnet restore src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj
           dotnet restore src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
+          dotnet restore src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj
           dotnet pack src/Forge/TheSingularityWorkshop.Experiences.Forge.csproj --configuration Release --output ./artifacts
           dotnet pack src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj --configuration Release --output ./artifacts
           dotnet pack src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj --configuration Release --output ./artifacts
+          dotnet pack src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj --configuration Release --output ./artifacts
       - uses: actions/upload-artifact@v4
         with:
           name: experience-packages
