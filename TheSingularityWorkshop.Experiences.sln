@@ -1,0 +1,42 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.Forge", "src\Forge\TheSingularityWorkshop.Experiences.Forge.csproj", "{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA101}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.Moniker", "src\Moniker\TheSingularityWorkshop.Experiences.Moniker.csproj", "{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA102}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.Elements", "src\Elements\TheSingularityWorkshop.Experiences.Elements.csproj", "{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA103}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.StoryForge", "src\StoryForge\TheSingularityWorkshop.Experiences.StoryForge.csproj", "{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA104}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackMicroBundle", "tools\PackMicroBundle\PackMicroBundle.csproj", "{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA105}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA101}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA101}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA101}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA101}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA103}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA103}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA103}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA103}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA104}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA104}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA104}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA104}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA105}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA105}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA105}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA105}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
