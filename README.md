@@ -198,6 +198,18 @@ The next test corpus is intentionally made from small semantic things:
 
 The repository should let these atoms remain independent while larger Experiences compose them. See issue #3 for the working extraction and test plan.
 
+## Story Forge — temporal story authoring
+
+![Story Forge temporal model](docs/assets/story-forge-temporal-model.svg)
+
+Story Forge is being developed as a capability inside the Forge Experience. Its first domain library defines named story timelines, event markers, story-time ranges, publication coverage, and immutable published-edition snapshots.
+
+The key distinction is between **when something happens in the story world** and **where a chapter or book chooses to present it**. Multiple timelines and coverage bands will let authors add flashbacks or earlier-discovered events without silently rewriting published editions.
+
+The planned diegetic tools include a hashed 2D timeline, clickable event markers, chapter/book coverage lanes, a character workshop, an evidence/string board, temporal queries, and scene playback. The current code is an early renderer-independent foundation; the interactive manifestations and temporal query engine are not implemented yet.
+
+See [Story Forge architecture](docs/STORY_FORGE_ARCHITECTURE.md) and [the project README](src/StoryForge/README.md).
+
 ## What belongs here?
 
 This repository should contain things that can be independently built, versioned, published, and addressed as Experiences.
