@@ -11,7 +11,7 @@ public sealed class TemporalModelTests
         var time = timeline.At(250);
 
         Assert.Equal("world", time.TimelineId);
-        Assert.Equal(250, time.Value);
+        Assert.Equal(250m, time.Value);
         Assert.True(timeline.Contains(time));
         Assert.False(timeline.Contains(new StoryTime("publication", 250)));
     }
@@ -32,7 +32,7 @@ public sealed class TemporalModelTests
         Assert.True(range.Contains(timeline.At(10)));
         Assert.True(range.Contains(timeline.At(19.999m)));
         Assert.False(range.Contains(timeline.At(20)));
-        Assert.Equal(10, range.Duration);
+        Assert.Equal(10m, range.Duration);
     }
 
     [Fact]
@@ -70,8 +70,8 @@ public sealed class TemporalModelTests
             new StoryTimeRange(timeline.At(5), timeline.At(10)));
 
         Assert.Equal(3, coverage.Sequence);
-        Assert.Equal(5, coverage.StoryRange.Start.Value);
-        Assert.Equal(10, coverage.StoryRange.End.Value);
+        Assert.Equal(5m, coverage.StoryRange.Start.Value);
+        Assert.Equal(10m, coverage.StoryRange.End.Value);
     }
 
     [Fact]
