@@ -29,11 +29,13 @@ Publication order is a third dimension. A flashback may appear late in Book I wh
 - A PublicationCoverage associates a work unit with the story-time interval it presents.
 - A PublishedEdition captures an immutable edition identifier, version, content hash, and declared coverage.
 
-The first domain library implements these small types only. It intentionally does not yet claim to answer arbitrary world-state queries, infer character positions, or optimize camera placement.
+The domain library now implements these temporal types plus provenance-aware events and time-bounded entity-state assertions. Its first query engine answers exact-coordinate event questions and returns state assertions whose half-open validity intervals contain the selected coordinate. It preserves conflicting values as conflicts rather than silently choosing a winner. It does not infer missing facts, interpolate positions, or optimize camera placement.
 
 ## Asking what was true at time t
 
-The planned query pipeline should keep fact retrieval separate from scene composition:
+The first query layer is implemented in `TemporalQueryEngine`. A query names a `StoryTime`, may focus on one entity, and can exclude proposed assertions. The result contains matching events, state assertions valid at that coordinate, and keys for properties with conflicting values. Events and state facts retain certainty and provenance so a view can explain where a claim came from.
+
+The larger query pipeline must keep fact retrieval separate from scene composition:
 
 1. The user selects a coordinate on a named timeline.
 2. A temporal query resolves candidate events, entity states, and spatial facts at that coordinate.
@@ -83,14 +85,14 @@ The Story Forge domain project is deliberately dependency-free. Add package depe
 
 ## Implementation sequence
 
-1. Establish the domain vocabulary and validation rules.
-2. Add unit tests for time domains, ranges, coverage, and edition immutability.
-3. Add a query interface for events and entity state at time t, including uncertainty and provenance.
-4. Build a renderer-independent timeline model and illustrative SVG examples.
-5. Create the diegetic timeline manifestation with clickable markers and coverage lanes.
-6. Add character and event authoring, then the evidence/string board.
-7. Add scene composition and explainable viewpoint scoring.
-8. Add temporal playback.
-9. Integrate as a manifest-driven Forge capability after confirming the existing Experience startup and MicroBundle contracts.
+1. [x] Establish domain vocabulary and validation rules.
+2. [x] Add unit tests for time domains, ranges, coverage, and edition immutability.
+3. [x] Add a query interface for events and entity state at time t, including uncertainty and provenance.
+4. [x] Define the renderer-independent temporal model and illustrative SVG examples.
+5. [ ] Create the diegetic timeline manifestation with clickable markers and coverage lanes.
+6. [ ] Add character and event authoring, then the evidence/string board.
+7. [ ] Add scene composition and explainable viewpoint scoring.
+8. [ ] Add temporal playback.
+9. [ ] Integrate as a manifest-driven Forge capability against the current Experience startup and MicroBundle contracts.
 
 The first milestone is not a beautiful fake timeline. It is a correct temporal model that can support several beautiful views without changing the story.
