@@ -35,4 +35,6 @@ A future diegetic timeline manifestation can draw a hashed axis, selectable even
 
 ## Status
 
-Early foundation only. This project does not yet implement the interactive timeline, story graph, temporal simulation, camera optimization, extraction pipeline, or publishing workflow. Those should be added as separately testable capabilities.
+**Implemented:** temporal coordinates and ranges, publication coverage and immutable edition snapshots, provenance-aware event/state records, exact-time temporal queries, entity focus, proposal filtering, and conflict reporting. Automated tests cover these invariants.
+
+**Not implemented yet:** interactive timeline and string-board manifestations, character authoring UI, temporal simulation/interpolation, camera/viewpoint optimization, extraction pipeline, persistent story graph, and end-to-end publication workflow. These should be added as separately testable capabilities and integrated into Forge through its actual manifest/MicroBundle contracts—not through a Unity-specific project.
