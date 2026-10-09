@@ -15,6 +15,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj" />
+    <ProjectReference Include="../../src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj" />
   </ItemGroup>
 </Project>
