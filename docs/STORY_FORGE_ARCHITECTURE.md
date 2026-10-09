@@ -2,6 +2,8 @@
 
 ![Story Forge temporal model](assets/story-forge-temporal-model.svg)
 
+![Diegetic evidence wall concept](assets/story-forge-evidence-wall.svg)
+
 Story Forge is a capability inside the Forge Experience. It is not a separate host application and does not replace FSM_COS, FSM_API, the MicroBundle contracts, or a future renderer. The Experience describes the authoring capability; manifestations decide how to present it.
 
 ## The core idea
