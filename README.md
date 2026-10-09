@@ -206,7 +206,7 @@ Story Forge is being developed as a capability inside the Forge Experience. Its 
 
 The key distinction is between **when something happens in the story world** and **where a chapter or book chooses to present it**. Multiple timelines and coverage bands will let authors add flashbacks or earlier-discovered events without silently rewriting published editions.
 
-The planned diegetic tools include a hashed 2D timeline, clickable event markers, chapter/book coverage lanes, a character workshop, an evidence/string board, temporal queries, and scene playback. The current code is an early renderer-independent foundation; the interactive manifestations and temporal query engine are not implemented yet.
+The planned diegetic tools include a hashed 2D timeline, clickable event markers, chapter/book coverage lanes, a character workshop, an evidence/string board, temporal queries, and scene playback. The current code includes a renderer-independent temporal model and first temporal query engine with provenance-aware events, time-bounded entity state, proposal filtering, and explicit conflict reporting. The interactive timeline, character workshop, evidence/string board, scene planner, and host integration remain the next milestones.
 
 See [Story Forge architecture](docs/STORY_FORGE_ARCHITECTURE.md) and [the project README](src/StoryForge/README.md).
 
