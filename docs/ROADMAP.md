@@ -31,8 +31,8 @@ The roadmap is ordered around a working path rather than repository completeness
 - [x] Separate story-time coverage from publication order.
 - [x] Define immutable published-edition snapshots with content hashes.
 - [x] Document temporal queries, diegetic timeline presentation, character tooling, and scene observation.
-- [ ] Add unit tests for temporal invariants and edition snapshots.
-- [ ] Implement query contracts for entity state and events at time t.
+- [x] Add unit tests for temporal invariants and edition snapshots.
+- [x] Implement query contracts for entity state and events at time t, including provenance, proposal filtering, and conflict reporting.
 - [ ] Build a manifest-driven diegetic timeline manifestation.
 - [ ] Add character/event authoring and the evidence/string board.
 - [ ] Add explainable viewpoint scoring and temporal playback.
