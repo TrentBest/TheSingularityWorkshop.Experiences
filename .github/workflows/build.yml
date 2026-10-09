@@ -64,6 +64,7 @@ jobs:
           name: experience-packages
           path: artifacts
 
+  # Story Forge domain invariants are tested independently from host manifestations.
   test-story-forge:
     runs-on: ubuntu-24.04
     steps:
