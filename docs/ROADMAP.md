@@ -24,6 +24,19 @@ The roadmap is ordered around a working path rather than repository completeness
 - [ ] Execute the first Azure publication against the Workshop storage account.
 - [ ] Publish the Moniker Experience artifact and bootstrap identity alongside its MicroBundle.
 
+## Story Forge — temporal authoring foundation
+
+- [x] Establish a renderer-independent Story Forge project.
+- [x] Define named story-time coordinates, timeline markers, and half-open ranges.
+- [x] Separate story-time coverage from publication order.
+- [x] Define immutable published-edition snapshots with content hashes.
+- [x] Document temporal queries, diegetic timeline presentation, character tooling, and scene observation.
+- [ ] Add unit tests for temporal invariants and edition snapshots.
+- [ ] Implement query contracts for entity state and events at time t.
+- [ ] Build a manifest-driven diegetic timeline manifestation.
+- [ ] Add character/event authoring and the evidence/string board.
+- [ ] Add explainable viewpoint scoring and temporal playback.
+
 ## Phase 2 — Immutable Experience manifests
 
 - [ ] Extend Experience bundle requests with artifact version and content hash.
