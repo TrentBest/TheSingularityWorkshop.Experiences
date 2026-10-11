@@ -95,3 +95,19 @@ public sealed class MonikerMicroBundle : IMicroBundle
         return false;
     }
 }
+
+
+/// <summary>
+/// A reusable presentation behavior that can be composed with the canonical Moniker content bundle.
+/// </summary>
+/// <remarks>
+/// Motion belongs to a separate MicroBundle. Implementations transform a semantic surface into a
+/// presentation-ready surface without mutating the original content tree.
+/// </remarks>
+public interface IMonikerMotion
+{
+    /// <summary>Applies this motion's presentation parameters to a Moniker surface.</summary>
+    /// <param name="root">The static semantic Moniker surface.</param>
+    /// <returns>A presentation-ready surface that leaves <paramref name="root"/> unchanged.</returns>
+    GuiNode Apply(GuiNode root);
+}
