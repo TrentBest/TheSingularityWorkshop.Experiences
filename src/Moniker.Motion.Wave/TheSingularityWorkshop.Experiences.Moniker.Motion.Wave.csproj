@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageId>TheSingularityWorkshop.Experiences.Moniker.Motion.Wave</PackageId>
+    <Version>0.1.0-alpha.1</Version>
+    <Authors>The Singularity Workshop</Authors>
+    <Company>The Singularity Workshop</Company>
+    <Description>An independently composable wave motion MicroBundle for the Workshop Moniker.</Description>
+    <PackageTags>singularity;workshop;experience;microbundle;moniker;motion;wave</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/TrentBest/TheSingularityWorkshop.Experiences</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Moniker\TheSingularityWorkshop.Experiences.Moniker.csproj" />
+    <PackageReference Include="TheSingularityWorkshop.GUI.Core" Version="0.1.0-alpha.4" />
+    <PackageReference Include="TheSingularityWorkshop.MicroBundleDomain" Version="1.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+</Project>
