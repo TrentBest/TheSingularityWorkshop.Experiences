@@ -79,3 +79,17 @@ jobs:
         run: dotnet restore tests/StoryForge.Tests/TheSingularityWorkshop.Experiences.StoryForge.Tests.csproj
       - name: Run temporal model tests
         run: dotnet test tests/StoryForge.Tests/TheSingularityWorkshop.Experiences.StoryForge.Tests.csproj --configuration Release --no-restore
+
+  
+# Keep motion contracts honest without requiring a host renderer.
+test-moniker-motion:
+  runs-on: ubuntu-24.04
+  steps:
+    - uses: actions/checkout@v7
+    - uses: actions/setup-dotnet@v6
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore motion tests
+      run: dotnet restore tests/Moniker.Motion.Wave.Tests/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.Tests.csproj
+    - name: Run motion contract tests
+      run: dotnet test tests/Moniker.Motion.Wave.Tests/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.Tests.csproj --configuration Release --no-restore
