@@ -184,7 +184,8 @@ See [`docs/PUBLICATION.md`](docs/PUBLICATION.md) for the artifact boundary from 
 The first independently buildable Experience payloads now live here rather than inside a host:
 
 - `TheSingularityWorkshop.Experiences.Forge` — Forge MicroBundle, Experience 3201.
-- `TheSingularityWorkshop.Experiences.Moniker` — Moniker MicroBundle and presentation, Experience 3101.
+- `TheSingularityWorkshop.Experiences.Moniker` — static Moniker content MicroBundle, Bundle 3101, and the shared motion contract.
+- `TheSingularityWorkshop.Experiences.Moniker.Motion.Wave` — independent wave presentation MicroBundle, Bundle 3102, composed by a Moniker Experience when desired.
 
 They reference the published domain/composition/GUI contracts; they do not reference AnyApp source. AnyApp remains a host and consumer of published Experience artifacts.
 
