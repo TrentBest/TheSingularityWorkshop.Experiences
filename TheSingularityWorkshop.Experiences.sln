@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Expe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.Moniker", "src\Moniker\TheSingularityWorkshop.Experiences.Moniker.csproj", "{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA102}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.Moniker.Motion.Wave", "src\Moniker.Motion.Wave\TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj", "{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA107}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.Elements", "src\Elements\TheSingularityWorkshop.Experiences.Elements.csproj", "{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA103}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.StoryForge", "src\StoryForge\TheSingularityWorkshop.Experiences.StoryForge.csproj", "{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA104}"
@@ -28,6 +30,10 @@ Global
 		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA102}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA102}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA107}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA107}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA107}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA107}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA103}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA103}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA103}.Release|Any CPU.ActiveCfg = Release|Any CPU
