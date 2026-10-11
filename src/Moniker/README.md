@@ -15,6 +15,8 @@ It owns the semantic GUI surface for:
 > SINGULARITY  
 > WORKSHOP
 
+The package also defines the renderer-independent `IMonikerMotion` contract. It does not implement a specific motion; wave, orbit, dissolve, and future motions can remain independently addressable MicroBundles that implement this contract.
+
 The package does **not** depend on FSM_COS. FSM_COS remains the composition boundary that loads and arbitrates the bundle.
 
 A host such as AnyApp or WebPage can therefore request Bundle `3101` in its startup `RuntimeManifest`, compose it through FSM_COS, and choose its own renderer for the resulting `GuiNode` tree.
@@ -30,9 +32,12 @@ Host startup manifest
         |
         | loads + arbitrates
         v
-MonikerMicroBundle
+MonikerMicroBundle (3101)
         |
         | semantic GuiNode
+        v
+Moniker Experience + optional IMonikerMotion
+        |
         v
 host renderer
 ```
