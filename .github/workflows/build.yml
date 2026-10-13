@@ -92,3 +92,47 @@ jobs:
         run: dotnet restore tests/Moniker.Motion.Wave.Tests/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.Tests.csproj
       - name: Run motion contract tests
         run: dotnet test tests/Moniker.Motion.Wave.Tests/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.Tests.csproj --configuration Release --no-restore
+
+  source-integration:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - src/Forge/TheSingularityWorkshop.Experiences.Forge.csproj
+          - src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj
+          - src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj
+          - src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
+          - src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj
+    steps:
+      - name: Checkout Experiences
+        uses: actions/checkout@v7
+        with:
+          path: Experiences
+
+      - name: Checkout MicroBundleDomain source
+        uses: actions/checkout@v7
+        with:
+          repository: TrentBest/TheSingularityWorkshop.MicroBundleDomain
+          ref: development
+          path: TheSingularityWorkshop.MicroBundleDomain
+
+      - name: Checkout GUI source
+        uses: actions/checkout@v7
+        with:
+          repository: TrentBest/TheSingularityWorkshop.GUI
+          ref: development
+          path: TheSingularityWorkshop.GUI
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore source graph
+        working-directory: Experiences
+        run: dotnet restore "${{ matrix.project }}" -p:WorkshopUseRepositorySources=true
+
+      - name: Build source graph
+        working-directory: Experiences
+        run: dotnet build "${{ matrix.project }}" --configuration Release --no-restore -p:WorkshopUseRepositorySources=true
