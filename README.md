@@ -22,7 +22,7 @@ An Experience defines what is being experienced; WebApp, AnyApp, and VR are diff
 
 ## 🟣 02 Why
 
-The Workshop is easier to understand when each repository states its responsibility clearly and shows how it connects to the wider system—without claiming ownership of neighboring layers.
+An Experience should survive changes in presentation. Keeping the Experience and its artifacts independent lets browser, desktop, and VR hosts share identity and semantics while each host remains responsible for its own interaction and rendering.
 
 ## 🔺 03 How
 
