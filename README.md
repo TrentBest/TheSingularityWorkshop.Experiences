@@ -1,4 +1,44 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 # The Singularity Workshop — Experiences
+
+
+> **A home for independently authored Workshop Experiences and publishable MicroBundle artifacts.**
+
+An Experience defines what is being experienced; WebApp, AnyApp, and VR are different manifestations of that shared experience—not separate definitions of it.
+
+```mermaid
+flowchart TD
+  E[Experience definition] --> M[Manifest + configuration]
+  M --> C[FSM_COS composition]
+  C --> W[WebApp]
+  C --> A[AnyApp]
+  C --> V[VR manifestation]
+```
+
+## 🟦 01 What
+
+An Experience defines what is being experienced; WebApp, AnyApp, and VR are different manifestations of that shared experience—not separate definitions of it.
+
+## 🟣 02 Why
+
+The Workshop is easier to understand when each repository states its responsibility clearly and shows how it connects to the wider system—without claiming ownership of neighboring layers.
+
+## 🔺 03 How
+
+Keep Experience semantics and artifact identity here; let hosts own presentation, FSM_COS own composition, and the repository own durable artifact delivery.
+
+## 🟢 04 See it in a minute
+
+Start with the MVP vertical slice and publication path documented below; use the listed tests and artifact checks before treating an Experience as publishable.
+
+## 🟪 05 Documentation and theory
+
+[MVP vertical slice](#the-mvp-vertical-slice) · [Publication](#publication) · [Artifact identity](#artifact-identity) · [Architectural rules](#architectural-rules)
+
+---
+
+## Detailed guide
 
 This repository contains independent, publishable Experiences and MicroBundle artifacts for The Singularity Workshop.
 
