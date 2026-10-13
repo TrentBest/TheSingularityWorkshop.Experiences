@@ -16,6 +16,7 @@
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="TheSingularityWorkshop.MicroBundleDomain" Version="1.0.1" />
+    <PackageReference Include="TheSingularityWorkshop.MicroBundleDomain" Version="1.0.1" Condition="'$(WorkshopUseRepositorySources)' != 'true'" />
+    <ProjectReference Include="..\..\..\TheSingularityWorkshop.MicroBundleDomain\TheSingularityWorkshop.MicroBundleDomain.csproj" Condition="'$(WorkshopUseRepositorySources)' == 'true'" />
   </ItemGroup>
 </Project>
