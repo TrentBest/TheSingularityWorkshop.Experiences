@@ -136,3 +136,38 @@ jobs:
       - name: Build source graph
         working-directory: Experiences
         run: dotnet build "${{ matrix.project }}" --configuration Release --no-restore -p:WorkshopUseRepositorySources=true
+
+  source-integration-tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Experiences
+        uses: actions/checkout@v7
+        with:
+          path: Experiences
+
+      - name: Checkout MicroBundleDomain source
+        uses: actions/checkout@v7
+        with:
+          repository: TrentBest/TheSingularityWorkshop.MicroBundleDomain
+          ref: development
+          path: TheSingularityWorkshop.MicroBundleDomain
+
+      - name: Checkout GUI source
+        uses: actions/checkout@v7
+        with:
+          repository: TrentBest/TheSingularityWorkshop.GUI
+          ref: development
+          path: TheSingularityWorkshop.GUI
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Test Moniker.Motion.Wave against source graph
+        working-directory: Experiences
+        run: dotnet test tests/Moniker.Motion.Wave.Tests/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.Tests.csproj --configuration Release -p:WorkshopUseRepositorySources=true
+
+      - name: Test StoryForge against source graph
+        working-directory: Experiences
+        run: dotnet test tests/StoryForge.Tests/TheSingularityWorkshop.Experiences.StoryForge.Tests.csproj --configuration Release -p:WorkshopUseRepositorySources=true
