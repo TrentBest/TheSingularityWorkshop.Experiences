@@ -62,12 +62,28 @@ public sealed class CardDeckTests
     }
 
     [Fact]
+    public void Discard_RejectsUndefinedSuitOrRank()
+    {
+        var deck = CardDeck.CreateStandard();
+
+        Assert.Throws<ArgumentException>(
+            () => deck.Discard(new PlayingCard((CardSuit)99, CardRank.Ace)));
+        Assert.Throws<ArgumentException>(
+            () => deck.Discard(new PlayingCard(CardSuit.Clubs, (CardRank)99)));
+
+        Assert.Equal(0, deck.DiscardCount);
+        Assert.Equal(52, deck.Count);
+    }
+
+    [Fact]
     public void CardColor_IsDerivedFromSuit()
     {
         Assert.True(new PlayingCard(CardSuit.Hearts, CardRank.Ace).IsRed);
         Assert.True(new PlayingCard(CardSuit.Diamonds, CardRank.Two).IsRed);
         Assert.True(new PlayingCard(CardSuit.Clubs, CardRank.Ace).IsBlack);
         Assert.True(new PlayingCard(CardSuit.Spades, CardRank.Two).IsBlack);
+        Assert.False(new PlayingCard((CardSuit)99, CardRank.Ace).IsRed);
+        Assert.False(new PlayingCard((CardSuit)99, CardRank.Ace).IsBlack);
     }
 
     [Fact]
