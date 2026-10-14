@@ -17,7 +17,7 @@ public sealed class CasinoLedgerTests
         Assert.Equal(50m, ledger.GetBalance("player", "S$"));
         Assert.Equal(-50m, ledger.GetBalance("clearing", "S$"));
         Assert.True(ledger.Reconcile().IsBalanced);
-        Assert.Equal(1, ledger.GetTransactions().Count);
+        Assert.Single(ledger.GetTransactions());
     }
 
     [Fact]
@@ -41,7 +41,7 @@ public sealed class CasinoLedgerTests
         Assert.Throws<InvalidOperationException>(() => ledger.Post(failed));
         Assert.Equal(20m, ledger.GetBalance("player", "CHIP"));
         Assert.Equal(0m, ledger.GetBalance("cage", "CHIP"));
-        Assert.Equal(1, ledger.GetTransactions().Count);
+        Assert.Single(ledger.GetTransactions());
     }
 
     [Fact]
@@ -84,7 +84,7 @@ public sealed class CasinoLedgerTests
 
         Assert.True(ledger.Post(transaction));
         Assert.False(ledger.Post(Transaction("event-1", Posting("a", "CHIP", -1m), Posting("b", "CHIP", 1m))));
-        Assert.Equal(1, ledger.GetTransactions().Count);
+        Assert.Single(ledger.GetTransactions());
     }
 
     [Fact]
@@ -95,7 +95,7 @@ public sealed class CasinoLedgerTests
 
         var different = Transaction("event-1", Posting("a", "CHIP", -2m), Posting("c", "CHIP", 2m));
         Assert.Throws<InvalidOperationException>(() => ledger.Post(different));
-        Assert.Equal(1, ledger.GetTransactions().Count);
+        Assert.Single(ledger.GetTransactions());
     }
 
     [Fact]
