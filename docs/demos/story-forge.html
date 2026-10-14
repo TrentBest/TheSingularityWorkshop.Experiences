@@ -39,15 +39,14 @@ function el(name,attrs={},text){const n=document.createElementNS('http://www.w3.
 function visibleBooks(scope){if(scope==='collection')return books;if(scope==='seriesA')return books.filter(b=>b.series==='seriesA');if(scope==='seriesB')return books.filter(b=>b.series==='seriesB');return books.filter(b=>b.id===scope)}
 function render(){
 const focus=$('timeline').value, scope=$('scope').value, selectedBooks=visibleBooks(scope),svg=$('timelineSvg');svg.replaceChildren();
-svg.append(el('text',{x:24,y:22,fill:'#aab7d3','font-size':12,'letter-spacing':1},'STORY TIME · YEAR 0 → YEAR 20'));
+svg.append(el('text',{x:24,y:22,fill:'#aab7d3','font-size':12,'letter-spacing':1},'STORY TIME · EACH TIMELINE HAS ITS OWN DOMAIN AND SCALE'));
 const x=t=>230+t*39, bookX=(i)=>210+i*300, blockCenter=(i,j)=>bookX(i)+12+j*78+35, blockY=346;
 selectedBooks.forEach((b,i)=>svg.append(el('rect',{x:bookX(i),y:294,width:270,height:82,rx:9,fill:'#1a2340',stroke:'#506184'})));
-for(let t=0;t<=20;t+=5)svg.append(el('text',{x:x(t),y:54,fill:'#aab7d3','font-size':11,'text-anchor':'middle'},'Year '+t));
 lanes.filter(l=>focus==='all'||l.id===focus).forEach(l=>{
 svg.append(el('text',{x:20,y:l.y-8,fill:'#f5f6ff','font-size':16,'font-weight':700},l.name));
 svg.append(el('text',{x:20,y:l.y+12,fill:'#aab7d3','font-size':11},l.subtitle));
 svg.append(el('line',{x1:x(0),y1:l.y,x2:x(20),y2:l.y,stroke:'#506184','stroke-width':2}));
-for(let t=0;t<=20;t+=5){svg.append(el('line',{x1:x(t),y1:l.y-6,x2:x(t),y2:l.y+6,stroke:'#506184'}));}
+for(let t=0;t<=20;t+=5){svg.append(el('line',{x1:x(t),y1:l.y-6,x2:x(t),y2:l.y+6,stroke:'#506184'}));const tickLabels=l.id==='world'?['Year 0','Year 5','Year 10','Year 15','Year 20']:l.id==='mira'?['Day 0','Day 25','Day 50','Day 75','Day 100']:['Reign I','Reign II','Reign III','Reign IV','Reign V'];svg.append(el('text',{x:x(t),y:l.y-20,fill:'#aab7d3','font-size':10,'text-anchor':'middle'},tickLabels[t/5]));}
 l.ranges.forEach(r=>{
 const isFocused=focus==='all'||focus===l.id;if(!isFocused)return;
 const rect=el('rect',{x:x(r.start),y:l.y-14,width:(r.end-r.start)*39,height:28,rx:5,fill:l.color,'fill-opacity':.22,stroke:l.color,'stroke-width':2});rect.append(el('title',{},r.label+' · years '+r.start+'–'+r.end));svg.append(rect);
