@@ -9,12 +9,12 @@ public sealed class CasinoLedgerTests
     [Fact]
     public void Post_commits_balanced_transfer_and_reconciles()
     {
-        var ledger = CreateLedger("player", "cage");
-        var transaction = Transaction("buy-in", Posting("player", "s$", -50m), Posting("cage", "S$", 50m));
+        var ledger = CreateLedger("clearing", "player", "cage");
+        var transaction = Transaction("fund-player", Posting("clearing", "s$", -50m), Posting("player", "S$", 50m));
 
         Assert.True(ledger.Post(transaction));
-        Assert.Equal(-50m, ledger.GetBalance("player", "S$")); // This account permits a negative balance.
-        Assert.Equal(50m, ledger.GetBalance("cage", "S$"));
+        Assert.Equal(50m, ledger.GetBalance("player", "S$"));
+        Assert.Equal(-50m, ledger.GetBalance("clearing", "S$"));
         Assert.True(ledger.Reconcile().IsBalanced);
         Assert.Equal(1, ledger.GetTransactions().Count);
     }
@@ -23,7 +23,7 @@ public sealed class CasinoLedgerTests
     public void Post_rejects_unbalanced_transaction_without_mutating_state()
     {
         var ledger = CreateLedger("player", "cage");
-        var transaction = Transaction("bad", Posting("player", "CHIP", -5m), Posting("cage", "CHIP", 4m));
+        var transaction = Transaction("bad", Posting("player", "CHIP", 5m), Posting("cage", "CHIP", 4m));
 
         Assert.Throws<InvalidOperationException>(() => ledger.Post(transaction));
         Assert.Empty(ledger.GetTransactions());
@@ -115,11 +115,11 @@ public sealed class CasinoLedgerTests
     [Fact]
     public void Account_ids_are_unique_and_currency_codes_are_normalized()
     {
-        var ledger = CreateLedger("player", "cage");
+        var ledger = CreateLedger("clearing", "player", "cage");
         Assert.Throws<ArgumentException>(() => ledger.RegisterAccount("player"));
-        Assert.True(ledger.Post(Transaction("fund", Posting("player", "chip", -3m), Posting("cage", "CHIP", 3m))));
-        Assert.Equal(-3m, ledger.GetBalance("player", "chip"));
-        Assert.Equal(3m, ledger.GetBalance("cage", "CHIP"));
+        Assert.True(ledger.Post(Transaction("fund", Posting("clearing", "chip", -3m), Posting("player", "CHIP", 3m))));
+        Assert.Equal(3m, ledger.GetBalance("player", "chip"));
+        Assert.Equal(-3m, ledger.GetBalance("clearing", "CHIP"));
     }
 
     [Fact]
@@ -150,7 +150,7 @@ public sealed class CasinoLedgerTests
     {
         var ledger = new CasinoLedger();
         foreach (var accountId in accountIds)
-            ledger.RegisterAccount(accountId, allowNegativeBalance: accountId is "player" or "mint" or "house" or "clearing");
+            ledger.RegisterAccount(accountId, allowNegativeBalance: accountId is "mint" or "house" or "clearing" or "a" or "b");
         return ledger;
     }
 
