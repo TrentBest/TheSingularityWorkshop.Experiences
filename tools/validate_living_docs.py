@@ -82,7 +82,7 @@ require("World collection" in story_svg and "Series A" in story_svg and "Series 
         "Story Forge SVG must show a collection containing multiple series")
 
 casino, casino_probe = parse_demo("casino-floor.html")
-require({"cashBalance", "chips", "wagers", "returns", "reconcile", "journal"}.issubset(casino_probe.ids),
+require({"cashBalance", "cageCash", "cageInventory", "chips", "wagers", "returns", "reconcile", "journal"}.issubset(casino_probe.ids),
         "casino demo is missing a visible ledger/operator field")
 require({"buyin", "wager", "payout", "cashout", "reset"}.issubset(
     {button.get("data-kind", "") for button in casino_probe.buttons}),
