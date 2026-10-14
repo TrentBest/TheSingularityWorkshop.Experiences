@@ -69,8 +69,9 @@ public readonly record struct PlayingCard(CardSuit Suit, CardRank Rank)
     public bool IsRed => Suit is CardSuit.Diamonds or CardSuit.Hearts;
 
     /// <summary>Gets whether this card belongs to a black suit.</summary>
-    public bool IsBlack => !IsRed;
+    /// <remarks>Returns <see langword="false"/> for an undefined suit value.</remarks>
+    public bool IsBlack => Suit is CardSuit.Clubs or CardSuit.Spades;
 
     /// <inheritdoc />
-    public override string ToString() => $"{Rank} of {Suit}";
+    public override string ToString() => $`{Rank} of {Suit}`;
 }
