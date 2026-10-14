@@ -14,7 +14,7 @@
 <div class="layout">
 <section class="panel" aria-labelledby="floorTitle"><h2 id="floorTitle">The floor</h2>
 <div class="floor">
-<div class="station"><div class="coin">🏦</div><strong>Cage</strong><span>Buy-in · cash-out</span><p><b id="cashBalance">S$ 100</b> <small>virtual funds</small></p></div>
+<div class="station"><div class="coin">🏦</div><strong>Cage</strong><span>Buy-in · cash-out</span><p><b id="cashBalance">S$ 100</b> <small>player funds</small></p><p><small>Cage: <b id="cageCash">S$ 0</b> cash · <b id="cageInventory">100 CHIP</b> inventory</small></p></div>
 <div class="station"><div class="coin">♠️</div><strong>Table</strong><span>Wagers held in escrow</span><p><b id="escrowBalance">0 CHIP</b></p></div>
 <div class="station"><div class="coin">🎰</div><strong>Slot machine</strong><span>Deterministic demo outcome</span><p><b id="machineState">Ready</b></p></div>
 </div>
@@ -37,20 +37,20 @@
 </main>
 <script>
 (()=>{'use strict';
-const initial=()=>({cash:100,chips:0,escrow:0,reserve:10,wagers:0,returns:0,house:0,events:[]});
+const initial=()=>({cash:100,cageCash:0,cageInventory:100,chips:0,escrow:0,reserve:10,wagers:0,returns:0,house:0,events:[]});
 let state=initial();
 const $=id=>document.getElementById(id);
 function record(kind,detail){state.events.unshift({kind,detail,time:new Date().toLocaleTimeString()});render()}
 function act(kind){
 if(kind==='reset'){state=initial();render();return}
-if(kind==='buyin'){if(state.cash<10)return record('Rejected','Insufficient virtual funds for buy-in');state.cash-=10;state.chips+=10;record('BUY-IN','10 S$ → 10 CHIP');return}
+if(kind==='buyin'){if(state.cash<10)return record('Rejected','Insufficient virtual funds for buy-in');state.cash-=10;state.cageCash+=10;state.cageInventory-=10;state.chips+=10;record('BUY-IN','10 S$ → 10 CHIP');return}
 if(kind==='wager'){if(state.chips<4)return record('Rejected','Need 4 CHIP before placing this wager');state.chips-=4;state.escrow+=4;state.wagers+=4;record('WAGER','4 CHIP → table escrow');return}
 if(kind==='payout'){if(state.escrow<4)return record('Rejected','No 4 CHIP wager in escrow to settle');if(state.reserve<2)return record('Rejected','House reserve cannot fund the gross return');state.escrow-=4;state.chips+=6;state.reserve-=2;state.returns+=6;state.house-=2;record('PAYOUT','4 CHIP stake settled; 6 CHIP gross return to player');$('machineState').textContent='Return +6';return}
-if(kind==='cashout'){if(state.chips<5)return record('Rejected','Need 5 CHIP before cash-out');state.chips-=5;state.cash+=5;record('CASH-OUT','5 CHIP → 5 S$ (demo-only 1:1 rule)');return}
+if(kind==='cashout'){if(state.chips<5)return record('Rejected','Need 5 CHIP before cash-out');if(state.cageCash<5)return record('Rejected','Cage has insufficient virtual cash for cash-out');state.chips-=5;state.cageInventory+=5;state.cageCash-=5;state.cash+=5;record('CASH-OUT','5 CHIP → 5 S$ (demo-only 1:1 rule)');return}
 }
 function render(){
-$('cashBalance').textContent='S$ '+state.cash;$('chips').textContent=state.chips+' CHIP';$('escrowBalance').textContent=state.escrow+' CHIP';$('wagers').textContent=state.wagers+' CHIP';$('returns').textContent=state.returns+' CHIP';$('house').textContent=state.house+' CHIP';$('eventCount').textContent=state.events.length;
-const delta=state.cash+state.chips+state.escrow+state.reserve-110;
+$('cashBalance').textContent='S$ '+state.cash;$('cageCash').textContent='S$ '+state.cageCash;$('cageInventory').textContent=state.cageInventory+' CHIP';$('chips').textContent=state.chips+' CHIP';$('escrowBalance').textContent=state.escrow+' CHIP';$('wagers').textContent=state.wagers+' CHIP';$('returns').textContent=state.returns+' CHIP';$('house').textContent=state.house+' CHIP';$('eventCount').textContent=state.events.length;
+const delta=state.cash+state.cageCash+state.chips+state.escrow+state.cageInventory+state.reserve-210;
 $('reconcile').textContent='Δ '+delta;$('reconcile').className=delta===0?'ok':'';
 $('journal').innerHTML=state.events.length?state.events.map(e=>'<div class="entry"><div><b>'+escapeHtml(e.kind)+'</b><small>'+escapeHtml(e.detail)+'</small></div><small>'+escapeHtml(e.time)+'</small></div>').join(''):'<p>Nothing has happened yet. Choose an event above.</p>';
 }
