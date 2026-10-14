@@ -27,6 +27,8 @@ The first living visualization now demonstrates the intended authoring question:
 
 [Open the interactive timeline and book-coverage demo source](../../docs/demos/story-forge.html). Save the HTML file and open it locally to switch among timeline and publication scopes. This is an illustrative interaction prototype, not yet wired to the canonical StoryForge data. The visual layer must query the data; it must not own the canonical story.
 
+The intended rendering handoff is [StoryForge data](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/tree/development/src/StoryForge) → [Visualize](https://github.com/TrentBest/TheSingularityWorkshop.Visualize) → [GUI.Core neutral model](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/GUI_MODEL.md) → [GUI.SVG manifestation](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/SVG_ADAPTER.md). [Renderer](https://github.com/TrentBest/TheSingularityWorkshop.Renderer) is the policy boundary for selecting a representation suitable to the observer; it must not become the owner of story canon.
+
 ## Design principles
 
 1. **Data before depiction.** The same story can be shown as a timeline, string board, dossier, map, novel, screenplay, or immersive scene.
