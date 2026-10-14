@@ -20,6 +20,7 @@ jobs:
           - src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj
           - src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
           - src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj
+          - src/Games.Slots/TheSingularityWorkshop.Games.Slots.csproj
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
@@ -57,15 +58,30 @@ jobs:
           dotnet restore src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj
           dotnet restore src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
           dotnet restore src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj
+          dotnet restore src/Games.Slots/TheSingularityWorkshop.Games.Slots.csproj
           dotnet pack src/Forge/TheSingularityWorkshop.Experiences.Forge.csproj --configuration Release --output ./artifacts
           dotnet pack src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj --configuration Release --output ./artifacts
           dotnet pack src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj --configuration Release --output ./artifacts
           dotnet pack src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj --configuration Release --output ./artifacts
           dotnet pack src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj --configuration Release --output ./artifacts
+          dotnet pack src/Games.Slots/TheSingularityWorkshop.Games.Slots.csproj --configuration Release --output ./artifacts
       - uses: actions/upload-artifact@v4
         with:
           name: experience-packages
           path: artifacts
+
+  # Slot rules and exact probability calculations are tested independently from host manifestations.
+  test-game-slots:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore slot tests
+        run: dotnet restore tests/Games.Slots.Tests/TheSingularityWorkshop.Games.Slots.Tests.csproj
+      - name: Run slot rule and probability tests
+        run: dotnet test tests/Games.Slots.Tests/TheSingularityWorkshop.Games.Slots.Tests.csproj --configuration Release --no-restore
 
   # Story Forge domain invariants are tested independently from host manifestations.
   test-story-forge:

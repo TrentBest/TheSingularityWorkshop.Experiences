@@ -226,6 +226,7 @@ The first independently buildable Experience payloads now live here rather than 
 - `TheSingularityWorkshop.Experiences.Forge` — Forge MicroBundle, Experience 3201.
 - `TheSingularityWorkshop.Experiences.Moniker` — static Moniker content MicroBundle, Bundle 3101, and the shared motion contract.
 - `TheSingularityWorkshop.Experiences.Moniker.Motion.Wave` — independent wave presentation MicroBundle, Bundle 3102, composed by a Moniker Experience when desired.
+- `TheSingularityWorkshop.Games.Slots` — host-neutral single-line slot outcome evaluator with exact analytical RTP for its documented rule set; simulation-only and not yet a MicroBundle artifact. See [slot contracts and probability](docs/GAMES_SLOTS_DESIGN.md).
 
 They reference the published domain/composition/GUI contracts; they do not reference AnyApp source. AnyApp remains a host and consumer of published Experience artifacts.
 
