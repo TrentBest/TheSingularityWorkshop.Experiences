@@ -64,14 +64,6 @@ public sealed class CasinoLedger
                 var key = (posting.AccountId, posting.Currency);
                 changes.TryGetValue(key, out var previousChange);
                 changes[key] = checked(previousChange + posting.Amount);
-
-                _balances.TryGetValue(key, out var currentBalance);
-                var projectedBalance = checked(currentBalance + changes[key]);
-                if (!account.AllowNegativeBalance && projectedBalance < 0m)
-                {
-                    throw new InvalidOperationException(
-                        $"Transaction '{transaction.TransactionId}' would overdraw account '{posting.AccountId}' in {posting.Currency}.");
-                }
             }
 
             var unbalanced = totals.FirstOrDefault(pair => pair.Value != 0m);
@@ -79,6 +71,18 @@ public sealed class CasinoLedger
             {
                 throw new InvalidOperationException(
                     $"Transaction '{transaction.TransactionId}' is not balanced in {unbalanced.Key}: net {unbalanced.Value}.");
+            }
+
+            foreach (var change in changes)
+            {
+                var account = _accounts[change.Key.AccountId];
+                _balances.TryGetValue(change.Key, out var currentBalance);
+                var projectedBalance = checked(currentBalance + change.Value);
+                if (!account.AllowNegativeBalance && projectedBalance < 0m)
+                {
+                    throw new InvalidOperationException(
+                        $"Transaction '{transaction.TransactionId}' would overdraw account '{change.Key.AccountId}' in {change.Key.Currency}.");
+                }
             }
 
             foreach (var change in changes)
