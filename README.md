@@ -30,7 +30,17 @@ Keep Experience semantics and artifact identity here; let hosts own presentation
 
 ## 🟢 04 See it in a minute
 
-Start with the MVP vertical slice and publication path documented below; use the listed tests and artifact checks before treating an Experience as publishable.
+### Watch the model, not a paragraph
+
+![Living casino economy: cage, table, slots, and auditable ledger](docs/assets/casino-floor.svg)
+
+[Open the interactive casino-floor demo source](docs/demos/casino-floor.html) · [Casino ledger contracts](docs/GAMES_CASINO_LEDGER_DESIGN.md)
+
+![Story Forge: parallel timelines connected to book coverage](docs/assets/story-forge-coverage.svg)
+
+[Open the interactive Story Forge demo source](docs/demos/story-forge.html) · [Story Forge domain](src/StoryForge/README.md)
+
+The HTML demos are self-contained: download each file and open it locally to interact with the prototype. They currently use illustrative browser-side data, not the C# ledger or StoryForge domain. The SVGs are living visual explanations; the next integration step is to generate the scenes through Visualize and the GUI.Core → GUI.SVG path, with Renderer choosing observer-appropriate representation.
 
 ## 🟪 05 Documentation and theory
 
