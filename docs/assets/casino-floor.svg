@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">A living casino economy: one floor, one auditable ledger</title>
+  <desc id="desc">A simulation casino floor connects a virtual currency cage, player chips, a blackjack table, slot machines, and an operator ledger. Animated colored paths show buy-in, wager, payout, and cash-out flows. A reconciliation panel stays separate from activity and result metrics.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#10152a"/><stop offset="1" stop-color="#202b45"/></linearGradient>
+    <linearGradient id="felt" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0d7668"/><stop offset="1" stop-color="#06483f"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#ffd76a"/><stop offset="1" stop-color="#ff9e46"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrowCash" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6Z" fill="#ffd76a"/></marker>
+    <marker id="arrowWager" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6Z" fill="#58d9ff"/></marker>
+    <marker id="arrowPayout" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6Z" fill="#ff79c6"/></marker>
+    <style>
+      text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#f4f7ff} .muted{fill:#aebbd5}.tiny{font-size:12px;letter-spacing:.7px}.label{font-size:16px;font-weight:700}.panel{fill:#18223a;stroke:#425270;stroke-width:1.5}.flow{fill:none;stroke-width:4;stroke-linecap:round;stroke-dasharray:9 11;animation:travel 2.6s linear infinite}.cash{stroke:#ffd76a}.wager{stroke:#58d9ff}.payout{stroke:#ff79c6}.chip{fill:#1d3555;stroke:#58d9ff;stroke-width:2}.metric{font-size:27px;font-weight:800}.tag{font-size:11px;font-weight:800;letter-spacing:1px}@keyframes travel{to{stroke-dashoffset:-80}} @keyframes pulse{0%,100%{opacity:.65}50%{opacity:1}} .pulse{animation:pulse 2s ease-in-out infinite}
+    </style>
+  </defs>
+  <rect width="1200" height="760" rx="26" fill="url(#bg)"/>
+  <circle cx="1080" cy="95" r="180" fill="#384b78" opacity=".15"/><circle cx="100" cy="680" r="220" fill="#0ba58e" opacity=".08"/>
+  <text x="48" y="54" font-size="13" font-weight="800" fill="#58d9ff" letter-spacing="2">THE SINGULARITY WORKSHOP · LIVING EXPERIENCE</text>
+  <text x="48" y="96" font-size="32" font-weight="800">The casino is an economy you can see.</text>
+  <text x="48" y="124" class="muted" font-size="15">Simulation only · every chip movement leaves a trace · reconciliation is the truth test</text>
+  <rect x="48" y="153" width="1104" height="352" rx="20" fill="#111a2c" stroke="#34425f"/>
+  <text x="72" y="183" class="tiny muted">THE FLOOR · PRESENTATION IS A VIEW OF DOMAIN STATE</text>
+  <rect x="72" y="204" width="220" height="118" rx="14" class="panel"/>
+  <path d="M94 241h48v38H94z M100 234h36v7h-36z M102 250h12v22h-12z M120 250h12v22h-12z" fill="#ffd76a" opacity=".9"/>
+  <text x="158" y="238" class="label">CAGE</text><text x="158" y="260" class="muted" font-size="13">S$ ↔ CHIP</text><text x="158" y="283" font-size="11" fill="#ffd76a">BUY-IN / CASH-OUT</text>
+  <rect x="350" y="204" width="292" height="118" rx="14" class="panel"/>
+  <ellipse cx="495" cy="254" rx="91" ry="35" fill="url(#felt)" stroke="#64e5bf" stroke-width="2"/>
+  <ellipse cx="495" cy="254" rx="72" ry="22" fill="none" stroke="#b4f6dc" stroke-dasharray="3 5"/>
+  <circle cx="468" cy="250" r="12" fill="#fff" stroke="#24314a"/><text x="468" y="255" text-anchor="middle" font-size="14" fill="#111">A</text>
+  <rect x="488" y="237" width="22" height="29" rx="3" fill="#f4f7ff" stroke="#ff79c6"/><text x="499" y="255" text-anchor="middle" font-size="13" fill="#b51e73">7</text>
+  <text x="495" y="304" text-anchor="middle" class="tiny">TABLE · ESCROWED WAGERS</text>
+  <rect x="700" y="204" width="428" height="118" rx="14" class="panel"/>
+  {#each} 
+  <g transform="translate(730 223)"><rect width="75" height="64" rx="8" fill="#2b3856" stroke="#7f93ba"/><rect x="7" y="7" width="61" height="40" rx="5" fill="#10182b"/><text x="37" y="35" text-anchor="middle" font-size="21" fill="#ff79c6">7 ★ 7</text><circle cx="60" cy="55" r="3" fill="#58d9ff"/><text x="37" y="84" text-anchor="middle" class="tiny">SLOT 01</text></g>
+  <g transform="translate(825 223)"><rect width="75" height="64" rx="8" fill="#2b3856" stroke="#7f93ba"/><rect x="7" y="7" width="61" height="40" rx="5" fill="#10182b"/><text x="37" y="35" text-anchor="middle" font-size="21" fill="#ffd76a">♠ K</text><circle cx="60" cy="55" r="3" fill="#58d9ff"/><text x="37" y="84" text-anchor="middle" class="tiny">SLOT 02</text></g>
+  <g transform="translate(920 223)"><rect width="75" height="64" rx="8" fill="#2b3856" stroke="#7f93ba"/><rect x="7" y="7" width="61" height="40" rx="5" fill="#10182b"/><text x="37" y="35" text-anchor="middle" font-size="21" fill="#64e5bf">♦ 9</text><circle cx="60" cy="55" r="3" fill="#58d9ff"/><text x="37" y="84" text-anchor="middle" class="tiny">SLOT 03</text></g>
+  <text x="1040" y="247" text-anchor="middle" class="label">MACHINES</text><text x="1040" y="269" text-anchor="middle" class="muted" font-size="12">deterministic results</text>
+  <path d="M182 322 V364 H486 V323" class="flow cash" marker-end="url(#arrowCash)"/>
+  <path d="M495 322 V389 H840 V323" class="flow wager" marker-end="url(#arrowWager)"/>
+  <path d="M840 322 V432 H182 V323" class="flow payout" marker-end="url(#arrowPayout)"/>
+  <rect x="72" y="405" width="190" height="63" rx="12" fill="#302b26" stroke="#ffd76a"/><circle cx="96" cy="428" r="6" fill="#ffd76a"/><text x="112" y="431" class="label">BUY-IN</text><text x="92" y="452" class="muted" font-size="12">virtual currency → chips</text>
+  <rect x="350" y="405" width="190" height="63" rx="12" fill="#172f42" stroke="#58d9ff"/><circle cx="374" cy="428" r="6" fill="#58d9ff"/><text x="390" y="431" class="label">WAGER</text><text x="370" y="452" class="muted" font-size="12">player → table escrow</text>
+  <rect x="628" y="405" width="190" height="63" rx="12" fill="#35223a" stroke="#ff79c6"/><circle cx="652" cy="428" r="6" fill="#ff79c6"/><text x="668" y="431" class="label">PAYOUT</text><text x="648" y="452" class="muted" font-size="12">escrow / house reserve</text>
+  <rect x="906" y="405" width="198" height="63" rx="12" fill="#1d3430" stroke="#64e5bf"/><circle cx="930" cy="428" r="6" fill="#64e5bf"/><text x="946" y="431" class="label">CASH-OUT</text><text x="926" y="452" class="muted" font-size="12">chips → virtual currency</text>
+  <rect x="48" y="529" width="1104" height="185" rx="20" class="panel"/>
+  <text x="72" y="561" class="tiny muted">OPERATOR VIEW · DERIVED FROM THE JOURNAL, NEVER A SECOND SOURCE OF TRUTH</text>
+  <g transform="translate(72 580)"><rect width="240" height="88" rx="12" fill="#10182b" stroke="#425270"/><text x="18" y="25" class="tiny muted">GROSS WAGERS</text><text x="18" y="57" class="metric">Σ stakes</text><text x="18" y="76" font-size="11" fill="#58d9ff">activity · not revenue</text></g>
+  <g transform="translate(334 580)"><rect width="240" height="88" rx="12" fill="#10182b" stroke="#425270"/><text x="18" y="25" class="tiny muted">GROSS PAYOUTS</text><text x="18" y="57" class="metric">Σ returns</text><text x="18" y="76" font-size="11" fill="#ff79c6">returned value</text></g>
+  <g transform="translate(596 580)"><rect width="240" height="88" rx="12" fill="#10182b" stroke="#425270"/><text x="18" y="25" class="tiny muted">CHIP OBLIGATION</text><text x="18" y="57" class="metric">Σ unredeemed</text><text x="18" y="76" font-size="11" fill="#ffd76a">not profit</text></g>
+  <g transform="translate(858 580)"><rect width="266" height="88" rx="12" fill="#102d2a" stroke="#64e5bf" stroke-width="2"/><text x="18" y="25" class="tiny muted">RECONCILIATION</text><text x="18" y="57" class="metric pulse" fill="#64e5bf">Δ = 0</text><text x="18" y="76" font-size="11" fill="#64e5bf">invariant · all currencies</text></g>
+  <text x="48" y="741" class="muted" font-size="11">Illustrative living-documentation concept · not connected to a running ledger yet · no real-money handling or redemption</text>
+</svg>
