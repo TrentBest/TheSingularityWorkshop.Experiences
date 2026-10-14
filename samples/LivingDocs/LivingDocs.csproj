@@ -8,5 +8,6 @@
   <ItemGroup>
     <ProjectReference Include="../../../TheSingularityWorkshop.GUI/src/Core/TheSingularityWorkshop.GUI.Core.csproj" />
     <ProjectReference Include="../../../TheSingularityWorkshop.GUI/src/SVG/TheSingularityWorkshop.GUI.SVG.csproj" />
+    <ProjectReference Include="../../src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj" />
   </ItemGroup>
 </Project>
