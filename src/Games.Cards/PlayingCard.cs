@@ -73,5 +73,5 @@ public readonly record struct PlayingCard(CardSuit Suit, CardRank Rank)
     public bool IsBlack => Suit is CardSuit.Clubs or CardSuit.Spades;
 
     /// <inheritdoc />
-    public override string ToString() => $`{Rank} of {Suit}`;
+    public override string ToString() => $"{Rank} of {Suit}";
 }
