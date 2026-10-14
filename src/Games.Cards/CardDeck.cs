@@ -37,10 +37,10 @@ public sealed class CardDeck
     public int DiscardCount => _discardPile.Count;
 
     /// <summary>Gets a read-only snapshot of the current draw-pile order.</summary>
-    public IReadOnlyList<PlayingCard> Cards => _drawPile.AsReadOnly();
+    public IReadOnlyList<PlayingCard> Cards => Array.AsReadOnly(_drawPile.ToArray());
 
     /// <summary>Gets a read-only snapshot of the current discard-pile order.</summary>
-    public IReadOnlyList<PlayingCard> Discards => _discardPile.AsReadOnly();
+    public IReadOnlyList<PlayingCard> Discards => Array.AsReadOnly(_discardPile.ToArray());
 
     /// <summary>Shuffles the draw pile using the supplied random source.</summary>
     public void Shuffle(Random random)
