@@ -68,9 +68,9 @@ static GuiNode StoryForgeCoverage()
     Rect(root, "timeline-panel", 40, 143, 1120, 344, "#121b30", 18, "#39496b");
     Text(root, "timeline-label", "STORY TIME · MULTIPLE TIME DOMAINS CAN COEXIST", 64, 173, "#aab7d3", 12, 700);
 
-    Timeline(root, "world", "World events", "world timeline", 217, "#62d8ff", 340, 545, "First signal");
-    Timeline(root, "mira", "Mira", "character arc", 297, "#ff8cc8", 610, 875, "Disappearance");
-    Timeline(root, "archive", "The Archive", "institutional record", 377, "#ffd36a", 475, 805, "Hidden record");
+    Timeline(root, "world", "World events", "world timeline", 217, "#62d8ff", 90, 295, "First signal");
+    Timeline(root, "mira", "Mira", "character arc", 297, "#ff8cc8", 360, 625, "Disappearance");
+    Timeline(root, "archive", "The Archive", "institutional record", 377, "#ffd36a", 225, 555, "Hidden record");
 
     Text(root, "legend-one", "Colored ranges = time covered by a work", 64, 450, "#aab7d3", 12);
     Text(root, "legend-two", "String lines = where that range appears in reading order", 64, 470, "#aab7d3", 12);
