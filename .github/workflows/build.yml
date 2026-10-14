@@ -96,6 +96,19 @@ jobs:
       - name: Run motion contract tests
         run: dotnet test tests/Moniker.Motion.Wave.Tests/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.Tests.csproj --configuration Release --no-restore
 
+  # Casino accounting invariants are tested independently of game rules and host presentation.
+  test-games-casino-ledger:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore casino ledger tests
+        run: dotnet restore tests/Games.CasinoLedger.Tests/TheSingularityWorkshop.Games.CasinoLedger.Tests.csproj
+      - name: Run ledger invariant tests
+        run: dotnet test tests/Games.CasinoLedger.Tests/TheSingularityWorkshop.Games.CasinoLedger.Tests.csproj --configuration Release --no-restore
+
   source-integration:
     runs-on: ubuntu-24.04
     strategy:
