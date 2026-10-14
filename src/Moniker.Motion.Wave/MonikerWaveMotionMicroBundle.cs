@@ -57,7 +57,9 @@ public sealed class MonikerWaveMotionMicroBundle : IMicroBundle, IMonikerMotion
     {
         var properties = new Dictionary<string, string>(node.Properties, StringComparer.Ordinal);
 
-        if (node.Kind == GuiKinds.Text &&
+        // GUI node kinds are represented by the same string values accepted by GuiBuilder.Create.
+        // Keeping this capability on the public string contract avoids a dependency on a removed enum.
+        if (node.Kind == "Text" &&
             node.Id.StartsWith("moniker-", StringComparison.Ordinal))
         {
             properties["wavePeriod"] = "3.8";
