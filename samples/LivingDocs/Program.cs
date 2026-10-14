@@ -66,7 +66,7 @@ static GuiNode StoryForgeCoverage()
     Text(root, "title", "The world has time. The book has order.", 42, 88, "#f5f6ff", 32, 800);
     Text(root, "subtitle", "Follow a moment through parallel timelines into the exact place a reader encounters it.", 42, 116, "#aab7d3", 15);
     Rect(root, "timeline-panel", 40, 143, 1120, 344, "#121b30", 18, "#39496b");
-    Text(root, "timeline-label", "STORY TIME · MULTIPLE TIME DOMAINS CAN COEXIST", 64, 173, "#aab7d3", 12, 700);
+    Text(root, "timeline-label", "STORY TIME · EACH TIMELINE HAS ITS OWN DOMAIN AND SCALE", 64, 173, "#aab7d3", 12, 700);
 
     Timeline(root, "world", "World events", "world timeline", 217, "#62d8ff", 90, 295, "First signal");
     Timeline(root, "mira", "Mira", "character arc", 297, "#ff8cc8", 360, 625, "Disappearance");
