@@ -1,4 +1,5 @@
 using TheSingularityWorkshop.Games.CasinoLedger;
+using Xunit;
 
 namespace TheSingularityWorkshop.Games.CasinoLedger.Tests;
 
