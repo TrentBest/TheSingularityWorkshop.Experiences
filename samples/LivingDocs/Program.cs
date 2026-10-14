@@ -71,8 +71,9 @@ static GuiNode StoryForgeCoverage()
     Timeline(root, "world", "World events", "world timeline", 217, "#62d8ff", 90, 295, "First signal");
     Timeline(root, "mira", "Mira", "character arc", 297, "#ff8cc8", 360, 625, "Disappearance");
     Timeline(root, "archive", "The Archive", "institutional record", 377, "#ffd36a", 225, 555, "Hidden record");
-    foreach (var (year, tick) in new[] { ("Year 0", 270), ("Year 5", 465), ("Year 10", 660), ("Year 15", 855), ("Year 20", 1050) })
-        Text(root, "year-" + tick, year, tick, 198, "#aab7d3", 11);
+    AddTicks(root, "world-years", new[] { "Year 0", "Year 5", "Year 10", "Year 15", "Year 20" }, 198);
+    AddTicks(root, "mira-days", new[] { "Day 0", "Day 25", "Day 50", "Day 75", "Day 100" }, 278);
+    AddTicks(root, "archive-reigns", new[] { "Reign I", "Reign II", "Reign III", "Reign IV", "Reign V" }, 358);
 
     Rect(root, "publication-panel", 40, 505, 1120, 226, "#121b30", 18, "#39496b");
     Text(root, "publication-label", "PUBLICATION ORDER · SERIES CONTAIN BOOKS; COLLECTIONS CONTAIN SERIES", 64, 535, "#aab7d3", 12, 700);
@@ -163,6 +164,13 @@ static void Metric(GuiBuilder root, string id, double x, string label, string va
     Text(root, id + "-label", label, x + 18, 605, "#aebbd5", 11, 700);
     Text(root, id + "-value", value, x + 18, 637, "#f4f7ff", 25, 800);
     Text(root, id + "-caption", caption, x + 18, 657, accent, 11);
+}
+
+static void AddTicks(GuiBuilder root, string id, string[] labels, double y)
+{
+    var positions = new[] { 270, 465, 660, 855, 1050 };
+    for (var i = 0; i < positions.Length; i++)
+        Text(root, id + "-" + i, labels[i], positions[i], y, "#aab7d3", 11);
 }
 
 static void Timeline(GuiBuilder root, string id, string title, string subtitle, double y,
