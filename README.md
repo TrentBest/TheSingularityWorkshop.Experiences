@@ -230,7 +230,7 @@ The first independently buildable Experience payloads now live here rather than 
 
 They reference the published domain/composition/GUI contracts; they do not reference AnyApp source. AnyApp remains a host and consumer of published Experience artifacts.
 
-The proposed game-economy family and its boundaries are documented in [Game Economy MicroBundles](docs/GAME_ECONOMY_MICROBUNDLES.md). The first executable casino accounting slice is documented in [Casino ledger design](docs/GAMES_CASINO_LEDGER_DESIGN.md); it remains simulation-only and does not process real money.
+The first executable casino accounting slice is documented in [Casino ledger design](docs/GAMES_CASINO_LEDGER_DESIGN.md); it remains simulation-only and does not process real money.
 
 ## Atomic ontology corpus
 
