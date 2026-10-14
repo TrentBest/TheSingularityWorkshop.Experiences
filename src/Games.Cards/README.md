@@ -24,6 +24,16 @@ var hand = Enumerable.Range(0, 5)
     .ToArray();
 ```
 
+## Contracts and limitations
+
+- The standard deck has 52 unique cards; the general constructor accepts any ordered sequence of valid cards, including duplicates for multi-deck shoes.
+- `Draw()` removes the final card in the current draw-pile order and returns `null` when empty.
+- `Cards` and `Discards` are read-only snapshots, not live views. Re-read the property to observe later mutations.
+- `Shuffle(Random)` uses the supplied source; repeatability requires the same starting order, seed, and compatible runtime implementation. Do not use `System.Random` as a cryptographic source.
+- `Discard(PlayingCard)` rejects undefined enum values but does not track ownership or prevent duplicates. The caller's game rules decide whether a card may be discarded.
+- Card rank is identity only. Ace valuation, hand scoring, game legality, and dealing policy belong to a consuming game-rules capability.
+- The class is mutable and not thread-safe; synchronize externally if sharing an instance across threads.
+
 ## Boundaries
 
 This library does not implement Poker or Blackjack rules, betting, account balances, money movement, real-money gambling, payment processing, casino UI, or game settlement. Rules-specific MicroBundles should consume these primitives rather than copy deck logic.
