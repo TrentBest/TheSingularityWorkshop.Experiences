@@ -13,6 +13,9 @@ public sealed class CardDeck
     private readonly List<PlayingCard> _discardPile = [];
 
     /// <summary>Creates a deck from the supplied card sequence, preserving its order.</summary>
+    /// <param name="cards">The initial draw-pile contents. Repeated valid cards are permitted for multi-deck shoes.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="cards"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException">A card has an undefined suit or rank.</exception>
     public CardDeck(IEnumerable<PlayingCard> cards)
     {
         ArgumentNullException.ThrowIfNull(cards);
@@ -43,6 +46,8 @@ public sealed class CardDeck
     public IReadOnlyList<PlayingCard> Discards => Array.AsReadOnly(_discardPile.ToArray());
 
     /// <summary>Shuffles the draw pile using the supplied random source.</summary>
+    /// <param name="random">The random source used to select each swap index.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="random"/> is <see langword="null"/>.</exception>
     public void Shuffle(Random random)
     {
         ArgumentNullException.ThrowIfNull(random);
@@ -66,8 +71,22 @@ public sealed class CardDeck
         return card;
     }
 
-    /// <summary>Moves a card into the discard pile.</summary>
-    public void Discard(PlayingCard card) => _discardPile.Add(card);
+    /// <summary>
+    /// Adds a valid card to the discard pile.
+    /// </summary>
+    /// <remarks>
+    /// This method does not track card ownership or prevent duplicates. The caller owns those rules,
+    /// which allows a game to discard cards held outside this draw pile or to model multi-deck shoes.
+    /// </remarks>
+    /// <param name="card">The card to discard.</param>
+    /// <exception cref="ArgumentException">The card has an undefined suit or rank.</exception>
+    public void Discard(PlayingCard card)
+    {
+        if (!Enum.IsDefined(card.Suit) || !Enum.IsDefined(card.Rank))
+            throw new ArgumentException("A discarded card must use a defined suit and rank.", nameof(card));
+
+        _discardPile.Add(card);
+    }
 
     /// <summary>Returns every discarded card to the draw pile and clears the discard pile.</summary>
     public void CollectDiscards()
