@@ -7,6 +7,8 @@
 
 # ✳️ 00 The Singularity Workshop — Experiences
 
+This README follows the Workshop's shared [Documentation Standard](https://github.com/TrentBest/TheSingularityWorkshop.FSM_COS/blob/master/DOCUMENTATION_STANDARD.md).
+
 This repository contains independent, publishable Experiences and MicroBundle artifacts for The Singularity Workshop.
 
 It is deliberately separate from WebApp/WebPage, AnyApp, FSM_COS, MicroBundleRepository, GUI, and FSM_API.
