@@ -39,20 +39,27 @@ function el(name,attrs={},text){const n=document.createElementNS('http://www.w3.
 function visibleBooks(scope){if(scope==='collection')return books;if(scope==='seriesA')return books.filter(b=>b.series==='seriesA');if(scope==='seriesB')return books.filter(b=>b.series==='seriesB');return books.filter(b=>b.id===scope)}
 function render(){
 const focus=$('timeline').value, scope=$('scope').value, selectedBooks=visibleBooks(scope),svg=$('timelineSvg');svg.replaceChildren();
-svg.append(el('text',{x:24,y:24,fill:'#aab7d3','font-size':12,'letter-spacing':1},'STORY TIME · YEAR 0 → YEAR 20'));
-const x=t=>230+t*39;
-const bookTargets={};selectedBooks.forEach((b,i)=>{bookTargets[b.id]={x:210+i*300+120,y:326}});
+svg.append(el('text',{x:24,y:22,fill:'#aab7d3','font-size':12,'letter-spacing':1},'STORY TIME · YEAR 0 → YEAR 20'));
+const x=t=>230+t*39, bookX=(i)=>210+i*300, blockCenter=(i,j)=>bookX(i)+12+j*78+35, blockY=346;
+selectedBooks.forEach((b,i)=>svg.append(el('rect',{x:bookX(i),y:294,width:270,height:82,rx:9,fill:'#1a2340',stroke:'#506184'})));
 lanes.filter(l=>focus==='all'||l.id===focus).forEach(l=>{
-svg.append(el('text',{x:20,y:l.y-8,fill:'#f5f6ff','font-size':16,'font-weight':700},l.name));svg.append(el('text',{x:20,y:l.y+12,fill:'#aab7d3','font-size':11},l.subtitle));
+svg.append(el('text',{x:20,y:l.y-8,fill:'#f5f6ff','font-size':16,'font-weight':700},l.name));
+svg.append(el('text',{x:20,y:l.y+12,fill:'#aab7d3','font-size':11},l.subtitle));
 svg.append(el('line',{x1:x(0),y1:l.y,x2:x(20),y2:l.y,stroke:'#506184','stroke-width':2}));
 for(let t=0;t<=20;t+=5){svg.append(el('line',{x1:x(t),y1:l.y-6,x2:x(t),y2:l.y+6,stroke:'#506184'}));if(l.y===76)svg.append(el('text',{x:x(t),y:54,fill:'#aab7d3','font-size':11,'text-anchor':'middle'},'Year '+t))}
-l.ranges.forEach((r,idx)=>{const target=bookTargets[r.book];const isVisible=selectedBooks.some(b=>b.id===r.book);const isFocused=focus==='all'||focus===l.id;if(!isFocused)return;
+l.ranges.forEach(r=>{
+const isFocused=focus==='all'||focus===l.id;if(!isFocused)return;
 const rect=el('rect',{x:x(r.start),y:l.y-14,width:(r.end-r.start)*39,height:28,rx:5,fill:l.color,'fill-opacity':.22,stroke:l.color,'stroke-width':2});rect.append(el('title',{},r.label+' · years '+r.start+'–'+r.end));svg.append(rect);
 svg.append(el('text',{x:x(r.start)+6,y:l.y+4,fill:'#f5f6ff','font-size':11},r.label));
-if(target&&isVisible){const tx=target.x,ty=target.y;svg.append(el('path',{d:'M '+(x(r.start)+((r.end-r.start)*39)/2)+' '+(l.y+17)+' C '+(x(r.start)+((r.end-r.start)*39)/2)+' 300, '+tx+' 285, '+tx+' '+(ty-14),fill:'none',stroke:l.color,'stroke-width':2.5,'stroke-dasharray':'7 6',class:'thread',opacity:.9}));}
+const bookIndex=selectedBooks.findIndex(b=>b.id===r.book), book=selectedBooks[bookIndex];
+if(book){const blockIndex=book.blocks.findIndex(b=>b.lane===l.id);if(blockIndex>=0){const sx=x(r.start+(r.end-r.start)/2),tx=blockCenter(bookIndex,blockIndex);svg.append(el('path',{d:'M '+sx+' '+(l.y+16)+' C '+sx+' 280, '+tx+' 280, '+tx+' '+(blockY-15),fill:'none',stroke:l.color,'stroke-width':2.5,'stroke-dasharray':'7 6',class:'thread',opacity:.95}));}}
 });
 });
-selectedBooks.forEach((b,i)=>{const bx=210+i*300,by=295;svg.append(el('rect',{x:bx,y:by,width:270,height:44,rx:8,fill:'#1a2340',stroke:'#506184'}));svg.append(el('text',{x:bx+12,y:by+18,fill:'#f5f6ff','font-size':13,'font-weight':700},b.name));svg.append(el('text',{x:bx+12,y:by+34,fill:'#aab7d3','font-size':10},b.seriesName));});
+selectedBooks.forEach((b,i)=>{
+const bx=bookX(i);svg.append(el('text',{x:bx+12,y:314,fill:'#f5f6ff','font-size':13,'font-weight':700},b.name));
+svg.append(el('text',{x:bx+12,y:328,fill:'#aab7d3','font-size':10},b.seriesName));
+b.blocks.forEach((block,j)=>{const rect=el('rect',{x:bx+12+j*78,y:335,width:70,height:23,rx:4,fill:block.color,stroke:(focus==='all'||focus===block.lane)?'#ffffff':'none','stroke-width':(focus==='all'||focus===block.lane)?1.5:0});rect.append(el('title',{},(j+1)+'. '+block.label+' · '+block.lane+' timeline'));svg.append(rect);svg.append(el('text',{x:bx+47+j*78,y:350,fill:'#111629','font-size':9,'font-weight':700,'text-anchor':'middle'},block.label.length>11?block.label.slice(0,10)+'…':block.label));});
+});
 const host=$('books');host.replaceChildren();selectedBooks.forEach(b=>{const card=document.createElement('article');card.className='book';const h=document.createElement('h3');h.textContent=b.name;const p=document.createElement('p');p.textContent=b.seriesName+' · reading order';const blocks=document.createElement('div');blocks.className='blocks';b.blocks.forEach((block,i)=>{const span=document.createElement('div');span.className='block'+((focus==='all'||focus===block.lane)?' active':'');span.style.background=block.color;span.title=(i+1)+'. '+block.label+' — '+block.lane+' timeline';span.setAttribute('aria-label',span.title);blocks.append(span)});card.append(h,p,blocks);host.append(card)});
 $('scopeDescription').textContent=scope==='collection'?'Collection view: Series A and Series B remain separate containers, each with its own book sequence.':scope.startsWith('series')?'Series view: only books belonging to this series are shown; other series are not flattened into it.':'Book view: the selected book is isolated while its colored blocks still point back to parallel story time.';
 }
