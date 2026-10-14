@@ -40,6 +40,8 @@ Console.WriteLine(machine.CalculateReturnToPlayer(1m)); // exact expected gross 
 
 A multiplier is **total gross return**, including returned stake—not profit-only. A 2x return on a 1-unit stake returns 2 units total.
 
+See [the design note](../../docs/GAMES_SLOTS_DESIGN.md) for the probability derivation, separation from accounting, and next milestones.
+
 ## Probability contract
 
 For each paying symbol, its probability is the product of that symbol's frequency on each independent reel divided by that reel's number of stops. The exact RTP is the sum of each paying symbol's probability multiplied by its configured total-return multiplier. This contract applies only to this package's simple single-line, all-reels-match rule.
