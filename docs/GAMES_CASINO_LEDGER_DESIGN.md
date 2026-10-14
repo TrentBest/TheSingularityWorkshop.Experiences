@@ -45,7 +45,7 @@ The sum is zero for S$ and separately zero for CHIP. This example demonstrates a
 
 ## Wagers and gross payout
 
-The ledger can represent a wager transfer from a player account to table escrow and a later settlement. If a gross payout includes the stake, a payout greater than the wager needs an additional source such as a house bankroll; the wager escrow alone cannot fund it. A losing wager can move from escrow to a house-result account. These are examples of posting composition, not convenience methods or game settlement code currently implemented here.
+The implemented `CasinoLedgerOperations` helpers move a wager from the player account into table escrow and settle it against a caller-supplied gross payout. A payout below the wager credits the difference to house gaming revenue; a payout above the wager debits only the excess from the house reserve. The wager escrow and reserve must have sufficient balances, or the entire settlement is rejected. Game outcome and payout calculation remain outside the ledger. The caller must also guarantee wager lifecycle correctness: these helpers cannot know whether a wager was authorized or already settled under another transaction ID.
 
 ## Failure modes and explicit non-goals
 
@@ -70,10 +70,9 @@ The contract is inadequate if any of the following can be demonstrated:
 
 The test suite exercises these conditions. Future settlement helpers should remain separate and prove their own invariants, especially the relationship between wager escrow, gross payout, house reserve, and operator result.
 
-## Next vertical slice
+## Remaining vertical slice
 
-1. Define a caller-owned chart of accounts and explicit simulated funding.
-2. Add tested cashier buy-in/cash-out transaction builders, preserving separate cash and chip balances.
-3. Add wager placement and settlement builders that cannot pay more than escrow plus explicitly available house funds.
-4. Connect deterministic Slots outcomes to settlement only after game payout semantics and ledger account policy agree.
-5. Demonstrate one cage, one table, and one machine, then benchmark increasing instance counts while checking reconciliation at every step.
+1. Connect deterministic Slots outcomes to settlement only after game payout semantics and account policy agree.
+2. Add wager identity/lifecycle tracking so one authorized wager cannot be settled twice under different transaction IDs.
+3. Add an operator report that distinguishes gross wagers, gross payouts, net gaming result, outstanding chip obligations, and operating costs.
+4. Demonstrate one cage, one table, and one machine, then benchmark increasing instance counts while checking reconciliation at every step.
