@@ -2,7 +2,7 @@
 
 A host-neutral, simulation-only accounting kernel for virtual casino experiments.
 
-**Implemented:** atomic balanced postings, per-currency reconciliation, immutable journal snapshots, optional overdraft rules, and idempotent transaction IDs. This package does not implement a cashier UI, game rules, persistence, payment processing, real-money gambling, or a complete casino settlement workflow.
+**Implemented:** atomic balanced postings, per-currency reconciliation, immutable journal snapshots, optional overdraft rules, idempotent transaction IDs, and tested buy-in/cash-out/wager/settlement builders. This package does not implement a cashier UI, game rules, persistence, payment processing, real-money gambling, or a complete casino settlement workflow.
 
 ## First step
 
@@ -41,7 +41,20 @@ The example funds a simulation account from an explicitly named issuance/clearin
 - A transaction ID is an idempotency key. Reposting identical content returns `false`; using the same ID for different content throws.
 - Amounts use `decimal`; currency codes are trimmed and normalized to uppercase invariant. Account and transaction IDs are case-sensitive and caller-defined.
 - Event timestamps and transaction kinds are supplied by the caller. The ledger does not silently generate randomness, IDs, timestamps, exchange rates, game outcomes, or accounting policy.
+- `CasinoLedgerOperations.BuyIn` and `CashOut` post a paired cash/chip exchange using independently supplied amounts; no fixed exchange rate is assumed.
+- `PlaceWager` moves player chips to table escrow. `SettleWager` returns the caller-supplied gross payout, credits house gaming revenue when payout is below the wager, or debits house reserve for the excess when payout is above the wager.
+- Settlement helpers require a valid existing escrow balance and available reserve when needed, but they do not prove that a wager was authorized or prevent a caller from settling the same wager again under a different transaction ID. Callers must own wager identity and lifecycle.
 - The ledger is in-memory and thread-safe within one process. It is not durable across restarts or distributed across hosts.
+
+## Common transaction builders
+
+After registering and funding the referenced accounts, the operations API can post the standard simulated casino movements:
+
+- `BuyIn(...)` and `CashOut(...)` for cash/chip exchange.
+- `PlaceWager(...)` to move player chips into table escrow.
+- `SettleWager(...)` to settle escrow against a caller-provided gross payout and, when required, the house reserve.
+
+The caller supplies transaction IDs and timestamps. Game rules remain responsible for determining the wager and payout; these helpers only validate and post the accounting movements.
 
 ## Verification
 
