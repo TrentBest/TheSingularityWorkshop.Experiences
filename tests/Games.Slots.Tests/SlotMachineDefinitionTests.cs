@@ -1,4 +1,5 @@
 using TheSingularityWorkshop.Games.Slots;
+using Xunit;
 
 namespace TheSingularityWorkshop.Games.Slots.Tests;
 
