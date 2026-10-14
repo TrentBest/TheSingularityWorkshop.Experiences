@@ -78,14 +78,17 @@ static GuiNode StoryForgeCoverage()
     Rect(root, "publication-panel", 40, 505, 1120, 226, "#121b30", 18, "#39496b");
     Text(root, "publication-label", "PUBLICATION ORDER · SERIES CONTAIN BOOKS; COLLECTIONS CONTAIN SERIES", 64, 535, "#aab7d3", 12, 700);
 
-    // String lines terminate on the same-colored blocks in publication order.
+    // Reserve the cards first, then draw string lines, then place blocks on top of their termini.
+    BookPanel(root, "book-one", 72);
+    BookPanel(root, "book-two", 382);
+    // The archive interval is represented by the gold "Fragment" block in Book 1.
     Flow(root, "world-to-book", "M442 217 C442 455 124 478 124 548 L124 613", "#62d8ff");
     Flow(root, "mira-to-book", "M740 297 C740 455 425 478 425 548 L425 613", "#ff8cc8");
-    Flow(root, "archive-to-book", "M640 377 C640 455 505 478 505 548 L505 613", "#ffd36a");
+    Flow(root, "archive-to-book", "M640 377 C640 455 204 478 204 548 L204 613", "#ffd36a");
 
-    Book(root, "book-one", 72, "Series A · The First Signal", "Book 1 · Ashes",
+    BookContent(root, "book-one", 72, "Series A", "Book 1 · Ashes",
         new[] { ("Signal", "#62d8ff"), ("Fragment", "#ffd36a"), ("Memory", "#ff8cc8") });
-    Book(root, "book-two", 382, "Series A · The First Signal", "Book 2 · Echoes",
+    BookContent(root, "book-two", 382, "Series A", "Book 2 · Echoes",
         new[] { ("Disappearance", "#ff8cc8"), ("Hidden record", "#ffd36a"), ("Aftermath", "#62d8ff") });
     Rect(root, "collection-card", 692, 555, 424, 146, "#1b2b45", 12, "#62d8ff");
     Text(root, "collection-title", "World collection", 708, 580, "#f5f6ff", 17, 800);
@@ -180,12 +183,15 @@ static void Timeline(GuiBuilder root, string id, string title, string subtitle, 
             .Property("stroke", "#6b7897").Property("stroke-width", "1"));
 }
 
-static void Book(GuiBuilder root, string id, double x, string series, string title,
+static void BookPanel(GuiBuilder root, string id, double x) =>
+    Rect(root, id + "-panel", x, 555, 285, 146, "#1a2340", 12, "#506184");
+
+static void BookContent(GuiBuilder root, string id, double x, string series, string title,
     (string Label, string Color)[] blocks)
 {
-    Rect(root, id + "-panel", x, 555, 285, 146, "#1a2340", 12, "#506184");
-    Text(root, id + "-series", series, x + 16, 580, "#f5f6ff", 14, 800);
-    Text(root, id + "-title", title, x + 16, 600, "#aab7d3", 12);
+    // Labels occupy the right-hand gutter so the colored threads can reach their exact sequence blocks.
+    Text(root, id + "-series", series, x + 178, 580, "#f5f6ff", 14, 800);
+    Text(root, id + "-title", title, x + 178, 600, "#aab7d3", 12);
     for (var i = 0; i < blocks.Length; i++)
     {
         var block = blocks[i];
