@@ -29,8 +29,8 @@ public static class CasinoLedgerOperations
         var normalizedCashCurrency = NormalizeCurrency(cashCurrency, nameof(cashCurrency));
         var normalizedChipCurrency = NormalizeCurrency(chipCurrency, nameof(chipCurrency));
         RequireDifferentCurrencies(normalizedCashCurrency, normalizedChipCurrency, nameof(chipCurrency));
-        RequireDifferentAccounts(playerCashAccount, cageCashAccount, nameof(cageCashAccount));
-        RequireDifferentAccounts(cageChipInventoryAccount, playerChipAccount, nameof(playerChipAccount));
+        RequireDifferentAccounts(playerCashAccount, cageCashAccount, nameof(playerCashAccount), nameof(cageCashAccount));
+        RequireDifferentAccounts(cageChipInventoryAccount, playerChipAccount, nameof(cageChipInventoryAccount), nameof(playerChipAccount));
 
         return ledger.Post(new LedgerTransaction(transactionId, "buy-in", occurredAt,
         [
@@ -62,8 +62,8 @@ public static class CasinoLedgerOperations
         var normalizedCashCurrency = NormalizeCurrency(cashCurrency, nameof(cashCurrency));
         var normalizedChipCurrency = NormalizeCurrency(chipCurrency, nameof(chipCurrency));
         RequireDifferentCurrencies(normalizedCashCurrency, normalizedChipCurrency, nameof(chipCurrency));
-        RequireDifferentAccounts(playerCashAccount, cageCashAccount, nameof(cageCashAccount));
-        RequireDifferentAccounts(cageChipInventoryAccount, playerChipAccount, nameof(playerChipAccount));
+        RequireDifferentAccounts(playerCashAccount, cageCashAccount, nameof(playerCashAccount), nameof(cageCashAccount));
+        RequireDifferentAccounts(cageChipInventoryAccount, playerChipAccount, nameof(cageChipInventoryAccount), nameof(playerChipAccount));
 
         return ledger.Post(new LedgerTransaction(transactionId, "cash-out", occurredAt,
         [
@@ -88,7 +88,7 @@ public static class CasinoLedgerOperations
         ArgumentNullException.ThrowIfNull(ledger);
         RequirePositive(wagerAmount, nameof(wagerAmount));
         var currency = NormalizeCurrency(chipCurrency, nameof(chipCurrency));
-        RequireDifferentAccounts(playerChipAccount, tableEscrowAccount, nameof(tableEscrowAccount));
+        RequireDifferentAccounts(playerChipAccount, tableEscrowAccount, nameof(playerChipAccount), nameof(tableEscrowAccount));
 
         return ledger.Post(new LedgerTransaction(transactionId, "wager", occurredAt,
         [
@@ -125,7 +125,7 @@ public static class CasinoLedgerOperations
             throw new ArgumentOutOfRangeException(nameof(grossPayout), "Gross payout cannot be negative.");
 
         var currency = NormalizeCurrency(chipCurrency, nameof(chipCurrency));
-        RequireDifferentAccounts(tableEscrowAccount, playerChipAccount, nameof(playerChipAccount));
+        RequireDifferentAccounts(tableEscrowAccount, playerChipAccount, nameof(tableEscrowAccount), nameof(playerChipAccount));
 
         var postings = new List<LedgerPosting>
         {
@@ -137,14 +137,14 @@ public static class CasinoLedgerOperations
 
         if (grossPayout > wagerAmount)
         {
-            RequireDifferentAccounts(tableEscrowAccount, houseReserveAccount, nameof(houseReserveAccount));
-            RequireDifferentAccounts(playerChipAccount, houseReserveAccount, nameof(houseReserveAccount));
+            RequireDifferentAccounts(tableEscrowAccount, houseReserveAccount, nameof(tableEscrowAccount), nameof(houseReserveAccount));
+            RequireDifferentAccounts(playerChipAccount, houseReserveAccount, nameof(playerChipAccount), nameof(houseReserveAccount));
             postings.Add(new LedgerPosting(houseReserveAccount, currency, -(grossPayout - wagerAmount)));
         }
         else if (grossPayout < wagerAmount)
         {
-            RequireDifferentAccounts(tableEscrowAccount, houseGamingRevenueAccount, nameof(houseGamingRevenueAccount));
-            RequireDifferentAccounts(playerChipAccount, houseGamingRevenueAccount, nameof(houseGamingRevenueAccount));
+            RequireDifferentAccounts(tableEscrowAccount, houseGamingRevenueAccount, nameof(tableEscrowAccount), nameof(houseGamingRevenueAccount));
+            RequireDifferentAccounts(playerChipAccount, houseGamingRevenueAccount, nameof(playerChipAccount), nameof(houseGamingRevenueAccount));
             postings.Add(new LedgerPosting(houseGamingRevenueAccount, currency, wagerAmount - grossPayout));
         }
 
@@ -171,13 +171,17 @@ public static class CasinoLedgerOperations
             throw new ArgumentException("Cash and chip currency codes must differ.", parameterName);
     }
 
-    private static void RequireDifferentAccounts(string first, string second, string parameterName)
+    private static void RequireDifferentAccounts(
+        string first,
+        string second,
+        string firstParameterName,
+        string secondParameterName)
     {
         if (string.IsNullOrWhiteSpace(first))
-            throw new ArgumentException("Account ID cannot be blank.", nameof(first));
+            throw new ArgumentException("Account ID cannot be blank.", firstParameterName);
         if (string.IsNullOrWhiteSpace(second))
-            throw new ArgumentException("Account ID cannot be blank.", parameterName);
+            throw new ArgumentException("Account ID cannot be blank.", secondParameterName);
         if (string.Equals(first, second, StringComparison.Ordinal))
-            throw new ArgumentException("This operation requires distinct account IDs.", parameterName);
+            throw new ArgumentException("This operation requires distinct account IDs.", secondParameterName);
     }
 }
