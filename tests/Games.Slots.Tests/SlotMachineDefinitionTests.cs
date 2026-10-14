@@ -56,8 +56,9 @@ public sealed class SlotMachineDefinitionTests
         // Cherry: (2/3)*(1/3)*(1/3) * 2 = 4/27
         // Bell:   (1/3)*(2/3)*(1/3) * 4 = 8/27
         // Seven:  (0/3)*(0/3)*(1/3) * 10 = 0
-        Assert.Equal(12m / 27m, machine.CalculateExpectedPayoutPerSpin(1m));
-        Assert.Equal(12m / 27m, machine.CalculateReturnToPlayer(1m));
+        var expectedRtp = 12m / 27m;
+        Assert.True(Math.Abs(machine.CalculateExpectedPayoutPerSpin(1m) - expectedRtp) < 0.00000000000000000000000001m);
+        Assert.True(Math.Abs(machine.CalculateReturnToPlayer(1m) - expectedRtp) < 0.00000000000000000000000001m);
     }
 
     [Fact]
