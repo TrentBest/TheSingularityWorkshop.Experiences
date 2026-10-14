@@ -20,6 +20,7 @@ jobs:
           - src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj
           - src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
           - src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj
+          - src/Games.CasinoLedger/TheSingularityWorkshop.Games.CasinoLedger.csproj
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
@@ -57,11 +58,13 @@ jobs:
           dotnet restore src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj
           dotnet restore src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
           dotnet restore src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj
+          dotnet restore src/Games.CasinoLedger/TheSingularityWorkshop.Games.CasinoLedger.csproj
           dotnet pack src/Forge/TheSingularityWorkshop.Experiences.Forge.csproj --configuration Release --output ./artifacts
           dotnet pack src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj --configuration Release --output ./artifacts
           dotnet pack src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj --configuration Release --output ./artifacts
           dotnet pack src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj --configuration Release --output ./artifacts
           dotnet pack src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj --configuration Release --output ./artifacts
+          dotnet pack src/Games.CasinoLedger/TheSingularityWorkshop.Games.CasinoLedger.csproj --configuration Release --output ./artifacts
       - uses: actions/upload-artifact@v4
         with:
           name: experience-packages
@@ -92,6 +95,19 @@ jobs:
         run: dotnet restore tests/Moniker.Motion.Wave.Tests/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.Tests.csproj
       - name: Run motion contract tests
         run: dotnet test tests/Moniker.Motion.Wave.Tests/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.Tests.csproj --configuration Release --no-restore
+
+  # Casino accounting invariants are tested independently of game rules and host presentation.
+  test-games-casino-ledger:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore casino ledger tests
+        run: dotnet restore tests/Games.CasinoLedger.Tests/TheSingularityWorkshop.Games.CasinoLedger.Tests.csproj
+      - name: Run ledger invariant tests
+        run: dotnet test tests/Games.CasinoLedger.Tests/TheSingularityWorkshop.Games.CasinoLedger.Tests.csproj --configuration Release --no-restore
 
   source-integration:
     runs-on: ubuntu-24.04
