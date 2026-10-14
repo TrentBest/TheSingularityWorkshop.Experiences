@@ -150,6 +150,103 @@ public sealed class CasinoLedgerTests
     }
 
     [Fact]
+    public void Buy_in_and_cash_out_move_cash_and_chips_in_opposite_directions()
+    {
+        var ledger = CreateLedger("mint", "player-cash", "cage-cash", "cage-chips", "player-chips");
+        Assert.True(ledger.Post(Transaction("fund-cash", Posting("mint", "S$", -100m), Posting("player-cash", "S$", 100m))));
+        Assert.True(ledger.Post(Transaction("fund-chips", Posting("mint", "CHIP", -100m), Posting("cage-chips", "CHIP", 100m))));
+
+        Assert.True(CasinoLedgerOperations.BuyIn(ledger, "buy-in", EventTime,
+            "player-cash", "cage-cash", "cage-chips", "player-chips", 30m, 40m));
+        Assert.True(CasinoLedgerOperations.CashOut(ledger, "cash-out", EventTime.AddMinutes(1),
+            "player-cash", "cage-cash", "cage-chips", "player-chips", 20m, 25m));
+
+        Assert.Equal(90m, ledger.GetBalance("player-cash", "S$"));
+        Assert.Equal(10m, ledger.GetBalance("cage-cash", "S$"));
+        Assert.Equal(85m, ledger.GetBalance("cage-chips", "CHIP"));
+        Assert.Equal(15m, ledger.GetBalance("player-chips", "CHIP"));
+        Assert.True(ledger.Reconcile().IsBalanced);
+    }
+
+    [Fact]
+    public void Place_wager_moves_player_chips_into_escrow()
+    {
+        var ledger = CreateLedger("clearing", "player", "table-escrow");
+        Assert.True(ledger.Post(Transaction("fund-player", Posting("clearing", "CHIP", -50m), Posting("player", "CHIP", 50m))));
+
+        Assert.True(CasinoLedgerOperations.PlaceWager(ledger, "wager", EventTime, "player", "table-escrow", 12m));
+
+        Assert.Equal(38m, ledger.GetBalance("player", "CHIP"));
+        Assert.Equal(12m, ledger.GetBalance("table-escrow", "CHIP"));
+        Assert.True(ledger.Reconcile().IsBalanced);
+    }
+
+    [Fact]
+    public void Settlement_of_partial_payout_credits_only_the_house_net_win()
+    {
+        var ledger = CreateLedger("mint", "player", "table-escrow", "house-reserve", "house-revenue");
+        Assert.True(ledger.Post(Transaction("fund-player", Posting("mint", "CHIP", -100m), Posting("player", "CHIP", 100m))));
+        Assert.True(ledger.Post(Transaction("fund-reserve", Posting("mint", "CHIP", -100m), Posting("house-reserve", "CHIP", 100m))));
+        Assert.True(CasinoLedgerOperations.PlaceWager(ledger, "wager", EventTime, "player", "table-escrow", 20m));
+
+        Assert.True(CasinoLedgerOperations.SettleWager(ledger, "settle", EventTime.AddMinutes(1),
+            "table-escrow", "player", "house-reserve", "house-revenue", 20m, 10m));
+
+        Assert.Equal(90m, ledger.GetBalance("player", "CHIP"));
+        Assert.Equal(0m, ledger.GetBalance("table-escrow", "CHIP"));
+        Assert.Equal(100m, ledger.GetBalance("house-reserve", "CHIP"));
+        Assert.Equal(10m, ledger.GetBalance("house-revenue", "CHIP"));
+        Assert.True(ledger.Reconcile().IsBalanced);
+    }
+
+    [Fact]
+    public void Settlement_above_wager_uses_only_the_excess_from_house_reserve()
+    {
+        var ledger = CreateLedger("mint", "player", "table-escrow", "house-reserve", "house-revenue");
+        Assert.True(ledger.Post(Transaction("fund-player", Posting("mint", "CHIP", -100m), Posting("player", "CHIP", 100m))));
+        Assert.True(ledger.Post(Transaction("fund-reserve", Posting("mint", "CHIP", -100m), Posting("house-reserve", "CHIP", 100m))));
+        Assert.True(CasinoLedgerOperations.PlaceWager(ledger, "wager", EventTime, "player", "table-escrow", 20m));
+
+        Assert.True(CasinoLedgerOperations.SettleWager(ledger, "settle", EventTime.AddMinutes(1),
+            "table-escrow", "player", "house-reserve", "house-revenue", 20m, 40m));
+
+        Assert.Equal(120m, ledger.GetBalance("player", "CHIP"));
+        Assert.Equal(0m, ledger.GetBalance("table-escrow", "CHIP"));
+        Assert.Equal(80m, ledger.GetBalance("house-reserve", "CHIP"));
+        Assert.Equal(0m, ledger.GetBalance("house-revenue", "CHIP"));
+        Assert.True(ledger.Reconcile().IsBalanced);
+    }
+
+    [Fact]
+    public void Settlement_rejects_insufficient_house_reserve_without_partial_commit()
+    {
+        var ledger = CreateLedger("mint", "player", "table-escrow", "house-reserve", "house-revenue");
+        Assert.True(ledger.Post(Transaction("fund-player", Posting("mint", "CHIP", -20m), Posting("player", "CHIP", 20m))));
+        Assert.True(CasinoLedgerOperations.PlaceWager(ledger, "wager", EventTime, "player", "table-escrow", 10m));
+
+        Assert.Throws<InvalidOperationException>(() => CasinoLedgerOperations.SettleWager(ledger, "settle",
+            EventTime.AddMinutes(1), "table-escrow", "player", "house-reserve", "house-revenue", 10m, 20m));
+
+        Assert.Equal(10m, ledger.GetBalance("player", "CHIP"));
+        Assert.Equal(10m, ledger.GetBalance("table-escrow", "CHIP"));
+        Assert.Equal(0m, ledger.GetBalance("house-reserve", "CHIP"));
+        Assert.Equal(2, ledger.GetTransactions().Count);
+        Assert.True(ledger.Reconcile().IsBalanced);
+    }
+
+    [Fact]
+    public void Casino_operations_reject_nonpositive_amounts()
+    {
+        var ledger = CreateLedger("player", "cage", "chips", "player-chips");
+        Assert.Throws<ArgumentOutOfRangeException>(() => CasinoLedgerOperations.BuyIn(ledger, "zero",
+            EventTime, "player", "cage", "chips", "player-chips", 0m, 1m));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CasinoLedgerOperations.PlaceWager(ledger, "zero",
+            EventTime, "player-chips", "cage", 0m));
+        Assert.Throws<ArgumentOutOfRangeException>(() => CasinoLedgerOperations.SettleWager(ledger, "negative",
+            EventTime, "cage", "player-chips", "chips", "player", 1m, -1m));
+    }
+
+    [Fact]
     public void Transaction_rejects_zero_postings_and_missing_identifiers()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => Posting("a", "CHIP", 0m));
