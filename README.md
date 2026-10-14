@@ -226,7 +226,7 @@ The first independently buildable Experience payloads now live here rather than 
 - `TheSingularityWorkshop.Experiences.Forge` — Forge MicroBundle, Experience 3201.
 - `TheSingularityWorkshop.Experiences.Moniker` — static Moniker content MicroBundle, Bundle 3101, and the shared motion contract.
 - `TheSingularityWorkshop.Experiences.Moniker.Motion.Wave` — independent wave presentation MicroBundle, Bundle 3102, composed by a Moniker Experience when desired.
-- `TheSingularityWorkshop.Games.CasinoLedger` — host-neutral simulation ledger with atomic balanced postings, idempotent journal entries, and per-currency reconciliation; not yet an `IMicroBundle` artifact.
+- `TheSingularityWorkshop.Games.CasinoLedger` — host-neutral simulation ledger with atomic balanced postings, per-currency reconciliation, and tested buy-in/cash-out/wager-settlement builders; not yet an `IMicroBundle` artifact.
 
 They reference the published domain/composition/GUI contracts; they do not reference AnyApp source. AnyApp remains a host and consumer of published Experience artifacts.
 
