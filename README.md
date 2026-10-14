@@ -40,7 +40,7 @@ Keep Experience semantics and artifact identity here; let hosts own presentation
 
 [Open the interactive Story Forge demo source](docs/demos/story-forge.html) · [Story Forge domain](src/StoryForge/README.md)
 
-The HTML demos are self-contained: download each file and open it locally to interact with the prototype. They currently use illustrative browser-side data, not the C# ledger or StoryForge domain. The SVGs are living visual explanations; the next integration step is to generate the scenes through Visualize and the GUI.Core → GUI.SVG path, with Renderer choosing observer-appropriate representation.
+The HTML demos are self-contained: download each file and open it locally to interact with the prototype. They currently use illustrative browser-side data, not the C# ledger or StoryForge domain. The SVGs are living visual explanations, **not yet generated through the Workshop rendering APIs**. The next integration step is to generate these scenes through [Visualize](https://github.com/TrentBest/TheSingularityWorkshop.Visualize) and the [GUI.Core model](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/GUI_MODEL.md) → [GUI.SVG adapter](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/SVG_ADAPTER.md) path, with [Renderer](https://github.com/TrentBest/TheSingularityWorkshop.Renderer) selecting observer-appropriate representation.
 
 ## 🟪 05 Documentation and theory
 
