@@ -66,6 +66,17 @@ public sealed class CasinoLedgerTests
     }
 
     [Fact]
+    public void Repeated_postings_to_one_account_are_validated_as_one_atomic_change()
+    {
+        var ledger = CreateLedger("player");
+        var transaction = Transaction("net-zero", Posting("player", "CHIP", -10m), Posting("player", "CHIP", 10m));
+
+        Assert.True(ledger.Post(transaction));
+        Assert.Equal(0m, ledger.GetBalance("player", "CHIP"));
+        Assert.True(ledger.Reconcile().IsBalanced);
+    }
+
+    [Fact]
     public void Identical_replay_is_idempotent()
     {
         var ledger = CreateLedger("a", "b");
