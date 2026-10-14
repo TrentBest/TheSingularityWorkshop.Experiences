@@ -71,9 +71,8 @@ static GuiNode StoryForgeCoverage()
     Timeline(root, "world", "World events", "world timeline", 217, "#62d8ff", 90, 295, "First signal");
     Timeline(root, "mira", "Mira", "character arc", 297, "#ff8cc8", 360, 625, "Disappearance");
     Timeline(root, "archive", "The Archive", "institutional record", 377, "#ffd36a", 225, 555, "Hidden record");
-
-    Text(root, "legend-one", "Colored ranges = time covered by a work", 64, 450, "#aab7d3", 12);
-    Text(root, "legend-two", "String lines = where that range appears in reading order", 64, 470, "#aab7d3", 12);
+    foreach (var (year, tick) in new[] { ("Year 0", 270), ("Year 5", 465), ("Year 10", 660), ("Year 15", 855), ("Year 20", 1050) })
+        Text(root, "year-" + tick, year, tick, 198, "#aab7d3", 11);
 
     Rect(root, "publication-panel", 40, 505, 1120, 226, "#121b30", 18, "#39496b");
     Text(root, "publication-label", "PUBLICATION ORDER · SERIES CONTAIN BOOKS; COLLECTIONS CONTAIN SERIES", 64, 535, "#aab7d3", 12, 700);
