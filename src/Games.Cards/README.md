@@ -34,6 +34,10 @@ var hand = Enumerable.Range(0, 5)
 - Card rank is identity only. Ace valuation, hand scoring, game legality, and dealing policy belong to a consuming game-rules capability.
 - The class is mutable and not thread-safe; synchronize externally if sharing an instance across threads.
 
+## Design and verification
+
+The [design rationale and testable contracts](../../docs/GAMES_CARDS_DESIGN.md) explain the boundary, trade-offs, complexity, determinism assumptions, falsifiable invariants, and unresolved integration questions. The repository-wide [engineering quality standard](../../docs/ENGINEERING_QUALITY_STANDARD.md) defines the evidence and documentation bar for this work.
+
 ## Boundaries
 
 This library does not implement Poker or Blackjack rules, betting, account balances, money movement, real-money gambling, payment processing, casino UI, or game settlement. Rules-specific MicroBundles should consume these primitives rather than copy deck logic.
