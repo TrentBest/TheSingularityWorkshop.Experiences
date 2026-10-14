@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Story Forge — Timeline to Book Coverage</title>
+<style>
+:root{color-scheme:dark;--bg:#111629;--panel:#1a2340;--line:#506184;--text:#f5f6ff;--muted:#aab7d3;--a:#62d8ff;--b:#ff8cc8;--c:#ffd36a}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0,#29375b,var(--bg) 50%);color:var(--text);font:16px/1.5 system-ui,Segoe UI,sans-serif}main{max-width:1240px;margin:auto;padding:28px}.eyebrow{color:var(--a);font-size:.75rem;font-weight:800;letter-spacing:.15em}h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.05;margin:.4rem 0 1rem}p,.muted{color:var(--muted)}.panel{background:#1a2340dd;border:1px solid var(--line);border-radius:18px;padding:18px;margin:16px 0}.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.controls label{display:grid;gap:5px;color:var(--muted);font-size:.85rem}.controls select,.controls button{background:#10182b;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:10px;font:inherit}.controls button{cursor:pointer;border-color:var(--a)}.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.85rem}.key{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px}.visual{width:100%;height:auto;display:block}.booklist{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.book{border:1px solid var(--line);border-radius:12px;padding:14px;background:#111a30;min-width:0}.book h3{margin:0 0 3px}.book p{font-size:.85rem;margin:.2rem 0 .8rem}.blocks{display:flex;gap:5px;min-height:32px}.block{flex:1;min-width:10px;border-radius:4px;opacity:.9}.block.active{outline:2px solid white;outline-offset:2px;filter:brightness(1.25)}.readout{font-variant-numeric:tabular-nums}.foot{font-size:.82rem}.thread{stroke-dasharray:8 6;animation:thread 3s linear infinite}@keyframes thread{to{stroke-dashoffset:-56}}@media(max-width:800px){.booklist{grid-template-columns:1fr}.panel{padding:12px}main{padding:15px}}
+</style>
+</head>
+<body><main>
+<div class="eyebrow">THE SINGULARITY WORKSHOP · STORY FORGE</div>
+<h1>One world. Many timelines. Many books.</h1>
+<p>Select a time domain and publication container. The colored ranges on the timeline connect to matching coverage blocks in reading order. A story can move backward in time without moving backward through the book.</p>
+<section class="panel"><div class="controls">
+<label>Timeline focus<select id="timeline"><option value="all">All parallel timelines</option><option value="world">World events</option><option value="mira">Mira · character arc</option><option value="archive">The Archive · institutional record</option></select></label>
+<label>Publication scope<select id="scope"><option value="collection">World collection · all series</option><option value="seriesA">Series A · The First Signal</option><option value="seriesB">Series B · The Quiet Archive</option><option value="book1">Book 1 · Ashes</option><option value="book2">Book 2 · Echoes</option><option value="book3">Book 3 · The Long Return</option></select></label>
+<button id="reset" type="button">Reset view</button>
+</div><div class="legend" style="margin-top:16px"><span><i class="key" style="background:var(--a)"></i>World event range</span><span><i class="key" style="background:var(--b)"></i>Mira's arc</span><span><i class="key" style="background:var(--c)"></i>Archive coverage</span><span>Dashed threads connect time to publication order</span></div></section>
+<section class="panel"><h2>Story-time view</h2><svg id="timelineSvg" class="visual" viewBox="0 0 1100 350" role="img" aria-label="Selectable parallel timelines with coverage ranges and threads to publication order"></svg></section>
+<section class="panel"><h2>Publication sequence</h2><p id="scopeDescription" class="muted">A collection contains series; each series contains books; each book has its own chapter order. Color identifies the story-time interval represented, not chapter chronology.</p><div id="books" class="booklist"></div></section>
+<section class="panel"><h2>What this picture makes explicit</h2><p><b>Story time ≠ reading order.</b> A scene in chapter one may depict Year 20, while chapter two reveals Year 3. The timeline preserves the world's chronology; the book preserves the reader's sequence.</p><p><b>Parallel time is first-class.</b> Character arcs, institutional calendars, planets, flashbacks, and competing accounts do not have to be flattened onto one universal clock.</p><p><b>Published editions are snapshots.</b> Revising canon can change a new edition's coverage without silently mutating a published one. This prototype's sample data is illustrative and is not yet wired to the StoryForge C# domain library.</p></section>
+<p class="foot">Intended integration: StoryForge domain queries → selected timeline/coverage model → Visualize frame → GUI.Core neutral scene → GUI.SVG output; Renderer can choose representation detail for the observer. No dependency on Unity or a specific authoring host is required by the story data.</p>
+</main>
+<script>
+(()=>{'use strict';
+const colors={world:'#62d8ff',mira:'#ff8cc8',archive:'#ffd36a'};
+const lanes=[
+{id:'world',name:'World events',subtitle:'shared world calendar',y:76,color:colors.world,ranges:[{start:2,end:7,label:'First signal',book:'book1'},{start:10,end:16,label:'The return',book:'book3'}]},
+{id:'mira',name:'Mira',subtitle:'character arc',y:164,color:colors.mira,ranges:[{start:8,end:14,label:'Mira disappears',book:'book2'},{start:3,end:5,label:'Memory',book:'book1'}]},
+{id:'archive',name:'The Archive',subtitle:'institutional record',y:252,color:colors.archive,ranges:[{start:5,end:12,label:'Hidden record',book:'book2'},{start:13,end:18,label:'Disclosure',book:'book3'}]}
+];
+const books=[
+{id:'book1',series:'seriesA',seriesName:'Series A · The First Signal',name:'Book 1 · Ashes',order:1,blocks:[{lane:'world',label:'Signal',color:colors.world},{lane:'archive',label:'Fragment',color:colors.archive},{lane:'mira',label:'Memory',color:colors.mira}]},
+{id:'book2',series:'seriesA',seriesName:'Series A · The First Signal',name:'Book 2 · Echoes',order:2,blocks:[{lane:'mira',label:'Disappearance',color:colors.mira},{lane:'archive',label:'Hidden record',color:colors.archive},{lane:'world',label:'Aftermath',color:colors.world}]},
+{id:'book3',series:'seriesB',seriesName:'Series B · The Quiet Archive',name:'Book 3 · The Long Return',order:1,blocks:[{lane:'archive',label:'Disclosure',color:colors.archive},{lane:'world',label:'Return',color:colors.world},{lane:'mira',label:'Consequence',color:colors.mira}]}
+];
+const $=id=>document.getElementById(id);
+function el(name,attrs={},text){const n=document.createElementNS('http://www.w3.org/2000/svg',name);Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));if(text!==undefined)n.textContent=text;return n}
+function visibleBooks(scope){if(scope==='collection')return books;if(scope==='seriesA')return books.filter(b=>b.series==='seriesA');if(scope==='seriesB')return books.filter(b=>b.series==='seriesB');return books.filter(b=>b.id===scope)}
+function render(){
+const focus=$('timeline').value, scope=$('scope').value, selectedBooks=visibleBooks(scope),svg=$('timelineSvg');svg.replaceChildren();
+svg.append(el('text',{x:24,y:24,fill:'#aab7d3','font-size':12,'letter-spacing':1},'STORY TIME · YEAR 0 → YEAR 20'));
+const x=t=>230+t*39;
+const bookTargets={};selectedBooks.forEach((b,i)=>{bookTargets[b.id]={x:210+i*300+120,y:326}});
+lanes.filter(l=>focus==='all'||l.id===focus).forEach(l=>{
+svg.append(el('text',{x:20,y:l.y-8,fill:'#f5f6ff','font-size':16,'font-weight':700},l.name));svg.append(el('text',{x:20,y:l.y+12,fill:'#aab7d3','font-size':11},l.subtitle));
+svg.append(el('line',{x1:x(0),y1:l.y,x2:x(20),y2:l.y,stroke:'#506184','stroke-width':2}));
+for(let t=0;t<=20;t+=5){svg.append(el('line',{x1:x(t),y1:l.y-6,x2:x(t),y2:l.y+6,stroke:'#506184'}));if(l.y===76)svg.append(el('text',{x:x(t),y:54,fill:'#aab7d3','font-size':11,'text-anchor':'middle'},'Year '+t))}
+l.ranges.forEach((r,idx)=>{const target=bookTargets[r.book];const isVisible=selectedBooks.some(b=>b.id===r.book);const isFocused=focus==='all'||focus===l.id;if(!isFocused)return;
+const rect=el('rect',{x:x(r.start),y:l.y-14,width:(r.end-r.start)*39,height:28,rx:5,fill:l.color,'fill-opacity':.22,stroke:l.color,'stroke-width':2});rect.append(el('title',{},r.label+' · years '+r.start+'–'+r.end));svg.append(rect);
+svg.append(el('text',{x:x(r.start)+6,y:l.y+4,fill:'#f5f6ff','font-size':11},r.label));
+if(target&&isVisible){const tx=target.x,ty=target.y;svg.append(el('path',{d:'M '+(x(r.start)+((r.end-r.start)*39)/2)+' '+(l.y+17)+' C '+(x(r.start)+((r.end-r.start)*39)/2)+' 300, '+tx+' 285, '+tx+' '+(ty-14),fill:'none',stroke:l.color,'stroke-width':2.5,'stroke-dasharray':'7 6',class:'thread',opacity:.9}));}
+});
+});
+selectedBooks.forEach((b,i)=>{const bx=210+i*300,by=295;svg.append(el('rect',{x:bx,y:by,width:270,height:44,rx:8,fill:'#1a2340',stroke:'#506184'}));svg.append(el('text',{x:bx+12,y:by+18,fill:'#f5f6ff','font-size':13,'font-weight':700},b.name));svg.append(el('text',{x:bx+12,y:by+34,fill:'#aab7d3','font-size':10},b.seriesName));});
+const host=$('books');host.replaceChildren();selectedBooks.forEach(b=>{const card=document.createElement('article');card.className='book';const h=document.createElement('h3');h.textContent=b.name;const p=document.createElement('p');p.textContent=b.seriesName+' · reading order';const blocks=document.createElement('div');blocks.className='blocks';b.blocks.forEach((block,i)=>{const span=document.createElement('div');span.className='block'+((focus==='all'||focus===block.lane)?' active':'');span.style.background=block.color;span.title=(i+1)+'. '+block.label+' — '+block.lane+' timeline';span.setAttribute('aria-label',span.title);blocks.append(span)});card.append(h,p,blocks);host.append(card)});
+$('scopeDescription').textContent=scope==='collection'?'Collection view: Series A and Series B remain separate containers, each with its own book sequence.':scope.startsWith('series')?'Series view: only books belonging to this series are shown; other series are not flattened into it.':'Book view: the selected book is isolated while its colored blocks still point back to parallel story time.';
+}
+$('timeline').addEventListener('change',render);$('scope').addEventListener('change',render);$('reset').addEventListener('click',()=>{$('timeline').value='all';$('scope').value='collection';render()});render();
+})();
+</script>
+</body></html>
