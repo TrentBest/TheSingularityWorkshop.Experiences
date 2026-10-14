@@ -229,6 +229,10 @@ The first independently buildable Experience payloads now live here rather than 
 
 They reference the published domain/composition/GUI contracts; they do not reference AnyApp source. AnyApp remains a host and consumer of published Experience artifacts.
 
+## Game Economy MicroBundles
+
+The temporary source plan for reusable RPG shops, card games, blackjack, slots, prize wheels, race markets, competitions, and tournaments is documented in [Game Economy MicroBundles](docs/GAME_ECONOMY_MICROBUNDLES.md). These remain independent, simulation-first capabilities; Economy provides neutral economic primitives, and Forge is the intended long-term authoring/publication surface.
+
 ## Atomic ontology corpus
 
 The next test corpus is intentionally made from small semantic things:
