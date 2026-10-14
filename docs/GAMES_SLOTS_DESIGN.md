@@ -14,25 +14,26 @@ The library does not select stops, own a wallet, move chips, render reels, or se
 
 ## 2. Repeated symbols are probability weights
 
-A reel is a finite strip of stops. If a symbol appears three times on a 12-stop reel, its probability on that reel is (3/12), assuming each stop is selected uniformly and reels are independent.
+A reel is a finite strip of stops. If a symbol appears three times on a 12-stop reel, its probability on that reel is 3/12, assuming each stop is selected uniformly and reels are independent.
 
-For a paying symbol (s) across (n) reels:
+For a paying symbol `s` across `n` reels:
 
-[
-P(s	ext{ matches}) = prod_{i=1}^{n}rac{c_{i,s}}{N_i}
-]
+```text
+P(all reels match symbol s) = product over reels i of (count(i, s) / stopCount(i))
+```
 
-where (c_{i,s}) is the number of occurrences of (s) on reel (i), and (N_i) is that reel's stop count.
+where `count(i, s)` is the number of occurrences of `s` on reel `i`, and `stopCount(i)` is that reel's stop count.
 
 The exact expected gross return per spin is:
 
-[
-E[	ext{gross payout}] = 	ext{stake}sum_s P(s	ext{ matches})m_s
-]
+```text
+expectedGrossPayout = stake * sum over paying symbols s of (P(all reels match s) * multiplier(s))
+RTP = expectedGrossPayout / stake
+```
 
-where (m_s) is the configured total-return multiplier. The stake is included in gross return: a 5x multiplier returns five units for a one-unit stake, not six. A symbol omitted from the paytable loses even if it appears on every reel.
+The stake is included in gross return: a 5x multiplier returns five units for a one-unit stake, not six. A symbol omitted from the paytable loses even if it appears on every reel.
 
-RTP is expected gross return divided by stake. An RTP of 0.95 means an expected gross return of 0.95 units per unit staked across the defined probability model. It is not a promise about any finite run and does not describe variance or maximum drawdown.
+RTP is an expectation over the configured probability model, not a promise for any finite run and not a measure of variance or maximum loss.
 
 ## 3. Why exact analysis comes before a large simulation
 
