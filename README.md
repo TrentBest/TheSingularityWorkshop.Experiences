@@ -5,7 +5,7 @@
   </a>
 </p>
 
-# The Singularity Workshop — Experiences
+# ✳️ 00 The Singularity Workshop — Experiences
 
 This repository contains independent, publishable Experiences and MicroBundle artifacts for The Singularity Workshop.
 
