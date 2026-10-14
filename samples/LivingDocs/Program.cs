@@ -1,5 +1,6 @@
 using TheSingularityWorkshop.Workshop.Gui;
 using TheSingularityWorkshop.Workshop.Gui.Svg;
+using TheSingularityWorkshop.Experiences.StoryForge;
 
 var outputDirectory = args.Length > 0
     ? Path.GetFullPath(args[0])
@@ -68,9 +69,21 @@ static GuiNode StoryForgeCoverage()
     Rect(root, "timeline-panel", 40, 143, 1120, 344, "#121b30", 18, "#39496b");
     Text(root, "timeline-label", "STORY TIME · EACH TIMELINE HAS ITS OWN DOMAIN AND SCALE", 64, 173, "#aab7d3", 12, 700);
 
-    Timeline(root, "world", "World events", "world timeline", 217, "#62d8ff", 90, 295, "First signal");
-    Timeline(root, "mira", "Mira", "character arc", 297, "#ff8cc8", 360, 625, "Disappearance");
-    Timeline(root, "archive", "The Archive", "institutional record", 377, "#ffd36a", 225, 555, "Hidden record");
+    // These ranges are real StoryForge domain values. Their distinct units and domain extents
+    // are mapped to the same drawing width only for display; the source coordinates stay independent.
+    var world = new StoryTimeline("world", "World events", "years", 5m);
+    var worldCoverage = new PublicationCoverage("book-one", "signal", "chapter", 0,
+        new StoryTimeRange(world.At(2m), world.At(7m)));
+    var mira = new StoryTimeline("mira", "Mira", "days", 25m);
+    var miraCoverage = new PublicationCoverage("book-two", "disappearance", "chapter", 0,
+        new StoryTimeRange(mira.At(42m), mira.At(73m)));
+    var archive = new StoryTimeline("archive", "The Archive", "reigns", 1m);
+    var archiveCoverage = new PublicationCoverage("book-one", "fragment", "chapter", 1,
+        new StoryTimeRange(archive.At(1.3m), archive.At(3.2m)));
+
+    Timeline(root, world, worldCoverage, 20m, "world timeline", 217, "#62d8ff", "First signal");
+    Timeline(root, mira, miraCoverage, 100m, "character arc", 297, "#ff8cc8", "Disappearance");
+    Timeline(root, archive, archiveCoverage, 5m, "institutional record", 377, "#ffd36a", "Hidden record");
     AddTicks(root, "world-years", new[] { "Year 0", "Year 5", "Year 10", "Year 15", "Year 20" }, 198);
     AddTicks(root, "mira-days", new[] { "Day 0", "Day 25", "Day 50", "Day 75", "Day 100" }, 278);
     AddTicks(root, "archive-reigns", new[] { "Reign I", "Reign II", "Reign III", "Reign IV", "Reign V" }, 358);
@@ -82,9 +95,12 @@ static GuiNode StoryForgeCoverage()
     BookPanel(root, "book-one", 72);
     BookPanel(root, "book-two", 382);
     // The archive interval is represented by the gold "Fragment" block in Book 1.
-    Flow(root, "world-to-book", "M442 217 C442 455 124 478 124 548 L124 613", "#62d8ff");
-    Flow(root, "mira-to-book", "M740 297 C740 455 425 478 425 548 L425 613", "#ff8cc8");
-    Flow(root, "archive-to-book", "M640 377 C640 455 204 478 204 548 L204 613", "#ffd36a");
+    var worldCenter = RangeCenter(worldCoverage, 20m);
+    var miraCenter = RangeCenter(miraCoverage, 100m);
+    var archiveCenter = RangeCenter(archiveCoverage, 5m);
+    Flow(root, "world-to-book", $"M{F(worldCenter)} 217 C{F(worldCenter)} 455 124 478 124 548 L124 613", "#62d8ff");
+    Flow(root, "mira-to-book", $"M{F(miraCenter)} 297 C{F(miraCenter)} 455 434 478 434 548 L434 613", "#ff8cc8");
+    Flow(root, "archive-to-book", $"M{F(archiveCenter)} 377 C{F(archiveCenter)} 455 204 478 204 548 L204 613", "#ffd36a");
 
     BookContent(root, "book-one", 72, "Series A", "Book 1 · Ashes",
         new[] { ("Signal", "#62d8ff"), ("Fragment", "#ffd36a"), ("Memory", "#ff8cc8") });
@@ -173,15 +189,16 @@ static void AddTicks(GuiBuilder root, string id, string[] labels, double y)
         Text(root, id + "-" + i, labels[i], positions[i], y, "#aab7d3", 11);
 }
 
-static void Timeline(GuiBuilder root, string id, string title, string subtitle, double y,
-    string accent, double rangeStart, double rangeEnd, string rangeLabel)
+static void Timeline(GuiBuilder root, StoryTimeline timeline, PublicationCoverage coverage,
+    decimal domainEnd, string subtitle, double y, string accent, string rangeLabel)
 {
-    Text(root, id + "-title", title, 65, y + 3, "#f5f6ff", 17, 800);
+    var id = timeline.Id;
+    Text(root, id + "-title", timeline.Name, 65, y + 3, "#f5f6ff", 17, 800);
     Text(root, id + "-subtitle", subtitle, 65, y + 23, "#aab7d3", 12);
     root.Child("svg-line", id + "-axis", line => line.Property("x1", "250").Property("y1", F(y))
         .Property("x2", "1100").Property("y2", F(y)).Property("stroke", "#6b7897").Property("stroke-width", "2"));
-    var x = 250 + rangeStart;
-    var width = rangeEnd - rangeStart;
+    var x = 250 + RangeStart(coverage, domainEnd);
+    var width = RangeWidth(coverage, domainEnd);
     Rect(root, id + "-range", x, y - 15, width, 30, accent, 6, accent, 2);
     Text(root, id + "-range-label", rangeLabel, x + 8, y + 5, "#111629", 12, 800);
     foreach (var tick in new[] { 270, 465, 660, 855, 1050 })
@@ -189,6 +206,15 @@ static void Timeline(GuiBuilder root, string id, string title, string subtitle, 
             .Property("y1", F(y - 7)).Property("x2", tick.ToString()).Property("y2", F(y + 7))
             .Property("stroke", "#6b7897").Property("stroke-width", "1"));
 }
+
+static double RangeStart(PublicationCoverage coverage, decimal domainEnd) =>
+    850d * (double)(coverage.StoryRange.Start.Value / domainEnd);
+
+static double RangeWidth(PublicationCoverage coverage, decimal domainEnd) =>
+    850d * (double)(coverage.StoryRange.Duration / domainEnd);
+
+static double RangeCenter(PublicationCoverage coverage, decimal domainEnd) =>
+    250 + RangeStart(coverage, domainEnd) + RangeWidth(coverage, domainEnd) / 2;
 
 static void BookPanel(GuiBuilder root, string id, double x) =>
     Rect(root, id + "-panel", x, 555, 285, 146, "#1a2340", 12, "#506184");
