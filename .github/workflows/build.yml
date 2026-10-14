@@ -93,6 +93,17 @@ jobs:
       - name: Run motion contract tests
         run: dotnet test tests/Moniker.Motion.Wave.Tests/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.Tests.csproj --configuration Release --no-restore
 
+  # Treat living docs as testable deliverables: parse SVG/XML, check controls, and syntax-check embedded JavaScript.
+  validate-living-docs:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate SVG, HTML structure, interactions, and JavaScript syntax
+        run: python3 tools/validate_living_docs.py
+
   source-integration:
     runs-on: ubuntu-24.04
     strategy:
