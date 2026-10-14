@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+<title id="title">Story Forge: one world, many timelines, many books</title>
+<desc id="desc">Three parallel story timelines show colored ranges of story time. Curved string lines connect each range to same-colored sequence blocks in books. Books group into a series and multiple series group into a world collection. The diagram distinguishes chronological time from publication order.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#111629"/><stop offset="1" stop-color="#202943"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <style>
+ text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#f5f6ff}.muted{fill:#aab7d3}.small{font-size:12px}.tiny{font-size:10px;letter-spacing:1px}.heading{font-size:17px;font-weight:800}.axis{stroke:#6b7897;stroke-width:2}.tick{stroke:#6b7897;stroke-width:1}.thread{fill:none;stroke-width:3;opacity:.8;stroke-dasharray:8 6;animation:thread 3s linear infinite}.c1{stroke:#62d8ff;fill:#62d8ff}.c2{stroke:#ff8cc8;fill:#ff8cc8}.c3{stroke:#ffd36a;fill:#ffd36a}.book{fill:#1a2340;stroke:#506184;stroke-width:1.5}.block{rx:5;opacity:.95}@keyframes thread{to{stroke-dashoffset:-56}}@keyframes shimmer{0%,100%{opacity:.65}50%{opacity:1}}.active{animation:shimmer 2s ease-in-out infinite}
+ </style>
+</defs>
+<rect width="1200" height="800" rx="24" fill="url(#bg)"/>
+<text x="42" y="48" font-size="12" font-weight="800" fill="#62d8ff" letter-spacing="2">THE SINGULARITY WORKSHOP · STORY FORGE</text>
+<text x="42" y="88" font-size="32" font-weight="800">The world has time. The book has order.</text>
+<text x="42" y="116" class="muted" font-size="15">Follow a moment through parallel timelines into the exact place a reader encounters it.</text>
+<rect x="40" y="143" width="1120" height="344" rx="18" fill="#121b30" stroke="#39496b"/>
+<text x="64" y="173" class="tiny muted">STORY TIME · MULTIPLE TIME DOMAINS CAN COEXIST</text>
+<text x="65" y="220" class="heading">World events</text><text x="65" y="240" class="muted small">world timeline</text>
+<text x="65" y="300" class="heading">Mira</text><text x="65" y="320" class="muted small">character arc</text>
+<text x="65" y="380" class="heading">The Archive</text><text x="65" y="400" class="muted small">institutional record</text>
+<line x1="250" y1="217" x2="1100" y2="217" class="axis"/><line x1="250" y1="297" x2="1100" y2="297" class="axis"/><line x1="250" y1="377" x2="1100" y2="377" class="axis"/>
+{# ticks #}
+<g class="muted small" text-anchor="middle"><text x="270" y="201">Year 0</text><text x="465" y="201">Year 5</text><text x="660" y="201">Year 10</text><text x="855" y="201">Year 15</text><text x="1050" y="201">Year 20</text></g>
+<g><path d="M270 209v16 M465 209v16 M660 209v16 M855 209v16 M1050 209v16 M270 289v16 M465 289v16 M660 289v16 M855 289v16 M1050 289v16 M270 369v16 M465 369v16 M660 369v16 M855 369v16 M1050 369v16" class="tick"/></g>
+<rect x="340" y="202" width="205" height="30" rx="6" fill="#62d8ff" opacity=".24" stroke="#62d8ff" stroke-width="2"/>
+<rect x="610" y="282" width="265" height="30" rx="6" fill="#ff8cc8" opacity=".24" stroke="#ff8cc8" stroke-width="2"/>
+<rect x="475" y="362" width="330" height="30" rx="6" fill="#ffd36a" opacity=".24" stroke="#ffd36a" stroke-width="2"/>
+<circle cx="340" cy="217" r="5" fill="#62d8ff"/><circle cx="545" cy="217" r="5" fill="#62d8ff"/><circle cx="610" cy="297" r="5" fill="#ff8cc8"/><circle cx="875" cy="297" r="5" fill="#ff8cc8"/><circle cx="475" cy="377" r="5" fill="#ffd36a"/><circle cx="805" cy="377" r="5" fill="#ffd36a"/>
+<text x="64" y="450" class="small muted">Colored ranges = time covered by a work</text><text x="64" y="470" class="small muted">String lines = where that range appears in reading order</text>
+<path d="M442 217 C442 455 185 478 185 548 S360 590 360 620" class="thread c1" filter="url(#glow)"/>
+<path d="M740 297 C740 455 555 478 555 548 S565 590 565 620" class="thread c2" filter="url(#glow)"/>
+<path d="M640 377 C640 455 925 478 925 548 S780 590 780 620" class="thread c3" filter="url(#glow)"/>
+<rect x="40" y="505" width="1120" height="226" rx="18" fill="#121b30" stroke="#39496b"/>
+<text x="64" y="535" class="tiny muted">PUBLICATION ORDER · SERIES CONTAIN BOOKS; COLLECTIONS CONTAIN SERIES</text>
+<g transform="translate(72 555)"><rect width="285" height="146" rx="12" class="book"/><text x="16" y="25" class="heading">Series A · The First Signal</text><text x="16" y="45" class="muted small">Book 1 · Ashes</text><rect x="16" y="58" width="72" height="28" rx="5" fill="#62d8ff" opacity=".92"/><rect x="96" y="58" width="62" height="28" rx="5" fill="#ffd36a" opacity=".92"/><rect x="166" y="58" width="98" height="28" rx="5" fill="#ff8cc8" opacity=".92"/><text x="16" y="108" class="small">Chapters sequence by reader order</text><text x="16" y="128" class="muted small">A scene may jump across world time</text></g>
+<g transform="translate(382 555)"><rect width="285" height="146" rx="12" class="book"/><text x="16" y="25" class="heading">Series A · The First Signal</text><text x="16" y="45" class="muted small">Book 2 · Echoes</text><rect x="16" y="58" width="55" height="28" rx="5" fill="#ff8cc8" opacity=".92"/><rect x="79" y="58" width="88" height="28" rx="5" fill="#62d8ff" opacity=".92"/><rect x="175" y="58" width="89" height="28" rx="5" fill="#ffd36a" opacity=".92"/><text x="16" y="108" class="small">Same timeline, new coverage</text><text x="16" y="128" class="muted small">Edit source; freeze published editions</text></g>
+<g transform="translate(692 555)"><rect width="424" height="146" rx="12" fill="#1b2b45" stroke="#62d8ff" stroke-width="1.5"/><text x="16" y="25" class="heading">World collection</text><text x="16" y="45" class="muted small">A container for multiple series (optional)</text><rect x="16" y="59" width="180" height="58" rx="8" fill="#121b30" stroke="#506184"/><text x="28" y="82" class="small">Series A</text><text x="28" y="101" class="muted small">2 books · shared canon</text><rect x="208" y="59" width="200" height="58" rx="8" fill="#121b30" stroke="#506184"/><text x="220" y="82" class="small">Series B</text><text x="220" y="101" class="muted small">Parallel stories · own order</text></g>
+<text x="42" y="765" class="muted" font-size="11">Concept model: illustrative links only · not yet connected to interactive Story Forge data or an authoring runtime</text>
+</svg>
