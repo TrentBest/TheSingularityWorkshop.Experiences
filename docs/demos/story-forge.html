@@ -42,11 +42,12 @@ const focus=$('timeline').value, scope=$('scope').value, selectedBooks=visibleBo
 svg.append(el('text',{x:24,y:22,fill:'#aab7d3','font-size':12,'letter-spacing':1},'STORY TIME · YEAR 0 → YEAR 20'));
 const x=t=>230+t*39, bookX=(i)=>210+i*300, blockCenter=(i,j)=>bookX(i)+12+j*78+35, blockY=346;
 selectedBooks.forEach((b,i)=>svg.append(el('rect',{x:bookX(i),y:294,width:270,height:82,rx:9,fill:'#1a2340',stroke:'#506184'})));
+for(let t=0;t<=20;t+=5)svg.append(el('text',{x:x(t),y:54,fill:'#aab7d3','font-size':11,'text-anchor':'middle'},'Year '+t));
 lanes.filter(l=>focus==='all'||l.id===focus).forEach(l=>{
 svg.append(el('text',{x:20,y:l.y-8,fill:'#f5f6ff','font-size':16,'font-weight':700},l.name));
 svg.append(el('text',{x:20,y:l.y+12,fill:'#aab7d3','font-size':11},l.subtitle));
 svg.append(el('line',{x1:x(0),y1:l.y,x2:x(20),y2:l.y,stroke:'#506184','stroke-width':2}));
-for(let t=0;t<=20;t+=5){svg.append(el('line',{x1:x(t),y1:l.y-6,x2:x(t),y2:l.y+6,stroke:'#506184'}));if(l.y===76)svg.append(el('text',{x:x(t),y:54,fill:'#aab7d3','font-size':11,'text-anchor':'middle'},'Year '+t))}
+for(let t=0;t<=20;t+=5){svg.append(el('line',{x1:x(t),y1:l.y-6,x2:x(t),y2:l.y+6,stroke:'#506184'}));}
 l.ranges.forEach(r=>{
 const isFocused=focus==='all'||focus===l.id;if(!isFocused)return;
 const rect=el('rect',{x:x(r.start),y:l.y-14,width:(r.end-r.start)*39,height:28,rx:5,fill:l.color,'fill-opacity':.22,stroke:l.color,'stroke-width':2});rect.append(el('title',{},r.label+' · years '+r.start+'–'+r.end));svg.append(rect);
