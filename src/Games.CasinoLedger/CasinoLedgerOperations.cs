@@ -9,6 +9,21 @@ namespace TheSingularityWorkshop.Games.CasinoLedger;
 public static class CasinoLedgerOperations
 {
     /// <summary>Exchanges a caller-specified cash amount for a caller-specified amount of virtual chips.</summary>
+    /// <param name="ledger">The ledger to receive the transaction.</param>
+    /// <param name="transactionId">A stable idempotency key supplied by the caller.</param>
+    /// <param name="occurredAt">The event timestamp supplied by the caller.</param>
+    /// <param name="playerCashAccount">The account debited for cash.</param>
+    /// <param name="cageCashAccount">The account credited for cash.</param>
+    /// <param name="cageChipInventoryAccount">The account debited for chips.</param>
+    /// <param name="playerChipAccount">The account credited for chips.</param>
+    /// <param name="cashAmount">The positive cash amount.</param>
+    /// <param name="chipAmount">The positive chip amount; no exchange rate is inferred.</param>
+    /// <param name="cashCurrency">The cash currency code.</param>
+    /// <param name="chipCurrency">The distinct chip currency code.</param>
+    /// <exception cref="ArgumentNullException">The ledger is null.</exception>
+    /// <exception cref="ArgumentException">A currency or account identifier is invalid, or paired accounts/currencies are not distinct.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Either amount is not positive.</exception>
+    /// <exception cref="InvalidOperationException">The ledger rejects the transaction, for example because an account would be overdrawn.</exception>
     /// <returns><see langword="true"/> if posted; <see langword="false"/> if the identical transaction was already posted.</returns>
     public static bool BuyIn(
         CasinoLedger ledger,
@@ -42,6 +57,21 @@ public static class CasinoLedgerOperations
     }
 
     /// <summary>Exchanges a caller-specified amount of virtual chips back into a caller-specified cash amount.</summary>
+    /// <param name="ledger">The ledger to receive the transaction.</param>
+    /// <param name="transactionId">A stable idempotency key supplied by the caller.</param>
+    /// <param name="occurredAt">The event timestamp supplied by the caller.</param>
+    /// <param name="playerCashAccount">The account credited for cash.</param>
+    /// <param name="cageCashAccount">The account debited for cash.</param>
+    /// <param name="cageChipInventoryAccount">The account credited for chips.</param>
+    /// <param name="playerChipAccount">The account debited for chips.</param>
+    /// <param name="cashAmount">The positive cash amount.</param>
+    /// <param name="chipAmount">The positive chip amount; no exchange rate is inferred.</param>
+    /// <param name="cashCurrency">The cash currency code.</param>
+    /// <param name="chipCurrency">The distinct chip currency code.</param>
+    /// <exception cref="ArgumentNullException">The ledger is null.</exception>
+    /// <exception cref="ArgumentException">A currency or account identifier is invalid, or paired accounts/currencies are not distinct.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Either amount is not positive.</exception>
+    /// <exception cref="InvalidOperationException">The ledger rejects the transaction, for example because an account would be overdrawn.</exception>
     /// <returns><see langword="true"/> if posted; <see langword="false"/> if the identical transaction was already posted.</returns>
     public static bool CashOut(
         CasinoLedger ledger,
@@ -75,6 +105,17 @@ public static class CasinoLedgerOperations
     }
 
     /// <summary>Moves virtual chips from a player's account into a table's wager escrow.</summary>
+    /// <param name="ledger">The ledger to receive the transaction.</param>
+    /// <param name="transactionId">A stable idempotency key supplied by the caller.</param>
+    /// <param name="occurredAt">The event timestamp supplied by the caller.</param>
+    /// <param name="playerChipAccount">The account debited for the wager.</param>
+    /// <param name="tableEscrowAccount">The account credited with the wager.</param>
+    /// <param name="wagerAmount">The positive amount to escrow.</param>
+    /// <param name="chipCurrency">The chip currency code.</param>
+    /// <exception cref="ArgumentNullException">The ledger is null.</exception>
+    /// <exception cref="ArgumentException">An account or currency identifier is invalid, or the accounts are identical.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The wager amount is not positive.</exception>
+    /// <exception cref="InvalidOperationException">The ledger rejects the transaction, for example because the player lacks funds.</exception>
     /// <returns><see langword="true"/> if posted; <see langword="false"/> if the identical transaction was already posted.</returns>
     public static bool PlaceWager(
         CasinoLedger ledger,
@@ -100,6 +141,20 @@ public static class CasinoLedgerOperations
     /// <summary>
     /// Settles an existing escrowed wager. A payout includes any returned stake defined by the game rules.
     /// </summary>
+    /// <param name="ledger">The ledger to receive the transaction.</param>
+    /// <param name="transactionId">A stable idempotency key supplied by the caller.</param>
+    /// <param name="occurredAt">The event timestamp supplied by the caller.</param>
+    /// <param name="tableEscrowAccount">The account debited for the full wager.</param>
+    /// <param name="playerChipAccount">The account credited with the gross payout.</param>
+    /// <param name="houseReserveAccount">The account debited only when payout exceeds the wager.</param>
+    /// <param name="houseGamingRevenueAccount">The account credited only when payout is below the wager.</param>
+    /// <param name="wagerAmount">The positive wager previously moved into escrow.</param>
+    /// <param name="grossPayout">The nonnegative payout amount, including returned stake when the game rules define it that way.</param>
+    /// <param name="chipCurrency">The chip currency code.</param>
+    /// <exception cref="ArgumentNullException">The ledger is null.</exception>
+    /// <exception cref="ArgumentException">An account or currency identifier is invalid, or required accounts are not distinct.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The wager amount is not positive or the gross payout is negative.</exception>
+    /// <exception cref="InvalidOperationException">The ledger rejects the transaction, for example because escrow or house reserve lacks funds.</exception>
     /// <remarks>
     /// The table escrow is debited by the full wager. If gross payout is below the wager, the difference is credited
     /// to house gaming revenue. If gross payout exceeds the wager, the excess is debited from house reserve.
