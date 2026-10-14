@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Living Casino Floor — The Singularity Workshop</title>
+<style>
+:root{color-scheme:dark;--bg:#10152a;--panel:#18223a;--line:#425270;--text:#f4f7ff;--muted:#aebbd5;--cash:#ffd76a;--wager:#58d9ff;--payout:#ff79c6;--ok:#64e5bf}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% 5%,#29375b,var(--bg) 48%);color:var(--text);font:16px/1.5 system-ui,Segoe UI,sans-serif}main{max-width:1180px;margin:auto;padding:28px}h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.05;margin:.4rem 0 1rem}h2{margin:.2rem 0 .8rem}p{color:var(--muted)}.eyebrow{color:var(--wager);font-size:.75rem;font-weight:800;letter-spacing:.15em}.layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(290px,1fr);gap:18px}.panel{background:#18223add;border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0}.floor{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.station{border:1px solid var(--line);border-radius:12px;padding:14px;background:#10182b;min-height:132px}.station strong{display:block;font-size:1.05rem}.station span{color:var(--muted);font-size:.86rem}.coin{font-size:1.7rem;margin-bottom:8px}.flows{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.flows button{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#202c47;color:var(--text);font:inherit;cursor:pointer}.flows button:hover,.flows button:focus-visible{outline:2px solid var(--wager);outline-offset:2px}.flows button[data-kind=buyin],.flows button[data-kind=cashout]{border-color:var(--cash)}.flows button[data-kind=wager]{border-color:var(--wager)}.flows button[data-kind=payout]{border-color:var(--payout)}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.metric{padding:14px;border-radius:12px;background:#10182b;border:1px solid var(--line)}.metric small{display:block;color:var(--muted);font-size:.74rem;letter-spacing:.07em}.metric b{display:block;font-size:1.5rem;overflow-wrap:anywhere}.metric em{font-size:.75rem;color:var(--muted);font-style:normal}.ok{color:var(--ok)}.journal{max-height:310px;overflow:auto}.entry{display:grid;grid-template-columns:1fr auto;gap:10px;padding:10px 0;border-bottom:1px solid #34425f}.entry small{display:block;color:var(--muted)}.entry b{font-variant-numeric:tabular-nums}.note{font-size:.85rem;border-left:3px solid var(--cash);padding-left:12px}.foot{font-size:.8rem;margin-top:18px}@media(max-width:850px){.layout{grid-template-columns:1fr}}@media(max-width:540px){main{padding:16px}.floor{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body><main>
+<div class="eyebrow">THE SINGULARITY WORKSHOP · LIVING DOCUMENTATION</div>
+<h1>A casino is an economy you can watch.</h1>
+<p>Push a transaction. Watch the chips move. Inspect the journal. Reconciliation stays in view. This is a browser-side teaching model, not a connection to the C# ledger or a real-money system.</p>
+<div class="layout">
+<section class="panel" aria-labelledby="floorTitle"><h2 id="floorTitle">The floor</h2>
+<div class="floor">
+<div class="station"><div class="coin">🏦</div><strong>Cage</strong><span>Buy-in · cash-out</span><p><b id="cashBalance">S$ 100</b> <small>virtual funds</small></p></div>
+<div class="station"><div class="coin">♠️</div><strong>Table</strong><span>Wagers held in escrow</span><p><b id="escrowBalance">0 CHIP</b></p></div>
+<div class="station"><div class="coin">🎰</div><strong>Slot machine</strong><span>Deterministic demo outcome</span><p><b id="machineState">Ready</b></p></div>
+</div>
+<div class="flows" aria-label="Simulate casino transactions">
+<button data-kind="buyin">＋ Buy in 10</button><button data-kind="wager">↗ Wager 4</button><button data-kind="payout">✦ Return 6</button><button data-kind="cashout">↩ Cash out 5</button><button data-kind="reset">Reset run</button>
+</div>
+<p class="note">The buttons use a deliberately simplified virtual economy. They demonstrate the meaning of events; they do not invoke <code>CasinoLedger</code>, establish an exchange policy, or prove production accounting correctness.</p>
+</section>
+<aside class="panel"><h2>Operator's view</h2><p>Every number below is derived from this demo's event stream.</p><div class="metrics">
+<div class="metric"><small>CHIPS HELD</small><b id="chips">0</b><em>player balance</em></div>
+<div class="metric"><small>GROSS WAGERS</small><b id="wagers">0</b><em>activity, not revenue</em></div>
+<div class="metric"><small>GROSS RETURNS</small><b id="returns">0</b><em>returned value</em></div>
+<div class="metric"><small>HOUSE RESULT*</small><b id="house">0</b><em>*simplified demo only</em></div>
+<div class="metric"><small>RECONCILIATION</small><b class="ok" id="reconcile">Δ 0</b><em>demo accounting check</em></div>
+<div class="metric"><small>EVENTS</small><b id="eventCount">0</b><em>append-only in this page session</em></div>
+</div></aside>
+<section class="panel" style="grid-column:1/-1"><h2>Transaction journal</h2><div id="journal" class="journal" aria-live="polite"><p>Nothing has happened yet. Choose an event above.</p></div></section>
+</div>
+<p class="foot">Architecture to connect next: game result → wager lifecycle → CasinoLedger postings → derived operator view. Visualize can build the frame; GUI.Core owns neutral interface intent; GUI.SVG manifests it as inspectable SVG; Renderer policy can select the representation. This page is a UI prototype, not that end-to-end integration.</p>
+</main>
+<script>
+(()=>{'use strict';
+const initial=()=>({cash:100,chips:0,escrow:0,wagers:0,returns:0,house:0,events:[]});
+let state=initial();
+const $=id=>document.getElementById(id);
+function record(kind,detail){state.events.unshift({kind,detail,time:new Date().toLocaleTimeString()});render()}
+function act(kind){
+if(kind==='reset'){state=initial();render();return}
+if(kind==='buyin'){if(state.cash<10)return record('Rejected','Insufficient virtual funds for buy-in');state.cash-=10;state.chips+=10;record('BUY-IN','10 S$ → 10 CHIP');return}
+if(kind==='wager'){if(state.chips<4)return record('Rejected','Need 4 CHIP before placing this wager');state.chips-=4;state.escrow+=4;state.wagers+=4;record('WAGER','4 CHIP → table escrow');return}
+if(kind==='payout'){if(state.escrow<4)return record('Rejected','No 4 CHIP wager in escrow to settle');state.escrow-=4;state.chips+=6;state.returns+=6;state.house-=2;record('PAYOUT','4 CHIP stake settled; 6 CHIP gross return to player');$('machineState').textContent='Return +6';return}
+if(kind==='cashout'){if(state.chips<5)return record('Rejected','Need 5 CHIP before cash-out');state.chips-=5;state.cash+=5;record('CASH-OUT','5 CHIP → 5 S$ (demo-only 1:1 rule)');return}
+}
+function render(){
+$('cashBalance').textContent='S$ '+state.cash;$('chips').textContent=state.chips+' CHIP';$('escrowBalance').textContent=state.escrow+' CHIP';$('wagers').textContent=state.wagers+' CHIP';$('returns').textContent=state.returns+' CHIP';$('house').textContent=state.house+' CHIP';$('eventCount').textContent=state.events.length;
+const delta=state.cash+state.chips+state.escrow-100;
+$('reconcile').textContent='Δ '+delta;$('reconcile').className=delta===0?'ok':'';
+$('journal').innerHTML=state.events.length?state.events.map(e=>'<div class="entry"><div><b>'+escapeHtml(e.kind)+'</b><small>'+escapeHtml(e.detail)+'</small></div><small>'+escapeHtml(e.time)+'</small></div>').join(''):'<p>Nothing has happened yet. Choose an event above.</p>';
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+document.querySelectorAll('button[data-kind]').forEach(b=>b.addEventListener('click',()=>act(b.dataset.kind)));render();
+})();
+</script>
+</body></html>
