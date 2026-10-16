@@ -34,7 +34,7 @@ Start with the MVP vertical slice and publication path documented below; use the
 
 ## 🟪 05 Documentation and theory
 
-[MVP vertical slice](#the-mvp-vertical-slice) · [Castle Siege Experience](docs/CASTLE_SIEGE_EXPERIENCE.md) · [Publication](#publication) · [Artifact identity](#artifact-identity) · [Architectural rules](#architectural-rules) · [Engineering quality standard](docs/ENGINEERING_QUALITY_STANDARD.md)
+[MVP vertical slice](#the-mvp-vertical-slice) · [Castle Siege Experience](docs/CASTLE_SIEGE_EXPERIENCE.md) · [Castle Siege manifest](docs/CASTLE_SIEGE_MANIFEST.md) · [Publication](#publication) · [Artifact identity](#artifact-identity) · [Architectural rules](#architectural-rules) · [Engineering quality standard](docs/ENGINEERING_QUALITY_STANDARD.md)
 
 ---
 
