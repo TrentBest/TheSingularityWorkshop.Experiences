@@ -34,13 +34,13 @@ Start with the MVP vertical slice and publication path documented below; use the
 
 ## 🟪 05 Documentation and theory
 
-[MVP vertical slice](#the-mvp-vertical-slice) · [Castle Siege Experience](docs/CASTLE_SIEGE_EXPERIENCE.md) · [Castle Siege manifest](docs/CASTLE_SIEGE_MANIFEST.md) · [Publication](#publication) · [Artifact identity](#artifact-identity) · [Architectural rules](#architectural-rules) · [Engineering quality standard](docs/ENGINEERING_QUALITY_STANDARD.md)
+[MVP vertical slice](#the-mvp-vertical-slice) · [Castle Siege preforge home](experiences/CastleSiege/README.md) · [Castle Siege Experience](docs/CASTLE_SIEGE_EXPERIENCE.md) · [Castle Siege manifest](docs/CASTLE_SIEGE_MANIFEST.md) · [Publication](#publication) · [Artifact identity](#artifact-identity) · [Architectural rules](#architectural-rules) · [Engineering quality standard](docs/ENGINEERING_QUALITY_STANDARD.md)
 
 ---
 
 ## Detailed guide
 
-This repository contains independent, publishable Experiences and MicroBundle artifacts for The Singularity Workshop.
+This repository contains preforge Experience definitions, independent publishable Experiences, and MicroBundle artifacts for The Singularity Workshop. Each substantial Experience starts with its own authored home under `experiences/`; buildable projects under `src/` are implementation artifacts, not the Experience's source of truth.
 
 It is deliberately separate from WebApp/WebPage, AnyApp, FSM_COS, MicroBundleRepository, GUI, and FSM_API.
 
