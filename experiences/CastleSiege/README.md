@@ -41,12 +41,17 @@ The first slice is not a trebuchet mechanism simulator, rigid-body castle solver
 
 ## Current implementation pointers
 
+- [Session handoff and next steps](HANDOFF.md)
 - [Experience design contract](design/EXPERIENCE.md)
+- [Battlespace content contract](design/BATTLESPACE_CONTENT_CONTRACT.md)
+- [Battlespace schema](contracts/castle-siege-battlespace.schema.json)
+- [Battlespace example](contracts/castle-siege-battlespace.example.json)
 - [MicroBundle growth plan](design/MICROBUNDLE_GROWTH_PLAN.md)
 - [Manifest contract](manifest/MANIFEST.md)
 - [Manifest schema](contracts/castle-siege-experience-manifest.schema.json)
 - [Manifest example](contracts/castle-siege-experience-manifest.example.json)
 - [Current entry-surface project](../../src/CastleSiege/)
+- [Battlespace contract tests](../../tests/CastleSiege.Tests/CastleSiegeBattlespaceContentTests.cs)
 - [Experience roadmap](../../docs/ROADMAP.md)
 
-The current C# project is only an independently buildable entry surface and evidence-adapter contract. It is not yet the playable Experience. The JSON adapter is fixture-tested; live integration with the actual Physics experiment remains pending.
+The current C# project is only an independently buildable entry surface and evidence-adapter contract. It is not yet the playable Experience. The JSON adapter is fixture-tested; live integration with the actual Physics experiment remains pending. The battlespace test suite checks selected contract invariants but is not a full JSON Schema validator.
