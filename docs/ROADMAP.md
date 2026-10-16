@@ -39,7 +39,7 @@ The roadmap is ordered around a working path rather than repository completeness
 
 ## Castle Siege — first physics-backed game Experience
 
-The design contract lives in [Castle Siege Experience](CASTLE_SIEGE_EXPERIENCE.md). This is an Experience project, not a new physics engine or a competing host. Physics must supply verified outcomes; WebPage/WebApp owns the scene manifestation and controls.
+Castle Siege is being authored as a preforge construct under [`experiences/CastleSiege/`](../experiences/CastleSiege/README.md). The design contract is linked from that home and expanded in [Castle Siege Experience](CASTLE_SIEGE_EXPERIENCE.md). The `src/CastleSiege` project is only an entry-surface/integration artifact at this stage—not the Experience's source of truth. This is not a new physics engine or a competing host: Physics supplies verified outcomes; WebPage/WebApp owns the scene manifestation and controls.
 
 - [x] Establish cross-repository ownership, staged physics gates, equal-kit build rules, alternating-turn rules, and truthful capability labels.
 - [x] Reserve a stable Experience/bundle identity and define the initial semantic entry-surface contract.
