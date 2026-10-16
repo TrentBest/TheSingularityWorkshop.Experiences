@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "experienceId": 3301,
+  "experienceKey": "castle-siege",
+  "version": "0.1.0-alpha.1",
+  "title": "Castle Siege",
+  "artifacts": [
+    {
+      "artifactId": "workshop-castle-siege",
+      "version": "0.1.0-alpha.1",
+      "sha256": null
+    }
+  ],
+  "capabilities": [
+    {
+      "capabilityId": "physics.projectile-trajectory.constant-acceleration",
+      "level": "Required",
+      "rationale": "A deterministic sampled projectile trajectory is required for the first physics-backed slice."
+    },
+    {
+      "capabilityId": "presentation.scene-3d",
+      "level": "Preferred",
+      "rationale": "A 3D scene is the intended manifestation; alternate hosts may provide a reduced diagnostic view."
+    }
+  ]
+}
