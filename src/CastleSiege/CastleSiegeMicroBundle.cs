@@ -72,7 +72,7 @@ public sealed class CastleSiegeMicroBundle : IMicroBundle
                     .Property("margin", "0,0,0,26"));
 
             column.Child("Text", "castle-siege-physics-status", text =>
-                text.Text("PHYSICS ADAPTER NOT CONNECTED")
+                text.Text("PHYSICS RUN NOT CONNECTED")
                     .Property("foreground", "#FFD34D")
                     .Property("fontSize", "15")
                     .Property("fontWeight", "700")
