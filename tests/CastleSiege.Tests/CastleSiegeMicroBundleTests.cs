@@ -27,7 +27,7 @@ public sealed class CastleSiegeMicroBundleTests
         Assert.True(bundle.Root!.TryFind("castle-siege-title", out var title));
         Assert.Equal("CASTLE SIEGE", title!.Text);
         Assert.True(bundle.Root.TryFind("castle-siege-physics-status", out var status));
-        Assert.Equal("PHYSICS ADAPTER NOT CONNECTED", status!.Text);
+        Assert.Equal("PHYSICS RUN NOT CONNECTED", status!.Text);
         Assert.True(bundle.Root.TryFind("castle-siege-scope", out var scope));
         Assert.Contains("no computed trajectory", scope!.Text, StringComparison.OrdinalIgnoreCase);
     }
