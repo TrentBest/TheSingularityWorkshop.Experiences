@@ -142,8 +142,8 @@ The current Physics coordination record and experiment catalog are the detailed 
 
 The Experience should eventually be a versioned, independently identifiable artifact that can be composed into different manifestations. The repository's existing MicroBundle pattern is the intended starting point; do not invent a parallel scene host or a second composition framework.
 
-Before creating the first Castle Siege MicroBundle, settle and test:
-- stable Experience and bundle identity (do not reuse Forge, Moniker, or other existing IDs);
+Before advancing the current entry shell into a simulation-capable artifact, settle and test:
+- stable Experience and bundle identity (the initial shell reserves ID 3301; do not reuse Forge, Moniker, or other existing IDs);
 - artifact version and immutable content hash;
 - explicit dependencies and optional capabilities;
 - a minimal semantic entry surface compatible with the current GUI Core contract;
@@ -186,7 +186,7 @@ A milestone is complete only when all applicable gates are satisfied:
 ## 10. Immediate implementation sequence
 
 1. Keep the current Physics projectile kernel and tests as the numerical foundation; finish the trajectory experiment and target-query contracts there.
-2. Add a Castle Siege Experience design/artifact surface in this repository, beginning with identity and a scene/entry manifest rather than embedding a physics engine in the UI.
+2. The initial Castle Siege semantic entry surface now exists in this repository; next define the versioned manifest and Physics adapter contract rather than embedding a physics engine in the UI.
 3. Build the single-player presentation against a typed adapter and explicit capability status.
 4. Add target intersection and impact diagnostics, then a bounded wall response in Physics.
 5. Add immutable build-piece definitions, canonical validation, and locked build snapshots.
