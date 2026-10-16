@@ -17,4 +17,8 @@
   <ItemGroup>
     <ProjectReference Include="../../src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="../../experiences/CastleSiege/contracts/castle-siege-battlespace.schema.json" Link="contracts/castle-siege-battlespace.schema.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../experiences/CastleSiege/contracts/castle-siege-battlespace.example.json" Link="contracts/castle-siege-battlespace.example.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
