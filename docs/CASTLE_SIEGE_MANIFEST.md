@@ -26,7 +26,7 @@ The canonical representation is deterministic for a given validated object. It i
 
 ## Current declared requirement
 
-The initial manifest requires `physics.projectile-trajectory.constant-acceleration`. This describes the intended minimum for the first physics-backed slice. It does **not** mean that the Experience currently connects to the Physics project or that collision, hit/miss, impact, damage, or multiplayer exists. The entry bundle continues to report that the Physics adapter is not connected until an adapter is implemented and verified.
+The initial manifest requires `physics.projectile-trajectory.constant-acceleration`. This describes the intended minimum for the first physics-backed slice. It does **not** mean that the Experience currently connects to the Physics project or that collision, hit/miss, impact, damage, or multiplayer exists. A JSON evidence adapter now validates and projects the Physics v1 trajectory run-record shape without reimplementing its solver. The current tests use a contract fixture; live source integration that feeds an actual Physics experiment result through this adapter is still pending. The entry bundle therefore continues to report that a Physics run is not connected.
 
 ## Files
 
