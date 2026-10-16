@@ -46,44 +46,46 @@ public sealed class MonikerMicroBundle : IMicroBundle
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        var builder = GuiBuilders.Column("moniker-column")
-            .Property("horizontalAlignment", "Center")
-            .Property("verticalAlignment", "Center")
-            .Property("padding", "24");
+        var root = GuiBuilder.Create("Panel", "moniker-root")
+            .Property("background", "#020711");
 
-        foreach (var (word, offset) in new[] { ("THE", 0), ("SINGULARITY", 3), ("WORKSHOP", 14) })
+        root.Child("Column", "moniker-column", column =>
         {
-            var row = GuiBuilders.Row($"moniker-{word.ToLowerInvariant()}")
-                .Property("horizontalAlignment", "Center");
+            column.Property("horizontalAlignment", "Center")
+                .Property("verticalAlignment", "Center")
+                .Property("padding", "24");
 
-            for (var index = 0; index < word.Length; index++)
+            foreach (var (word, offset) in new[] { ("THE", 0), ("SINGULARITY", 3), ("WORKSHOP", 14) })
             {
-                var phase = (offset + index) % 6;
-                var color = phase switch
+                column.Child("Row", $"moniker-{word.ToLowerInvariant()}", row =>
                 {
-                    0 => "#FF3030",
-                    1 => "#FF7A00",
-                    2 => "#FFD34D",
-                    3 => "#52E05A",
-                    4 => "#00A8FF",
-                    _ => "#FF2CFF"
-                };
+                    row.Property("horizontalAlignment", "Center");
 
-                row.Child(GuiBuilders.Text(
-                    $"moniker-{word.ToLowerInvariant()}-{index}", word[index].ToString())
-                    .Property("foreground", color)
-                    .Property("fontSize", "76")
-                    .Property("fontWeight", "700")
-                    .Property("fontFamily", "Consolas"));
+                    for (var index = 0; index < word.Length; index++)
+                    {
+                        var phase = (offset + index) % 6;
+                        var color = phase switch
+                        {
+                            0 => "#FF3030",
+                            1 => "#FF7A00",
+                            2 => "#FFD34D",
+                            3 => "#52E05A",
+                            4 => "#00A8FF",
+                            _ => "#FF2CFF"
+                        };
+
+                        row.Child("Text", $"moniker-{word.ToLowerInvariant()}-{index}", text =>
+                            text.Text(word[index].ToString())
+                                .Property("foreground", color)
+                                .Property("fontSize", "76")
+                                .Property("fontWeight", "700")
+                                .Property("fontFamily", "Consolas"));
+                    }
+                });
             }
+        });
 
-            builder.Child(row);
-        }
-
-        Root = GuiBuilders.Panel("moniker-root")
-            .Property("background", "#020711")
-            .Child(builder)
-            .Build();
+        Root = root.Build();
     }
 
     /// <summary>
@@ -95,7 +97,6 @@ public sealed class MonikerMicroBundle : IMicroBundle
         return false;
     }
 }
-
 
 /// <summary>
 /// A reusable presentation behavior that can be composed with the canonical Moniker content bundle.

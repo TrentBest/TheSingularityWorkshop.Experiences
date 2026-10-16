@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageId>TheSingularityWorkshop.Games.Cards</PackageId>
+    <Version>0.1.0-alpha.1</Version>
+    <Authors>The Singularity Workshop</Authors>
+    <Company>The Singularity Workshop</Company>
+    <Description>Host-neutral playing-card primitives and deterministic deck operations for Workshop Experiences.</Description>
+    <PackageTags>singularity;workshop;experience;microbundle;cards;games</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/TrentBest/TheSingularityWorkshop.Experiences</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+</Project>

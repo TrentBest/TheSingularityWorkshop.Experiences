@@ -19,9 +19,9 @@ public sealed class MonikerWaveMotionMicroBundleTests
     [Fact]
     public void Apply_AddsWaveParametersOnlyToMonikerGlyphs_WithoutMutatingSource()
     {
-        var root = GuiBuilders.Panel("moniker-root")
-            .Child(GuiBuilders.Text("moniker-word-0", "T"))
-            .Child(GuiBuilders.Text("unrelated-label", "Hello"))
+        var root = GuiBuilder.Create("Panel", "moniker-root")
+            .Child("Text", "moniker-word-0", glyph => glyph.Text("T"))
+            .Child("Text", "unrelated-label", label => label.Text("Hello"))
             .Build();
 
         var result = new MonikerWaveMotionMicroBundle().Apply(root);
@@ -41,9 +41,9 @@ public sealed class MonikerWaveMotionMicroBundleTests
     [Fact]
     public void Apply_AssignsDeterministicPhasesAcrossGlyphs()
     {
-        var root = GuiBuilders.Panel("moniker-root")
-            .Child(GuiBuilders.Text("moniker-glyph-0", "A"))
-            .Child(GuiBuilders.Text("moniker-glyph-1", "B"))
+        var root = GuiBuilder.Create("Panel", "moniker-root")
+            .Child("Text", "moniker-glyph-0", glyph => glyph.Text("A"))
+            .Child("Text", "moniker-glyph-1", glyph => glyph.Text("B"))
             .Build();
 
         var motion = new MonikerWaveMotionMicroBundle();
