@@ -43,7 +43,7 @@ The design contract lives in [Castle Siege Experience](CASTLE_SIEGE_EXPERIENCE.m
 
 - [x] Establish cross-repository ownership, staged physics gates, equal-kit build rules, alternating-turn rules, and truthful capability labels.
 - [x] Reserve a stable Experience/bundle identity and define the initial semantic entry-surface contract.
-- [ ] Define the versioned Experience manifest/artifact contract and capability requirements.
+- [x] Define the Castle Siege v1 manifest/artifact contract, canonical serializer, capability requirements, JSON Schema, and example (`docs/CASTLE_SIEGE_MANIFEST.md`).
 - [x] Add an independently buildable Castle Siege MicroBundle using the current GUI Core contract.
 - [x] Add an entry surface that clearly distinguishes the current scene-only shell from working simulation.
 - [ ] Define and test the Experience-to-Physics adapter against the actual trajectory experiment output.
