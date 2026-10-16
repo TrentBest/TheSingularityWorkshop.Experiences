@@ -35,9 +35,10 @@ The trajectory adapter currently parses a representative Physics-shaped fixture 
 These are targeted contract tests, **not** a full JSON Schema Draft 2020-12 validator. The schema and example are staged as test inputs by the test project.
 
 - [Contract-test workflow run — success](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/38978054035)
-- [Latest documentation workflow run — success](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/38978105694)
+- [Battlespace-validation documentation workflow — success](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/38978105694)
+- [Session-handoff workflow](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/38983748546)
 
-Both workflows have completed successfully. The most recent commit is the documentation update at `a78e6802bad9ae5e822de00dfcf91794a7c68547`.
+The contract-test and battlespace-validation documentation runs above completed successfully. The handoff and README index-link commits were pushed afterward; their push-triggered CI needs to be checked before treating the final repository state as fully CI-verified. Do not infer success from the earlier runs alone.
 
 ## Architecture decisions to preserve
 
