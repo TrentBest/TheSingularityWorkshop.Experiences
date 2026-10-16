@@ -49,6 +49,61 @@ public sealed class CastleSiegeMicroBundleTests
         Assert.False(bundle.Arbitrate(new TestArbitrationContext(), 0));
     }
 
+
+    [Fact]
+    public void Manifest_UsesStableIdentityAndDeclaresRequiredPhysicsCapability()
+    {
+        var manifest = new CastleSiegeExperienceManifest();
+
+        manifest.Validate();
+
+        Assert.Equal(1, manifest.SchemaVersion);
+        Assert.Equal(3301UL, manifest.ExperienceId);
+        Assert.Equal("castle-siege", manifest.ExperienceKey);
+        Assert.Contains(manifest.Capabilities, c =>
+            c.CapabilityId == "physics.projectile-trajectory.constant-acceleration" &&
+            c.Level == CapabilityRequirementLevel.Required);
+    }
+
+    [Fact]
+    public void Manifest_CanonicalJsonIsStableRegardlessOfCollectionOrder()
+    {
+        var manifest = new CastleSiegeExperienceManifest
+        {
+            Artifacts =
+            [
+                new ExperienceArtifactReference("z-artifact", "1.0.0", null),
+                new ExperienceArtifactReference("a-artifact", "1.0.0", null)
+            ],
+            Capabilities =
+            [
+                new ExperienceCapabilityRequirement("z-capability", CapabilityRequirementLevel.Optional, "Optional."),
+                new ExperienceCapabilityRequirement("a-capability", CapabilityRequirementLevel.Required, "Required.")
+            ]
+        };
+        var reversed = manifest with
+        {
+            Artifacts = manifest.Artifacts.Reverse().ToArray(),
+            Capabilities = manifest.Capabilities.Reverse().ToArray()
+        };
+
+        Assert.Equal(manifest.ToCanonicalJson(), reversed.ToCanonicalJson());
+        Assert.Equal(manifest, CastleSiegeExperienceManifest.Parse(manifest.ToCanonicalJson()));
+    }
+
+    [Fact]
+    public void Manifest_RejectsUnsupportedSchemaAndInvalidArtifactHash()
+    {
+        Assert.Throws<InvalidOperationException>(() =>
+            new CastleSiegeExperienceManifest { SchemaVersion = 99 }.Validate());
+
+        var invalidHash = new CastleSiegeExperienceManifest
+        {
+            Artifacts = [new ExperienceArtifactReference("castle-siege", "0.1.0", "not-a-sha256")]
+        };
+        Assert.Throws<InvalidOperationException>(() => invalidHash.Validate());
+    }
+
     private sealed class TestLoadContext : TheSingularityWorkshop.MicroBundleDomain.IMicroBundleLoadContext
     {
         public ulong RuntimeId => 3301;
