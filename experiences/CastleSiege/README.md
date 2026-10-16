@@ -41,10 +41,11 @@ The first slice is not a trebuchet mechanism simulator, rigid-body castle solver
 
 ## Current implementation pointers
 
-- [Experience design contract](../../docs/CASTLE_SIEGE_EXPERIENCE.md)
-- [Manifest contract](../../docs/CASTLE_SIEGE_MANIFEST.md)
-- [Manifest schema](../../docs/schemas/castle-siege-experience-manifest.schema.json)
-- [Manifest example](../../docs/schemas/castle-siege-experience-manifest.example.json)
+- [Experience design contract](design/EXPERIENCE.md)
+- [MicroBundle growth plan](design/MICROBUNDLE_GROWTH_PLAN.md)
+- [Manifest contract](manifest/MANIFEST.md)
+- [Manifest schema](contracts/castle-siege-experience-manifest.schema.json)
+- [Manifest example](contracts/castle-siege-experience-manifest.example.json)
 - [Current entry-surface project](../../src/CastleSiege/)
 - [Experience roadmap](../../docs/ROADMAP.md)
 
