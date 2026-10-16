@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageId>TheSingularityWorkshop.Experiences.CastleSiege</PackageId>
+    <Version>0.1.0-alpha.1</Version>
+    <Authors>The Singularity Workshop</Authors>
+    <Company>The Singularity Workshop</Company>
+    <Description>The Castle Siege Experience entry surface; Physics integration is not yet connected.</Description>
+    <PackageTags>singularity;workshop;experience;castle-siege;physics</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/TrentBest/TheSingularityWorkshop.Experiences</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="TheSingularityWorkshop.GUI.Core" Version="0.1.0-alpha.4" Condition="'$(WorkshopUseRepositorySources)' != 'true'" />
+    <ProjectReference Include="..\..\..\TheSingularityWorkshop.GUI\src\Core\TheSingularityWorkshop.GUI.Core.csproj" Condition="'$(WorkshopUseRepositorySources)' == 'true'" />
+    <PackageReference Include="TheSingularityWorkshop.MicroBundleDomain" Version="1.0.1" Condition="'$(WorkshopUseRepositorySources)' != 'true'" />
+    <ProjectReference Include="..\..\..\TheSingularityWorkshop.MicroBundleDomain\TheSingularityWorkshop.MicroBundleDomain.csproj" Condition="'$(WorkshopUseRepositorySources)' == 'true'" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+</Project>
