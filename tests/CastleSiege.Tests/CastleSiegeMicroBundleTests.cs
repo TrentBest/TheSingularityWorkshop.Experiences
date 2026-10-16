@@ -88,7 +88,7 @@ public sealed class CastleSiegeMicroBundleTests
         };
 
         Assert.Equal(manifest.ToCanonicalJson(), reversed.ToCanonicalJson());
-        Assert.Equal(manifest, CastleSiegeExperienceManifest.Parse(manifest.ToCanonicalJson()));
+        Assert.Equal(manifest.ToCanonicalJson(), CastleSiegeExperienceManifest.Parse(manifest.ToCanonicalJson()).ToCanonicalJson());
     }
 
     [Fact]
