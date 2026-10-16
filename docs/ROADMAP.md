@@ -42,9 +42,10 @@ The roadmap is ordered around a working path rather than repository completeness
 The design contract lives in [Castle Siege Experience](CASTLE_SIEGE_EXPERIENCE.md). This is an Experience project, not a new physics engine or a competing host. Physics must supply verified outcomes; WebPage/WebApp owns the scene manifestation and controls.
 
 - [x] Establish cross-repository ownership, staged physics gates, equal-kit build rules, alternating-turn rules, and truthful capability labels.
-- [ ] Reserve a unique Experience/bundle identity and define its versioned semantic entry/manifest contract.
-- [ ] Add an independently buildable Castle Siege MicroBundle using the current GUI Core contract.
-- [ ] Add a capability-aware entry surface that clearly distinguishes scene-only preview from working simulation.
+- [x] Reserve a stable Experience/bundle identity and define the initial semantic entry-surface contract.
+- [ ] Define the versioned Experience manifest/artifact contract and capability requirements.
+- [x] Add an independently buildable Castle Siege MicroBundle using the current GUI Core contract.
+- [x] Add an entry surface that clearly distinguishes the current scene-only shell from working simulation.
 - [ ] Define and test the Experience-to-Physics adapter against the actual trajectory experiment output.
 - [ ] Deliver the first single-player slice: one siege engine, one target region, real trajectory samples, and a hit/miss/indeterminate result.
 - [ ] Add impact diagnostics and a bounded, testable target response before presenting damage as computed.
