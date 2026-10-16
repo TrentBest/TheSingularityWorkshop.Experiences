@@ -34,7 +34,7 @@ Start with the MVP vertical slice and publication path documented below; use the
 
 ## 🟪 05 Documentation and theory
 
-[MVP vertical slice](#the-mvp-vertical-slice) · [Publication](#publication) · [Artifact identity](#artifact-identity) · [Architectural rules](#architectural-rules) · [Engineering quality standard](docs/ENGINEERING_QUALITY_STANDARD.md)
+[MVP vertical slice](#the-mvp-vertical-slice) · [Castle Siege Experience](docs/CASTLE_SIEGE_EXPERIENCE.md) · [Publication](#publication) · [Artifact identity](#artifact-identity) · [Architectural rules](#architectural-rules) · [Engineering quality standard](docs/ENGINEERING_QUALITY_STANDARD.md)
 
 ---
 
@@ -238,6 +238,12 @@ The next test corpus is intentionally made from small semantic things:
 - **Software Design Patterns** — individually addressable patterns that can compose into larger pattern collections.
 
 The repository should let these atoms remain independent while larger Experiences compose them. See issue #3 for the working extraction and test plan.
+
+## Castle Siege — physical experiment and competitive play
+
+Castle Siege is the planned physics-based build-and-destroy Experience: first a single-player, inspectable siege experiment, then an equal-kit construction duel with locked builds and alternating attacks. Its design contract assigns Experience identity and match rules here, physical outcomes to Physics, and scene/input/presentation to WebPage. The design is documented; a playable Castle Siege artifact and complete Physics-backed trajectory/impact loop are **not yet implemented**.
+
+See [Castle Siege Experience design and implementation contract](docs/CASTLE_SIEGE_EXPERIENCE.md) and the [Physics experiment catalog](https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/docs/CASTLE_SIEGE_EXPERIMENT_CATALOG.md).
 
 ## Story Forge — temporal story authoring
 
