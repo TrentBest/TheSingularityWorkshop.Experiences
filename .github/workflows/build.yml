@@ -21,6 +21,7 @@ jobs:
           - src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
           - src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj
           - src/Games.Cards/TheSingularityWorkshop.Games.Cards.csproj
+          - src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
@@ -59,12 +60,14 @@ jobs:
           dotnet restore src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
           dotnet restore src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj
           dotnet restore src/Games.Cards/TheSingularityWorkshop.Games.Cards.csproj
+          dotnet restore src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj
           dotnet pack src/Forge/TheSingularityWorkshop.Experiences.Forge.csproj --configuration Release --output ./artifacts
           dotnet pack src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj --configuration Release --output ./artifacts
           dotnet pack src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj --configuration Release --output ./artifacts
           dotnet pack src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj --configuration Release --output ./artifacts
           dotnet pack src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj --configuration Release --output ./artifacts
           dotnet pack src/Games.Cards/TheSingularityWorkshop.Games.Cards.csproj --configuration Release --output ./artifacts
+          dotnet pack src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj --configuration Release --output ./artifacts
       - uses: actions/upload-artifact@v4
         with:
           name: experience-packages
@@ -96,6 +99,19 @@ jobs:
       - name: Run card capability tests
         run: dotnet test tests/Games.Cards.Tests/TheSingularityWorkshop.Games.Cards.Tests.csproj --configuration Release --no-restore
 
+  # Castle Siege's initial semantic entry surface must state its current capability boundary honestly.
+  test-castle-siege:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore Castle Siege tests
+        run: dotnet restore tests/CastleSiege.Tests/TheSingularityWorkshop.Experiences.CastleSiege.Tests.csproj
+      - name: Run Castle Siege contract tests
+        run: dotnet test tests/CastleSiege.Tests/TheSingularityWorkshop.Experiences.CastleSiege.Tests.csproj --configuration Release --no-restore
+
   # Keep motion contracts honest without requiring a host renderer.
   test-moniker-motion:
     runs-on: ubuntu-24.04
@@ -120,6 +136,7 @@ jobs:
           - src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj
           - src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
           - src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj
+          - src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj
     steps:
       - name: Checkout Experiences
         uses: actions/checkout@v7
@@ -187,3 +204,7 @@ jobs:
       - name: Test StoryForge against source graph
         working-directory: Experiences
         run: dotnet test tests/StoryForge.Tests/TheSingularityWorkshop.Experiences.StoryForge.Tests.csproj --configuration Release -p:WorkshopUseRepositorySources=true
+
+      - name: Test Castle Siege against source graph
+        working-directory: Experiences
+        run: dotnet test tests/CastleSiege.Tests/TheSingularityWorkshop.Experiences.CastleSiege.Tests.csproj --configuration Release -p:WorkshopUseRepositorySources=true
