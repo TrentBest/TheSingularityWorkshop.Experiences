@@ -21,7 +21,7 @@ public sealed class CastleSiegeMicroBundleTests
     {
         var bundle = new CastleSiegeMicroBundle();
 
-        bundle.Load(null!);
+        bundle.Load(new TestLoadContext());
 
         Assert.NotNull(bundle.Root);
         Assert.True(bundle.Root!.TryFind("castle-siege-title", out var title));
@@ -47,6 +47,17 @@ public sealed class CastleSiegeMicroBundleTests
 
         Assert.Throws<ArgumentNullException>(() => bundle.Arbitrate(null!, 0));
         Assert.False(bundle.Arbitrate(new TestArbitrationContext(), 0));
+    }
+
+    private sealed class TestLoadContext : TheSingularityWorkshop.MicroBundleDomain.IMicroBundleLoadContext
+    {
+        public ulong RuntimeId => 3301;
+
+        public bool TryGetConfiguration(ulong bundleId, out ReadOnlyMemory<byte> configuration)
+        {
+            configuration = default;
+            return false;
+        }
     }
 
     private sealed class TestArbitrationContext : TheSingularityWorkshop.MicroBundleDomain.IMicroBundleArbitrationContext
