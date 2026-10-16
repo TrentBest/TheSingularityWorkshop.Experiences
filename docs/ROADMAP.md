@@ -46,7 +46,8 @@ The design contract lives in [Castle Siege Experience](CASTLE_SIEGE_EXPERIENCE.m
 - [x] Define the Castle Siege v1 manifest/artifact contract, canonical serializer, capability requirements, JSON Schema, and example (`docs/CASTLE_SIEGE_MANIFEST.md`).
 - [x] Add an independently buildable Castle Siege MicroBundle using the current GUI Core contract.
 - [x] Add an entry surface that clearly distinguishes the current scene-only shell from working simulation.
-- [ ] Define and test the Experience-to-Physics adapter against the actual trajectory experiment output.
+- [x] Define and contract-test a JSON adapter for the Physics v1 trajectory run-record shape without duplicating the solver.
+- [ ] Source-integrate the adapter with an actual Physics experiment result; the current adapter tests use a contract fixture.
 - [ ] Deliver the first single-player slice: one siege engine, one target region, real trajectory samples, and a hit/miss/indeterminate result.
 - [ ] Add impact diagnostics and a bounded, testable target response before presenting damage as computed.
 - [ ] Define canonical build-piece identities, placement/connection validation, and immutable locked-build snapshots.
