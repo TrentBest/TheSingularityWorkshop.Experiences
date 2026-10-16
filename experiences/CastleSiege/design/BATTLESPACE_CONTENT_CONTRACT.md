@@ -24,7 +24,7 @@ The example declares a right-handed world frame with Y up and metre-valued lengt
 - `id` is a stable, author-assigned semantic content ID; do not derive it from the label, array index, numeric bundle ID, or current folder path.
 - Keep an ID when only its label or presentation changes.
 - If an object is replaced by a meaningfully different authored object, create a new ID and preserve any required history/migration mapping.
-- IDs are unique within one battlespace document. A validator should reject duplicates; the schema alone cannot enforce that across array entries.
+- IDs are unique within one battlespace document. The schema describes ID syntax, while the contract tests check uniqueness across the example's objects.
 - `contentRevision` identifies the authored document revision. It is not a MicroBundle version or SHA-256 artifact address.
 
 ## Files
@@ -33,7 +33,12 @@ The example declares a right-handed world frame with Y up and metre-valued lengt
 - [Illustrative authored battlespace](../contracts/castle-siege-battlespace.example.json)
 - [Experience design](EXPERIENCE.md)
 - [MicroBundle growth plan](MICROBUNDLE_GROWTH_PLAN.md)
+- [Contract tests](../../../tests/CastleSiege.Tests/CastleSiegeBattlespaceContentTests.cs)
+
+## Validation boundary
+
+The Castle Siege test suite checks the example's identity, coordinate-frame, role, and bounds invariants; it rejects duplicate semantic IDs and non-positive dimensions. It also asserts key parts of the schema contract. These are contract tests, not a full JSON Schema 2020-12 validator.
 
 ## Next proof
 
-Before this becomes a runtime capability, add validation for duplicate IDs and geometry sanity, then write a small consumer that can enumerate the authored objects without needing a renderer. Only after Physics exposes a tested target-intersection contract should a separate adapter claim hit/miss/indeterminate from these bounds.
+The next step is a small renderer-independent consumer that enumerates the authored objects as Experience-owned data. Keep geometry bounds descriptive until Physics exposes a tested target-intersection contract; only then should an adapter claim hit/miss/indeterminate from those bounds.
