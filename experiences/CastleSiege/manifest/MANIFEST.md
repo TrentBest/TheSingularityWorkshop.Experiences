@@ -34,4 +34,4 @@ The initial manifest requires `physics.projectile-trajectory.constant-accelerati
 
 - JSON Schema: [castle-siege-experience-manifest.schema.json](../contracts/castle-siege-experience-manifest.schema.json)
 - Example: [castle-siege-experience-manifest.example.json](../contracts/castle-siege-experience-manifest.example.json)
-- Experience design: [../design/EXPERIENCE.md](CASTLE_SIEGE_EXPERIENCE.md)
+- Experience design: [Experience design](../design/EXPERIENCE.md)
