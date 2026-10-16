@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/blob/development/docs/schemas/castle-siege-experience-manifest.schema.json",
+  "$id": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/blob/development/experiences/CastleSiege/contracts/castle-siege-experience-manifest.schema.json",
   "title": "Castle Siege Experience Manifest",
   "description": "Renderer-independent, versioned authored identity and capability declaration for Castle Siege.",
   "type": "object",
