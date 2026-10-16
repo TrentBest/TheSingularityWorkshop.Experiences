@@ -51,5 +51,10 @@ public sealed class CastleSiegeMicroBundleTests
 
     private sealed class TestArbitrationContext : TheSingularityWorkshop.MicroBundleDomain.IMicroBundleArbitrationContext
     {
+        public ulong RuntimeId => 3301;
+
+        public IReadOnlyList<TheSingularityWorkshop.MicroBundleDomain.IMicroBundle> Bundles => [];
+
+        public object? ExperienceContext => null;
     }
 }
