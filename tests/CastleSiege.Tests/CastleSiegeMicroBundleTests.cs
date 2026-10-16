@@ -104,6 +104,61 @@ public sealed class CastleSiegeMicroBundleTests
         Assert.Throws<InvalidOperationException>(() => invalidHash.Validate());
     }
 
+
+    [Fact]
+    public void TrajectoryAdapter_ProjectsActualPhysicsRecordShapeWithoutClaimingCollision()
+    {
+        var evidence = ProjectileTrajectoryEvidenceAdapter.Read(PhysicsRunJson);
+
+        Assert.Equal("kinematics.constant-acceleration-projectile", evidence.ModelId);
+        Assert.Equal("1", evidence.ModelVersion);
+        Assert.Equal("world, Z-up", evidence.CoordinateFrame);
+        Assert.Equal(2, evidence.CompletedSteps);
+        Assert.Equal(3, evidence.Samples.Count);
+        Assert.Equal(2d, evidence.Samples[^1].ElapsedTime);
+        Assert.Equal(20d, evidence.Samples[^1].PositionMetres.X);
+    }
+
+    [Fact]
+    public void TrajectoryAdapter_RejectsUnknownUnitsAndMismatchedSampleCount()
+    {
+        var wrongUnits = PhysicsRunJson.Replace("\"position\": \"m\"", "\"position\": \"cm\"", StringComparison.Ordinal);
+        Assert.Throws<InvalidOperationException>(() => ProjectileTrajectoryEvidenceAdapter.Read(wrongUnits));
+
+        var wrongCount = PhysicsRunJson.Replace("\"stepCount\": 2", "\"stepCount\": 3", StringComparison.Ordinal);
+        Assert.Throws<InvalidOperationException>(() => ProjectileTrajectoryEvidenceAdapter.Read(wrongCount));
+    }
+
+    private const string PhysicsRunJson = """
+    {
+      "modelId": "kinematics.constant-acceleration-projectile",
+      "modelVersion": "1",
+      "schemaVersion": 1,
+      "units": {
+        "acceleration": "m/s^2",
+        "elapsedTime": "s",
+        "position": "m",
+        "velocity": "m/s"
+      },
+      "definition": {
+        "initialState": {
+          "position": { "x": 0, "y": 0, "z": 0 },
+          "velocity": { "x": 10, "y": 0, "z": 0 },
+          "elapsedTime": 0
+        },
+        "acceleration": { "x": 0, "y": 0, "z": 0 },
+        "deltaTime": 1,
+        "stepCount": 2,
+        "coordinateFrame": "world, Z-up"
+      },
+      "samples": [
+        { "position": { "x": 0, "y": 0, "z": 0 }, "velocity": { "x": 10, "y": 0, "z": 0 }, "elapsedTime": 0 },
+        { "position": { "x": 10, "y": 0, "z": 0 }, "velocity": { "x": 10, "y": 0, "z": 0 }, "elapsedTime": 1 },
+        { "position": { "x": 20, "y": 0, "z": 0 }, "velocity": { "x": 10, "y": 0, "z": 0 }, "elapsedTime": 2 }
+      ]
+    }
+    """;
+
     private sealed class TestLoadContext : TheSingularityWorkshop.MicroBundleDomain.IMicroBundleLoadContext
     {
         public ulong RuntimeId => 3301;
