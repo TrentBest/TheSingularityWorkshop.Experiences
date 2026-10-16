@@ -22,6 +22,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Game
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Games.Cards.Tests", "tests\Games.Cards.Tests\TheSingularityWorkshop.Games.Cards.Tests.csproj", "{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA110}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.CastleSiege", "src\CastleSiege\TheSingularityWorkshop.Experiences.CastleSiege.csproj", "{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA111}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.CastleSiege.Tests", "tests\CastleSiege.Tests\TheSingularityWorkshop.Experiences.CastleSiege.Tests.csproj", "{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA112}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,5 +72,13 @@ Global
 		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA110}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA110}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA110}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA111}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA111}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA111}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA112}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD2E8B57-7D9C-4B28-AEC9-BCF1461AA112}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
