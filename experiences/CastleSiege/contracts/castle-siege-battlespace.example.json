@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "experienceKey": "castle-siege",
+  "contentRevision": "0.1.0-alpha.1",
+  "coordinateFrame": {
+    "id": "castle-siege.world",
+    "handedness": "right-handed",
+    "upAxis": "y",
+    "lengthUnit": "m"
+  },
+  "objects": [
+    {
+      "id": "terrain.main",
+      "role": "terrain",
+      "label": "Main terrain patch",
+      "bounds": {
+        "kind": "axis-aligned-box",
+        "centerMeters": [
+          0,
+          -0.5,
+          0
+        ],
+        "sizeMeters": [
+          40,
+          1,
+          40
+        ]
+      },
+      "notes": "Authored scene bounds; terrain surface and physical support behavior are not defined by this file."
+    },
+    {
+      "id": "castle.west-wall",
+      "role": "castle-section",
+      "label": "West wall",
+      "bounds": {
+        "kind": "axis-aligned-box",
+        "centerMeters": [
+          0,
+          2,
+          8
+        ],
+        "sizeMeters": [
+          12,
+          4,
+          1
+        ]
+      },
+      "notes": "Simple authored bounds for placement and inspection."
+    },
+    {
+      "id": "target.west-wall.core",
+      "role": "target-region",
+      "label": "West wall target region",
+      "bounds": {
+        "kind": "axis-aligned-box",
+        "centerMeters": [
+          0,
+          2,
+          7.4
+        ],
+        "sizeMeters": [
+          4,
+          2,
+          0.2
+        ]
+      },
+      "notes": "A named target candidate. Physics must explicitly accept a compatible geometry mapping before intersection can be claimed."
+    },
+    {
+      "id": "apparatus.siege-engine-01",
+      "role": "siege-apparatus",
+      "label": "Siege engine 01",
+      "bounds": {
+        "kind": "axis-aligned-box",
+        "centerMeters": [
+          0,
+          0.75,
+          -10
+        ],
+        "sizeMeters": [
+          3,
+          1.5,
+          4
+        ]
+      },
+      "notes": "Presentation/placement bounds only; no validated trebuchet mechanism or launch state is implied."
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/blob/development/experiences/CastleSiege/contracts/castle-siege-battlespace.schema.json",
+  "title": "Castle Siege Authored Battlespace",
+  "description": "Renderer-independent authored object identities and simple declared bounds. This is not a Physics collision or simulation contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "experienceKey",
+    "contentRevision",
+    "coordinateFrame",
+    "objects"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "experienceKey": {
+      "const": "castle-siege"
+    },
+    "contentRevision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "coordinateFrame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "handedness",
+        "upAxis",
+        "lengthUnit"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "handedness": {
+          "enum": [
+            "right-handed",
+            "left-handed"
+          ]
+        },
+        "upAxis": {
+          "enum": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        "lengthUnit": {
+          "const": "m"
+        }
+      }
+    },
+    "objects": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "role",
+          "label",
+          "bounds"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)*$"
+          },
+          "role": {
+            "enum": [
+              "terrain",
+              "castle-section",
+              "target-region",
+              "siege-apparatus"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bounds": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "centerMeters",
+              "sizeMeters"
+            ],
+            "properties": {
+              "kind": {
+                "const": "axis-aligned-box"
+              },
+              "centerMeters": {
+                "$ref": "#/$defs/vector3"
+              },
+              "sizeMeters": {
+                "$ref": "#/$defs/positiveVector3"
+              }
+            }
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "vector3": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "positiveVector3": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      ],
+      "minItems": 3,
+      "maxItems": 3
+    }
+  }
+}

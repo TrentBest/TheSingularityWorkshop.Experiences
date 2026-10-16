@@ -25,7 +25,7 @@ Names below are stable *proposed semantic keys*, not assigned numeric MicroBundl
 | Proposed semantic key | Owner | Responsibility | Maturity / gate |
 |---|---|---|---|
 | `castle-siege.entry-surface` | Experiences | Current honest entry surface and Experience identity | Exists as a shell; not a playable simulation |
-| `castle-siege.authored-battlespace` | Experiences | Stable IDs for terrain patch, castle silhouette, target region, and siege apparatus; authored geometry separate from computed state | Design boundary; content schema still to be authored |
+| `castle-siege.authored-battlespace` | Experiences | Stable IDs for terrain patch, castle silhouette, target region, and siege apparatus; authored geometry separate from computed state | First authored content schema and example exist; duplicate-ID validation and Physics mapping remain pending |
 | `castle-siege.launch-command` | Experiences + Physics contract | Express a player's requested launch inputs with units, coordinate frame, and validation | Contract needed; no solver in this bundle |
 | `physics.projectile-trajectory` | Physics | Produce deterministic trajectory samples with model/version, assumptions, units, and run provenance | Candidate dependency; use the Physics-owned experiment, never duplicate its solver |
 | `physics.target-intersection` | Physics | Classify a trajectory against a declared target using supported geometry and tolerances | Not available until Physics exposes a tested intersection contract |
@@ -37,6 +37,8 @@ Names below are stable *proposed semantic keys*, not assigned numeric MicroBundl
 | `castle-siege.presentation` | WebPage/WebApp + Visualize/Renderer | Present the authored scene, controls, actual evidence, and feedback | Host/presentation concern; must not be authoritative for physics or score |
 
 This is a capability map, not a requirement to create eleven packages immediately. Some rows may remain manifest requirements or contracts rather than standalone bundles until they have a coherent independent boundary and a real implementation.
+
+The first authored content contract is [BATTLESPACE_CONTENT_CONTRACT.md](BATTLESPACE_CONTENT_CONTRACT.md), with a schema and illustrative data file. It establishes content identity and declared bounds only; it is not yet a runtime capability or Physics collision contract.
 
 ## First useful composition
 
