@@ -37,6 +37,22 @@ The roadmap is ordered around a working path rather than repository completeness
 - [ ] Add character/event authoring and the evidence/string board.
 - [ ] Add explainable viewpoint scoring and temporal playback.
 
+## Castle Siege — first physics-backed game Experience
+
+The design contract lives in [Castle Siege Experience](CASTLE_SIEGE_EXPERIENCE.md). This is an Experience project, not a new physics engine or a competing host. Physics must supply verified outcomes; WebPage/WebApp owns the scene manifestation and controls.
+
+- [x] Establish cross-repository ownership, staged physics gates, equal-kit build rules, alternating-turn rules, and truthful capability labels.
+- [ ] Reserve a unique Experience/bundle identity and define its versioned semantic entry/manifest contract.
+- [ ] Add an independently buildable Castle Siege MicroBundle using the current GUI Core contract.
+- [ ] Add a capability-aware entry surface that clearly distinguishes scene-only preview from working simulation.
+- [ ] Define and test the Experience-to-Physics adapter against the actual trajectory experiment output.
+- [ ] Deliver the first single-player slice: one siege engine, one target region, real trajectory samples, and a hit/miss/indeterminate result.
+- [ ] Add impact diagnostics and a bounded, testable target response before presenting damage as computed.
+- [ ] Define canonical build-piece identities, placement/connection validation, and immutable locked-build snapshots.
+- [ ] Implement local equal-kit build phase and alternating attacks with canonical command/event history.
+- [ ] Add structural failure/debris only when supported by Physics contracts.
+- [ ] Add online match authority, reconnect behavior, and anti-duplicate command handling only after deterministic local matches work.
+
 ## Phase 2 — Immutable Experience manifests
 
 - [ ] Extend Experience bundle requests with artifact version and content hash.
