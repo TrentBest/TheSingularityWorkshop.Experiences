@@ -10,24 +10,137 @@
     }
   ],
   "destinations": [
-    { "id": "welcome", "title": "Welcome", "kind": "hub-tab", "hostRouteKey": "hub:welcome", "revealStage": 0 },
-    { "id": "singularity-laboratory", "title": "Singularity Laboratory", "kind": "hub-tab", "hostRouteKey": "hub:demonstrations", "revealStage": 1 },
-    { "id": "singularity-architecture", "title": "Singularity Architecture", "kind": "route", "hostRouteKey": "architecture", "revealStage": 2 },
-    { "id": "singularity-city", "title": "Singularity City", "kind": "route", "hostRouteKey": "city-lab", "revealStage": 3 },
-    { "id": "economy", "title": "Economy", "kind": "hub-tab", "hostRouteKey": "hub:economy", "revealStage": 4 },
-    { "id": "digitens", "title": "Digitens", "kind": "route", "hostRouteKey": "digitens", "revealStage": 4 },
-    { "id": "protocolai-terminal", "title": "ProtocolAi Terminal", "kind": "route", "hostRouteKey": "protocolai-terminal", "revealStage": 5 },
-    { "id": "movement-lab", "title": "Movement Lab", "kind": "route", "hostRouteKey": "movement-lab", "revealStage": 5 },
-    { "id": "replay-lab", "title": "Replay Lab", "kind": "route", "hostRouteKey": "replay-lab", "revealStage": 6 },
-    { "id": "singularity-studios", "title": "Singularity Studios", "kind": "route", "hostRouteKey": "singularity-studios", "revealStage": 6 }
+    {
+      "id": "welcome",
+      "title": "Welcome",
+      "kind": "hub-tab",
+      "hostRouteKey": "hub:welcome",
+      "revealStage": 0
+    },
+    {
+      "id": "singularity-laboratory",
+      "title": "Singularity Laboratory",
+      "kind": "hub-tab",
+      "hostRouteKey": "hub:demonstrations",
+      "revealStage": 1
+    },
+    {
+      "id": "singularity-architecture",
+      "title": "Singularity Architecture",
+      "kind": "route",
+      "hostRouteKey": "architecture",
+      "revealStage": 2
+    },
+    {
+      "id": "singularity-city",
+      "title": "Singularity City",
+      "kind": "route",
+      "hostRouteKey": "city-lab",
+      "revealStage": 3
+    },
+    {
+      "id": "economy",
+      "title": "Economy",
+      "kind": "hub-tab",
+      "hostRouteKey": "hub:economy",
+      "revealStage": 4
+    },
+    {
+      "id": "digitens",
+      "title": "Digitens",
+      "kind": "route",
+      "hostRouteKey": "digitens",
+      "revealStage": 4
+    },
+    {
+      "id": "protocolai-terminal",
+      "title": "ProtocolAi Terminal",
+      "kind": "route",
+      "hostRouteKey": "protocolai-terminal",
+      "revealStage": 5
+    },
+    {
+      "id": "movement-lab",
+      "title": "Movement Lab",
+      "kind": "route",
+      "hostRouteKey": "movement-lab",
+      "revealStage": 5
+    },
+    {
+      "id": "replay-lab",
+      "title": "Replay Lab",
+      "kind": "route",
+      "hostRouteKey": "replay-lab",
+      "revealStage": 6
+    },
+    {
+      "id": "singularity-studios",
+      "title": "Singularity Studios",
+      "kind": "route",
+      "hostRouteKey": "singularity-studios",
+      "revealStage": 6
+    }
   ],
   "progression": [
-    { "stage": 1, "triggerDestination": "welcome", "reveals": ["singularity-laboratory"] },
-    { "stage": 2, "triggerDestination": "singularity-laboratory", "reveals": ["singularity-architecture"] },
-    { "stage": 3, "triggerDestination": "singularity-architecture", "reveals": ["singularity-city"] },
-    { "stage": 4, "triggerDestination": "singularity-city", "reveals": ["economy", "digitens"] },
-    { "stage": 5, "triggerDestination": "digitens", "reveals": ["protocolai-terminal", "movement-lab"] },
-    { "stage": 6, "triggerDestination": "movement-lab", "reveals": ["replay-lab", "singularity-studios"] }
+    {
+      "stage": 1,
+      "triggerDestinations": [
+        "welcome"
+      ],
+      "reveals": [
+        "singularity-laboratory"
+      ]
+    },
+    {
+      "stage": 2,
+      "triggerDestinations": [
+        "singularity-laboratory"
+      ],
+      "reveals": [
+        "singularity-architecture"
+      ]
+    },
+    {
+      "stage": 3,
+      "triggerDestinations": [
+        "singularity-architecture"
+      ],
+      "reveals": [
+        "singularity-city"
+      ]
+    },
+    {
+      "stage": 4,
+      "triggerDestinations": [
+        "singularity-city"
+      ],
+      "reveals": [
+        "economy",
+        "digitens"
+      ]
+    },
+    {
+      "stage": 5,
+      "triggerDestinations": [
+        "economy",
+        "digitens"
+      ],
+      "reveals": [
+        "protocolai-terminal",
+        "movement-lab"
+      ]
+    },
+    {
+      "stage": 6,
+      "triggerDestinations": [
+        "protocolai-terminal",
+        "movement-lab"
+      ],
+      "reveals": [
+        "replay-lab",
+        "singularity-studios"
+      ]
+    }
   ],
   "notes": [
     "This file records the current WebPage visitor journey as Experience-owned data.",
