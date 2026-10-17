@@ -16,14 +16,14 @@ WebPage is a browser host, not the authoring home or compiled implementation of 
 - Demonstration catalog: `demonstrations.json` now contains all six records from the current WebPage host manifest.
 - Remaining content migration: visitor journey declarations and the host's runtime integration; the legacy WebPage copy remains until the new source is exercised.
 
-The MicroBundle IDs and versions are references to existing declared roots, not proof that arbitrary bundles can currently be fetched or loaded dynamically.
+The MicroBundle IDs and versions are references to existing declared roots, not proof that arbitrary bundles can currently be fetched or loaded dynamically. The Experience has a stable source key but no numeric Experience ID yet; the current MicroBundleRepository ExperienceArtifactAddress requires one before immutable publication.
 
 ## Host contract
 
 The WebPage host must provide:
 
 1. a default Experience identity/version and a user-selectable active manifest;
-2. a repository-backed manifest/artifact resolver with a clearly defined local cache/bootstrap path;
+2. a repository-backed manifest/artifact resolver with a clearly defined local cache/bootstrap path; the current MicroBundleRepository REST host exposes MicroBundle artifact routes but does not yet expose the ExperienceArtifact/IExperienceCatalog contract as HTTP endpoints;
 3. schema, identity, version, digest, dependency, and host-capability validation;
 4. candidate composition through FSM_COS before active-state mutation;
 5. atomic activation and rollback to the prior active Experience on failure;
