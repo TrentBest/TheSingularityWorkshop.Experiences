@@ -13,7 +13,8 @@ WebPage is a browser host, not the authoring home or compiled implementation of 
 - Experience: `workshop-showcase`
 - Version: `0.1.0`
 - Manifest: [manifest.json](manifest.json)
-- Follow-on content declarations: `demonstrations.json` and `journeys.json` (to be migrated from the current WebPage manifest)
+- Demonstration catalog: `demonstrations.json` now contains all six records from the current WebPage host manifest.
+- Remaining content migration: visitor journey declarations and the host's runtime integration; the legacy WebPage copy remains until the new source is exercised.
 
 The MicroBundle IDs and versions are references to existing declared roots, not proof that arbitrary bundles can currently be fetched or loaded dynamically.
 
