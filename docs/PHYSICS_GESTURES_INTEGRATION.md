@@ -39,7 +39,7 @@ Before adding a cross-package adapter, define the smallest host-neutral contract
 - A test that proves no raw Physics contact can silently become Supported or Slipping.
 - A visible, generated learning example that exposes the evidence and assessment side by side, with each quantity and assumption inspectable.
 
-Keep this as an integration MicroBundle; do not make either core depend on the other. If the existing host has no provider-resolution contract yet, first extend or implement that host boundary with tests rather than smuggling a registry into a core package. Any extension to MicroBundleDomain must be minimal, backward-compatible where practical, and coordinated with its owner.
+Keep this as an integration MicroBundle; do not make either core depend on the other. If the existing host has no provider-resolution contract yet, first extend or implement that host boundary with tests rather than smuggling a registry into a core package. Any extension to MicroBundleDomain must be minimal, backward-compatible where practical, and coordinated with its owner. The current provider boundary and proposed host-side resolution flow are documented in [MicroBundleDomain's Provider Resolution Contract](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleDomain/blob/development/docs/PROVIDER_RESOLUTION_CONTRACT.md).
 
 ## Learning-first manifestation
 
