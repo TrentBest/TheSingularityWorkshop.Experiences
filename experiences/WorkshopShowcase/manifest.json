@@ -9,7 +9,10 @@
       "name": "THE SINGULARITY WORKSHOP",
       "kind": "Moniker",
       "microBundles": [
-        { "bundleId": 2101, "version": "1.0.0" }
+        {
+          "bundleId": 2101,
+          "version": "1.0.0"
+        }
       ]
     }
   ],
@@ -18,7 +21,10 @@
       "name": "LIVING GUI",
       "kind": "Primary",
       "microBundles": [
-        { "bundleId": 2102, "version": "1.0.0" }
+        {
+          "bundleId": 2102,
+          "version": "1.0.0"
+        }
       ]
     }
   ],
@@ -26,19 +32,24 @@
     {
       "name": "Rendering",
       "microBundles": [
-        { "bundleId": 4100, "version": "0.1.0" }
+        {
+          "bundleId": 4100,
+          "version": "0.1.0"
+        }
       ]
     },
     {
       "name": "ProtocolAi Terminal",
       "microBundles": [
-        { "bundleId": 4099, "version": "0.1.0" }
+        {
+          "bundleId": 4099,
+          "version": "0.1.0"
+        }
       ]
     }
   ],
   "content": {
-    "demonstrations": "demonstrations.json",
-    "journeys": "journeys.json"
+    "demonstrations": "demonstrations.json"
   },
   "manifestContract": "workshop-experience-manifest/v1",
   "notes": [
