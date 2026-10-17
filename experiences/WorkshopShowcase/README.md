@@ -18,7 +18,7 @@ The manifest is an initial repository-owned contract, not proof of runtime artif
 
 ## Next migration steps
 
-1. Move the existing showcase demonstration and journey definitions into this folder.
+1. The current six-entry demonstration catalog has been copied here; now migrate journey definitions and make WebPage consume this catalog before removing the duplicate host copy.
 2. Publish this Experience manifest and content as immutable, versioned artifacts through the Experience/MicroBundle repository path.
 3. Update WebPage to choose an Experience identity/version, resolve the manifest, validate all references, and compose a candidate with FSM_COS.
 4. Activate only after successful resolution/composition; retain the previous active Experience on failure.
