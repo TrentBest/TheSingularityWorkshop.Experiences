@@ -1,0 +1,51 @@
+{
+  "experienceId": "workshop-showcase",
+  "version": "0.1.0",
+  "demonstrations": [
+    {
+      "id": "gpu-instancing-webgpu",
+      "title": "GPU Instancing — Browser WebGPU Proof",
+      "summary": "A standalone browser sample for adjusting 1,000–50,000 procedural triangle instances, observer offset, and motion.",
+      "whyItMatters": "It explores how large populations can share one instanced draw call while near and far cohorts update at different cadences.",
+      "status": "Runnable proof — local sample; not hosted by WebPage",
+      "whatItProves": "A browser WebGPU instancing experiment and a visible starting point for evaluating population rendering and update cadence.",
+      "whatItDoesNotProve": "A native .NET IVisualizerBackend, Renderer Event Horizon integration, FSM_API/FSM_COS scheduling, compute-to-render, production performance, or a controlled benchmark. The FPS display is an estimate.",
+      "launchMode": "Run locally",
+      "runInstructions": "From the TheSingularityWorkshop.Visualize repository root, run py -m http.server 8080, then open http://localhost:8080/samples/WebGpuInstancingProof/ in a WebGPU-capable browser. This sample is not currently hosted by WebPage.",
+      "sourceUrl": "https://github.com/TrentBest/TheSingularityWorkshop.Visualize/pull/5",
+      "requirements": "A checkout containing samples/WebGpuInstancingProof, Python's static server, and a browser with WebGPU support.",
+      "requiredHostCapabilities": ["WebGPU"],
+      "diagramKind": null
+    },
+    {
+      "id": "native-wpf-d3d12-surface",
+      "title": "Native WPF / Direct3D 12 Surface Proof",
+      "summary": "A technical walkthrough of the exploratory native WPF surface, device and queue setup, swapchain presentation, resizing, and resource lifecycle.",
+      "whyItMatters": "It explores the boundary between a native desktop host and Direct3D 12 presentation without claiming that the full renderer exists.",
+      "status": "Experimental — source and explanation",
+      "whatItProves": "The exploratory native surface setup and lifecycle represented in the source.",
+      "whatItDoesNotProve": "Geometry rendering, a selected production backend, a real hardware performance result, or a complete Visualize implementation.",
+      "launchMode": "Read explanation",
+      "runInstructions": "This is a native application proof, not a browser demo. Inspect the source; no verified public executable or runtime capture is currently provided.",
+      "sourceUrl": "https://github.com/TrentBest/TheSingularityWorkshop.Visualize/tree/development/samples/WpfD3D12Proof",
+      "requirements": "Native Windows/WPF and Direct3D 12 development environment for local investigation.",
+      "requiredHostCapabilities": ["WPF", "Direct3D12"],
+      "diagramKind": "native-surface-lifecycle"
+    },
+    {
+      "id": "renderer-event-horizon-buckets",
+      "title": "Event Horizon Buckets — Renderer Architecture",
+      "summary": "Explore processing buckets that refresh at different rates, retain valid cached output, and invalidate dependent results when source data changes.",
+      "whyItMatters": "It addresses the cost of updating every representation at the same frequency, while keeping cache validity and dependency propagation explicit.",
+      "status": "Experimental — architecture model",
+      "whatItProves": "The bucket model, dependency propagation, cache-validity rules, representation handoff contracts, membership indexing, and tests in the referenced work.",
+      "whatItDoesNotProve": "A complete spatial partitioner, a full production rendering pipeline, actual GPU execution, or measured end-to-end frame-rate gains.",
+      "launchMode": "Read explanation",
+      "runInstructions": "Review the pull request and its tests. WebPage presents this as an explanatory architecture model; it does not simulate or report performance measurements.",
+      "sourceUrl": "https://github.com/TrentBest/TheSingularityWorkshop.Renderer/pull/8",
+      "requirements": "No special browser capability is required to read the explanation. Renderer source and tests are required to inspect implementation evidence.",
+      "requiredHostCapabilities": [],
+      "diagramKind": "event-horizon-buckets"
+    }
+  ]
+}
