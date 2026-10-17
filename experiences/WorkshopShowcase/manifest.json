@@ -1,5 +1,4 @@
 {
-  "experienceId": "workshop-showcase",
   "version": "0.1.0",
   "kind": "Showcase",
   "title": "The Singularity Workshop",
@@ -56,6 +55,10 @@
     "This is an Experience-owned definition, not a WebPage host configuration.",
     "Bundle references are versioned roots; FSM_COS resolves dependencies.",
     "The current WebPage host has not yet been migrated to load this artifact at runtime.",
-    "New executable behavior must arrive as a trusted, versioned MicroBundle artifact; JSON is declarative data, not executable code."
-  ]
+    "New executable behavior must arrive as a trusted, versioned MicroBundle artifact; JSON is declarative data, not executable code.",
+    "The string key is stable for source control; a numeric Experience ID must be reserved before this can be published through the current MicroBundleRepository ExperienceArtifactAddress contract."
+  ],
+  "experienceKey": "workshop-showcase",
+  "experienceId": null,
+  "identityStatus": "pending-numeric-reservation"
 }
