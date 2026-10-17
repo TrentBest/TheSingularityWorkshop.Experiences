@@ -14,7 +14,7 @@ The WebPage host must eventually select this Experience by immutable identity/ve
 
 ## Current status
 
-The manifest is an initial repository-owned contract, not proof of runtime artifact resolution. Its numeric Experience ID is deliberately unassigned: the current MicroBundleRepository ExperienceArtifactAddress requires a numeric ID, and no Workshop Showcase ID has yet been reserved. The current WebPage host still loads its legacy host manifest from its own static assets and uses a compiled MicroBundle catalog. Do not describe the Experience as runtime-loaded until the host fetches this manifest through the repository boundary and demonstrates switching between two valid manifests without recompilation.
+The manifest, complete six-entry demonstration catalog, and current progressive-discovery journey are now repository-owned. This is not proof of runtime artifact resolution: WebPage still uses its compiled navigation progression and legacy host manifest. Its numeric Experience ID is deliberately unassigned: the current MicroBundleRepository ExperienceArtifactAddress requires a numeric ID, and no Workshop Showcase ID has yet been reserved. The current WebPage host still loads its legacy host manifest from its own static assets and uses a compiled MicroBundle catalog. Do not describe the Experience as runtime-loaded until the host fetches this manifest through the repository boundary and demonstrates switching between two valid manifests without recompilation.
 
 ## Next migration steps
 
