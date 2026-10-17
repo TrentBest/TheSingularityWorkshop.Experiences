@@ -42,4 +42,6 @@ The WebPage host must provide:
 
 ## Status
 
-This is the first repository-owned Experience manifest contract. It is not yet connected to WebPage runtime loading. WebPage should update its `WebPageLLM` handoff and orchestration documentation with implementation commits, tests, and remaining limitations.
+This is the first repository-owned Experience manifest contract. WebPage now has an initial same-origin host-manifest switch/reset API, candidate composition and activation, scoped Hub replacement, and Hub-lab controls; that API still reads the legacy WebPage host-manifest schema. It does **not yet** resolve this Experience-owned manifest or its content through MicroBundleRepository/cache. The next handoff is to implement that repository boundary and migrate the remaining showcase definitions without deleting the working fallback prematurely.
+
+WebPage implementation tracking: [WebPageLLM.md](https://github.com/TrentBest/WebPage/blob/development/docs/WebPageLLM.md). Tests/build status must be checked in the linked workflow before the initial host switch slice is called green.
