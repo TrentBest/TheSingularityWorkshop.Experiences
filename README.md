@@ -221,7 +221,7 @@ See [`docs/PUBLICATION.md`](docs/PUBLICATION.md) for the artifact boundary from 
 
 ## Workshop Showcase — WebApp-hosted Experience
 
-The initial repository-owned showcase definition lives in [`experiences/WorkshopShowcase`](experiences/WorkshopShowcase/README.md). It contains the versioned Experience manifest and the first moved demonstration records. This is the start of migrating showcase content out of WebPage; the WebPage host does not yet load these files through the repository at runtime.
+The initial repository-owned showcase definition lives in [`experiences/WorkshopShowcase`](experiences/WorkshopShowcase/README.md). It contains the versioned Experience manifest and the complete current six-entry demonstration catalog. This is the start of migrating showcase content out of WebPage; the WebPage host does not yet load these files through the repository at runtime.
 
 The intended boundary is Experience-owned identity, journeys, content, and MicroBundle requirements, resolved by the host through the repository path and composed by FSM_COS. WebPage remains responsible for browser lifecycle, host manifest selection, and presentation adapters.
 
