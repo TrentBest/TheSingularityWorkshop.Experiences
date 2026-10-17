@@ -14,7 +14,7 @@ WebPage is a browser host, not the authoring home or compiled implementation of 
 - Version: `0.1.0`
 - Manifest: [manifest.json](manifest.json)
 - Demonstration catalog: `demonstrations.json` now contains all six records from the current WebPage host manifest.
-- Remaining content migration: visitor journey declarations and the host's runtime integration; the legacy WebPage copy remains until the new source is exercised.
+- Journey declaration: `journeys.json` now records the current progressive-discovery destinations and reveal stages. WebPage still implements that progression in `NavMenu.razor`; keep the legacy behavior until the data-driven replacement passes browser tests.
 
 The MicroBundle IDs and versions are references to existing declared roots, not proof that arbitrary bundles can currently be fetched or loaded dynamically. The Experience has a stable source key but no numeric Experience ID yet; the current MicroBundleRepository ExperienceArtifactAddress requires one before immutable publication.
 
