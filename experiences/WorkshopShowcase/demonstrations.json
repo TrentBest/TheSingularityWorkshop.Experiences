@@ -1,5 +1,4 @@
 {
-  "experienceId": "workshop-showcase",
   "version": "0.1.0",
   "demonstrations": [
     {
@@ -100,5 +99,6 @@
       "diagramKind": null,
       "embeddedExperienceUrl": "/experiences/soldier-field/index.html"
     }
-  ]
+  ],
+  "experienceKey": "workshop-showcase"
 }
