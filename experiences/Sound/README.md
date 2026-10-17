@@ -6,6 +6,8 @@
 
 An Experience defines *what* is being experienced. A MicroBundle is a reusable, versioned capability/content unit that can be composed into an Experience. This document is an authored design contract, not a MicroBundleDomain descriptor, executable provider, audio engine, or Physics result.
 
+**Contract mapping:** [Map the design to the existing MicroBundleDomain and repository contracts](MICROBUNDLE_CONTRACT_MAPPING.md). This is still a design document; no executable sound bundle is claimed.
+
 ## Composition examples
 
 - **Instrument → section → ensemble → performance:** a cello instrument can belong to a cello section, which participates in an orchestra performance.
@@ -77,4 +79,4 @@ This first slice should not wait for a complete room-acoustics solver. Conversel
 - AnyApp is the desktop counterpart and should consume the same versioned Experience/data contracts.
 - Gestures may supply performer choreography but does not own ensemble semantics, score content, or acoustic calculations.
 
-**Next design gate:** identify the existing MicroBundle descriptor and artifact schemas that an authored Sound Experience must reference before introducing a parallel schema. Keep this proposal in design status until the concrete schema, provider, tests, and integration path exist.
+**Next design gate:** check the existing Experiences bundle-ID inventory, then build the smallest real source/content provider against the current MicroBundleDomain contract. Keep this proposal in design status until concrete implementations, tests, immutable artifact identities, and a browser/desktop integration path exist.
