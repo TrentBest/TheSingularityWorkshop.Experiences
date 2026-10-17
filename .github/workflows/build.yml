@@ -125,6 +125,87 @@ jobs:
       - name: Run motion contract tests
         run: dotnet test tests/Moniker.Motion.Wave.Tests/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.Tests.csproj --configuration Release --no-restore
 
+  # Treat living docs as testable deliverables: parse SVG/XML, check controls, and syntax-check embedded JavaScript.
+  validate-living-docs:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate SVG, HTML structure, interactions, and JavaScript syntax
+        run: python3 tools/validate_living_docs.py
+
+  # Generate a second proof from the actual GUI.Core and GUI.SVG APIs, not browser-authored markup.
+  render-living-docs:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Experiences
+        uses: actions/checkout@v7
+        with:
+          path: Experiences
+      - name: Checkout GUI source for real Core/SVG project references
+        uses: actions/checkout@v7
+        with:
+          repository: TrentBest/TheSingularityWorkshop.GUI
+          ref: development
+          path: TheSingularityWorkshop.GUI
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Generate casino and Story Forge scenes through GUI.Core → GUI.SVG
+        working-directory: Experiences
+        run: dotnet run --project samples/LivingDocs/LivingDocs.csproj --configuration Release -- "${RUNNER_TEMP}/living-docs"
+      - name: Validate generated SVG structure and visible meaning
+        run: |
+          python3 - <<'PY'
+          import glob
+          import os
+          import xml.etree.ElementTree as ET
+
+          paths = glob.glob(os.path.join(os.environ["RUNNER_TEMP"], "living-docs", "*.svg"))
+          if len(paths) != 2:
+              raise SystemExit(f"Expected 2 generated SVG proofs, found {len(paths)}: {paths}")
+
+          expectations = {
+              "casino-floor.svg": [
+                  "CAGE", "TABLE", "SLOT MACHINES", "BUY-IN", "WAGER",
+                  "PAYOUT", "CASH-OUT", "RECONCILIATION", "Δ = 0",
+              ],
+              "story-forge-coverage.svg": [
+                  "World events", "Mira", "The Archive", "Year 0", "Day 0",
+                  "Reign I", "World collection", "Series A", "Series B",
+                  "sequence ≠ chronology",
+              ],
+          }
+
+          for path in paths:
+              name = os.path.basename(path)
+              root = ET.parse(path).getroot()
+              if not root.tag.endswith("svg"):
+                  raise SystemExit(f"Not an SVG document: {path}")
+              visible_text = " ".join(
+                  "".join(node.itertext())
+                  for node in root.iter()
+                  if node.tag.split("}")[-1] == "text"
+              )
+              missing = [label for label in expectations[name] if label not in visible_text]
+              if missing:
+                  raise SystemExit(f"{name} parsed but lost expected visible content: {missing}")
+              shape_count = sum(
+                  1 for node in root.iter()
+                  if node.tag.split("}")[-1] in {"path", "rect", "line", "circle"}
+              )
+              if shape_count < 10:
+                  raise SystemExit(f"{name} contains only {shape_count} drawable elements")
+              print(f"Validated {name}: {shape_count} drawable elements and {len(expectations[name])} semantic labels")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: experiences-living-svg-proofs
+          path: ${{ runner.temp }}/living-docs/*.svg
+          if-no-files-found: error
+
   source-integration:
     runs-on: ubuntu-24.04
     strategy:

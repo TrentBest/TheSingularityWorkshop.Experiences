@@ -21,7 +21,13 @@ These are different timelines. A later author can add a newly discovered earlier
 - Edition snapshots that retain a fixed identity and fixed coverage.
 - Observation queries that ask what the story world says was true at a selected time.
 
-A future diegetic timeline manifestation can draw a hashed axis, selectable event markers, chapter/volume coverage bands, and playback controls from these concepts. The visual layer will query the data; it will not own the canonical story.
+The first living visualization now demonstrates the intended authoring question: **which interval of which timeline is covered by this exact place in this book?** Colored ranges on parallel timelines connect to same-colored sequence blocks. A series contains books; a collection can contain multiple series without flattening their separate reading orders.
+
+![Parallel story timelines connected to publication coverage](../../docs/assets/story-forge-coverage.svg)
+
+[Open the interactive timeline and book-coverage demo source](../../docs/demos/story-forge.html). Save the HTML file and open it locally to switch among timeline and publication scopes. This is an illustrative interaction prototype, not yet wired to the canonical StoryForge data. The visual layer must query the data; it must not own the canonical story.
+
+The intended rendering handoff is [StoryForge data](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/tree/development/src/StoryForge) → [Visualize](https://github.com/TrentBest/TheSingularityWorkshop.Visualize) → [GUI.Core neutral model](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/GUI_MODEL.md) → [GUI.SVG manifestation](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/SVG_ADAPTER.md). [Renderer](https://github.com/TrentBest/TheSingularityWorkshop.Renderer) is the policy boundary for selecting a representation suitable to the observer; it must not become the owner of story canon. The companion [C# scene proof](../../samples/LivingDocs/Program.cs) currently generates a GUI.Core → GUI.SVG representation from explicit sample scene data; it is not yet bound to the canonical StoryForge query model.
 
 ## Design principles
 

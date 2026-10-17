@@ -30,7 +30,19 @@ Keep Experience semantics and artifact identity here; let hosts own presentation
 
 ## 🟢 04 See it in a minute
 
-Start with the MVP vertical slice and publication path documented below; use the listed tests and artifact checks before treating an Experience as publishable.
+### Watch the model, not a paragraph
+
+![Living casino economy: cage, table, slots, and auditable ledger](docs/assets/casino-floor.svg)
+
+[Open the interactive casino-floor demo source](docs/demos/casino-floor.html) · [Casino ledger contracts](docs/GAMES_CASINO_LEDGER_DESIGN.md)
+
+![Story Forge: parallel timelines connected to book coverage](docs/assets/story-forge-coverage.svg)
+
+[Open the interactive Story Forge demo source](docs/demos/story-forge.html) · [Story Forge domain](src/StoryForge/README.md)
+
+The HTML demos are self-contained: download each file and open it locally to interact with the prototype. They currently use illustrative browser-side data, not the C# ledger or StoryForge domain. The polished README illustrations are authored visual prototypes; CI now also builds [the C# scene proof](samples/LivingDocs/Program.cs) against the actual GUI.Core and GUI.SVG source and uploads the generated SVGs as an artifact. This verifies the real manifestation path without claiming the browser mock is the runtime.
+
+The next integration step is to replace the authored snapshots with reviewed generated outputs, then connect domain-derived scene data through [Visualize](https://github.com/TrentBest/TheSingularityWorkshop.Visualize) and the [GUI.Core model](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/GUI_MODEL.md) → [GUI.SVG adapter](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/SVG_ADAPTER.md) path, with [Renderer](https://github.com/TrentBest/TheSingularityWorkshop.Renderer) selecting observer-appropriate representation.
 
 ## 🟪 05 Documentation and theory
 
