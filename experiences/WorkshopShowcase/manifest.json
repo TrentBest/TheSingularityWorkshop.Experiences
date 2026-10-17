@@ -48,7 +48,8 @@
     }
   ],
   "content": {
-    "demonstrations": "demonstrations.json"
+    "demonstrations": "demonstrations.json",
+    "journeys": "journeys.json"
   },
   "manifestContract": "workshop-experience-manifest/v1",
   "notes": [
