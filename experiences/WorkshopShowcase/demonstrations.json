@@ -11,10 +11,12 @@
       "whatItProves": "A browser WebGPU instancing experiment and a visible starting point for evaluating population rendering and update cadence.",
       "whatItDoesNotProve": "A native .NET IVisualizerBackend, Renderer Event Horizon integration, FSM_API/FSM_COS scheduling, compute-to-render, production performance, or a controlled benchmark. The FPS display is an estimate.",
       "launchMode": "Run locally",
-      "runInstructions": "From the TheSingularityWorkshop.Visualize repository root, run py -m http.server 8080, then open http://localhost:8080/samples/WebGpuInstancingProof/ in a WebGPU-capable browser. This sample is not currently hosted by WebPage.",
+      "runInstructions": "From the TheSingularityWorkshop.Visualize repository root, run `py -m http.server 8080`, then open `http://localhost:8080/samples/WebGpuInstancingProof/` in a WebGPU-capable browser. This sample is not currently hosted by WebPage.",
       "sourceUrl": "https://github.com/TrentBest/TheSingularityWorkshop.Visualize/pull/5",
       "requirements": "A checkout containing samples/WebGpuInstancingProof, Python's static server, and a browser with WebGPU support.",
-      "requiredHostCapabilities": ["WebGPU"],
+      "requiredHostCapabilities": [
+        "WebGPU"
+      ],
       "diagramKind": null
     },
     {
@@ -29,7 +31,10 @@
       "runInstructions": "This is a native application proof, not a browser demo. Inspect the source; no verified public executable or runtime capture is currently provided.",
       "sourceUrl": "https://github.com/TrentBest/TheSingularityWorkshop.Visualize/tree/development/samples/WpfD3D12Proof",
       "requirements": "Native Windows/WPF and Direct3D 12 development environment for local investigation.",
-      "requiredHostCapabilities": ["WPF", "Direct3D12"],
+      "requiredHostCapabilities": [
+        "WPF",
+        "Direct3D12"
+      ],
       "diagramKind": "native-surface-lifecycle"
     },
     {
@@ -46,6 +51,54 @@
       "requirements": "No special browser capability is required to read the explanation. Renderer source and tests are required to inspect implementation evidence.",
       "requiredHostCapabilities": [],
       "diagramKind": "event-horizon-buckets"
+    },
+    {
+      "id": "singularity-city-digitens",
+      "title": "Singularity City — Digitens Living-World Slice",
+      "summary": "Explore the current Digiten identity/place model, city topics, and the boundary between authored demonstration data and future autonomous routines.",
+      "whyItMatters": "A city showcase becomes credible when its citizens, places, and systems have explicit identities and honest implementation boundaries.",
+      "status": "Runnable WebPage experience — early slice",
+      "whatItProves": "The routed Digitens experience, current catalog-backed city information, and a visitor-facing explanation of the living-world architecture.",
+      "whatItDoesNotProve": "Autonomous Digiten behavior, persistent city simulation, production Renderer integration, or fully simulated transport and commerce.",
+      "launchMode": "Open experience",
+      "runInstructions": "Open /digitens in this WebPage checkout. The page distinguishes current data and demonstrations from systems that remain planned.",
+      "sourceUrl": "https://github.com/TrentBest/WebPage/tree/development/TheSingularityWorkshop/Pages/Digitens.razor",
+      "requirements": "No special browser capability is required.",
+      "requiredHostCapabilities": [],
+      "diagramKind": null,
+      "embeddedExperienceUrl": "/digitens"
+    },
+    {
+      "id": "singularity-city-lab",
+      "title": "Singularity City Lab — Three Skins and Historical Eras",
+      "summary": "Inspect a city-generation planning surface with selectable visual skins and historical/speculative eras.",
+      "whyItMatters": "The same spatial identity can support multiple presentations without confusing visual style with world data.",
+      "status": "Runnable WebPage experience — planning prototype",
+      "whatItProves": "A visitor can inspect the authored city model across visual treatments and historical/speculative framing.",
+      "whatItDoesNotProve": "A historically complete city model, a live procedural urban simulation, or production Renderer integration.",
+      "launchMode": "Open experience",
+      "runInstructions": "Open /city-lab in this WebPage checkout. Future-era chapters are explicitly fictional planning scenarios.",
+      "sourceUrl": "https://github.com/TrentBest/WebPage/tree/development/TheSingularityWorkshop/Pages/CityLab.razor",
+      "requirements": "No special browser capability is required.",
+      "requiredHostCapabilities": [],
+      "diagramKind": null,
+      "embeddedExperienceUrl": "/city-lab"
+    },
+    {
+      "id": "soldier-field-webgpu",
+      "title": "Soldier Field — Exoskeleton and Event Horizon Lab",
+      "summary": "Inspect an original science-fiction exoskeleton trooper, select semantic parts, derive preliminary engineering cut sheets, and scale independent per-horizon GPU workloads.",
+      "whyItMatters": "Stable semantic part records can feed the rendered soldier, cut sheets, future research boards, and geometry-quality variants from one source of truth.",
+      "status": "Live WebPage experience — exploratory WebGPU lab",
+      "whatItProves": "A same-origin WebGPU geometry lab with 38 stable semantic part records, a versioned engineering-data schema, downloadable data-derived cut sheets, and per-horizon stress telemetry.",
+      "whatItDoesNotProve": "Certified BIM, fabrication-ready geometry, production Renderer bucket integration, pixel-accurate obstruction handling, GPU timestamp measurements, or controlled performance gains.",
+      "launchMode": "Run in WebPage",
+      "runInstructions": "Open the embedded lab in a browser with WebGPU support. Inspect semantic parts and download preliminary JSON cut sheets. Population controls are a stress harness, not physical occupancy.",
+      "sourceUrl": "https://github.com/TrentBest/TheSingularityWorkshop.Visualize/pull/7",
+      "requirements": "A browser with WebGPU support. Part data are preliminary and are not manufacturing instructions.",
+      "requiredHostCapabilities": [],
+      "diagramKind": null,
+      "embeddedExperienceUrl": "/experiences/soldier-field/index.html"
     }
   ]
 }
