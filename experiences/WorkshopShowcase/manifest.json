@@ -1,0 +1,50 @@
+{
+  "experienceId": "workshop-showcase",
+  "version": "0.1.0",
+  "kind": "Showcase",
+  "title": "The Singularity Workshop",
+  "description": "A manifest-defined showcase of Workshop capabilities and their evidence.",
+  "startup": [
+    {
+      "name": "THE SINGULARITY WORKSHOP",
+      "kind": "Moniker",
+      "microBundles": [
+        { "bundleId": 2101, "version": "1.0.0" }
+      ]
+    }
+  ],
+  "running": [
+    {
+      "name": "LIVING GUI",
+      "kind": "Primary",
+      "microBundles": [
+        { "bundleId": 2102, "version": "1.0.0" }
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "Rendering",
+      "microBundles": [
+        { "bundleId": 4100, "version": "0.1.0" }
+      ]
+    },
+    {
+      "name": "ProtocolAi Terminal",
+      "microBundles": [
+        { "bundleId": 4099, "version": "0.1.0" }
+      ]
+    }
+  ],
+  "content": {
+    "demonstrations": "demonstrations.json",
+    "journeys": "journeys.json"
+  },
+  "manifestContract": "workshop-experience-manifest/v1",
+  "notes": [
+    "This is an Experience-owned definition, not a WebPage host configuration.",
+    "Bundle references are versioned roots; FSM_COS resolves dependencies.",
+    "The current WebPage host has not yet been migrated to load this artifact at runtime.",
+    "New executable behavior must arrive as a trusted, versioned MicroBundle artifact; JSON is declarative data, not executable code."
+  ]
+}
