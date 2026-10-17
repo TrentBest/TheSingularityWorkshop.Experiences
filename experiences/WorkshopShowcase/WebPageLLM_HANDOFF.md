@@ -23,7 +23,7 @@ The MicroBundle IDs and versions are references to existing declared roots, not 
 The WebPage host must provide:
 
 1. a default Experience identity/version and a user-selectable active manifest;
-2. a repository-backed manifest/artifact resolver with a clearly defined local cache/bootstrap path; the current MicroBundleRepository REST host exposes MicroBundle artifact routes but does not yet expose the ExperienceArtifact/IExperienceCatalog contract as HTTP endpoints; the consumer-facing API gap is tracked in [MicroBundleRepository issue #22](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleRepository/issues/22);
+2. a repository-backed manifest/artifact resolver with a clearly defined local cache/bootstrap path; the current MicroBundleRepository REST host exposes MicroBundle artifact routes but does not yet expose the ExperienceArtifact/IExperienceCatalog contract as HTTP endpoints; the consumer-facing API gap is tracked in [MicroBundleRepository issue #22](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleRepository/issues/22); the Showcase identity/publication prerequisite is tracked in [Experiences issue #19](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/issues/19);
 3. schema, identity, version, digest, dependency, and host-capability validation;
 4. candidate composition through FSM_COS before active-state mutation;
 5. atomic activation and rollback to the prior active Experience on failure;
