@@ -1,3 +1,5 @@
+using Xunit;
+
 using TheSingularityWorkshop.Experiences.DominoStudio;
 
 namespace TheSingularityWorkshop.Experiences.DominoStudio.Tests;
