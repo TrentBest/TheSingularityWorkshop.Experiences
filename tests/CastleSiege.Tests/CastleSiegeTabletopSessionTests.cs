@@ -30,7 +30,7 @@ public sealed class CastleSiegeTabletopSessionTests
         Assert.Equal("wall.abstract-breach-point", attack.RuleId);
         Assert.Equal("abstract-tabletop", attack.Classification);
         Assert.Equal(2, attack.StateAfter.WallIntegrity);
-        Assert.Equal(CastleSiegeRole.Defender, session.State.ActiveRole);
+        Assert.Equal(CastleSiegeRole.Defender, attack.StateAfter.ActiveRole);
 
         Assert.Equal(2, defend.Sequence);
         Assert.Equal(2, defend.TurnNumber);
