@@ -1,6 +1,6 @@
 # Castle Siege — Tabletop Vertical Slice
 
-**Status:** deterministic abstract rules core implemented; automated test coverage added; host presentation and current-head CI verification remain separate gates. This is not Physics integration and does not claim a rendered, host-runnable Experience.
+**Status:** deterministic abstract rules core and immutable session-report snapshot implemented; automated test coverage added; host presentation and current-head CI verification remain separate gates. This is not Physics integration and does not claim a rendered, host-runnable Experience.
 
 ## Purpose
 
@@ -29,11 +29,13 @@ The implemented rules core identifies its scenario as `castle.west-wall`, versio
 7. **Continue or finish.** Advance to the next turn or a declared terminal condition. The session can be replayed from its initial state and accepted action sequence.
 8. **Leave with evidence.** Present a compact after-action report: actions taken, state transitions, outcome, rules version, and replay status.
 
-The rules core implements state transitions and event evidence. The diegetic room/table UI and a complete host-runnable session remain future work. A later physical experiment is a separate, explicitly connected activity.
+The rules core implements state transitions and event evidence. `CastleSiegeSessionReport.Capture(session)` now creates a read-only point-in-time snapshot containing scenario key/version, rules version, current state, legal actions, ordered events, and outcome. Its event and legal-action collections do not change when the live session advances. The diegetic room/table UI and a complete host-runnable session remain future work. A later physical experiment is a separate, explicitly connected activity.
 
 ## Rules contract
 
 The current implementation in `src/CastleSiege/CastleSiegeTabletopSession.cs` defines the stable scenario key/version and rules version; immutable initial/current state; active role; explicit legal actions; turn and action validation; deterministic transition rules and terminal conditions; and canonical event sequence numbers, before/after state, rule IDs, explanation, and `abstract-tabletop` classification.
+
+The report contract in `src/CastleSiege/CastleSiegeSessionReport.cs` is a consumer-facing snapshot, not a second rules engine or game loop. It captures identity, state, legal actions, ordered events, and outcome without mutating the session. The snapshot is intended for a future host UI, diagnostics, and after-action presentation while leaving the rules engine independent of rendering.
 
 The fixed tabletop values are wall integrity 3, attacker shots 3, defender repair tokens 2. An attack spends one shot and removes one abstract wall point. A repair spends one token and restores one point up to the starting maximum. A defender may instead hold position. The attacker wins if integrity reaches zero; the defender wins if shots are exhausted while integrity remains positive. These are game rules, not physical measurements.
 
@@ -98,11 +100,11 @@ These are extension points, not failures of the first slice.
 ## Acceptance gates
 
 - [ ] A scenario definition can be inspected without executing it.
-- [ ] The initial state and legal actions are explicit.
-- [ ] The same accepted action sequence yields the same abstract state/event sequence.
-- [ ] Invalid and out-of-turn actions are rejected with explainable reasons.
-- [ ] Victory and draw conditions are deterministic and visible.
-- [ ] An after-action report identifies the scenario and rules version.
+- [x] The initial state and legal actions are explicit.
+- [x] The same accepted action sequence yields the same abstract state/event sequence.
+- [x] Invalid and out-of-turn actions are rejected with explainable reasons.
+- [x] Victory conditions are deterministic and visible.
+- [x] An after-action report identifies the scenario and rules version.
 - [ ] The presentation distinguishes abstract results from physical observations and authored effects.
 - [ ] Tests run in CI before any claim of implementation readiness.
 - [ ] No publication or deployment occurs without separate approval.
