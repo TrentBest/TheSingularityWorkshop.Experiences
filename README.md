@@ -34,7 +34,7 @@ Start with the MVP vertical slice and publication path documented below; use the
 
 ## 🟪 05 Documentation and theory
 
-[MVP vertical slice](#the-mvp-vertical-slice) · [Castle Siege preforge home](experiences/CastleSiege/README.md) · [Sound Experiences and MicroBundles](experiences/Sound/README.md) · [Castle Siege Experience](experiences/CastleSiege/design/EXPERIENCE.md) · [Castle Siege manifest](experiences/CastleSiege/manifest/MANIFEST.md) · [Publication](#publication) · [Artifact identity](#artifact-identity) · [Architectural rules](#architectural-rules) · [Engineering quality standard](docs/ENGINEERING_QUALITY_STANDARD.md)
+[MVP vertical slice](#the-mvp-vertical-slice) · [Castle Siege preforge home](experiences/CastleSiege/README.md) · [Sound Experiences and MicroBundles](experiences/Sound/README.md) · [Castle Siege Experience](experiences/CastleSiege/design/EXPERIENCE.md) · [Castle Siege manifest](experiences/CastleSiege/manifest/MANIFEST.md) · [Marble Run](experiences/MarbleRun/README.md) · [Domino Studio](experiences/DominoStudio/README.md) · [Physics/MicroBundle boundary](docs/MARBLE_RUN_AND_DOMINO_MICROBUNDLE_BOUNDARY.md) · [Publication](#publication) · [Artifact identity](#artifact-identity) · [Architectural rules](#architectural-rules) · [Engineering quality standard](docs/ENGINEERING_QUALITY_STANDARD.md)
 
 ---
 
