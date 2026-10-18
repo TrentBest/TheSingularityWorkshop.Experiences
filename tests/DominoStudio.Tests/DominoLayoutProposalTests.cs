@@ -1,3 +1,5 @@
+using Xunit;
+
 namespace TheSingularityWorkshop.Experiences.DominoStudio.Tests;
 
 public sealed class DominoLayoutProposalTests
