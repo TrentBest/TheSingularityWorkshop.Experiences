@@ -38,6 +38,12 @@ The MicroBundleRepository stores/retrieves artifacts. It does not calculate phys
 - Thousands of marbles is a benchmark target, not a current claim.
 - The first push is the only authored domino impulse. Subsequent falls must emerge from the physical model. A pre-baked path may be used as a labelled playback/cache mode only when its initial state and model inputs match; it is not a substitute for live dynamics under changed conditions.
 
+## Record-scale starting point
+
+The published Guinness World Records page for [Most dominoes toppled by a group](https://www.guinnessworldrecords.com/world-records/most-dominoes-toppled-by-a-group) lists 4,491,863 dominoes, achieved on 13 November 2009. Use 4,491,863 as a **layout-storage and authoring stress target**, not as a claim that the current Physics solver can simulate that many bodies or reproduce the historical arrangement. The Domino Studio test constructs a linear, one-level grid with that many occupied slots to exercise the data representation only.
+
+A different topology is useful too: Guinness lists [Most dominoes toppled in a 3D pyramid](https://www.guinnessworldrecords.com/world-records/most-dominoes-toppled-in-a-3d-pyramid) as 29,193, achieved 20 June 2026. Treat this as a future multi-level geometry/overpass fixture target after the layout converter can represent actual placements and Physics can validate support/contact. A grid count alone is not a toppling simulation.
+
 ## Gesture ownership
 
 Do not modify the Gestures repository or add a dependency to it. Physics exposes observations and outcomes; the Gestures owner determines any motion-procedure interface. Any later integration belongs at the Experience/composition boundary and requires coordination with the responsible LLM.
