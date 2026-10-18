@@ -168,6 +168,48 @@ public sealed class CastleSiegeTabletopSessionTests
         Assert.Empty(session.GetLegalActions());
     }
 
+    [Fact]
+    public void ReportText_FormatsInitialStateAndExplicitlyMarksEvidenceBoundary()
+    {
+        var report = CastleSiegeSessionReport.Capture(new CastleSiegeTabletopSession());
+
+        var text = CastleSiegeSessionReportText.Format(report);
+
+        Assert.Contains("Scenario: castle.west-wall (v1)", text);
+        Assert.Contains("Rules: castle-siege-tabletop/1", text);
+        Assert.Contains("Outcome: InProgress", text);
+        Assert.Contains("Active role: Attacker", text);
+        Assert.Contains("  - FireAtWestWall", text);
+        Assert.Contains("Event history (abstract-tabletop):", text);
+        Assert.Contains("(no accepted actions)", text);
+        Assert.Contains("no physical trajectory, intersection, impact, or damage was calculated", text);
+    }
+
+    [Fact]
+    public void ReportText_FormatsOrderedEventsWithoutAdvancingTheSession()
+    {
+        var session = new CastleSiegeTabletopSession();
+        session.Apply(new CastleSiegeAction(CastleSiegeRole.Attacker, CastleSiegeActionKind.FireAtWestWall));
+        var report = CastleSiegeSessionReport.Capture(session);
+        var stateBeforeFormat = session.State;
+        var eventCountBeforeFormat = session.Events.Count;
+
+        var text = CastleSiegeSessionReportText.Format(report);
+
+        Assert.Contains("#1 | turn 1 | Attacker | FireAtWestWall", text);
+        Assert.Contains("Rule: wall.abstract-breach-point", text);
+        Assert.Contains("State: wall 3 -> 2; shots 3 -> 2; repairs 2 -> 2", text);
+        Assert.Contains("The tabletop attack spends one shot", text);
+        Assert.Equal(stateBeforeFormat, session.State);
+        Assert.Equal(eventCountBeforeFormat, session.Events.Count);
+    }
+
+    [Fact]
+    public void ReportText_RejectsNullReport()
+    {
+        Assert.Throws<ArgumentNullException>(() => CastleSiegeSessionReportText.Format(null!));
+    }
+
     private static CastleSiegeTabletopSession Run(IEnumerable<CastleSiegeAction> actions)
     {
         var session = new CastleSiegeTabletopSession();
