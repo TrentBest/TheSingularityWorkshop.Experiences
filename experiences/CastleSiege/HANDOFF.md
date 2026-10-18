@@ -62,8 +62,8 @@ Those historical runs completed successfully, but do not establish that later co
 
 ## Recommended next steps
 
-1. **Add the diegetic Wargaming Hall manifestation.** Keep the presentation as a consumer of the report and rules evidence; do not make visual effects authoritative.
-2. **Exercise the report consumer in a real host.** The plain-text formatter is a first inspection surface, not a rendered or interactive scene.
+1. **Build a minimal host-runnable Wargaming Hall surface.** Use the concept illustration as design guidance, consume `CastleSiegeSessionReport`, and keep visible state downstream of the authoritative rules/report. Do not make visual effects authoritative.
+2. **Exercise legal actions through the host.** Show an action selection, resulting report snapshot, and ordered events without introducing a second rules loop.
 4. **Continue the renderer-independent authored-content consumer.** Read caller-provided JSON and validate runtime invariants without claiming full JSON Schema validation.
 5. **Close the Physics contract gap.** Inspect Physics directly, agree on launch/run-evidence contracts and coordinate conventions, and wait for a tested target-intersection contract before reporting hit/miss/indeterminate or damage.
 6. **Expand only after the first proof.** Add supported impact observation, Experience-owned bounded damage rules, construction/attack/reset phases, optional Gestures choreography, and later campaign depth as independently testable increments.
