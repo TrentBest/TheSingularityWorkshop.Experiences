@@ -14,7 +14,7 @@ public sealed class CastleSiegeTabletopSessionTests
         Assert.Equal(1, CastleSiegeTabletopSession.ScenarioVersion);
         Assert.Equal("castle-siege-tabletop/1", CastleSiegeTabletopSession.RulesVersion);
         Assert.Equal(CastleSiegeTabletopSession.InitialState(), session.State);
-        Assert.Equal([CastleSiegeActionKind.FireAtWestWall], session.GetLegalActions());
+        Assert.Equal(CastleSiegeActionKind.FireAtWestWall, Assert.Single(session.GetLegalActions()));
     }
 
     [Fact]
