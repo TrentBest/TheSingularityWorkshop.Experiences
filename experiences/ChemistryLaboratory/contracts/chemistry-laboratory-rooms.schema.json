@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/blob/development/experiences/ChemistryLaboratory/contracts/chemistry-laboratory-rooms.schema.json",
+  "title": "Chemistry Laboratory Room Catalog",
+  "description": "Experience-owned, renderer-independent department room and visitor-journey definitions. This catalog is authored content, not executable chemistry.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "experienceKey", "status", "rooms"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "experienceKey": { "const": "chemistry-laboratory" },
+    "status": { "const": "preforge" },
+    "rooms": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["roomKey", "sequence", "title", "purpose", "visitorAction", "authoritativeState", "evidenceRule", "maturity"],
+        "properties": {
+          "roomKey": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+          "sequence": { "type": "integer", "minimum": 1, "maximum": 99 },
+          "title": { "type": "string", "minLength": 1 },
+          "purpose": { "type": "string", "minLength": 1 },
+          "visitorAction": { "type": "string", "minLength": 1 },
+          "authoritativeState": { "type": "string", "minLength": 1 },
+          "evidenceRule": { "type": "string", "minLength": 1 },
+          "maturity": { "enum": ["concept", "authored-data", "calculated", "simulated", "validated"] },
+          "requiredCapabilities": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          },
+          "nextRooms": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+            "uniqueItems": true
+          }
+        }
+      }
+    }
+  }
+}
