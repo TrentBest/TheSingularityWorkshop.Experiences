@@ -1,6 +1,6 @@
 # Safe Mishaps — Chemistry Laboratory Experience Contract
 
-**Status:** authored interaction design. This is not a chemistry hazard predictor, reaction solver, or implemented avatar animation.
+**Status:** design contract plus a host-neutral executable lifecycle state model. This is not a chemistry hazard predictor or implemented avatar animation.
 
 ## Design goal
 
@@ -17,6 +17,10 @@ The incident pipeline must keep three things distinct:
 3. **Presentation:** VFX, sound, avatar reaction, temporary controls, cleanup, and explanatory UI.
 
 The current atom/charge conservation analyzer cannot predict an explosion. A balanced reaction is not evidence that a reaction occurs; an unbalanced reaction is not a predictor of a blast. Until a verified model reports a relevant event, any face-full-of-smoke sequence must be labelled and treated as a **scripted comic mishap**, not scientific output.
+
+## Executable contract
+
+The host-neutral [ComicMishapSession](../../../src/Chemistry/ComicMishapSession.cs) now records the experiment snapshot, distinguishes scripted tutorial / model-reported / unknown triggers, enforces the presentation → recovery → evidence-review sequence, and prevents the session from representing death or permanent injury. Its tests are in [ComicMishapSessionTests.cs](../../../tests/Chemistry.Tests/ComicMishapSessionTests.cs). This is lifecycle logic only: it does not animate the avatar, run chemistry, or claim to infer hazardous outcomes.
 
 ## Event lifecycle
 
