@@ -8,6 +8,8 @@
 
 The seven rooms also have a renderer-independent [structured room catalog](contracts/rooms.json), checked against its [JSON Schema](contracts/chemistry-laboratory-rooms.schema.json). This is authored Experience content, not yet a runtime-loaded floor or an executable chemistry model.
 
+The [Fluid Dynamics Laboratory](../FluidDynamicsLaboratory/README.md) complements this department with water, waves, bathymetry, rainfall, and the still-developing boundary between fluid state and solid-body interaction. Chemistry owns species and reaction intent; Physics owns domain models and any verified cross-domain exchange.
+
 ## The floor
 
 - **01 · Atomic Gallery** — inspect element identity, atomic number, symbol, and atomic weight; compare known properties only when their provenance and units are available.
