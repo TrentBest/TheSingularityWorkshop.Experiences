@@ -19,6 +19,7 @@ jobs:
           - src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj
           - src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj
           - src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
+          - src/Chemistry/TheSingularityWorkshop.Experiences.Chemistry.csproj
           - src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj
           - src/Games.Cards/TheSingularityWorkshop.Games.Cards.csproj
           - src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj
@@ -42,6 +43,16 @@ jobs:
           assembly="$(basename "${project}" .csproj).dll"
           mkdir -p "./artifacts/assemblies/${{ matrix.project }}"
           cp "$(dirname "${project}")/bin/Release/net8.0/${assembly}" "./artifacts/assemblies/${{ matrix.project }}/${assembly}"
+
+  test-chemistry:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Run chemistry conservation tests
+        run: dotnet test tests/Chemistry.Tests/TheSingularityWorkshop.Experiences.Chemistry.Tests.csproj --configuration Release
 
   package:
     if: github.event_name == 'workflow_dispatch'
