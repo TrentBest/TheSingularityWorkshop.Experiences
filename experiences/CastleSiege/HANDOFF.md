@@ -2,13 +2,13 @@
 
 **Handoff date:** 2026-10-18  
 **Working branch:** `development`  
-**Status:** authored preforge and battlespace contract are documented and contract-tested; tabletop rules slice is specified but not implemented; no playable simulation or live Physics integration is claimed.
+**Status:** authored preforge and battlespace contract are documented and contract-tested; a deterministic abstract tabletop rules core and focused tests are committed; current-head CI verification is pending; no live Physics integration or rendered playable scene is claimed.
 
 ## Executive summary
 
 Castle Siege is an authored Experience under `experiences/CastleSiege/`, not a physics solver or presentation engine. Its first authored battlespace describes terrain, a castle wall, a target region, and one siege apparatus using stable semantic IDs and declared coordinates.
 
-The next game-facing proof is now specified in [Tabletop Vertical Slice](design/TABLETOP_VERTICAL_SLICE.md): the West Wall Demonstration. This is deliberately an **abstract, deterministic tabletop rules exercise**, independent of Physics, so a visitor can choose a role, take a legal action, inspect the transition, and replay the result before any physical claim is connected.
+The West Wall Demonstration now has an executable, renderer-independent tabletop rules core in [CastleSiegeTabletopSession.cs](../../../src/CastleSiege/CastleSiegeTabletopSession.cs). It is a small deterministic abstract rules exercise, independent of Physics: a session driver can choose an active role's legal action, inspect a transition, and replay the accepted action sequence. Outcomes are classified as `abstract-tabletop`, never as calculated impacts.
 
 ## Where the work landed
 
@@ -21,6 +21,12 @@ The next game-facing proof is now specified in [Tabletop Vertical Slice](design/
 - [MicroBundle growth plan](design/MICROBUNDLE_GROWTH_PLAN.md) — proposed semantic capability boundaries and maturity gates. These are not numeric bundle IDs and are not claims that all listed capabilities exist.
 - [Battlespace content contract](design/BATTLESPACE_CONTENT_CONTRACT.md) — object identity, geometry representation, coordinate frame, validation boundary, and ownership.
 - [Battlespace JSON Schema](../contracts/castle-siege-battlespace.schema.json) and [illustrative example](../contracts/castle-siege-battlespace.example.json) — first authored content shape and sample world.
+
+### Deterministic tabletop rules core
+
+[CastleSiegeTabletopSession.cs](../../../src/CastleSiege/CastleSiegeTabletopSession.cs) adds a versioned scenario, immutable state records, explicit legal actions, role/turn enforcement, deterministic transition rules, terminal outcomes, and canonical ordered event evidence.
+
+The initial tabletop rules use wall integrity 3, attacker shots 3, and defender repair tokens 2. Attacks spend a shot and remove one abstract wall point; repairs spend a token and restore one point up to the maximum; defenders may hold. The attacker wins at zero integrity; the defender wins when shots are exhausted with the wall standing. These are game rules, not physical constants. The core has no Physics, renderer, host-loop, random, or new MicroBundle dependencies.
 
 ### Buildable entry surface and evidence adapter
 
@@ -52,7 +58,16 @@ Those historical runs completed successfully, but do not establish that later co
 8. **Do not confuse authored bounds with collision geometry.** Current axis-aligned boxes are descriptive authored bounds. No target-intersection result can be claimed until Physics exposes a tested supported geometry/intersection contract.
 9. **Keep outcome authority deterministic and renderer-independent.** Animation, frame rate, and host presentation cannot change accepted actions or rule results.
 
-## Recommended implementation sequence
+## Recommended next steps
+
+1. **Run and verify current-head tests.** Check the workflow run triggered by these commits and fix any compile/test issues before proceeding.
+2. **Build a minimal host-neutral session/report consumer.** Make legal actions, current state, ordered events, scenario/rules identity, and outcome inspectable without adding a rendering dependency.
+3. **Add the diegetic Wargaming Hall manifestation.** Keep presentation as a consumer of rules evidence.
+4. **Continue the renderer-independent authored-content consumer.** Read caller-provided JSON and validate runtime invariants without claiming full JSON Schema validation.
+5. **Close the Physics contract gap.** Inspect Physics directly, agree on launch/run-evidence contracts and coordinate conventions, and wait for a tested target-intersection contract before reporting hit/miss/indeterminate or damage.
+6. **Expand only after the first proof.** Add supported impact observation, Experience-owned bounded damage rules, construction/attack/reset phases, optional Gestures choreography, and later campaign depth as independently testable increments.
+
+## Previous implementation sequence (superseded)
 
 ### 1. Implement the tabletop rules loop
 
@@ -112,4 +127,4 @@ All work described here is on `development`. Preserve the repository's Sith poli
 6. [MicroBundle growth plan](design/MICROBUNDLE_GROWTH_PLAN.md).
 7. [Entry-surface project](../../../src/CastleSiege/).
 
-**The next proof should be executable and tested: a tiny deterministic tabletop turn loop. It should illuminate the architecture without claiming Physics integration or taking ownership of adjacent repositories.**
+**The next proof is a host-neutral session/report consumer for the implemented tabletop rules core. Keep it inspectable and testable without claiming Physics integration or taking ownership of adjacent repositories.**
