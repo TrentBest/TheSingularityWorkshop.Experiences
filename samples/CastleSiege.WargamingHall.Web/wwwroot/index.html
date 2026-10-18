@@ -17,8 +17,11 @@
     .panel { border: 1px solid #34414e; border-radius: 16px; background: #171f28eF; padding: 20px; box-shadow: 0 18px 45px #0002; min-width: 0; }
     h2 { margin: 0 0 14px; font-size: 1.05rem; }
     .wall { display: flex; gap: 10px; margin: 22px 0; }
-    .pip { display: block; flex: 1; height: 14px; border-radius: 4px; background: #43515e; border: 1px solid #627384; }
+    .pip { display: block; flex: 1; height: 14px; border-radius: 4px; background: #43515e; border: 1px solid #627384; transition: background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease; }
     .pip.live { background: #d69a51; border-color: #f0c17e; box-shadow: 0 0 18px #d69a5130; }
+    button:focus-visible { outline: 3px solid #f0c17e; outline-offset: 3px; }
+    #integrity, #shots, #repairs, #role, #turn, #outcome { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; } }
     .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .stat { background: #202b36; padding: 14px; border-radius: 10px; }
     .stat small { display: block; color: #9fb0be; margin-bottom: 7px; }
@@ -51,7 +54,7 @@
       <h2 id="wall-heading">West wall integrity</h2>
       <div id="wall" class="wall" role="img" aria-label="Wall integrity"></div>
       <div class="stats">
-        <div class="stat"><small>Integrity</small><strong id="integrity">—</strong></div>
+        <div class="stat"><small>Integrity</small><strong id="integrity" aria-live="polite" aria-atomic="true">—</strong></div>
         <div class="stat"><small>Attacker shots</small><strong id="shots">—</strong></div>
         <div class="stat"><small>Defender repairs</small><strong id="repairs">—</strong></div>
       </div>
@@ -114,6 +117,7 @@
     view.legalActions.forEach(action => {
       const button = node("button", labels[action] || action);
       button.type = "button";
+      button.setAttribute("aria-label", view.activeRole + ": " + (labels[action] || action));
       button.disabled = busy;
       button.addEventListener("click", () => applyAction(action));
       actions.append(button);
