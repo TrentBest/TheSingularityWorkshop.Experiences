@@ -6,6 +6,8 @@
 
 ![Chemistry Laboratory conceptual floor plan](assets/chemistry-laboratory-floor.svg)
 
+The seven rooms also have a renderer-independent [structured room catalog](contracts/rooms.json), checked against its [JSON Schema](contracts/chemistry-laboratory-rooms.schema.json). This is authored Experience content, not yet a runtime-loaded floor or an executable chemistry model.
+
 ## The floor
 
 - **01 · Atomic Gallery** — inspect element identity, atomic number, symbol, and atomic weight; compare known properties only when their provenance and units are available.
