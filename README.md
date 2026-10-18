@@ -52,6 +52,14 @@ An Experience is not a WebApp, not a desktop window, and not a VR scene.
 
 An Experience can have multiple manifestations.
 
+## Digitens populate the universe
+
+Digitens are the Workshop's digital citizens and belong to the world across institutions and experiences—not to one isolated page or demo. They arrive and depart, occupy roles, work at places, and provide the familiar human-scale interactions through which visitors use the world: a bank teller at a bank, a shopkeeper at a store, a technician in a laboratory, or a guide in the Exploratorium.
+
+Treat citizen identity, role, lifecycle, workplace/service association, and interaction contracts as meaningful state. Browser, desktop, and VR hosts may render the same citizen differently, but must not invent unrelated populations for each manifestation. A role is not a functioning service until its underlying capability exists and is verified; design previews and current population visuals must be labelled honestly.
+
+The Experience layer describes the citizen and authored intent; FSM_COS composes the needed capabilities; domain systems own authoritative work and state; hosts present the encounter. Digitens should make the universe feel inhabited everywhere, while their actual jobs give the visitor a reason to engage.
+
     EXPERIENCE
         |
         +-------------+-------------+
