@@ -2,7 +2,7 @@
 
 **Handoff date:** 2026-10-18  
 **Working branch:** `development`  
-**Status:** authored preforge and battlespace contract are documented and contract-tested; the deterministic abstract tabletop rules core, immutable session-report snapshot, and focused tests are committed. The latest observed workflow for commit `4c470304` completed: Castle Siege build, source-integration, and focused tests passed; repository-wide status failed because the separate DominoStudio test and build jobs failed. No live Physics integration or rendered playable scene is claimed.
+**Status:** authored preforge and battlespace contract are documented and contract-tested; the deterministic abstract tabletop rules core, immutable session-report snapshot, plain-text report presenter, and focused tests are committed. The latest observed workflow for commit `4c470304` completed: Castle Siege build, source-integration, and focused tests passed; repository-wide status failed because the separate DominoStudio test and build jobs failed. No live Physics integration or rendered playable scene is claimed.
 
 ## Executive summary
 
@@ -28,7 +28,7 @@ The West Wall Demonstration now has an executable, renderer-independent tabletop
 
 The initial tabletop rules use wall integrity 3, attacker shots 3, and defender repair tokens 2. Attacks spend a shot and remove one abstract wall point; repairs spend a token and restore one point up to the maximum; defenders may hold. The attacker wins at zero integrity; the defender wins when shots are exhausted with the wall standing. These are game rules, not physical constants. The core has no Physics, renderer, host-loop, random, or new MicroBundle dependencies.
 
-[CastleSiegeSessionReport.cs](../../../src/CastleSiege/CastleSiegeSessionReport.cs) captures scenario/rules identity, current immutable state, legal actions, and ordered events as a stable read-only snapshot. Its outcome is derived from the captured state, avoiding contradictory duplicated outcome data. It does not mutate the session or run a second rules engine.
+[CastleSiegeSessionReport.cs](../../../src/CastleSiege/CastleSiegeSessionReport.cs) captures scenario/rules identity, current immutable state, legal actions, and ordered events as a stable read-only snapshot. Its outcome is derived from the captured state, avoiding contradictory duplicated outcome data. [CastleSiegeSessionReportText.cs](../../../src/CastleSiege/CastleSiegeSessionReportText.cs) formats that snapshot for host-side inspection, including state transitions and an explicit evidence-boundary statement. The presenter is pure text formatting: it does not mutate the session, run a second rules engine, or depend on rendering libraries.
 
 ### Buildable entry surface and evidence adapter
 
@@ -62,8 +62,8 @@ Those historical runs completed successfully, but do not establish that later co
 
 ## Recommended next steps
 
-1. **Build a minimal host-facing presentation proof.** Consume the report to make legal actions, current state, ordered events, scenario/rules identity, and outcome inspectable without adding a rendering dependency or presentation logic to the rules core.
-3. **Add the diegetic Wargaming Hall manifestation.** Keep presentation as a consumer of rules evidence.
+1. **Add the diegetic Wargaming Hall manifestation.** Keep the presentation as a consumer of the report and rules evidence; do not make visual effects authoritative.
+2. **Exercise the report consumer in a real host.** The plain-text formatter is a first inspection surface, not a rendered or interactive scene.
 4. **Continue the renderer-independent authored-content consumer.** Read caller-provided JSON and validate runtime invariants without claiming full JSON Schema validation.
 5. **Close the Physics contract gap.** Inspect Physics directly, agree on launch/run-evidence contracts and coordinate conventions, and wait for a tested target-intersection contract before reporting hit/miss/indeterminate or damage.
 6. **Expand only after the first proof.** Add supported impact observation, Experience-owned bounded damage rules, construction/attack/reset phases, optional Gestures choreography, and later campaign depth as independently testable increments.
