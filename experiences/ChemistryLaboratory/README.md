@@ -1,3 +1,5 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 # Chemistry Laboratory — Department Floor
 
 **Status:** preforge Experience design; no claim of a deployed interactive floor or validated chemistry solver.
@@ -87,3 +89,14 @@ See [the Physics branch atlas](https://github.com/TrentBest/TheSingularityWorksh
 The Experience now has a separate .NET chemistry core at [src/Chemistry](../../src/Chemistry/TheSingularityWorkshop.Experiences.Chemistry.csproj). Its first contract models a species with explicit elemental counts and charge, a proposed reaction with positive integer coefficients, and a deterministic conservation audit. The [tests](../../tests/Chemistry.Tests/ReactionBalanceAnalyzerTests.cs) cover balanced water formation, an unbalanced equation, charge conservation, invalid inputs, and defensive copying.
 
 **Scope boundary:** this computes atom and charge accounting only. It does not auto-balance equations, predict reaction feasibility, calculate energy, model kinetics, or claim a validated simulation. The room catalog remains authored Experience content until a runtime loader and registered capability path are implemented.
+
+---
+
+<p align="center">
+  <a href="https://github.com/TrentBest/TheSingularityWorkshop" aria-label="The Singularity Workshop living avatar">
+    <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar — a digital vortex converging on its central eye" width="112" />
+  </a><br />
+  <strong>The Singularity Workshop</strong><br />
+  <em>If a picture is worth a thousand words, what is a living picture worth?</em><br />
+  <a href="https://github.com/TrentBest">GitHub</a> · <a href="https://www.patreon.com/TheSingularityWorkshop">Support the Workshop</a>
+</p>
