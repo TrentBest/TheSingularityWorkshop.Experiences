@@ -210,6 +210,45 @@ public sealed class CastleSiegeTabletopSessionTests
         Assert.Throws<ArgumentNullException>(() => CastleSiegeSessionReportText.Format(null!));
     }
 
+
+    [Fact]
+    public void HallViewModel_ProjectsReportStateAndIntegrityPipsWithoutMutatingSession()
+    {
+        var session = new CastleSiegeTabletopSession();
+        session.Apply(new CastleSiegeAction(CastleSiegeRole.Attacker, CastleSiegeActionKind.FireAtWestWall));
+        var report = CastleSiegeSessionReport.Capture(session);
+        var stateBeforeProjection = session.State;
+        var eventCountBeforeProjection = session.Events.Count;
+
+        var view = CastleSiegeHallViewModel.FromReport(report);
+
+        Assert.Equal(report.ScenarioKey, view.ScenarioKey);
+        Assert.Equal(report.ScenarioVersion, view.ScenarioVersion);
+        Assert.Equal(report.RulesVersion, view.RulesVersion);
+        Assert.Equal(report.State.TurnNumber, view.TurnNumber);
+        Assert.Equal(CastleSiegeRole.Defender, view.ActiveRole);
+        Assert.Equal(2, view.WallIntegrity);
+        Assert.Equal(3, view.MaximumWallIntegrity);
+        Assert.Equal(new[] { true, true, false }, view.WallIntegrityPips);
+        Assert.Equal(report.LegalActions, view.LegalActions);
+        Assert.Equal(report.Events, view.Events);
+        Assert.Equal(CastleSiegeHallViewModel.TabletopEvidenceBoundary, view.EvidenceBoundary);
+        Assert.Equal(stateBeforeProjection, session.State);
+        Assert.Equal(eventCountBeforeProjection, session.Events.Count);
+    }
+
+    [Fact]
+    public void HallViewModel_CollectionsAreReadOnlyAndRejectsNullReport()
+    {
+        var view = CastleSiegeHallViewModel.FromReport(
+            CastleSiegeSessionReport.Capture(new CastleSiegeTabletopSession()));
+
+        Assert.Throws<NotSupportedException>(() => ((IList<bool>)view.WallIntegrityPips).Clear());
+        Assert.Throws<NotSupportedException>(() => ((IList<CastleSiegeActionKind>)view.LegalActions).Clear());
+        Assert.Throws<NotSupportedException>(() => ((IList<CastleSiegeTabletopEvent>)view.Events).Clear());
+        Assert.Throws<ArgumentNullException>(() => CastleSiegeHallViewModel.FromReport(null!));
+    }
+
     private static CastleSiegeTabletopSession Run(IEnumerable<CastleSiegeAction> actions)
     {
         var session = new CastleSiegeTabletopSession();
