@@ -1,3 +1,5 @@
+using Xunit;
+
 namespace TheSingularityWorkshop.Experiences.MarbleRun.Tests;
 
 public sealed class MarbleRunSceneDefinitionTests
