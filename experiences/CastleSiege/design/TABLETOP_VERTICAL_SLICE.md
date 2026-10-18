@@ -1,6 +1,6 @@
 # Castle Siege — Tabletop Vertical Slice
 
-**Status:** bounded implementation brief; design only. This document does not claim that a playable tabletop session, match authority, or Physics integration exists.
+**Status:** deterministic abstract rules core implemented; automated test coverage added; host presentation and current-head CI verification remain separate gates. This is not Physics integration and does not claim a rendered, host-runnable Experience.
 
 ## Purpose
 
@@ -16,7 +16,7 @@ It should not attempt to become Civilization, a full castle simulator, an online
 
 Use the existing authored Castle Siege content as the scene reference, especially `castle.west-wall` and `target.west-wall.core` in the [battlespace example](../contracts/castle-siege-battlespace.example.json). Those IDs name authored objects; they do not prove that a physical intersection query is available.
 
-The scenario is an **abstract tabletop rules exercise**. It may use declared game tokens and a small, versioned resolution table to make the first session playable before physical trajectories or damage models exist. Any abstract result must be labeled as a tabletop rule result, never a calculated impact.
+The implemented rules core identifies its scenario as `castle.west-wall`, version `1`, with rules version `castle-siege-tabletop/1`. It operates on abstract game tokens only. Any result is labeled `abstract-tabletop`, never a calculated impact.
 
 ## The first playable loop
 
@@ -29,11 +29,17 @@ The scenario is an **abstract tabletop rules exercise**. It may use declared gam
 7. **Continue or finish.** Advance to the next turn or a declared terminal condition. The session can be replayed from its initial state and accepted action sequence.
 8. **Leave with evidence.** Present a compact after-action report: actions taken, state transitions, outcome, rules version, and replay status.
 
-A turn-based tabletop session is complete only when this loop can run without requiring the Physics solver. A later physical experiment can be offered as a separate, explicitly connected activity.
+The rules core implements state transitions and event evidence. The diegetic room/table UI and a complete host-runnable session remain future work. A later physical experiment is a separate, explicitly connected activity.
 
 ## Rules contract
 
-Before implementation, define and version these items in the scenario data or a dedicated rules contract:
+The current implementation in `src/CastleSiege/CastleSiegeTabletopSession.cs` defines the stable scenario key/version and rules version; immutable initial/current state; active role; explicit legal actions; turn and action validation; deterministic transition rules and terminal conditions; and canonical event sequence numbers, before/after state, rule IDs, explanation, and `abstract-tabletop` classification.
+
+The fixed tabletop values are wall integrity 3, attacker shots 3, defender repair tokens 2. An attack spends one shot and removes one abstract wall point. A repair spends one token and restores one point up to the starting maximum. A defender may instead hold position. The attacker wins if integrity reaches zero; the defender wins if shots are exhausted while integrity remains positive. These are game rules, not physical measurements.
+
+Do not assign numeric MicroBundle IDs or artifact hashes for this rules class. It is part of the existing Experience project, not a new published capability artifact.
+
+### Planned extensions to the rules contract
 
 - stable scenario key and scenario-definition version;
 - initial state and token identities;
