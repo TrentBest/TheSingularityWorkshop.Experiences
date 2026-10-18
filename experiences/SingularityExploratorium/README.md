@@ -27,6 +27,26 @@ Learning should be embedded in the experience rather than announced as a prerequ
 
 The intended progression is **play → surprise → curiosity → experiment → explanation**. Visitors may stop at any point and still have had a worthwhile experience. Those who want to go deeper can follow the thread into the Museum's context or the Laboratory's reproducible investigation.
 
+## The universe is inhabited: Digitens
+
+The Exploratorium is part of a living universe, not an empty exhibit gallery. **Digitens are the digital citizens who populate the Workshop.** They arrive, depart, move between places, take on jobs, and become the people the visitor encounters while using its institutions and services.
+
+A Digiten's role should have practical meaning in the world. Examples include:
+
+- **Bank teller:** welcomes a visitor at a counter, helps with an account or transaction, and routes requests to the appropriate banking service.
+- **Shopkeeper or service worker:** helps the visitor find, purchase, or use something at a real point of interaction.
+- **Technician or researcher:** works in a laboratory, maintains an exhibit, or helps explain an experiment and its evidence.
+- **Guide, curator, or instructor:** helps visitors discover a place, collection, or concept at the depth they choose.
+- **Resident, student, or worker:** gives the wider city its ordinary rhythms, destinations, schedules, and reasons to exist.
+
+These are not merely decorative labels attached to animated figures. A role should connect a citizen to a place, a service or task, an interaction contract, and the relevant state. Where those systems are not yet implemented, present the role as design intent rather than a functioning service.
+
+Digitens should be a **cross-cutting population layer**, visible throughout the Workshop's universe rather than confined to a single “citizens” screen. Their authored identity and role should survive browser, desktop, and future VR manifestations; each host can present them differently without inventing a separate citizen for every screen. Their lifecycle should make arrivals and departures understandable, while their work gives visitors natural reasons to interact with them.
+
+The intended experience is simple: a visitor goes to a bank and meets a teller, visits a laboratory and encounters a technician, or enters the Exploratorium and finds a guide. The institution supplies the context; the Digiten supplies the human-scale point of contact.
+
+**Current maturity note:** the Workshop's existing animated inhabitants and population display are not proof of a complete citizen simulation, employment system, bank, or service economy. Build those capabilities incrementally and keep each live behavior grounded in implemented state.
+
 ## First exhibit families
 
 ### Dominoes — discrete causality you can touch
