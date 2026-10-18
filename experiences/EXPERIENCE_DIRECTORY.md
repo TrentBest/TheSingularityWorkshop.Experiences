@@ -36,7 +36,7 @@ The WebApp is the intended distribution and discovery surface; the Experiences r
 
 - [Experience home](DominoStudio/README.md)
 - [Implementation and tests](../src/DominoStudio/)
-- [Physics/MicroBundle boundary and milestones](../../docs/MARBLE_RUN_AND_DOMINO_MICROBUNDLE_BOUNDARY.md)
+- [Physics/MicroBundle boundary and milestones](../docs/MARBLE_RUN_AND_DOMINO_MICROBUNDLE_BOUNDARY.md)
 
 ### Marble Run — continuous motion
 
@@ -48,7 +48,7 @@ The WebApp is the intended distribution and discovery surface; the Experiences r
 
 - [Experience home](MarbleRun/README.md)
 - [Implementation and tests](../src/MarbleRun/)
-- [Physics/MicroBundle boundary and milestones](../../docs/MARBLE_RUN_AND_DOMINO_MICROBUNDLE_BOUNDARY.md)
+- [Physics/MicroBundle boundary and milestones](../docs/MARBLE_RUN_AND_DOMINO_MICROBUNDLE_BOUNDARY.md)
 
 ## The exhibit pattern
 
