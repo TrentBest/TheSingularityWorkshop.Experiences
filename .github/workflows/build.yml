@@ -139,6 +139,10 @@ jobs:
             sleep 1
           done
           jq -e '.scenarioKey == "castle.west-wall" and .wallIntegrity == 3 and (.legalActions | index("FireAtWestWall") != null)' /tmp/castle-siege-state.json
+          curl --silent --show-error --fail http://127.0.0.1:5099/ > /tmp/castle-siege-index.html
+          grep -q 'prefers-reduced-motion: reduce' /tmp/castle-siege-index.html
+          grep -q 'button:focus-visible' /tmp/castle-siege-index.html
+          grep -q 'id="integrity" aria-live="polite"' /tmp/castle-siege-index.html
           curl --silent --show-error --fail -H 'Content-Type: application/json' -d '{"action":"FireAtWestWall"}' http://127.0.0.1:5099/api/action > /tmp/castle-siege-action.json
           jq -e '.view.wallIntegrity == 2 and .view.activeRole == "Defender" and .acceptedEvent.ruleId == "wall.abstract-breach-point"' /tmp/castle-siege-action.json
           curl --silent --show-error --fail -X POST http://127.0.0.1:5099/api/reset > /tmp/castle-siege-reset.json
