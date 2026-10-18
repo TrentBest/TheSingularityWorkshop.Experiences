@@ -117,6 +117,12 @@ jobs:
         run: dotnet restore tests/CastleSiege.Tests/TheSingularityWorkshop.Experiences.CastleSiege.Tests.csproj
       - name: Run Castle Siege contract tests
         run: dotnet test tests/CastleSiege.Tests/TheSingularityWorkshop.Experiences.CastleSiege.Tests.csproj --configuration Release --no-restore
+      - name: Restore Wargaming Hall host
+        run: dotnet restore samples/CastleSiege.WargamingHall/CastleSiege.WargamingHall.csproj
+      - name: Build Wargaming Hall host
+        run: dotnet build samples/CastleSiege.WargamingHall/CastleSiege.WargamingHall.csproj --configuration Release --no-restore
+      - name: Smoke-test Wargaming Hall host
+        run: printf 'q\n' | dotnet run --project samples/CastleSiege.WargamingHall/CastleSiege.WargamingHall.csproj --configuration Release --no-build
 
   # Validate the grid encoding and scene setup contracts used by Marble Run and Domino Studio.
   test-domino-studio:
