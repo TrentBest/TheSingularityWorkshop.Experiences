@@ -1,0 +1,92 @@
+{
+  "$schema": "./chemistry-laboratory-rooms.schema.json",
+  "schemaVersion": 1,
+  "experienceKey": "chemistry-laboratory",
+  "status": "preforge",
+  "rooms": [
+    {
+      "roomKey": "atomic-gallery",
+      "sequence": 1,
+      "title": "Atomic Gallery",
+      "purpose": "Explore element identity and sourced atomic properties.",
+      "visitorAction": "Select an element and inspect its identity, units, and source.",
+      "authoritativeState": "Element definitions and provenance supplied by the selected data capability.",
+      "evidenceRule": "Do not infer molecular, reaction, or bulk-material behavior from element identity alone.",
+      "maturity": "concept",
+      "requiredCapabilities": [],
+      "nextRooms": ["molecular-assembly", "materials-bench"]
+    },
+    {
+      "roomKey": "molecular-assembly",
+      "sequence": 2,
+      "title": "Molecular Assembly",
+      "purpose": "Compose candidate species from atoms and bonds.",
+      "visitorAction": "Add atoms, propose bonds, and inspect validation diagnostics.",
+      "authoritativeState": "Versioned species graph, isotope counts, charge, bond order, and geometry model.",
+      "evidenceRule": "A drawn structure is only a candidate until the selected chemistry rules validate it.",
+      "maturity": "concept",
+      "requiredCapabilities": [],
+      "nextRooms": ["reaction-theatre"]
+    },
+    {
+      "roomKey": "reaction-theatre",
+      "sequence": 3,
+      "title": "Reaction Theatre",
+      "purpose": "Define reactions and inspect balancing and stoichiometric accounting.",
+      "visitorAction": "Choose reactants and products, then request a balance and conservation report.",
+      "authoritativeState": "Species references, reaction conditions, balanced coefficients, and conservation diagnostics.",
+      "evidenceRule": "A balanced equation does not prove that a reaction occurs under the chosen conditions.",
+      "maturity": "concept",
+      "requiredCapabilities": [],
+      "nextRooms": ["thermal-observatory", "combustion-chamber", "evidence-timeline"]
+    },
+    {
+      "roomKey": "thermal-observatory",
+      "sequence": 4,
+      "title": "Thermal Observatory",
+      "purpose": "Track explicitly modeled energy transfer and thermal state.",
+      "visitorAction": "Inspect energy terms and change one declared initial condition.",
+      "authoritativeState": "Named energy reservoirs, property data, initial conditions, and selected model outputs.",
+      "evidenceRule": "Only display computed temperature or heat-release curves when a named model produces them with units.",
+      "maturity": "concept",
+      "requiredCapabilities": [],
+      "nextRooms": ["evidence-timeline"]
+    },
+    {
+      "roomKey": "combustion-chamber",
+      "sequence": 5,
+      "title": "Combustion Chamber",
+      "purpose": "Study the modeled relationship among fuel, oxidizer, heat, surface, and transport.",
+      "visitorAction": "Inspect a benign reference scenario and compare supported model parameters.",
+      "authoritativeState": "Surface combustion state coupled to explicitly selected reaction and transport models.",
+      "evidenceRule": "A combustion cell state is not, by itself, a validated flame or reaction-kinetics simulation.",
+      "maturity": "concept",
+      "requiredCapabilities": [],
+      "nextRooms": ["thermal-observatory", "evidence-timeline"]
+    },
+    {
+      "roomKey": "materials-bench",
+      "sequence": 6,
+      "title": "Materials Bench",
+      "purpose": "Compare versioned material definitions and measured or modeled properties.",
+      "visitorAction": "Select materials and compare properties with units and provenance.",
+      "authoritativeState": "Material identity and a defined, versioned property set.",
+      "evidenceRule": "Do not derive bulk material behavior from elemental composition unless a validated model supports it.",
+      "maturity": "concept",
+      "requiredCapabilities": [],
+      "nextRooms": ["evidence-timeline"]
+    },
+    {
+      "roomKey": "evidence-timeline",
+      "sequence": 7,
+      "title": "Evidence & Timeline",
+      "purpose": "Make experiment assumptions, revisions, results, and provenance inspectable.",
+      "visitorAction": "Step or replay a run, compare revisions, and export the experiment record.",
+      "authoritativeState": "Experiment revision, inputs, selected model/version, outputs, units, and validation results.",
+      "evidenceRule": "Label every result as concept, authored data, calculated, simulated, or validated; preserve run identity.",
+      "maturity": "concept",
+      "requiredCapabilities": [],
+      "nextRooms": ["atomic-gallery"]
+    }
+  ]
+}
