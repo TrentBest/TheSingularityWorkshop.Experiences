@@ -32,6 +32,12 @@ The seven rooms also have a renderer-independent [structured room catalog](contr
 
 A visitor can enter at the atomic gallery and leave through the evidence wall without reading a textbook first. Deeper theory remains one click away.
 
+## The coyote moment
+
+Chemistry should be playful enough to let the player make a mess. The [Safe Mishaps contract](design/SAFE_MISHAPS.md) specifies the comic puff-in-the-face moment: a pop, smoke, soot, frazzled hair, a dazed blink, then automatic recovery—no death, lasting injury, or lost experiment.
+
+The gag is a presentation event, not a fabricated scientific result. Until a validated model reports a relevant outcome, the experience labels it as a scripted comic mishap or an unknown outcome. Atom/charge accounting alone never predicts an explosion.
+
 ## Experience boundary
 
 - **Experience owns:** the floor plan, room/department identity, visitor journey, experiment definitions, model selection, provenance display, and links between views.
