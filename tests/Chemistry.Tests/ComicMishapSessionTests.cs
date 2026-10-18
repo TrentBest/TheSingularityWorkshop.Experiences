@@ -1,3 +1,4 @@
+using Xunit;
 using TheSingularityWorkshop.Experiences.Chemistry;
 
 namespace TheSingularityWorkshop.Experiences.Chemistry.Tests;
