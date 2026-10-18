@@ -293,7 +293,7 @@ jobs:
         working-directory: Experiences
         run: dotnet test tests/CastleSiege.Tests/TheSingularityWorkshop.Experiences.CastleSiege.Tests.csproj --configuration Release -p:WorkshopUseRepositorySources=true
 
-  # The Chemistry Laboratory's room map is structured Experience data; validate its schema and navigation before it is consumed by any manifestation.
+  # Laboratory room catalogs are structured Experience data; validate schema and navigation before consumption by any manifestation.
   validate-experience-room-catalogs:
     runs-on: ubuntu-24.04
     steps:
@@ -331,36 +331,4 @@ jobs:
                   assert not missing, f'{name}: {room["roomKey"]} links to unknown rooms: {sorted(missing)}'
 
               print(f"Validated {len(rooms)} {name} rooms and all navigation links.")
-          PY
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-      - name: Install JSON Schema validator
-        run: python -m pip install jsonschema
-      - name: Validate Chemistry Laboratory room catalog
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          from jsonschema import validate
-
-          root = Path("experiences/ChemistryLaboratory/contracts")
-          schema = json.loads((root / "chemistry-laboratory-rooms.schema.json").read_text(encoding="utf-8"))
-          catalog = json.loads((root / "rooms.json").read_text(encoding="utf-8"))
-          validate(instance=catalog, schema=schema)
-
-          rooms = catalog["rooms"]
-          keys = [room["roomKey"] for room in rooms]
-          sequences = [room["sequence"] for room in rooms]
-          assert len(keys) == len(set(keys)), "roomKey values must be unique"
-          assert len(sequences) == len(set(sequences)), "room sequence values must be unique"
-          known = set(keys)
-          for room in rooms:
-              missing = set(room.get("nextRooms", [])) - known
-              assert not missing, f'{room["roomKey"]} links to unknown rooms: {sorted(missing)}'
-
-          print(f"Validated {len(rooms)} Chemistry Laboratory rooms and all navigation links.")
           PY
