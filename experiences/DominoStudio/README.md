@@ -6,8 +6,8 @@ The Experience converts an image-derived or hand-authored proposal into an edita
 
 ## Grid encoding
 
-- The height texture stores an integer count of occupied levels per cell: 0 is empty, 1 is one domino, 2 is two stacked levels.
-- The orientation texture is flattened as cellIndex × maximumLevels + level. 0 means empty; occupied slots use a 1-based orientation code.
+- The occupancy texture stores a bit mask per cell: bit 0 marks a base-level domino, bit 1 marks the first overpass, and so on. A cell can represent any combination of levels up to the configured 64-level mask limit.
+- The orientation texture is flattened as cellIndex × maximumLevels + level. Each set occupancy bit requires a corresponding nonzero orientation code; empty levels require zero.
 - Code 1 maps to the first angle in the saved orientation table. A zero-radian orientation is distinct from an empty cell.
 - A per-level orientation field is necessary because stacked dominoes in one cell may have different rotations.
 - The current validator checks height and coarse spacing constraints. It does not prove 3D collision-free placement, support stability, or successful toppling.
