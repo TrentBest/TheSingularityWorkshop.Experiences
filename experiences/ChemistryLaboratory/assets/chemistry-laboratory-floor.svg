@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Chemistry Laboratory — conceptual department floor</title>
+  <desc id="desc">A conceptual laboratory floor plan connecting atomic identity, molecular assembly, reaction theatre, thermal observatory, combustion chamber, materials bench, and an evidence timeline.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101b2c"/>
+      <stop offset="1" stop-color="#182b3d"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#37d7c3" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#8a7dff" stop-opacity=".12"/>
+    </linearGradient>
+    <style>
+      .label{font:700 20px system-ui,sans-serif;fill:#f4f8ff}
+      .small{font:14px system-ui,sans-serif;fill:#c6d5e8}
+      .tiny{font:12px system-ui,sans-serif;fill:#9eb2c9}
+      .room{stroke:#59748e;stroke-width:2;rx:16}
+      .number{font:800 13px system-ui,sans-serif;fill:#081624}
+      .wire{fill:none;stroke:#5bd8ca;stroke-width:2;stroke-dasharray:6 7;opacity:.8}
+    </style>
+  </defs>
+  <rect width="1200" height="760" rx="28" fill="url(#bg)"/>
+  <rect x="24" y="24" width="1152" height="712" rx="24" fill="none" stroke="#3d566f" stroke-width="2"/>
+  <text x="56" y="66" class="small" letter-spacing="4">SINGULARITY LABORATORY / DEPARTMENT 04</text>
+  <text x="56" y="108" class="label" font-size="32">CHEMISTRY LABORATORY</text>
+  <text x="56" y="137" class="small">Matter → structure → reaction → energy → evidence</text>
+  <rect x="825" y="48" width="320" height="66" rx="12" fill="#372e51" stroke="#8a7dff"/>
+  <text x="846" y="74" class="small" font-weight="700">CONCEPTUAL FLOOR PLAN</text>
+  <text x="846" y="96" class="tiny">Not a live simulation or physical safety plan</text>
+
+  <path class="wire" d="M278 252 H315 M537 252 H574 M796 252 H833 M426 340 V385 M685 340 V385 M944 340 V385 M278 495 H315 M537 495 H574 M796 495 H833"/>
+
+  <g>
+    <rect class="room" x="56" y="174" width="222" height="166" fill="#163d4b"/>
+    <circle cx="83" cy="202" r="15" fill="#5bd8ca"/><text x="83" y="207" text-anchor="middle" class="number">01</text>
+    <text x="78" y="240" class="label">Atomic Gallery</text>
+    <text x="78" y="268" class="small">Element identity</text><text x="78" y="290" class="small">Properties &amp; provenance</text>
+    <circle cx="224" cy="205" r="17" fill="none" stroke="#5bd8ca" stroke-width="2"/><circle cx="224" cy="205" r="5" fill="#5bd8ca"/>
+    <ellipse cx="224" cy="205" rx="31" ry="12" fill="none" stroke="#5bd8ca" transform="rotate(35 224 205)"/>
+  </g>
+  <g>
+    <rect class="room" x="315" y="174" width="222" height="166" fill="#20354d"/>
+    <circle cx="342" cy="202" r="15" fill="#8a7dff"/><text x="342" y="207" text-anchor="middle" class="number">02</text>
+    <text x="337" y="240" class="label">Molecular Assembly</text>
+    <text x="337" y="268" class="small">Species &amp; bonds</text><text x="337" y="290" class="small">Structure validation</text>
+    <path d="M479 205 L497 192 L514 207 L499 223 Z" fill="none" stroke="#b8aaff" stroke-width="3"/><circle cx="479" cy="205" r="6" fill="#b8aaff"/><circle cx="497" cy="192" r="6" fill="#b8aaff"/><circle cx="514" cy="207" r="6" fill="#b8aaff"/><circle cx="499" cy="223" r="6" fill="#b8aaff"/>
+  </g>
+  <g>
+    <rect class="room" x="574" y="174" width="222" height="166" fill="#3a2c42"/>
+    <circle cx="601" cy="202" r="15" fill="#ffbd69"/><text x="601" y="207" text-anchor="middle" class="number">03</text>
+    <text x="596" y="240" class="label">Reaction Theatre</text>
+    <text x="596" y="268" class="small">Balance &amp; stoichiometry</text><text x="596" y="290" class="small">Conditions &amp; outcomes</text>
+    <path d="M749 191 L769 205 L749 219 M730 205 H766" fill="none" stroke="#ffbd69" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g>
+    <rect class="room" x="833" y="174" width="287" height="166" fill="#3d3029"/>
+    <circle cx="860" cy="202" r="15" fill="#ff8e70"/><text x="860" y="207" text-anchor="middle" class="number">04</text>
+    <text x="855" y="240" class="label">Thermal Observatory</text>
+    <text x="855" y="268" class="small">Energy accounting</text><text x="855" y="290" class="small">Heat &amp; temperature models</text>
+    <path d="M1081 190 V220 A12 12 0 1 1 1065 220 V190 A8 8 0 0 1 1081 190Z" fill="none" stroke="#ff8e70" stroke-width="3"/><circle cx="1073" cy="222" r="6" fill="#ff8e70"/>
+  </g>
+
+  <g>
+    <rect class="room" x="56" y="385" width="481" height="220" fill="#3c2830"/>
+    <circle cx="83" cy="413" r="15" fill="#ff8e70"/><text x="83" y="418" text-anchor="middle" class="number">05</text>
+    <text x="78" y="452" class="label">Combustion Chamber</text>
+    <text x="78" y="480" class="small">Fuel · oxidizer · surface · thermal state</text>
+    <text x="78" y="505" class="small">Reaction / transport model boundary</text>
+    <rect x="368" y="433" width="122" height="92" rx="10" fill="#251e2a" stroke="#ff8e70"/>
+    <path d="M429 504 C399 483 426 471 420 451 C447 470 455 483 429 504Z" fill="#ffbd69"/>
+    <path d="M429 501 C418 488 437 481 432 469 C449 486 441 495 429 501Z" fill="#ff8e70"/>
+    <text x="368" y="547" class="tiny">Illustrative glyph only</text>
+  </g>
+  <g>
+    <rect class="room" x="574" y="385" width="222" height="220" fill="#193a3c"/>
+    <circle cx="601" cy="413" r="15" fill="#5bd8ca"/><text x="601" y="418" text-anchor="middle" class="number">06</text>
+    <text x="596" y="452" class="label">Materials Bench</text>
+    <text x="596" y="480" class="small">Material identity</text><text x="596" y="502" class="small">Properties &amp; comparison</text>
+    <rect x="622" y="530" width="36" height="28" rx="4" fill="#91a8bb"/><rect x="665" y="530" width="36" height="28" rx="4" fill="#c58b64"/><rect x="708" y="530" width="36" height="28" rx="4" fill="#b9c5cf"/>
+  </g>
+  <g>
+    <rect class="room" x="833" y="385" width="287" height="220" fill="#202f49"/>
+    <circle cx="860" cy="413" r="15" fill="#8a7dff"/><text x="860" y="418" text-anchor="middle" class="number">07</text>
+    <text x="855" y="452" class="label">Evidence &amp; Timeline</text>
+    <text x="855" y="480" class="small">Inputs · outputs · provenance</text><text x="855" y="502" class="small">Replay · compare · validate</text>
+    <path d="M859 550 H1090 M859 574 H1090" stroke="#718ba8" stroke-width="2"/>
+    <path d="M875 540 V561 M922 540 V581 M971 540 V561 M1024 540 V581 M1080 540 V561" stroke="#5bd8ca" stroke-width="3"/>
+    <circle cx="922" cy="550" r="5" fill="#ffbd69"/><circle cx="1024" cy="574" r="5" fill="#8a7dff"/>
+  </g>
+
+  <rect x="56" y="634" width="1064" height="64" rx="12" fill="url(#glow)" stroke="#41627b"/>
+  <text x="78" y="661" class="small" font-weight="700">ONE EXPERIMENT · MANY VIEWS</text>
+  <text x="78" y="682" class="tiny">Author inputs → select a model → run or calculate → inspect evidence → revise and repeat</text>
+  <text x="1095" y="721" text-anchor="end" class="tiny">SINGULARITY WORKSHOP · DESIGN ARTIFACT · v0.1</text>
+</svg>
