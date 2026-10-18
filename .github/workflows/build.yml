@@ -123,6 +123,26 @@ jobs:
         run: dotnet build samples/CastleSiege.WargamingHall/CastleSiege.WargamingHall.csproj --configuration Release --no-restore
       - name: Smoke-test Wargaming Hall host
         run: printf 'q\n' | dotnet run --project samples/CastleSiege.WargamingHall/CastleSiege.WargamingHall.csproj --configuration Release --no-build
+      - name: Restore graphical Wargaming Hall host
+        run: dotnet restore samples/CastleSiege.WargamingHall.Web/CastleSiege.WargamingHall.Web.csproj
+      - name: Build graphical Wargaming Hall host
+        run: dotnet build samples/CastleSiege.WargamingHall.Web/CastleSiege.WargamingHall.Web.csproj --configuration Release --no-restore
+      - name: Smoke-test graphical Wargaming Hall API
+        shell: bash
+        run: |
+          set -euo pipefail
+          dotnet run --project samples/CastleSiege.WargamingHall.Web/CastleSiege.WargamingHall.Web.csproj --configuration Release --no-build --urls http://127.0.0.1:5099 > /tmp/castle-siege-web.log 2>&1 &
+          host_pid=$!
+          trap 'kill "$host_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail http://127.0.0.1:5099/api/state > /tmp/castle-siege-state.json; then break; fi
+            sleep 1
+          done
+          jq -e '.scenarioKey == "castle.west-wall" and .wallIntegrity == 3 and (.legalActions | index("FireAtWestWall") != null)' /tmp/castle-siege-state.json
+          curl --silent --show-error --fail -H 'Content-Type: application/json' -d '{"action":"FireAtWestWall"}' http://127.0.0.1:5099/api/action > /tmp/castle-siege-action.json
+          jq -e '.view.wallIntegrity == 2 and .view.activeRole == "Defender" and .acceptedEvent.ruleId == "wall.abstract-breach-point"' /tmp/castle-siege-action.json
+          curl --silent --show-error --fail -X POST http://127.0.0.1:5099/api/reset > /tmp/castle-siege-reset.json
+          jq -e '.wallIntegrity == 3 and .activeRole == "Attacker" and (.events | length) == 0' /tmp/castle-siege-reset.json
 
   # Validate the grid encoding and scene setup contracts used by Marble Run and Domino Studio.
   test-domino-studio:
