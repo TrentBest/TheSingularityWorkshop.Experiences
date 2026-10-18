@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#161b22">
+  <title>Castle Siege · Wargaming Hall</title>
+  <style>
+    :root { color-scheme: dark; font-family: ui-sans-serif, system-ui, sans-serif; background: #10151b; color: #edf2f7; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: radial-gradient(ellipse at 20% 0%, #263646 0, #10151b 58%); min-height: 100vh; }
+    main { width: min(1100px, 100% - 32px); margin: 0 auto; padding: 32px 0 48px; }
+    .eyebrow { color: #9db6c9; font-size: .78rem; letter-spacing: .16em; font-weight: 700; }
+    h1 { margin: .35rem 0; font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: -.04em; }
+    .intro { color: #b5c1cc; max-width: 68ch; line-height: 1.6; }
+    .grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); gap: 16px; margin-top: 24px; }
+    .panel { border: 1px solid #34414e; border-radius: 16px; background: #171f28eF; padding: 20px; box-shadow: 0 18px 45px #0002; min-width: 0; }
+    h2 { margin: 0 0 14px; font-size: 1.05rem; }
+    .wall { display: flex; gap: 10px; margin: 22px 0; }
+    .pip { display: block; flex: 1; height: 14px; border-radius: 4px; background: #43515e; border: 1px solid #627384; }
+    .pip.live { background: #d69a51; border-color: #f0c17e; box-shadow: 0 0 18px #d69a5130; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .stat { background: #202b36; padding: 14px; border-radius: 10px; }
+    .stat small { display: block; color: #9fb0be; margin-bottom: 7px; }
+    .stat strong { font-size: 1.35rem; }
+    .meta { color: #aebdca; font-size: .88rem; line-height: 1.6; overflow-wrap: anywhere; }
+    .actions { display: grid; gap: 10px; }
+    button { cursor: pointer; border: 1px solid #60798b; border-radius: 10px; padding: 12px 14px; text-align: left; color: #f5f8fa; background: #2a4050; font: inherit; }
+    button:hover:enabled { background: #36566b; border-color: #91b4cb; }
+    button:disabled { opacity: .4; cursor: not-allowed; }
+    .reset { margin-top: 12px; background: transparent; width: 100%; text-align: center; }
+    .history { margin-top: 16px; }
+    ol { margin: 0; padding-left: 1.5rem; }
+    li { padding: 0 0 14px 4px; color: #dce5eb; line-height: 1.45; }
+    li::marker { color: #e5b16f; font-weight: 700; }
+    .rule { color: #e5b16f; font-size: .8rem; display: block; margin: 3px 0; }
+    .boundary { margin-top: 16px; border-left: 3px solid #d69a51; padding: 12px 14px; background: #2a241d; color: #f1d9b5; line-height: 1.5; font-size: .88rem; }
+    .status { min-height: 1.5em; color: #b7d7e9; margin: 12px 0 0; }
+    .outcome { display: inline-block; padding: 5px 9px; border-radius: 999px; background: #293944; font-size: .85rem; }
+    @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } main { padding-top: 24px; } .stats { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">THE SINGULARITY WORKSHOP / EXPERIENCES</div>
+  <h1>Wargaming Hall</h1>
+  <p class="intro">Castle Siege · West Wall. A small, deterministic tabletop scenario with explicit rules and inspectable event history. Choose an action for the active role; the same session that owns the rules drives every displayed state.</p>
+  <div class="meta" id="identity">Loading scenario…</div>
+  <div class="grid">
+    <section class="panel" aria-labelledby="wall-heading">
+      <h2 id="wall-heading">West wall integrity</h2>
+      <div id="wall" class="wall" role="img" aria-label="Wall integrity"></div>
+      <div class="stats">
+        <div class="stat"><small>Integrity</small><strong id="integrity">—</strong></div>
+        <div class="stat"><small>Attacker shots</small><strong id="shots">—</strong></div>
+        <div class="stat"><small>Defender repairs</small><strong id="repairs">—</strong></div>
+      </div>
+      <div class="boundary" id="boundary"></div>
+    </section>
+    <section class="panel" aria-labelledby="action-heading">
+      <h2 id="action-heading">Current turn</h2>
+      <p><span class="outcome" id="outcome">—</span></p>
+      <p class="meta">Active role: <strong id="role">—</strong><br>Turn: <strong id="turn">—</strong></p>
+      <div id="actions" class="actions"></div>
+      <button id="reset" class="reset" type="button">Reset tabletop session</button>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </section>
+  </div>
+  <section class="panel history">
+    <h2>Accepted event history</h2>
+    <p class="meta">Ordered events from the same session. No event is fabricated by the presentation layer.</p>
+    <ol id="events"></ol>
+  </section>
+</main>
+<script>
+  const labels = {
+    FireAtWestWall: "Fire at the west wall",
+    ReinforceWestWall: "Reinforce the west wall",
+    HoldPosition: "Hold position"
+  };
+  let busy = false;
+  async function request(url, options) {
+    const response = await fetch(url, options);
+    const body = await response.json();
+    if (!response.ok) throw new Error(body.error || "The request failed.");
+    return body;
+  }
+  function node(tag, text, className) {
+    const element = document.createElement(tag);
+    if (text !== undefined) element.textContent = text;
+    if (className) element.className = className;
+    return element;
+  }
+  function render(view) {
+    document.getElementById("identity").textContent =
+      view.scenarioKey + " · scenario v" + view.scenarioVersion + " · " + view.rulesVersion;
+    const wall = document.getElementById("wall");
+    wall.replaceChildren();
+    view.wallIntegrityPips.forEach((alive, index) => {
+      const pip = node("span", undefined, "pip" + (alive ? " live" : ""));
+      pip.setAttribute("aria-label", "Integrity segment " + (index + 1) + (alive ? " intact" : " depleted"));
+      wall.append(pip);
+    });
+    wall.setAttribute("aria-label", view.wallIntegrity + " of " + view.maximumWallIntegrity + " wall integrity");
+    document.getElementById("integrity").textContent = view.wallIntegrity + " / " + view.maximumWallIntegrity;
+    document.getElementById("shots").textContent = view.attackerShotsRemaining;
+    document.getElementById("repairs").textContent = view.defenderRepairsRemaining;
+    document.getElementById("role").textContent = view.activeRole;
+    document.getElementById("turn").textContent = view.turnNumber;
+    document.getElementById("outcome").textContent = view.outcome;
+    document.getElementById("boundary").textContent = "Evidence boundary: " + view.evidenceBoundary;
+    const actions = document.getElementById("actions");
+    actions.replaceChildren();
+    view.legalActions.forEach(action => {
+      const button = node("button", labels[action] || action);
+      button.type = "button";
+      button.disabled = busy;
+      button.addEventListener("click", () => applyAction(action));
+      actions.append(button);
+    });
+    if (view.outcome !== "InProgress") actions.append(node("p", "The scenario has reached a terminal outcome."));
+    const events = document.getElementById("events");
+    events.replaceChildren();
+    view.events.slice().reverse().forEach(event => {
+      const item = node("li");
+      item.append(node("strong", "Turn " + event.turnNumber + " · " + event.actor + " · " + (labels[event.action] || event.action)));
+      item.append(node("span", event.ruleId, "rule"));
+      item.append(node("span", event.explanation));
+      events.append(item);
+    });
+    if (!view.events.length) events.append(node("li", "No actions accepted yet."));
+    document.getElementById("reset").disabled = busy;
+  }
+  async function refresh() {
+    try { render(await request("/api/state")); }
+    catch (error) { document.getElementById("status").textContent = error.message; }
+  }
+  async function applyAction(action) {
+    busy = true;
+    document.getElementById("status").textContent = "Applying " + (labels[action] || action) + "…";
+    await refresh();
+    try {
+      const result = await request("/api/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action })
+      });
+      render(result.view);
+      document.getElementById("status").textContent = "Accepted event " + result.acceptedEvent.sequence + ": " + result.acceptedEvent.ruleId;
+    } catch (error) {
+      document.getElementById("status").textContent = error.message;
+      await refresh();
+    } finally {
+      busy = false;
+      await refresh();
+    }
+  }
+  document.getElementById("reset").addEventListener("click", async () => {
+    busy = true;
+    try { render(await request("/api/reset", { method: "POST" })); document.getElementById("status").textContent = "New tabletop session started."; }
+    catch (error) { document.getElementById("status").textContent = error.message; }
+    finally { busy = false; await refresh(); }
+  });
+  refresh();
+</script>
+</body>
+</html>
