@@ -41,6 +41,48 @@ public sealed class CastleSiegeTabletopSessionTests
     }
 
     [Fact]
+    public void Report_CapturesIdentityStateLegalActionsAndOrderedEventsAsStableSnapshot()
+    {
+        var session = new CastleSiegeTabletopSession();
+        session.Apply(new CastleSiegeAction(CastleSiegeRole.Attacker, CastleSiegeActionKind.FireAtWestWall));
+
+        var report = CastleSiegeSessionReport.Capture(session);
+
+        Assert.Equal(CastleSiegeTabletopSession.ScenarioKey, report.ScenarioKey);
+        Assert.Equal(CastleSiegeTabletopSession.ScenarioVersion, report.ScenarioVersion);
+        Assert.Equal(CastleSiegeTabletopSession.RulesVersion, report.RulesVersion);
+        Assert.Equal(session.State, report.State);
+        Assert.Equal(session.State.Outcome, report.Outcome);
+        Assert.Equal(CastleSiegeActionKind.ReinforceWestWall, Assert.Single(report.LegalActions.Where(
+            action => action == CastleSiegeActionKind.ReinforceWestWall)));
+        Assert.Equal(1, Assert.Single(report.Events).Sequence);
+
+        session.Apply(new CastleSiegeAction(CastleSiegeRole.Defender, CastleSiegeActionKind.HoldPosition));
+
+        Assert.Single(report.Events);
+        Assert.Equal(CastleSiegeRole.Defender, report.State.ActiveRole);
+        Assert.Equal(1, report.Events[0].Sequence);
+        Assert.Equal(2, session.Events.Count);
+    }
+
+    [Fact]
+    public void Report_CollectionsAreReadOnly()
+    {
+        var report = CastleSiegeSessionReport.Capture(new CastleSiegeTabletopSession());
+
+        Assert.Throws<NotSupportedException>(() =>
+            ((IList<CastleSiegeActionKind>)report.LegalActions).Clear());
+        Assert.Throws<NotSupportedException>(() =>
+            ((IList<CastleSiegeTabletopEvent>)report.Events).Clear());
+    }
+
+    [Fact]
+    public void Report_CaptureRejectsNullSession()
+    {
+        Assert.Throws<ArgumentNullException>(() => CastleSiegeSessionReport.Capture(null!));
+    }
+
+    [Fact]
     public void Apply_RejectsOutOfTurnActionWithoutChangingStateOrEvidence()
     {
         var session = new CastleSiegeTabletopSession();
