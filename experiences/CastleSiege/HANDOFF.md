@@ -2,7 +2,7 @@
 
 **Handoff date:** 2026-10-18  
 **Working branch:** `development`  
-**Status:** authored preforge and battlespace contract are documented and contract-tested; the deterministic abstract tabletop rules core, immutable session-report snapshot, plain-text report presenter, and focused tests are committed. The latest completed presenter-verification workflow, [run 39094905431](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39094905431), passed the Castle Siege build, source-integration, and focused tests; repository-wide status failed because the separate DominoStudio test and build jobs failed. Later concept-art commits have workflows queued; check their runs before claiming they passed. No live Physics integration or rendered playable scene is claimed.
+**Status:** authored preforge and battlespace contract are documented and contract-tested; the deterministic abstract tabletop rules core, immutable session-report snapshot, plain-text report presenter, focused tests, static Wargaming Hall concept, and first interactive console host are committed. Workflow [run 39095189564](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39095189564) confirms the Castle Siege build, focused tests, and source-integration checks pass; the overall workflow fails in the separate DominoStudio test/build jobs. The new sample host has not yet been built by CI. No live Physics integration or graphical playable scene is claimed.
 
 ## Executive summary
 
@@ -34,7 +34,7 @@ The initial tabletop rules use wall integrity 3, attacker shots 3, and defender 
 
 The current implementation remains under [src/CastleSiege](../../../src/CastleSiege/). It includes the Experience manifest model, a MicroBundle shell, and a projectile-trajectory evidence adapter.
 
-The [Wargaming Hall concept illustration](design/WARGAMING_HALL_CONCEPT.svg) sketches the intended tabletop/report relationship. It is static design documentation, not a running UI or live session view.
+The [Wargaming Hall concept illustration](design/WARGAMING_HALL_CONCEPT.svg) sketches the intended tabletop/report relationship. It remains static design documentation, not a live session view. The first runnable host now lives at [samples/CastleSiege.WargamingHall](../../../samples/CastleSiege.WargamingHall/README.md): it lists legal actions from the real session, applies the selected action through `CastleSiegeTabletopSession.Apply`, and captures/formats the final report through the existing report types. It is an interactive console host, not yet the graphical illustration.
 
 The trajectory adapter currently parses a representative Physics-shaped fixture into neutral evidence. It does **not** invoke the actual Physics experiment, solve a trajectory, detect target intersections, or establish damage. The shell explicitly reports that a Physics run is not connected. Treat this as a boundary/prototype, not an integrated gameplay slice.
 
@@ -64,8 +64,8 @@ Those historical runs completed successfully, but do not establish that later co
 
 ## Recommended next steps
 
-1. **Build a minimal host-runnable Wargaming Hall surface.** Use the concept illustration as design guidance, consume `CastleSiegeSessionReport`, and keep visible state downstream of the authoritative rules/report. Do not make visual effects authoritative.
-2. **Exercise legal actions through the host.** Show an action selection, resulting report snapshot, and ordered events without introducing a second rules loop.
+1. **Build and verify the console host.** Run `dotnet run --project samples/CastleSiege.WargamingHall` from the repository root; add focused host tests or CI coverage after confirming the repository's preferred sample-build convention.
+2. **Grow toward the graphical Wargaming Hall.** Use the concept illustration as design guidance and keep visible state downstream of `CastleSiegeSessionReport`; do not make visual effects authoritative or duplicate rules in presentation code.
 3. **Continue the renderer-independent authored-content consumer.** Read caller-provided JSON and validate runtime invariants without claiming full JSON Schema validation.
 4. **Close the Physics contract gap.** Inspect Physics directly, agree on launch/run-evidence contracts and coordinate conventions, and wait for a tested target-intersection contract before reporting hit/miss/indeterminate or damage.
 5. **Expand only after the first proof.** Add supported impact observation, Experience-owned bounded damage rules, construction/attack/reset phases, optional Gestures choreography, and later campaign depth as independently testable increments.
