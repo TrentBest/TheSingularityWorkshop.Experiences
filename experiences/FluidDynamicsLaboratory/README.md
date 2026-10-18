@@ -18,6 +18,14 @@ It belongs inside the **Singularity Laboratory** and complements Chemistry's foc
 6. **Shoreline & Structures** — explore a dam, seawall, bridge pier, or building boundary. Do not claim structural loading, erosion, or damage unless a connected model calculates it.
 7. **Evidence & Timeline** — compare inputs, revisions, model identity, outputs, units, and conservation diagnostics.
 
+## Typed catalog and serialization boundary
+
+The buildable catalog contract now lives in `src/ExperienceCatalog` as typed C# domain objects. It implements `IBinarySerializable` from [FSM_Serialization](https://github.com/TrentBest/TheSingularityWorkshop.FSM_Serialization) with an explicit format version, UTF-8 string lengths, little-endian integers, bounded collection sizes, and validation of room identity and navigation links. Round-trip and malformed-payload tests live in `tests/ExperienceCatalog.Tests`.
+
+This is a deliberate separation of concerns: the Experience owns room meaning; FSM_Serialization supplies the byte-stream boundary; the host decides where bytes are stored or transported. The typed catalog is not evidence of a live water simulation.
+
+**Migration status:** the earlier JSON catalog and schema files have not yet been retired. They must not be treated as a second authoritative representation; the remaining migration work is to replace their validation path with the typed catalog tests and then remove the duplicate files.
+
 ## Existing Physics foundation
 
 The Physics repository already includes 1D wave and 2D shallow-water/bathymetric basin models plus a rainfall-rate field. Those are useful starting capabilities, not proof of a complete hydrodynamics world. The Physics gap register explicitly identifies solid/fluid coupling, boat/body motion, 3D flow, and validated cross-domain mass/energy exchange as open gaps.
