@@ -38,10 +38,11 @@ public sealed class DominoLayoutGridTests
     public void ValidatorEnforcesHeightAndReportsSpacingConstraints()
     {
         var grid = new DominoLayoutGrid(1, 1, 3, [0d], [7UL], [1, 1, 1]);
-        var constraints = new DominoLayoutConstraints(0.1, 0.1, 0.02, 0.05, 0.04, 0.08, 0.01);
+        var constraints = new DominoLayoutConstraints(0.005, 0.005, 0.02, 0.05, 0.04, 0.08, 0.01);
         var issues = DominoLayoutValidator.Validate(grid, constraints);
         Assert.Contains(issues, x => x.Code == "maximum-height-exceeded");
         Assert.Contains(issues, x => x.Code == "spacing-below-footprint");
+        Assert.Contains(issues, x => x.Code == "spacing-exceeds-cell");
     }
 
     [Fact]
