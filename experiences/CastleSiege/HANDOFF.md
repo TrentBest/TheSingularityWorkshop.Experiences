@@ -2,7 +2,7 @@
 
 **Handoff date:** 2026-10-18  
 **Working branch:** `development`  
-**Status:** authored preforge and battlespace contract are documented and contract-tested; the deterministic abstract tabletop rules core, immutable session-report snapshot, and focused tests are committed; current-head CI verification is pending and the repository-wide workflow currently has an unrelated DominoStudio failure; no live Physics integration or rendered playable scene is claimed.
+**Status:** authored preforge and battlespace contract are documented and contract-tested; the deterministic abstract tabletop rules core, immutable session-report snapshot, and focused tests are committed. The latest observed workflow for commit `4c470304` completed: Castle Siege build, source-integration, and focused tests passed; repository-wide status failed because the separate DominoStudio test and build jobs failed. No live Physics integration or rendered playable scene is claimed.
 
 ## Executive summary
 
@@ -62,8 +62,7 @@ Those historical runs completed successfully, but do not establish that later co
 
 ## Recommended next steps
 
-1. **Finish current-head CI verification.** The Castle Siege build and source-integration job have succeeded on the latest run observed so far; the focused Castle Siege test job is still running. The repository-wide run is already failing in the separate DominoStudio test/build jobs, so distinguish that failure from Castle Siege status.
-2. **Build a minimal host-facing presentation proof.** Consume the report to make legal actions, current state, ordered events, scenario/rules identity, and outcome inspectable without adding a rendering dependency to the rules core.
+1. **Build a minimal host-facing presentation proof.** Consume the report to make legal actions, current state, ordered events, scenario/rules identity, and outcome inspectable without adding a rendering dependency or presentation logic to the rules core.
 3. **Add the diegetic Wargaming Hall manifestation.** Keep presentation as a consumer of rules evidence.
 4. **Continue the renderer-independent authored-content consumer.** Read caller-provided JSON and validate runtime invariants without claiming full JSON Schema validation.
 5. **Close the Physics contract gap.** Inspect Physics directly, agree on launch/run-evidence contracts and coordinate conventions, and wait for a tested target-intersection contract before reporting hit/miss/indeterminate or damage.
