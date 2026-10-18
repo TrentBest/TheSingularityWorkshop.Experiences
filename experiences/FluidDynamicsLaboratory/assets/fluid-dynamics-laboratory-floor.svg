@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Fluid Dynamics Laboratory — conceptual department floor</title>
+  <desc id="desc">A conceptual floor plan linking water gallery, wave basin, bathymetry and terrain, rainfall and runoff, vessel test tank, shoreline and structures, and evidence timeline.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b1d2b"/><stop offset="1" stop-color="#153c50"/></linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2dd4bf" stop-opacity=".35"/><stop offset="1" stop-color="#60a5fa" stop-opacity=".16"/></linearGradient>
+    <style>
+      .label{font:700 20px system-ui,sans-serif;fill:#f0f9ff}
+      .small{font:14px system-ui,sans-serif;fill:#c4e1ee}
+      .tiny{font:12px system-ui,sans-serif;fill:#93b8ca}
+      .room{stroke:#5d8da3;stroke-width:2;rx:16}
+      .num{font:800 13px system-ui,sans-serif;fill:#08202d}
+      .wire{fill:none;stroke:#5eead4;stroke-width:2;stroke-dasharray:6 7;opacity:.8}
+    </style>
+  </defs>
+  <rect width="1200" height="760" rx="28" fill="url(#bg)"/>
+  <rect x="24" y="24" width="1152" height="712" rx="24" fill="none" stroke="#35647b" stroke-width="2"/>
+  <text x="56" y="66" class="small" letter-spacing="4">SINGULARITY LABORATORY / DEPARTMENT CONCEPT</text>
+  <text x="56" y="108" class="label" font-size="32">FLUID DYNAMICS LABORATORY</text>
+  <text x="56" y="137" class="small">Water state → waves → terrain → vessels &amp; structures → evidence</text>
+  <rect x="825" y="48" width="320" height="66" rx="12" fill="#173b53" stroke="#5eead4"/>
+  <text x="846" y="74" class="small" font-weight="700">CONCEPTUAL FLOOR PLAN</text>
+  <text x="846" y="96" class="tiny">Not a live simulation or safety plan</text>
+
+  <path class="wire" d="M278 252 H315 M537 252 H574 M796 252 H833 M426 340 V385 M685 340 V385 M944 340 V385 M278 495 H315 M537 495 H574 M796 495 H833"/>
+  <g>
+    <rect class="room" x="56" y="174" width="222" height="166" fill="#163f54"/>
+    <circle cx="83" cy="202" r="15" fill="#5eead4"/><text x="83" y="207" text-anchor="middle" class="num">01</text>
+    <text x="78" y="240" class="label">Water Gallery</text><text x="78" y="268" class="small">State · units · boundaries</text><text x="78" y="290" class="small">Model scope</text>
+    <path d="M204 207 Q216 193 228 207 T252 207" fill="none" stroke="#5eead4" stroke-width="3"/>
+    <path d="M204 218 Q216 204 228 218 T252 218" fill="none" stroke="#60a5fa" stroke-width="3"/>
+  </g>
+  <g>
+    <rect class="room" x="315" y="174" width="222" height="166" fill="#17364f"/>
+    <circle cx="342" cy="202" r="15" fill="#60a5fa"/><text x="342" y="207" text-anchor="middle" class="num">02</text>
+    <text x="337" y="240" class="label">Wave Basin</text><text x="337" y="268" class="small">Initial conditions</text><text x="337" y="290" class="small">1D / 2D model boundary</text>
+    <path d="M465 205 Q477 188 489 205 T513 205" fill="none" stroke="#93c5fd" stroke-width="3"/><path d="M465 220 Q477 203 489 220 T513 220" fill="none" stroke="#93c5fd" stroke-width="3"/>
+  </g>
+  <g>
+    <rect class="room" x="574" y="174" width="222" height="166" fill="#25413d"/>
+    <circle cx="601" cy="202" r="15" fill="#a3e635"/><text x="601" y="207" text-anchor="middle" class="num">03</text>
+    <text x="596" y="240" class="label">Bathymetry &amp; Terrain</text><text x="596" y="268" class="small">Depth field</text><text x="596" y="290" class="small">Basin shape</text>
+    <path d="M730 220 L745 202 L760 212 L777 189" fill="none" stroke="#bef264" stroke-width="3"/><path d="M730 226 H777" stroke="#bef264" stroke-width="2"/>
+  </g>
+  <g>
+    <rect class="room" x="833" y="174" width="287" height="166" fill="#26364d"/>
+    <circle cx="860" cy="202" r="15" fill="#c4b5fd"/><text x="860" y="207" text-anchor="middle" class="num">04</text>
+    <text x="855" y="240" class="label">Rainfall &amp; Runoff</text><text x="855" y="268" class="small">Rain-rate input</text><text x="855" y="290" class="small">Bounded basin response</text>
+    <path d="M1060 190 l-7 13 h8 l-7 14 M1081 190 l-7 13 h8 l-7 14 M1102 190 l-7 13 h8 l-7 14" fill="none" stroke="#c4b5fd" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g>
+    <rect class="room" x="56" y="385" width="481" height="220" fill="#12384b"/>
+    <circle cx="83" cy="413" r="15" fill="#60a5fa"/><text x="83" y="418" text-anchor="middle" class="num">05</text>
+    <text x="78" y="452" class="label">Vessel Test Tank</text><text x="78" y="480" class="small">Boat + water interaction</text><text x="78" y="505" class="small">Buoyancy / drag require real coupling</text>
+    <rect x="352" y="432" width="150" height="98" rx="10" fill="url(#water)" stroke="#5eead4"/>
+    <path d="M373 480 H481 L464 498 H390 Z" fill="#cbd5e1" stroke="#e2e8f0" stroke-width="2"/>
+    <path d="M384 510 Q397 501 410 510 T436 510 T462 510 T488 510" fill="none" stroke="#5eead4" stroke-width="2"/>
+    <text x="352" y="550" class="tiny">Illustrative vessel glyph</text>
+  </g>
+  <g>
+    <rect class="room" x="574" y="385" width="222" height="220" fill="#24443d"/>
+    <circle cx="601" cy="413" r="15" fill="#a3e635"/><text x="601" y="418" text-anchor="middle" class="num">06</text>
+    <text x="596" y="452" class="label">Shoreline &amp; Structures</text><text x="596" y="480" class="small">Boundaries</text><text x="596" y="502" class="small">Loads / erosion not yet implied</text>
+    <path d="M615 560 L651 531 L687 560 Z" fill="#64748b" stroke="#cbd5e1" stroke-width="2"/><rect x="651" y="526" width="14" height="37" fill="#cbd5e1"/><path d="M607 570 Q625 560 643 570 T679 570 T715 570 T751 570" fill="none" stroke="#5eead4" stroke-width="3"/>
+  </g>
+  <g>
+    <rect class="room" x="833" y="385" width="287" height="220" fill="#1b3349"/>
+    <circle cx="860" cy="413" r="15" fill="#c4b5fd"/><text x="860" y="418" text-anchor="middle" class="num">07</text>
+    <text x="855" y="452" class="label">Evidence &amp; Timeline</text><text x="855" y="480" class="small">Inputs · outputs · model ID</text><text x="855" y="502" class="small">Units · diagnostics · replay</text>
+    <path d="M859 550 H1090 M859 574 H1090" stroke="#5d8da3" stroke-width="2"/><path d="M875 540 V561 M922 540 V581 M969 540 V561 M1016 540 V581 M1063 540 V561" stroke="#5eead4" stroke-width="3"/>
+  </g>
+  <text x="56" y="672" class="small">DESIGN STATUS: PREFORGE</text>
+  <text x="56" y="698" class="tiny">Existing wave / shallow-water primitives do not yet constitute a coupled water-and-structures world.</text>
+  <text x="56" y="720" class="tiny">Next milestone: one reproducible basin experiment with output-driven visualization and inspectable evidence.</text>
+</svg>
