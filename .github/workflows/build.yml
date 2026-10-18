@@ -23,6 +23,7 @@ jobs:
           - src/Games.Cards/TheSingularityWorkshop.Games.Cards.csproj
           - src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj
           - src/DominoStudio/TheSingularityWorkshop.Experiences.DominoStudio.csproj
+          - src/MarbleRun/TheSingularityWorkshop.Experiences.MarbleRun.csproj
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
@@ -63,6 +64,7 @@ jobs:
           dotnet restore src/Games.Cards/TheSingularityWorkshop.Games.Cards.csproj
           dotnet restore src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj
           dotnet restore src/DominoStudio/TheSingularityWorkshop.Experiences.DominoStudio.csproj
+          dotnet restore src/MarbleRun/TheSingularityWorkshop.Experiences.MarbleRun.csproj
           dotnet pack src/Forge/TheSingularityWorkshop.Experiences.Forge.csproj --configuration Release --output ./artifacts
           dotnet pack src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj --configuration Release --output ./artifacts
           dotnet pack src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj --configuration Release --output ./artifacts
@@ -71,6 +73,7 @@ jobs:
           dotnet pack src/Games.Cards/TheSingularityWorkshop.Games.Cards.csproj --configuration Release --output ./artifacts
           dotnet pack src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj --configuration Release --output ./artifacts
           dotnet pack src/DominoStudio/TheSingularityWorkshop.Experiences.DominoStudio.csproj --configuration Release --output ./artifacts
+          dotnet pack src/MarbleRun/TheSingularityWorkshop.Experiences.MarbleRun.csproj --configuration Release --output ./artifacts
       - uses: actions/upload-artifact@v4
         with:
           name: experience-packages
@@ -127,6 +130,18 @@ jobs:
         run: dotnet restore tests/DominoStudio.Tests/TheSingularityWorkshop.Experiences.DominoStudio.Tests.csproj
       - name: Run layout and scene contract tests
         run: dotnet test tests/DominoStudio.Tests/TheSingularityWorkshop.Experiences.DominoStudio.Tests.csproj --configuration Release --no-restore
+
+  test-marble-run:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore Marble Run tests
+        run: dotnet restore tests/MarbleRun.Tests/TheSingularityWorkshop.Experiences.MarbleRun.Tests.csproj
+      - name: Run Marble Run scene contract tests
+        run: dotnet test tests/MarbleRun.Tests/TheSingularityWorkshop.Experiences.MarbleRun.Tests.csproj --configuration Release --no-restore
 
   # Keep motion contracts honest without requiring a host renderer.
   test-moniker-motion:
