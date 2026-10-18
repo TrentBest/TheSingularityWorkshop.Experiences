@@ -32,7 +32,7 @@ The MicroBundleRepository stores/retrieves artifacts. It does not calculate phys
 
 ## Current experience contracts
 
-- Domino Studio: DominoLayoutGrid separates per-cell height from per-level orientation. Orientation zero means empty; occupied slots use 1-based codes so zero radians remains a valid angle. DominoLayoutProposal carries a source digest, converter identity/version, coordinate frame, interpretation, scale, confidence and grid.
+- Domino Studio: DominoLayoutGrid stores a per-cell occupancy bit mask (one bit per vertical level) separately from per-level orientation. Orientation zero means empty; occupied slots use 1-based codes so zero radians remains a valid angle. DominoLayoutProposal carries a source digest, converter identity/version, coordinate frame, interpretation, scale, confidence and grid.
 - Marble Run: MarbleRunSceneDefinition declares gravity, scale/density, requested body count, geometry revision, coordinate frame and selected Physics model identity. The sphere-mass helper is explicitly a homogeneous-sphere assumption.
 - The first validation methods are inexpensive authoring checks. They do not prove 3D support, collision-free construction, physical chain propagation, or throughput.
 - Thousands of marbles is a benchmark target, not a current claim.
