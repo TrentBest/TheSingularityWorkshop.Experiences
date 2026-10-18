@@ -1,3 +1,5 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 # Castle Siege Wargaming Hall — Web host
 
 A small runnable browser surface for the Castle Siege West Wall tabletop slice. It is intentionally a host/presentation example, not a second rules engine.
@@ -25,3 +27,14 @@ Open the local URL printed by ASP.NET Core (normally `http://localhost:5000` or 
 The wall is an abstract tabletop token. This host does **not** simulate trajectories, target intersection, impact, or physical damage. It does not call the Physics repository. A depleted wall pip is evidence of an accepted tabletop rule only.
 
 This is a deliberately small, inspectable proof surface. It is not a production multiplayer server: the session is in-memory and shared by visitors of this one host instance, with no identity, persistence, or multi-session isolation.
+
+---
+
+<p align="center">
+  <a href="https://github.com/TrentBest/TheSingularityWorkshop" aria-label="The Singularity Workshop living avatar">
+    <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar — a digital vortex converging on its central eye" width="112" />
+  </a><br />
+  <strong>The Singularity Workshop</strong><br />
+  <em>If a picture is worth a thousand words, what is a living picture worth?</em><br />
+  <a href="https://github.com/TrentBest">GitHub</a> · <a href="https://www.patreon.com/TheSingularityWorkshop">Support the Workshop</a>
+</p>
