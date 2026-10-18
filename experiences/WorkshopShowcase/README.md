@@ -1,3 +1,5 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 # Workshop Showcase Experience
 
 This folder is the Experience-owned source for the Workshop showcase.
@@ -24,3 +26,14 @@ The manifest, complete six-entry demonstration catalog, and current progressive-
 4. Activate only after successful resolution/composition; retain the previous active Experience on failure.
 5. Prove reset, switch, and reload against two configurations on the same host build.
 6. Remove the corresponding duplicated content and behavior from WebPage only after the replacement is exercised by tests and a visitor journey.
+
+---
+
+<p align="center">
+  <a href="https://github.com/TrentBest/TheSingularityWorkshop" aria-label="The Singularity Workshop living avatar">
+    <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar — a digital vortex converging on its central eye" width="112" />
+  </a><br />
+  <strong>The Singularity Workshop</strong><br />
+  <em>If a picture is worth a thousand words, what is a living picture worth?</em><br />
+  <a href="https://github.com/TrentBest">GitHub</a> · <a href="https://www.patreon.com/TheSingularityWorkshop">Support the Workshop</a>
+</p>
