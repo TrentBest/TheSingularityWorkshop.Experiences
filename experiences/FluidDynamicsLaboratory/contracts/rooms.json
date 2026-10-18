@@ -1,0 +1,92 @@
+{
+  "$schema": "./fluid-dynamics-laboratory-rooms.schema.json",
+  "schemaVersion": 1,
+  "experienceKey": "fluid-dynamics-laboratory",
+  "status": "preforge",
+  "rooms": [
+    {
+      "roomKey": "water-gallery",
+      "sequence": 1,
+      "title": "Water Gallery",
+      "purpose": "Introduce the modeled water domain, units, boundaries, and limitations.",
+      "visitorAction": "Inspect a basin definition and select the model whose scope matches the question.",
+      "authoritativeState": "Versioned basin inputs, boundary conditions, model identity, and declared units.",
+      "evidenceRule": "A water-level field is not a complete three-dimensional fluid state.",
+      "maturity": "concept",
+      "requiredCapabilities": [],
+      "nextRooms": ["wave-basin", "bathymetry-terrain", "evidence-timeline"]
+    },
+    {
+      "roomKey": "wave-basin",
+      "sequence": 2,
+      "title": "Wave Basin",
+      "purpose": "Explore wave evolution with an explicitly selected reference model.",
+      "visitorAction": "Change supported initial wave conditions and compare model output.",
+      "authoritativeState": "Initial conditions, boundary conditions, time settings, and wave-model output.",
+      "evidenceRule": "Label the 1D wave reference separately from 2D shallow-water behavior.",
+      "maturity": "concept",
+      "requiredCapabilities": [],
+      "nextRooms": ["bathymetry-terrain", "evidence-timeline"]
+    },
+    {
+      "roomKey": "bathymetry-terrain",
+      "sequence": 3,
+      "title": "Bathymetry & Terrain",
+      "purpose": "Inspect how a configured depth field shapes a basin model.",
+      "visitorAction": "Change the basin depth map and compare supported water-state outputs.",
+      "authoritativeState": "Versioned basin geometry, bathymetry, initial water state, and model output.",
+      "evidenceRule": "Terrain affects water only when the selected model consumes the terrain data.",
+      "maturity": "concept",
+      "requiredCapabilities": [],
+      "nextRooms": ["rainfall-runoff", "shoreline-structures", "evidence-timeline"]
+    },
+    {
+      "roomKey": "rainfall-runoff",
+      "sequence": 4,
+      "title": "Rainfall & Runoff",
+      "purpose": "Study declared rainfall inputs and their supported contribution to basin state.",
+      "visitorAction": "Vary a rainfall-rate field and inspect the resulting evidence.",
+      "authoritativeState": "Rainfall-rate input and basin state, with explicit model and boundary assumptions.",
+      "evidenceRule": "A rainfall field alone does not model infiltration, drainage, or a complete watershed.",
+      "maturity": "concept",
+      "requiredCapabilities": [],
+      "nextRooms": ["wave-basin", "evidence-timeline"]
+    },
+    {
+      "roomKey": "vessel-test-tank",
+      "sequence": 5,
+      "title": "Vessel Test Tank",
+      "purpose": "Prepare experiments for vessel and floating-body interaction with water.",
+      "visitorAction": "Configure a vessel preview and inspect which force models are available.",
+      "authoritativeState": "Authored vessel geometry and, only when integrated, coupled body and fluid state.",
+      "evidenceRule": "Do not claim buoyancy, drag, or simulated vessel motion until a validated coupling model supplies it.",
+      "maturity": "concept",
+      "requiredCapabilities": [],
+      "nextRooms": ["wave-basin", "shoreline-structures", "evidence-timeline"]
+    },
+    {
+      "roomKey": "shoreline-structures",
+      "sequence": 6,
+      "title": "Shoreline & Structures",
+      "purpose": "Explore boundary geometry and future water-to-structure interactions.",
+      "visitorAction": "Compare an authored shoreline or barrier and inspect supported boundary behavior.",
+      "authoritativeState": "Boundary geometry and any explicitly selected, implemented interaction model.",
+      "evidenceRule": "Do not invent structural loads, erosion, or damage from visual contact alone.",
+      "maturity": "concept",
+      "requiredCapabilities": [],
+      "nextRooms": ["vessel-test-tank", "evidence-timeline"]
+    },
+    {
+      "roomKey": "evidence-timeline",
+      "sequence": 7,
+      "title": "Evidence & Timeline",
+      "purpose": "Make basin inputs, model identity, outputs, and revisions inspectable.",
+      "visitorAction": "Compare experiment revisions and replay or export a recorded run when supported.",
+      "authoritativeState": "Experiment revision, inputs, model/version, outputs, units, and diagnostics.",
+      "evidenceRule": "Label results by maturity and preserve provenance; a fixture is not a live run.",
+      "maturity": "concept",
+      "requiredCapabilities": [],
+      "nextRooms": ["water-gallery"]
+    }
+  ]
+}
