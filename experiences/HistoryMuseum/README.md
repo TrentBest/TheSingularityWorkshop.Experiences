@@ -31,6 +31,12 @@ The museum is an Experience, not a new engine, global knowledge database, physic
 5. Offer a clearly labeled experiment only when it consumes actual Physics outputs. A historical explanation can exist before the solver integration is complete.
 6. Preserve exhibit/content versions and provenance so a visitor's result or lesson can be reproduced against the exact material shown.
 
+## The wider Siege Wing
+
+Castle Sieges is the first booth in a broader proposed **Siege Wing**, where visitors can explore siege and defense across documented history, epic and literature, and science fiction. The shared learning questions cover objectives, terrain, fortification, logistics, technology, time, and consequences; each domain keeps its own evidence rules. Historical claims, literary narrative, fictional canon, interpretation, reconstruction, and simulation output must remain visibly distinct.
+
+See [Siege Wing design](SIEGE_WING_DESIGN.md) for the cross-domain architecture, proposed bundle vocabulary, visitor journey, and implementation gates. The wing is a design plan, not an implemented runtime or a claim that these content bundles already exist.
+
 ## Initial booth contract
 
 See [Castle Sieges exhibit design](exhibits/CastleSieges/EXHIBIT_DESIGN.md) for the proposed content-bundle map, visitor flow, learning objectives, provenance rules, and implementation gates.
