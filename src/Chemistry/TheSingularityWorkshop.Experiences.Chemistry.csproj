@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>TheSingularityWorkshop.Experiences.Chemistry</PackageId>
+    <Version>0.1.0-alpha.1</Version>
+    <Authors>The Singularity Workshop</Authors>
+    <Company>The Singularity Workshop</Company>
+    <Description>Deterministic chemical species and reaction conservation contracts for Workshop Experiences.</Description>
+    <PackageTags>singularity;workshop;experience;chemistry;reaction;stoichiometry</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/TrentBest/TheSingularityWorkshop.Experiences</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+</Project>
