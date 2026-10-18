@@ -26,7 +26,7 @@ app.MapPost("/api/action", (HallActionRequest request) =>
         !Enum.TryParse<CastleSiegeActionKind>(request.Action, ignoreCase: true, out var kind) ||
         !Enum.IsDefined(kind))
     {
-        return Results.BadRequest(new { error = "Unknown action. Choose an action currently offered by the hall." });
+        return (IResult)Results.BadRequest(new { error = "Unknown action. Choose an action currently offered by the hall." });
     }
 
     lock (sessionGate)
@@ -34,16 +34,16 @@ app.MapPost("/api/action", (HallActionRequest request) =>
         var view = CaptureView();
         if (view.Outcome != CastleSiegeOutcome.InProgress)
         {
-            return Results.Conflict(new { error = "The tabletop session is complete. Reset the host to start a new session." });
+            return (IResult)Results.Conflict(new { error = "The tabletop session is complete. Reset the host to start a new session." });
         }
 
         if (!view.LegalActions.Contains(kind))
         {
-            return Results.BadRequest(new { error = $"Action {kind} is not legal for the active role." });
+            return (IResult)Results.BadRequest(new { error = $"Action {kind} is not legal for the active role." });
         }
 
         var entry = session.Apply(new CastleSiegeAction(view.ActiveRole, kind));
-        return Results.Ok(new
+        return (IResult)Results.Ok(new
         {
             view = CaptureView(),
             acceptedEvent = entry
