@@ -1,0 +1,23 @@
+{
+  "version": "0.1.0",
+  "kind": "CelestialMechanics",
+  "title": "Celestial Mechanics Laboratory",
+  "description": "Compose a persistent celestial system, inspect its gravity field, and investigate collisions across scales.",
+  "experienceKey": "celestial-mechanics",
+  "experienceId": null,
+  "identityStatus": "pending-numeric-reservation",
+  "manifestContract": "workshop-experience-manifest/v1",
+  "startup": [],
+  "running": [],
+  "capabilities": [],
+  "content": {
+    "design": "design/EXPERIENCE.md"
+  },
+  "notes": [
+    "Preforge manifest only; not a published or runtime-loadable Experience.",
+    "Capability roots remain empty until the actual Physics, visualization, and persistence MicroBundle contracts are verified and selected.",
+    "The Experience owns scenario semantics and user journey, not solver or renderer implementation.",
+    "Mutable scenario persistence is separate from immutable MicroBundle artifact publication.",
+    "A numeric Experience ID must be reserved before publication through the current repository contract."
+  ]
+}
