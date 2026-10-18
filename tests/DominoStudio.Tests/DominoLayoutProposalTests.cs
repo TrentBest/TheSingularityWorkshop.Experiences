@@ -11,8 +11,8 @@ public sealed class DominoLayoutProposalTests
         var valid = new DominoLayoutProposal(new string('a', 64), "threshold-grid", "1.0.0",
             "world-xy-v1", 0.04, 0.04, "top-down", 0.7, grid);
         Assert.True(valid.IsValid);
-        Assert.False(valid with { Confidence = 1.1 }.IsValid);
-        Assert.False(valid with { Interpretation = "" }.IsValid);
-        Assert.False(valid with { SourceImageSha256 = "not-a-digest" }.IsValid);
+        Assert.False((valid with { Confidence = 1.1 }).IsValid);
+        Assert.False((valid with { Interpretation = "" }).IsValid);
+        Assert.False((valid with { SourceImageSha256 = "not-a-digest" }).IsValid);
     }
 }
