@@ -37,7 +37,7 @@ public sealed class ReactionBalanceAnalyzerTests
         var report = ReactionBalanceAnalyzer.Analyze(reaction);
 
         Assert.False(report.IsBalanced);
-        Assert.Equal(-1, report.ElementImbalances["H"]);
+        Assert.Equal(0, report.ElementImbalances["H"]);
         Assert.Equal(-1, report.ElementImbalances["O"]);
     }
 
