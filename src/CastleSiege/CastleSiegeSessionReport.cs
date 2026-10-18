@@ -13,9 +13,11 @@ public sealed record CastleSiegeSessionReport(
     string RulesVersion,
     CastleSiegeTabletopState State,
     IReadOnlyList<CastleSiegeActionKind> LegalActions,
-    IReadOnlyList<CastleSiegeTabletopEvent> Events,
-    CastleSiegeOutcome Outcome)
+    IReadOnlyList<CastleSiegeTabletopEvent> Events)
 {
+    /// <summary>The terminal classification captured in the report's state.</summary>
+    public CastleSiegeOutcome Outcome => State.Outcome;
+
     /// <summary>Captures a stable snapshot of the supplied session's current state and accepted events.</summary>
     public static CastleSiegeSessionReport Capture(CastleSiegeTabletopSession session)
     {
@@ -27,7 +29,6 @@ public sealed record CastleSiegeSessionReport(
             CastleSiegeTabletopSession.RulesVersion,
             session.State,
             Array.AsReadOnly(session.GetLegalActions().ToArray()),
-            Array.AsReadOnly(session.Events.ToArray()),
-            session.State.Outcome);
+            Array.AsReadOnly(session.Events.ToArray()));
     }
 }
