@@ -143,6 +143,18 @@ jobs:
           jq -e '.view.wallIntegrity == 2 and .view.activeRole == "Defender" and .acceptedEvent.ruleId == "wall.abstract-breach-point"' /tmp/castle-siege-action.json
           curl --silent --show-error --fail -X POST http://127.0.0.1:5099/api/reset > /tmp/castle-siege-reset.json
           jq -e '.wallIntegrity == 3 and .activeRole == "Attacker" and (.events | length) == 0' /tmp/castle-siege-reset.json
+          illegal_status=$(curl --silent --output /tmp/castle-siege-illegal.json --write-out '%{http_code}' -H 'Content-Type: application/json' -d '{"action":"HoldPosition"}' http://127.0.0.1:5099/api/action)
+          test "$illegal_status" = "400"
+          jq -e '.error | contains("not legal")' /tmp/castle-siege-illegal.json
+          curl --silent --show-error --fail -H 'Content-Type: application/json' -d '{"action":"FireAtWestWall"}' http://127.0.0.1:5099/api/action > /dev/null
+          curl --silent --show-error --fail -H 'Content-Type: application/json' -d '{"action":"HoldPosition"}' http://127.0.0.1:5099/api/action > /dev/null
+          curl --silent --show-error --fail -H 'Content-Type: application/json' -d '{"action":"FireAtWestWall"}' http://127.0.0.1:5099/api/action > /dev/null
+          curl --silent --show-error --fail -H 'Content-Type: application/json' -d '{"action":"HoldPosition"}' http://127.0.0.1:5099/api/action > /dev/null
+          curl --silent --show-error --fail -H 'Content-Type: application/json' -d '{"action":"FireAtWestWall"}' http://127.0.0.1:5099/api/action > /tmp/castle-siege-terminal.json
+          jq -e '.view.outcome == "AttackerVictory" and .view.wallIntegrity == 0 and (.view.legalActions | length) == 0 and (.view.events | length) == 5' /tmp/castle-siege-terminal.json
+          terminal_status=$(curl --silent --output /tmp/castle-siege-terminal-action.json --write-out '%{http_code}' -H 'Content-Type: application/json' -d '{"action":"FireAtWestWall"}' http://127.0.0.1:5099/api/action)
+          test "$terminal_status" = "409"
+          jq -e '.error | contains("session is complete")' /tmp/castle-siege-terminal-action.json
 
   # Validate the grid encoding and scene setup contracts used by Marble Run and Domino Studio.
   test-domino-studio:
