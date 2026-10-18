@@ -1,3 +1,5 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 # Fluid Dynamics Laboratory — Preforge Experience
 
 **Status:** authored department concept grounded in existing Physics primitives; not yet a connected, host-runnable water simulation.
@@ -48,3 +50,14 @@ Every exhibit must label its maturity honestly: concept, authored preview, calcu
 5. Only then introduce a floating-body experiment, with buoyancy and fluid/body exchange as explicit prerequisites.
 
 The first release should prefer one inspectable, reproducible basin over a large animated ocean whose causal behavior cannot be verified.
+
+---
+
+<p align="center">
+  <a href="https://github.com/TrentBest/TheSingularityWorkshop" aria-label="The Singularity Workshop living avatar">
+    <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar — a digital vortex converging on its central eye" width="112" />
+  </a><br />
+  <strong>The Singularity Workshop</strong><br />
+  <em>If a picture is worth a thousand words, what is a living picture worth?</em><br />
+  <a href="https://github.com/TrentBest">GitHub</a> · <a href="https://www.patreon.com/TheSingularityWorkshop">Support the Workshop</a>
+</p>
