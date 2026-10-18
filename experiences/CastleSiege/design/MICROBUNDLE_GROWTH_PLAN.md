@@ -77,3 +77,17 @@ Until steps 3 and 4 are genuinely connected, the Experience must continue to say
 3. Coordinate with the Physics owner for the real trajectory output and target-intersection contract; do not change Physics or duplicate its solver.
 4. Define the smallest authored battlespace schema with stable IDs and explicit coordinate units.
 5. Only then implement/register the next real MicroBundle and test its definition, artifact identity, and composition behavior.
+
+## Historical education is a separate composition
+
+The Castle Siege scene can also be presented as the **Castle Sieges booth** inside the [History Museum preforge](../../HistoryMuseum/README.md). This is a new visitor journey and historical-content layer, not a replacement for the Castle Siege Experience and not a reason to duplicate its authored battlespace.
+
+See the [Castle Sieges exhibit design](../../HistoryMuseum/exhibits/CastleSieges/EXHIBIT_DESIGN.md) for the proposed history-content MicroBundle taxonomy. The key distinction is:
+
+- `history.case-study`, `history.chronology`, `history.fortification`, `history.siege-technology`, `history.logistics-and-supply`, `history.people-and-perspectives`, `history.claim-and-source`, `history.glossary`, and `history.learning-activity` carry historical meaning, source provenance, and educational structure.
+- `castle-siege.authored-battlespace` carries the scene/object identities already owned here.
+- `physics.projectile-trajectory` remains a separate, optional physical experiment with its own authoritative model and run evidence.
+- `history.exhibit-composition` joins references and visitor sequence; it must not copy historical claims or become a solver/runtime.
+
+These names are proposed semantic keys only. They do not imply assigned numeric IDs, executable implementations, repository artifacts, or publication. Begin with one carefully sourced case study and a few coherent data artifacts; split capabilities into independently versioned bundles only where reuse, ownership, or lifecycle justifies it. Historical context must remain useful when the Physics experiment is unavailable.
+
