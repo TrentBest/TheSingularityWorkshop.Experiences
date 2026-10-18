@@ -10,7 +10,7 @@ From the repository root:
 dotnet run --project samples/CastleSiege.WargamingHall
 ```
 
-Choose one of the legal actions shown for the active role. Enter `q` to leave the hall and inspect the report for the accepted events so far.
+Choose one of the legal actions shown for the active role. The displayed scenario identity, wall-integrity pips, resources, and evidence boundary are projected from a captured `CastleSiegeSessionReport` through `CastleSiegeHallViewModel`; they are not a separate set of host-owned game rules. Enter `q` to leave the hall and inspect the report for the accepted events so far.
 
 ## Authority boundary
 
@@ -20,4 +20,4 @@ Choose one of the legal actions shown for the active role. Enter `q` to leave th
 - The host does not implement outcome rules, alter evidence, or run a separate simulation loop.
 - Wall integrity is an abstract tabletop token. This sample calculates no trajectory, target intersection, impact, or physical damage.
 
-This is a first runnable host surface, not yet the illustrated graphical Wargaming Hall. It has no Physics, renderer, network authority, or persistence integration.
+The view model is the renderer-independent seam for a future graphical hall. This is a first runnable host surface, not yet the illustrated graphical Wargaming Hall. It has no Physics, renderer, network authority, or persistence integration.
