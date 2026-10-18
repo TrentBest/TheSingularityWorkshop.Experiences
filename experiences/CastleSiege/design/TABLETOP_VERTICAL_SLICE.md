@@ -2,6 +2,12 @@
 
 **Status:** deterministic abstract rules core and immutable session-report snapshot implemented; automated test coverage added; host presentation and current-head CI verification remain separate gates. This is not Physics integration and does not claim a rendered, host-runnable Experience.
 
+## Visual concept: Wargaming Hall
+
+![Castle Siege Wargaming Hall concept](WARGAMING_HALL_CONCEPT.svg)
+
+The [Wargaming Hall concept illustration](WARGAMING_HALL_CONCEPT.svg) gives the intended tabletop and after-action report a shared visual language: attacker and defender choices around the West Wall, plus an inspectable report snapshot. It is a static design illustration, not a running host UI, not live data, and not a Physics result. The authoritative state remains the deterministic session and its report; a future host should bind its visible state to that report instead of duplicating the rules.
+
 ## Purpose
 
 Build one small, inspectable tabletop siege game to illuminate the Experience boundary and leave the wider system open to independent contributors.
