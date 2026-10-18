@@ -10,10 +10,12 @@ Console.WriteLine();
 
 while (session.State.Outcome == CastleSiegeOutcome.InProgress)
 {
-    PrintState(session.State);
-    var legalActions = session.GetLegalActions();
+    var report = CastleSiegeSessionReport.Capture(session);
+    var view = CastleSiegeHallViewModel.FromReport(report);
+    PrintState(view);
+    var legalActions = view.LegalActions;
 
-    Console.WriteLine($"Active role: {session.State.ActiveRole}");
+    Console.WriteLine($"Active role: {view.ActiveRole}");
     for (var i = 0; i < legalActions.Count; i++)
     {
         Console.WriteLine($"  {i + 1}. {Describe(legalActions[i])}");
@@ -36,7 +38,7 @@ while (session.State.Outcome == CastleSiegeOutcome.InProgress)
         continue;
     }
 
-    var action = new CastleSiegeAction(session.State.ActiveRole, legalActions[choice - 1]);
+    var action = new CastleSiegeAction(view.ActiveRole, legalActions[choice - 1]);
     var entry = session.Apply(action);
     Console.WriteLine();
     Console.WriteLine($"EVENT {entry.Sequence:00} · {entry.RuleId}");
@@ -49,10 +51,13 @@ Console.WriteLine("AFTER-ACTION REPORT");
 Console.WriteLine("===================");
 Console.WriteLine(CastleSiegeSessionReportText.Format(CastleSiegeSessionReport.Capture(session)));
 
-static void PrintState(CastleSiegeTabletopState state)
+static void PrintState(CastleSiegeHallView view)
 {
-    Console.WriteLine($"Turn {state.TurnNumber}  |  Wall integrity: {state.WallIntegrity}/3");
-    Console.WriteLine($"Attacker shots: {state.AttackerShotsRemaining}  |  Defender repairs: {state.DefenderRepairsRemaining}");
+    var pips = string.Concat(view.WallIntegrityPips.Select(alive => alive ? "[●]" : "[○]"));
+    Console.WriteLine($"Scenario: {view.ScenarioKey} (v{view.ScenarioVersion})  |  Rules: {view.RulesVersion}");
+    Console.WriteLine($"Turn {view.TurnNumber}  |  West wall: {pips}  {view.WallIntegrity}/{view.MaximumWallIntegrity}");
+    Console.WriteLine($"Attacker shots: {view.AttackerShotsRemaining}  |  Defender repairs: {view.DefenderRepairsRemaining}");
+    Console.WriteLine($"Evidence: {view.EvidenceBoundary}");
     Console.WriteLine();
 }
 
