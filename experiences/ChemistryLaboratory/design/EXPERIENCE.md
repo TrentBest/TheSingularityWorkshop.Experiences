@@ -58,6 +58,12 @@ Keep the saved experiment editable and mutable. Published MicroBundle artifacts 
 
 Do not collapse these into one giant chemistry bundle. Each capability should remain independently addressable and replaceable.
 
+## Safe comic mishaps
+
+The department should allow harmless, memorable mistakes. See [Safe Mishaps — Chemistry Laboratory Experience Contract](SAFE_MISHAPS.md) for the event lifecycle, scripted-vs-modelled distinction, player recovery, and acceptance criteria.
+
+The intended “coyote moment” is a cartoon pop and smoke puff in the player's face: soot, frazzled hair, a dazed blink, then automatic recovery. The player does not die or lose the experiment. It must never be represented as a prediction from the atom/charge conservation analyzer. When no validated model classifies the result, label it as a scripted gag or an unknown outcome rather than inventing a chemical cause.
+
 ## Model and safety posture
 
 This is a computational research/education environment. Keep the initial examples focused on benign, well-characterized reference cases and symbolic/abstract experiments. The department must not turn into instructions for performing dangerous chemical synthesis, optimizing harmful substances, or operating real combustion experiments. Physical apparatus in the visual floor is illustrative unless an actual, reviewed laboratory integration exists.
