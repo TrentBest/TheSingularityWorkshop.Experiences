@@ -1,3 +1,5 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 # Workshop Games — Cards
 
 A small, host-neutral playing-card capability intended to become the shared card foundation for Poker, Blackjack, and other Experience MicroBundles.
@@ -43,3 +45,14 @@ The [design rationale and testable contracts](../../docs/GAMES_CARDS_DESIGN.md) 
 This library does not implement Poker or Blackjack rules, betting, account balances, money movement, real-money gambling, payment processing, casino UI, or game settlement. Rules-specific MicroBundles should consume these primitives rather than copy deck logic.
 
 The package project is independently buildable and packing is opt-in. Its `IMicroBundle` adapter and publishable MicroBundle identity are intentionally not declared here until the ecosystem's authoritative ID allocation can be verified.
+
+---
+
+<p align="center">
+  <a href="https://github.com/TrentBest/TheSingularityWorkshop" aria-label="The Singularity Workshop living avatar">
+    <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar — a digital vortex converging on its central eye" width="112" />
+  </a><br />
+  <strong>The Singularity Workshop</strong><br />
+  <em>If a picture is worth a thousand words, what is a living picture worth?</em><br />
+  <a href="https://github.com/TrentBest">GitHub</a> · <a href="https://www.patreon.com/TheSingularityWorkshop">Support the Workshop</a>
+</p>
