@@ -73,3 +73,9 @@ Never let color, animation, or a glowing molecule imply a result that the select
 The floor plan below is a **conceptual design image**, not a running floor simulation. The next milestone is an interactive view bound to the same authoritative experiment state as the equations, timeline, and evidence report.
 
 See [the Physics branch atlas](https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/docs/PHYSICS_BRANCH_ATLAS.md) for the domain gap map and [Build to Illuminate](../../docs/BUILD_TO_ILLUMINATE.md) for the implementation principle.
+
+## First executable chemistry capability
+
+The Experience now has a separate .NET chemistry core at [src/Chemistry](../../src/Chemistry/TheSingularityWorkshop.Experiences.Chemistry.csproj). Its first contract models a species with explicit elemental counts and charge, a proposed reaction with positive integer coefficients, and a deterministic conservation audit. The [tests](../../tests/Chemistry.Tests/ReactionBalanceAnalyzerTests.cs) cover balanced water formation, an unbalanced equation, charge conservation, invalid inputs, and defensive copying.
+
+**Scope boundary:** this computes atom and charge accounting only. It does not auto-balance equations, predict reaction feasibility, calculate energy, model kinetics, or claim a validated simulation. The room catalog remains authored Experience content until a runtime loader and registered capability path are implemented.
