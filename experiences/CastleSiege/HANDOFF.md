@@ -2,7 +2,7 @@
 
 **Handoff date:** 2026-10-18  
 **Working branch:** `development`  
-**Status:** authored preforge and battlespace contract are documented and contract-tested; the deterministic abstract tabletop rules core, immutable session-report snapshot, plain-text report presenter, focused tests, static Wargaming Hall concept, and first interactive console host are committed. Workflow [run 39095189564](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39095189564) confirms the Castle Siege build, focused tests, and source-integration checks pass; the overall workflow fails in the separate DominoStudio test/build jobs. The new sample host has not yet been built by CI. No live Physics integration or graphical playable scene is claimed.
+**Status:** authored preforge and battlespace contract are documented and contract-tested; the deterministic abstract tabletop rules core, immutable session-report snapshot, plain-text report presenter, focused tests, static Wargaming Hall concept, and interactive console host are committed. Workflow [run 39095536710](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39095536710) confirms the Castle Siege contract tests, Wargaming Hall host restore/build/smoke test, and source-integration checks pass. A separate Castle Siege build job completed its build step successfully but was later cancelled; the run is not evidence that every repository job passed. Earlier repository-wide runs failed in separate DominoStudio jobs. No live Physics integration or graphical playable scene is claimed.
 
 ## Executive summary
 
@@ -64,8 +64,8 @@ Those historical runs completed successfully, but do not establish that later co
 
 ## Recommended next steps
 
-1. **Build and verify the console host.** Run `dotnet run --project samples/CastleSiege.WargamingHall` from the repository root; add focused host tests or CI coverage after confirming the repository's preferred sample-build convention.
-2. **Grow toward the graphical Wargaming Hall.** Use the concept illustration as design guidance and keep visible state downstream of `CastleSiegeSessionReport`; do not make visual effects authoritative or duplicate rules in presentation code.
+1. **Design the graphical Wargaming Hall host contract.** The console host now has CI coverage. Define a small presentation model derived only from `CastleSiegeSessionReport` (scenario/rules identity, active role, wall-integrity pips, remaining resources, legal actions, ordered events, outcome, and evidence boundary) before binding a graphical surface. Keep action submission explicit and route it back through `CastleSiegeTabletopSession.Apply`; the view must not implement rules.
+2. **Build the graphical surface only against that contract.** Use the SVG concept illustration as design guidance, not as proof of a live UI. Prefer a runnable host with real session state and an automated interaction/smoke test over a static HTML/SVG mock. Do not make visual effects authoritative or duplicate rules in presentation code.
 3. **Continue the renderer-independent authored-content consumer.** Read caller-provided JSON and validate runtime invariants without claiming full JSON Schema validation.
 4. **Close the Physics contract gap.** Inspect Physics directly, agree on launch/run-evidence contracts and coordinate conventions, and wait for a tested target-intersection contract before reporting hit/miss/indeterminate or damage.
 5. **Expand only after the first proof.** Add supported impact observation, Experience-owned bounded damage rules, construction/attack/reset phases, optional Gestures choreography, and later campaign depth as independently testable increments.
