@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Castle Siege Wargaming Hall — West Wall tabletop concept</title>
+  <desc id="desc">A top-down tabletop layout shows an attacker token, west wall objective, defender token, three abstract wall integrity pips, and a report panel. Arrows explain that player actions enter deterministic rules, which emit ordered events and a report snapshot. This is a design illustration, not a running interface or physical simulation.</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#344052" stroke-width="1" opacity=".45"/></pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0L9 3L0 6Z" fill="#f4bd50"/></marker>
+    <linearGradient id="table" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#202c3c"/><stop offset="1" stop-color="#111923"/></linearGradient>
+  </defs>
+  <rect width="1200" height="760" rx="28" fill="#0b111a"/>
+  <text x="52" y="58" fill="#f4bd50" font-family="sans-serif" font-size="15" font-weight="700" letter-spacing="3">THE SINGULARITY WORKSHOP · EXPERIENCE STUDY</text>
+  <text x="52" y="104" fill="#f3f5f8" font-family="sans-serif" font-size="34" font-weight="700">Wargaming Hall / West Wall</text>
+  <text x="52" y="134" fill="#aeb9c8" font-family="sans-serif" font-size="17">A small, inspectable tabletop loop — rules first, presentation second.</text>
+  <rect x="48" y="164" width="708" height="438" rx="18" fill="url(#table)" stroke="#425064" stroke-width="2"/>
+  <rect x="62" y="178" width="680" height="410" rx="12" fill="url(#grid)"/>
+  <text x="84" y="211" fill="#b9c5d5" font-family="sans-serif" font-size="13" letter-spacing="2">ABSTRACT BATTLESPACE · TOP-DOWN</text>
+  <rect x="105" y="268" width="130" height="112" rx="16" fill="#20394a" stroke="#4ca9c8" stroke-width="2"/>
+  <circle cx="170" cy="312" r="22" fill="#4ca9c8"/>
+  <path d="M157 312h26M170 299v26" stroke="#0b1822" stroke-width="4" stroke-linecap="round"/>
+  <text x="170" y="354" fill="#e7f8ff" font-family="sans-serif" font-size="16" text-anchor="middle" font-weight="700">ATTACKER</text>
+  <text x="170" y="372" fill="#a8d7e6" font-family="sans-serif" font-size="12" text-anchor="middle">3 shots</text>
+  <path d="M245 324H350" fill="none" stroke="#f4bd50" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="298" y="306" fill="#f4bd50" font-family="sans-serif" font-size="13" text-anchor="middle">Fire</text>
+  <rect x="366" y="242" width="128" height="166" rx="12" fill="#46352a" stroke="#e1a65b" stroke-width="2"/>
+  <text x="430" y="269" fill="#ffe1b5" font-family="sans-serif" font-size="15" text-anchor="middle" font-weight="700">WEST WALL</text>
+  <g fill="#e1a65b"><rect x="386" y="286" width="88" height="22" rx="4"/><rect x="386" y="317" width="88" height="22" rx="4"/><rect x="386" y="348" width="88" height="22" rx="4"/></g>
+  <text x="430" y="392" fill="#ffe1b5" font-family="sans-serif" font-size="12" text-anchor="middle">3 / 3 integrity</text>
+  <path d="M495 324H578" fill="none" stroke="#f4bd50" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="591" y="268" width="130" height="112" rx="16" fill="#3d2b3a" stroke="#d879b6" stroke-width="2"/>
+  <circle cx="656" cy="312" r="22" fill="#d879b6"/>
+  <path d="M643 312h26M656 299v26" stroke="#281420" stroke-width="4" stroke-linecap="round"/>
+  <text x="656" y="354" fill="#ffe8f7" font-family="sans-serif" font-size="16" text-anchor="middle" font-weight="700">DEFENDER</text>
+  <text x="656" y="372" fill="#e7b9d6" font-family="sans-serif" font-size="12" text-anchor="middle">2 repairs</text>
+  <rect x="84" y="456" width="636" height="96" rx="12" fill="#131c28" stroke="#344052"/>
+  <text x="106" y="484" fill="#f3f5f8" font-family="sans-serif" font-size="15" font-weight="700">Player choice → legal action → deterministic transition</text>
+  <text x="106" y="512" fill="#b9c5d5" font-family="sans-serif" font-size="14">Tokens are game values, not measured physical quantities.</text>
+  <text x="106" y="534" fill="#b9c5d5" font-family="sans-serif" font-size="14">Visual effects cannot decide hits, damage, or victory.</text>
+  <rect x="784" y="164" width="368" height="438" rx="18" fill="#111923" stroke="#425064" stroke-width="2"/>
+  <text x="812" y="204" fill="#f4bd50" font-family="sans-serif" font-size="13" font-weight="700" letter-spacing="2">AFTER-ACTION REPORT</text>
+  <text x="812" y="239" fill="#f3f5f8" font-family="sans-serif" font-size="23" font-weight="700">Session snapshot</text>
+  <text x="812" y="271" fill="#aeb9c8" font-family="monospace" font-size="14">castle.west-wall · v1</text>
+  <text x="812" y="296" fill="#aeb9c8" font-family="monospace" font-size="14">castle-siege-tabletop/1</text>
+  <path d="M812 318H1124" stroke="#344052"/>
+  <text x="812" y="348" fill="#b9c5d5" font-family="sans-serif" font-size="14">CURRENT STATE</text>
+  <text x="812" y="376" fill="#f3f5f8" font-family="sans-serif" font-size="17" font-weight="700">In progress · Turn 1</text>
+  <text x="812" y="404" fill="#b9c5d5" font-family="sans-serif" font-size="14">Wall integrity</text>
+  <g fill="#e1a65b"><rect x="934" y="390" width="40" height="16" rx="4"/><rect x="980" y="390" width="40" height="16" rx="4"/><rect x="1026" y="390" width="40" height="16" rx="4"/></g>
+  <path d="M812 426H1124" stroke="#344052"/>
+  <text x="812" y="454" fill="#b9c5d5" font-family="sans-serif" font-size="14">ORDERED EVENTS</text>
+  <rect x="812" y="470" width="312" height="48" rx="8" fill="#1b2836" stroke="#344052"/>
+  <text x="828" y="490" fill="#f3f5f8" font-family="monospace" font-size="13">#1 · FireAtWestWall</text>
+  <text x="828" y="507" fill="#aeb9c8" font-family="sans-serif" font-size="12">Rule ID · before/after state · explanation</text>
+  <text x="812" y="548" fill="#f4bd50" font-family="sans-serif" font-size="12" font-weight="700">ABSTRACT-TABLETOP ONLY</text>
+  <text x="812" y="568" fill="#aeb9c8" font-family="sans-serif" font-size="12">No trajectory, intersection, impact, or damage</text>
+  <path d="M400 616V644H580" fill="none" stroke="#f4bd50" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="48" y="638" width="1104" height="76" rx="14" fill="#151e2a" stroke="#344052"/>
+  <text x="72" y="667" fill="#f3f5f8" font-family="sans-serif" font-size="16" font-weight="700">Authority boundary</text>
+  <text x="72" y="692" fill="#b9c5d5" font-family="sans-serif" font-size="14">Experience defines the scenario and rules · Physics owns physical evidence · presentation explains the report</text>
+  <text x="1128" y="742" fill="#657286" font-family="sans-serif" font-size="11" text-anchor="end">DESIGN ILLUSTRATION · NOT A RUNNING UI</text>
+</svg>
