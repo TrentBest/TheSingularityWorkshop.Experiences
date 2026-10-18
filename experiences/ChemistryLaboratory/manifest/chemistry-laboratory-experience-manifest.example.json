@@ -1,0 +1,24 @@
+{
+  "version": "0.1.0",
+  "kind": "ChemistryLaboratory",
+  "title": "Chemistry Laboratory",
+  "description": "Explore atomic identity, molecular structure, reactions, energy transfer, materials, and combustion through inspectable experiments.",
+  "experienceKey": "chemistry-laboratory",
+  "experienceId": null,
+  "identityStatus": "pending-numeric-reservation",
+  "manifestContract": "workshop-experience-manifest/v1",
+  "startup": [],
+  "running": [],
+  "capabilities": [],
+  "content": {
+    "design": "design/EXPERIENCE.md",
+    "floorPlan": "assets/chemistry-laboratory-floor.svg"
+  },
+  "notes": [
+    "Preforge manifest only; not a published or runtime-loadable Experience.",
+    "Numeric Experience ID and MicroBundle roots must be reserved against the actual registries before publication.",
+    "Do not claim runtime chemistry, reaction kinetics, thermal coupling, or combustion simulation until the selected capabilities exist and are verified.",
+    "The floor plan is conceptual; future living diagrams must bind to authoritative experiment state.",
+    "Editable experiment projects are separate from immutable published MicroBundle artifacts."
+  ]
+}
