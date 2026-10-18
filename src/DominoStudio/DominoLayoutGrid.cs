@@ -2,10 +2,10 @@ namespace TheSingularityWorkshop.Experiences.DominoStudio;
 
 /// <summary>Compact editable grid using a per-cell bit mask for level occupancy.</summary>
 /// <remarks>
-— Each set bit represents a domino at that vertical level: bit 0 is the base level, bit 1 is the first overpass, and so on.
-— The height/occupancy field is separate from the orientation field, which stores one 1-based orientation code per cell and level.
-— Orientation code zero is reserved for empty levels; code 1 maps to the first angle, including a valid zero-radian angle.
-</remarks>
+/// <para>Each set bit represents a domino at that vertical level: bit 0 is the base level, bit 1 is the first overpass, and so on.</para>
+/// <para>The height/occupancy field is separate from the orientation field, which stores one 1-based orientation code per cell and level.</para>
+/// <para>Orientation code zero is reserved for empty levels; code 1 maps to the first angle, including a valid zero-radian angle.</para>
+/// </remarks>
 public sealed class DominoLayoutGrid
 {
     private readonly ulong[] _occupancyMasks;
