@@ -2,7 +2,7 @@
 
 **Handoff date:** 2026-10-18  
 **Working branch:** `development`  
-**Status:** authored preforge and battlespace contract are documented and contract-tested; a deterministic abstract tabletop rules core and focused tests are committed; current-head CI verification is pending; no live Physics integration or rendered playable scene is claimed.
+**Status:** authored preforge and battlespace contract are documented and contract-tested; the deterministic abstract tabletop rules core, immutable session-report snapshot, and focused tests are committed; current-head CI verification is pending and the repository-wide workflow currently has an unrelated DominoStudio failure; no live Physics integration or rendered playable scene is claimed.
 
 ## Executive summary
 
@@ -16,7 +16,7 @@ The West Wall Demonstration now has an executable, renderer-independent tabletop
 
 - [Castle Siege preforge README](../README.md) — folder and authority boundaries, intended vertical slice, and current maturity.
 - [Experience design](design/EXPERIENCE.md) — authored purpose, journey, and acceptance intent.
-- [Tabletop vertical slice](design/TABLETOP_VERTICAL_SLICE.md) — first bounded playable-loop brief, rules contract checklist, event/evidence requirements, acceptance gates, and contribution boundaries. **Design only; no tabletop session implementation is claimed.**
+- [Tabletop vertical slice](design/TABLETOP_VERTICAL_SLICE.md) — first bounded playable-loop brief, rules contract checklist, event/evidence requirements, acceptance gates, contribution boundaries, and the implemented session/report snapshot.
 - [Manifest contract](../manifest/MANIFEST.md) and [manifest schema](../contracts/castle-siege-experience-manifest.schema.json) — Experience identity and declared capability requirements.
 - [MicroBundle growth plan](design/MICROBUNDLE_GROWTH_PLAN.md) — proposed semantic capability boundaries and maturity gates. These are not numeric bundle IDs and are not claims that all listed capabilities exist.
 - [Battlespace content contract](design/BATTLESPACE_CONTENT_CONTRACT.md) — object identity, geometry representation, coordinate frame, validation boundary, and ownership.
@@ -27,6 +27,8 @@ The West Wall Demonstration now has an executable, renderer-independent tabletop
 [CastleSiegeTabletopSession.cs](../../../src/CastleSiege/CastleSiegeTabletopSession.cs) adds a versioned scenario, immutable state records, explicit legal actions, role/turn enforcement, deterministic transition rules, terminal outcomes, and canonical ordered event evidence.
 
 The initial tabletop rules use wall integrity 3, attacker shots 3, and defender repair tokens 2. Attacks spend a shot and remove one abstract wall point; repairs spend a token and restore one point up to the maximum; defenders may hold. The attacker wins at zero integrity; the defender wins when shots are exhausted with the wall standing. These are game rules, not physical constants. The core has no Physics, renderer, host-loop, random, or new MicroBundle dependencies.
+
+[CastleSiegeSessionReport.cs](../../../src/CastleSiege/CastleSiegeSessionReport.cs) captures scenario/rules identity, current immutable state, legal actions, and ordered events as a stable read-only snapshot. Its outcome is derived from the captured state, avoiding contradictory duplicated outcome data. It does not mutate the session or run a second rules engine.
 
 ### Buildable entry surface and evidence adapter
 
@@ -60,8 +62,8 @@ Those historical runs completed successfully, but do not establish that later co
 
 ## Recommended next steps
 
-1. **Run and verify current-head tests.** Check the workflow run triggered by these commits and fix any compile/test issues before proceeding.
-2. **Build a minimal host-neutral session/report consumer.** Make legal actions, current state, ordered events, scenario/rules identity, and outcome inspectable without adding a rendering dependency.
+1. **Finish current-head CI verification.** The Castle Siege build and source-integration job have succeeded on the latest run observed so far; the focused Castle Siege test job is still running. The repository-wide run is already failing in the separate DominoStudio test/build jobs, so distinguish that failure from Castle Siege status.
+2. **Build a minimal host-facing presentation proof.** Consume the report to make legal actions, current state, ordered events, scenario/rules identity, and outcome inspectable without adding a rendering dependency to the rules core.
 3. **Add the diegetic Wargaming Hall manifestation.** Keep presentation as a consumer of rules evidence.
 4. **Continue the renderer-independent authored-content consumer.** Read caller-provided JSON and validate runtime invariants without claiming full JSON Schema validation.
 5. **Close the Physics contract gap.** Inspect Physics directly, agree on launch/run-evidence contracts and coordinate conventions, and wait for a tested target-intersection contract before reporting hit/miss/indeterminate or damage.
@@ -127,4 +129,4 @@ All work described here is on `development`. Preserve the repository's Sith poli
 6. [MicroBundle growth plan](design/MICROBUNDLE_GROWTH_PLAN.md).
 7. [Entry-surface project](../../../src/CastleSiege/).
 
-**The next proof is a host-neutral session/report consumer for the implemented tabletop rules core. Keep it inspectable and testable without claiming Physics integration or taking ownership of adjacent repositories.**
+**The next proof is a small host-facing presentation consumer of the implemented immutable session report. Keep it inspectable and testable without claiming Physics integration or taking ownership of adjacent repositories.**
