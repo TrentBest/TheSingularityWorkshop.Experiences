@@ -1,3 +1,5 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 # Castle Siege — Preforge Experience
 
 **Status:** preforge construct. This directory is the authored home of the Castle Siege Experience before it becomes a complete, host-runnable product.
@@ -55,3 +57,14 @@ The first slice is not a trebuchet mechanism simulator, rigid-body castle solver
 - [Experience roadmap](../../docs/ROADMAP.md)
 
 The current C# project is only an independently buildable entry surface and evidence-adapter contract. It is not yet the playable Experience. The JSON adapter is fixture-tested; live integration with the actual Physics experiment remains pending. The battlespace test suite checks selected contract invariants but is not a full JSON Schema validator.
+
+---
+
+<p align="center">
+  <a href="https://github.com/TrentBest/TheSingularityWorkshop" aria-label="The Singularity Workshop living avatar">
+    <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar — a digital vortex converging on its central eye" width="112" />
+  </a><br />
+  <strong>The Singularity Workshop</strong><br />
+  <em>If a picture is worth a thousand words, what is a living picture worth?</em><br />
+  <a href="https://github.com/TrentBest">GitHub</a> · <a href="https://www.patreon.com/TheSingularityWorkshop">Support the Workshop</a>
+</p>
