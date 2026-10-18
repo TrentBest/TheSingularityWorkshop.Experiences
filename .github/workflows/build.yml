@@ -22,6 +22,7 @@ jobs:
           - src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj
           - src/Games.Cards/TheSingularityWorkshop.Games.Cards.csproj
           - src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj
+          - src/DominoStudio/TheSingularityWorkshop.Experiences.DominoStudio.csproj
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
@@ -61,6 +62,7 @@ jobs:
           dotnet restore src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj
           dotnet restore src/Games.Cards/TheSingularityWorkshop.Games.Cards.csproj
           dotnet restore src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj
+          dotnet restore src/DominoStudio/TheSingularityWorkshop.Experiences.DominoStudio.csproj
           dotnet pack src/Forge/TheSingularityWorkshop.Experiences.Forge.csproj --configuration Release --output ./artifacts
           dotnet pack src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj --configuration Release --output ./artifacts
           dotnet pack src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj --configuration Release --output ./artifacts
@@ -68,6 +70,7 @@ jobs:
           dotnet pack src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj --configuration Release --output ./artifacts
           dotnet pack src/Games.Cards/TheSingularityWorkshop.Games.Cards.csproj --configuration Release --output ./artifacts
           dotnet pack src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj --configuration Release --output ./artifacts
+          dotnet pack src/DominoStudio/TheSingularityWorkshop.Experiences.DominoStudio.csproj --configuration Release --output ./artifacts
       - uses: actions/upload-artifact@v4
         with:
           name: experience-packages
@@ -111,6 +114,19 @@ jobs:
         run: dotnet restore tests/CastleSiege.Tests/TheSingularityWorkshop.Experiences.CastleSiege.Tests.csproj
       - name: Run Castle Siege contract tests
         run: dotnet test tests/CastleSiege.Tests/TheSingularityWorkshop.Experiences.CastleSiege.Tests.csproj --configuration Release --no-restore
+
+  # Validate the grid encoding and scene setup contracts used by Marble Run and Domino Studio.
+  test-domino-studio:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore layout tests
+        run: dotnet restore tests/DominoStudio.Tests/TheSingularityWorkshop.Experiences.DominoStudio.Tests.csproj
+      - name: Run layout and scene contract tests
+        run: dotnet test tests/DominoStudio.Tests/TheSingularityWorkshop.Experiences.DominoStudio.Tests.csproj --configuration Release --no-restore
 
   # Keep motion contracts honest without requiring a host renderer.
   test-moniker-motion:
