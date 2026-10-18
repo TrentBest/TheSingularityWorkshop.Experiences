@@ -1,3 +1,5 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 # Story Forge
 
 ![Story Forge temporal model](../../docs/assets/story-forge-temporal-model.svg)
@@ -38,3 +40,14 @@ A future diegetic timeline manifestation can draw a hashed axis, selectable even
 **Implemented:** temporal coordinates and ranges, publication coverage and immutable edition snapshots, provenance-aware event/state records, exact-time temporal queries, entity focus, proposal filtering, and conflict reporting. Automated tests cover these invariants.
 
 **Not implemented yet:** interactive timeline and string-board manifestations, character authoring UI, temporal simulation/interpolation, camera/viewpoint optimization, extraction pipeline, persistent story graph, and end-to-end publication workflow. These should be added as separately testable capabilities and integrated into Forge through its actual manifest/MicroBundle contracts—not through a Unity-specific project.
+
+---
+
+<p align="center">
+  <a href="https://github.com/TrentBest/TheSingularityWorkshop" aria-label="The Singularity Workshop living avatar">
+    <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar — a digital vortex converging on its central eye" width="112" />
+  </a><br />
+  <strong>The Singularity Workshop</strong><br />
+  <em>If a picture is worth a thousand words, what is a living picture worth?</em><br />
+  <a href="https://github.com/TrentBest">GitHub</a> · <a href="https://www.patreon.com/TheSingularityWorkshop">Support the Workshop</a>
+</p>
