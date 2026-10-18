@@ -104,7 +104,7 @@ Proceed incrementally: supported impact observation; Experience-owned bounded da
 ## Known gaps / things not to imply
 
 - Castle Siege is **not yet playable**.
-- The tabletop vertical slice is **design-only**; no deterministic turn-resolution implementation is claimed by this handoff.
+- The tabletop rules core is implemented; the diegetic UI and full host-runnable Experience remain unfinished.
 - The projectile adapter is **fixture-tested only**; no live Physics call is connected.
 - No validated target-intersection, impact, or damage contract is established by this work.
 - The authored example's boxes are not proof of a collision-ready Physics representation.
