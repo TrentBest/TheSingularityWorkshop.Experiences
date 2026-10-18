@@ -17,6 +17,17 @@ public sealed class DominoLayoutGridTests
     }
 
     [Fact]
+    public void OccupancyBitsRepresentSpecificLevelsRatherThanOnlyAStackCount()
+    {
+        var grid = new DominoLayoutGrid(1, 1, 3, [0d, Math.PI / 2], [5UL], [1, 0, 2]);
+        Assert.Equal(2, grid.DominoCount);
+        Assert.Equal(3, grid.HeightAt(0, 0));
+        Assert.True(grid.IsOccupiedAtLevel(0, 0, 0));
+        Assert.False(grid.IsOccupiedAtLevel(0, 0, 1));
+        Assert.True(grid.IsOccupiedAtLevel(0, 0, 2));
+    }
+
+    [Fact]
     public void RejectsMissingOccupiedOrientationAndNonzeroEmptyOrientation()
     {
         Assert.Throws<ArgumentException>(() => new DominoLayoutGrid(1, 1, 2, [0d], [1UL], [0, 0]));
