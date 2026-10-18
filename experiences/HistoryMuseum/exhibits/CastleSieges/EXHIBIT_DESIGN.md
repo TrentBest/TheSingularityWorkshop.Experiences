@@ -2,6 +2,10 @@
 
 **Status:** proposed exhibit and MicroBundle taxonomy. This document defines authored content boundaries; it does not claim that the bundles, booth runtime, or historical simulation are implemented.
 
+## Place in the wider Siege Wing
+
+This booth is the **historical-history track's first planned case**, not the whole collection. The proposed [Siege Wing](../../SIEGE_WING_DESIGN.md) will eventually connect historical cases with literary/epic narratives and science-fiction sieges through shared learning questions. This booth remains disciplined about historical evidence: a literary siege or fictional planetary assault belongs in its own evidence domain and should be compared through explicit dimensions, not folded into historical claims.
+
 ## Purpose
 
 Let visitors understand castle sieges as historically situated human and engineering systems. The booth begins with a grounded question—**how did attackers and defenders try to change each other's options over time?**—and lets the visitor inspect fortifications, tools, logistics, chronology, and consequences.
