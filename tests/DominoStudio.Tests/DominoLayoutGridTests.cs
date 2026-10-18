@@ -57,6 +57,19 @@ public sealed class DominoLayoutGridTests
     }
 
     [Fact]
+    public void StoresPublishedWorldRecordScaleCountWithoutClaimingPhysicsThroughput()
+    {
+        const int targetCount = 4_491_863;
+        var occupancy = Enumerable.Repeat(1UL, targetCount).ToArray();
+        var orientations = Enumerable.Repeat(1, targetCount).ToArray();
+        var grid = new DominoLayoutGrid(targetCount, 1, 1, [0d], occupancy, orientations);
+
+        Assert.Equal(targetCount, grid.DominoCount);
+        Assert.Equal(1, grid.HeightAt(0, 0));
+        Assert.Equal(1, grid.HeightAt(targetCount - 1, 0));
+    }
+
+    [Fact]
     public void RejectsInvalidConstraints()
     {
         var grid = new DominoLayoutGrid(1, 1, 1, [0d], [0UL], [0]);
