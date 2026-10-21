@@ -17,11 +17,13 @@ public sealed class MicroBundleTests
             new SkylaneMicroBundle(),
             new HoverLaneMicroBundle(),
             new SlipstreamMicroBundle(),
-            new TrafficCellMicroBundle()
+            new TrafficCellMicroBundle(),
+            new ConstructionAgentMicroBundle(),
+            new ConstructionTaskSchedulerMicroBundle()
         };
 
-        Assert.Equal(7, bundles.Select(bundle => bundle.Id).Distinct().Count());
-        Assert.Equal(7, bundles.SelectMany(bundle => bundle.Descriptor.Providers).Select(provider => provider.Id).Distinct().Count());
+        Assert.Equal(9, bundles.Select(bundle => bundle.Id).Distinct().Count());
+        Assert.Equal(9, bundles.SelectMany(bundle => bundle.Descriptor.Providers).Select(provider => provider.Id).Distinct().Count());
         Assert.All(bundles, bundle => Assert.Empty(bundle.Dependencies));
     }
 
@@ -60,3 +62,59 @@ public sealed class MicroBundleTests
         Assert.Equal(2, slipstream.TransitionCellCount);
     }
 }
+
+    [Fact]
+    public void TaskScheduler_AssignsInStableTaskIdOrderAndRejectsDuplicateCompletion()
+    {
+        var scheduler = new ConstructionTaskSchedulerMicroBundle().Create();
+        var agent = new ConstructionAgentMicroBundle().Create(12, new GridCell(0, 0));
+        Assert.True(scheduler.Enqueue(new PlacementTask(8, 4, 1, 1)));
+        Assert.True(scheduler.Enqueue(new PlacementTask(2, 1, 3, 1)));
+        Assert.False(scheduler.Enqueue(new PlacementTask(2, 9, 9, 9)));
+
+        Assert.True(scheduler.TryAssignNext(agent, out var task));
+        Assert.Equal(2UL, task!.TaskId);
+        Assert.Equal(new GridCell(0, 0), agent.Position);
+        Assert.Equal(ConstructionAgentState.QueuedAtEmitter, agent.State);
+        Assert.False(scheduler.Complete(2, 99));
+        Assert.True(scheduler.Complete(2, 12));
+        Assert.False(scheduler.Complete(2, 12));
+        Assert.True(scheduler.IsCompleted(2));
+        Assert.Equal(1, scheduler.PendingCount);
+        Assert.Equal(0, scheduler.AssignedCount);
+    }
+
+    [Fact]
+    public void TaskScheduler_RequeuePreservesTaskAndReleasesWaitingAgent()
+    {
+        var scheduler = new ConstructionTaskSchedulerMicroBundle().Create();
+        var firstAgent = new ConstructionAgentMicroBundle().Create(1, new GridCell(0, 0));
+        var secondAgent = new ConstructionAgentMicroBundle().Create(2, new GridCell(1, 0));
+        var original = new PlacementTask(5, 7, 4, 2);
+        Assert.True(scheduler.Enqueue(original));
+        Assert.True(scheduler.TryAssignNext(firstAgent, out _));
+
+        Assert.True(scheduler.Requeue(5, firstAgent));
+        Assert.Equal(ConstructionAgentState.Idle, firstAgent.State);
+        Assert.Null(firstAgent.AssignedTaskId);
+        Assert.True(scheduler.TryAssignNext(secondAgent, out var reassigned));
+        Assert.Equal(original, reassigned);
+    }
+
+    [Fact]
+    public void AgentLifecycle_RequiresExplicitLegalTransitions()
+    {
+        var agent = new ConstructionAgentMicroBundle().Create(44, new GridCell(2, 3));
+        var task = new PlacementTask(3, 1, 1, 1);
+        Assert.True(agent.TryAssign(task));
+        Assert.False(agent.TryTransition(ConstructionAgentState.Traveling));
+        Assert.True(agent.TryTransition(ConstructionAgentState.CarryingBlock));
+        Assert.True(agent.IsCarryingBlock);
+        Assert.True(agent.TryTransition(ConstructionAgentState.AwaitingTransition));
+        Assert.True(agent.TryTransition(ConstructionAgentState.Traveling));
+        Assert.True(agent.TryTransition(ConstructionAgentState.PlacingBlock));
+        Assert.True(agent.TryTransition(ConstructionAgentState.Completed));
+        Assert.Equal(ConstructionAgentState.Idle, agent.State);
+        Assert.False(agent.IsCarryingBlock);
+        Assert.Null(agent.AssignedTaskId);
+    }
