@@ -1,6 +1,6 @@
 # Drone Construction — MicroBundle Boundaries
 
-**Status:** first provider slice implemented for IDs 3410–3416; remaining entries are planned contracts only. These IDs are local to this Experience proposal and must be checked against the repository-wide registry before executable packages are published. Provider implementation is tracked below.
+**Status:** first provider slice implemented for IDs 3410–3418; remaining entries are planned contracts only. These IDs are local to this Experience proposal and must be checked against the repository-wide registry before executable packages are published. Provider implementation is tracked below.
 
 ## Ownership rule
 
@@ -19,8 +19,8 @@ Do not create one monolithic “DroneConstruction” bundle that hides image int
 | 3414 | `workshop-drone-construction.hover-lane` | 2D cellular holding grid and admission queue | traffic-cell contract | Implemented |
 | 3415 | `workshop-drone-construction.slipstream` | Bounded transition volume, reservations, conflict checks | traffic-cell contract | Implemented |
 | 3416 | `workshop-drone-construction.traffic-cell` | Shared cell identity, occupancy, reservation and tick semantics | none | Implemented |
-| 3417 | `workshop-drone-construction.agent` | Stable agent identity and explicit lifecycle/movement/task state | none | Planned |
-| 3418 | `workshop-drone-construction.task-scheduler` | Assigns pickup/placement work and commits idempotent task results | build-grid, resource-emitter, agent | Planned |
+| 3417 | `workshop-drone-construction.agent` | Stable agent identity and explicit lifecycle/movement/task state | none | Implemented |
+| 3418 | `workshop-drone-construction.task-scheduler` | Assigns pickup/placement work and commits idempotent task results | build-grid, resource-emitter, agent | Implemented |
 | 3419 | `workshop-drone-construction.simulation` | Deterministic tick transaction, invariant validation, snapshot/event publication | all required domain contracts | Planned |
 | 3420 | `workshop-drone-construction.telemetry` | Run metadata, state counts, invariant failures, performance counters, replay digest | simulation event contract | Planned |
 | 3421 | `workshop-drone-construction.renderer-adapter` | Maps snapshots to renderer-facing semantic scene; no authority over simulation | simulation snapshot contract | Planned |
@@ -60,9 +60,8 @@ This is a capability graph, not a claim that every dependency must be loaded int
 
 ## Implementation sequence
 
-1. **Done in the first slice:** pure height-field, build-grid, emitter, traffic-cell, skylane, hover-lane, and slipstream contracts with initial unit tests.
-2. **Next:** add stable agent lifecycle and movement/task state.
-3. Implement a deterministic task scheduler and end-to-end pickup → transit → placement loop.
+1. **Done in the first slice:** pure height-field, build-grid, emitter, traffic-cell, skylane, hover-lane, slipstream, agent lifecycle, and deterministic task-assignment contracts with initial unit tests.
+2. **Next:** implement the end-to-end pickup → transit → placement loop against the traffic and resource invariants.
 4. Add deterministic simulation ticks, event snapshots, and replay digests.
 5. Add renderer and SVG observers after snapshots are stable.
 6. Measure scale in stages; only then advertise a 100,000-agent result or split additional independently publishable providers.
