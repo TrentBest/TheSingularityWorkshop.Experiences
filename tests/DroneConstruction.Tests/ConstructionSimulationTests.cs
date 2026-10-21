@@ -109,4 +109,31 @@ public sealed class ConstructionSimulationTests
         Assert.Throws<NotSupportedException>(() => ((IList<int>)snapshot.CellPlacedBlocks)[0] = 99);
     }
 
+
+    [Fact]
+    public void Simulation_DoesNotMoveThroughAnOccupiedTrafficCell()
+    {
+        var movingAgent = new ConstructionAgent(1, new GridCell(0, 0));
+        var blockingAgent = new ConstructionAgent(2, new GridCell(1, 0));
+        var simulation = new ConstructionSimulation(
+            width: 3,
+            height: 1,
+            requiredHeight: (x, _) => x == 2 ? 1 : 0,
+            agents: [movingAgent, blockingAgent],
+            emitters: [new PositionedBlockEmitter(new GridCell(0, 0), new BlockEmitter("emitter", 1))]);
+
+        ConstructionSimulationSnapshot snapshot = simulation.Snapshot();
+        for (var i = 0; i < 12; i++)
+            snapshot = simulation.Step();
+
+        var mover = Assert.Single(snapshot.Agents, agent => agent.AgentId == 1);
+        var blocker = Assert.Single(snapshot.Agents, agent => agent.AgentId == 2);
+        Assert.Equal(new GridCell(0, 0), mover.Position);
+        Assert.Equal(ConstructionAgentState.Traveling, mover.State);
+        Assert.True(mover.IsCarryingBlock);
+        Assert.Equal(new GridCell(1, 0), blocker.Position);
+        Assert.Equal(0, snapshot.PlacedBlocks);
+        Assert.False(snapshot.IsComplete);
+    }
+
 }
