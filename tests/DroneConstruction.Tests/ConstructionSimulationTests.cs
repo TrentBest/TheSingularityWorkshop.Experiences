@@ -34,6 +34,7 @@ public sealed class ConstructionSimulationTests
         Assert.Equal(ConstructionAgentState.Idle, snapshot.Agents[0].State);
         Assert.Null(snapshot.Agents[0].AssignedTaskId);
         Assert.Equal(new GridCell(2, 0), snapshot.Agents[0].Position);
+        Assert.Equal(new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "construction-main", new GridCell(2, 0)), snapshot.Agents[0].Location);
         Assert.Equal(snapshot.Tick, simulation.TickCount);
     }
 
@@ -60,6 +61,8 @@ public sealed class ConstructionSimulationTests
         var current = simulation.GetAgentLocation(1);
         Assert.Equal("yard-east", current.SpaceId);
         Assert.Equal(agent.Position, current.Cell);
+        var snapshotLocation = Assert.Single(simulation.Snapshot().Agents).Location;
+        Assert.Equal(current, snapshotLocation);
         Assert.NotEqual(initial.Cell, current.Cell);
     }
 
