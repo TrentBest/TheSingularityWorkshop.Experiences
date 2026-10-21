@@ -111,6 +111,41 @@ public sealed class TrafficCellGridTests
     }
 
     [Fact]
+    public void TransferRejectsDestinationAgentAlreadyPresentInTargetGrid()
+    {
+        var source = new TrafficCellGrid(2, 1);
+        var destination = new TrafficCellGrid(2, 1);
+        var origin = new GridCell(0, 0);
+        var target = new GridCell(1, 0);
+        Assert.True(source.TryOccupy(origin, 7));
+        Assert.True(destination.TryOccupy(new GridCell(0, 0), 7));
+
+        Assert.False(source.TryTransferTo(origin, target, 7, destination));
+
+        Assert.True(source.TryGetOccupant(origin, out var sourceOwner));
+        Assert.Equal((ulong)7, sourceOwner);
+        Assert.True(destination.TryGetOccupant(new GridCell(0, 0), out var destinationOwner));
+        Assert.Equal((ulong)7, destinationOwner);
+        Assert.False(destination.IsOccupied(target));
+    }
+
+    [Fact]
+    public void TransferRejectsOutOfBoundsTargetBeforeReleasingSource()
+    {
+        var source = new TrafficCellGrid(2, 1);
+        var destination = new TrafficCellGrid(1, 1);
+        var origin = new GridCell(0, 0);
+        Assert.True(source.TryOccupy(origin, 7));
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            source.TryTransferTo(origin, new GridCell(1, 0), 7, destination));
+
+        Assert.True(source.TryGetOccupant(origin, out var sourceOwner));
+        Assert.Equal((ulong)7, sourceOwner);
+        Assert.False(destination.IsOccupied(new GridCell(0, 0))); // No transfer side effect on the destination grid.
+    }
+
+    [Fact]
     public void RejectsReservedAgentIdZero()
     {
         var grid = new TrafficCellGrid(1, 1);
