@@ -3,19 +3,28 @@ namespace TheSingularityWorkshop.Experiences.DroneConstruction;
 /// <summary>Explicit lifecycle states for a simulated construction agent.</summary>
 public enum ConstructionAgentState
 {
+    /// <summary>Indicates the agent is idle and available for assignment.: Idle.</summary>
     Idle,
+    /// <summary>Indicates the agent is queued for block pickup.: QueuedAtEmitter.</summary>
     QueuedAtEmitter,
+    /// <summary>Indicates the agent has acquired a block.: CarryingBlock.</summary>
     CarryingBlock,
+    /// <summary>Indicates the agent is waiting for traffic admission.: AwaitingTransition.</summary>
     AwaitingTransition,
+    /// <summary>Indicates the agent is traveling toward its target.: Traveling.</summary>
     Traveling,
+    /// <summary>Indicates the agent is attempting block placement.: PlacingBlock.</summary>
     PlacingBlock,
+    /// <summary>Indicates a task completion event state.: Completed.</summary>
     Completed,
+    /// <summary>Indicates the agent has encountered a modeled fault.: Faulted.</summary>
     Faulted
 }
 
 /// <summary>One uniquely identified block-placement task.</summary>
 public sealed record PlacementTask(ulong TaskId, int X, int Y, int BlockOrdinal)
 {
+    /// <summary>Gets whether the task has a nonzero identifier and valid target coordinates and block ordinal.: IsValid.</summary>
     public bool IsValid => TaskId != 0 && X >= 0 && Y >= 0 && BlockOrdinal > 0;
 }
 
@@ -24,6 +33,7 @@ public sealed record PlacementTask(ulong TaskId, int X, int Y, int BlockOrdinal)
 /// </summary>
 public sealed class ConstructionAgent
 {
+    /// <summary>Initializes an agent with a stable identifier and starting cell.: ConstructionAgent.</summary>
     public ConstructionAgent(ulong agentId, GridCell initialPosition)
     {
         if (agentId == 0) throw new ArgumentOutOfRangeException(nameof(agentId));
@@ -31,12 +41,18 @@ public sealed class ConstructionAgent
         Position = initialPosition;
     }
 
+    /// <summary>Gets the stable identifier of this agent.: AgentId.</summary>
     public ulong AgentId { get; }
+    /// <summary>Gets the agent's current discrete grid position.: Position.</summary>
     public GridCell Position { get; private set; }
+    /// <summary>Indicates the agent is idle and available for assignment.: Idle.</summary>
     public ConstructionAgentState State { get; private set; } = ConstructionAgentState.Idle;
+    /// <summary>Gets the identifier of the assigned task, if any.: AssignedTaskId.</summary>
     public ulong? AssignedTaskId { get; private set; }
+    /// <summary>Gets whether the agent currently carries a block.: IsCarryingBlock.</summary>
     public bool IsCarryingBlock { get; private set; }
 
+    /// <summary>Attempts to assign a valid task to an idle, unassigned agent.: TryAssign.</summary>
     public bool TryAssign(PlacementTask task)
     {
         ArgumentNullException.ThrowIfNull(task);
@@ -47,6 +63,7 @@ public sealed class ConstructionAgent
         return true;
     }
 
+    /// <summary>Attempts to cancel the task assignment matching the supplied identifier.: TryCancelAssignment.</summary>
     public bool TryCancelAssignment(ulong taskId)
     {
         if (taskId == 0 || AssignedTaskId != taskId || State != ConstructionAgentState.QueuedAtEmitter || IsCarryingBlock)
@@ -56,6 +73,7 @@ public sealed class ConstructionAgent
         return true;
     }
 
+    /// <summary>Attempts a legal lifecycle transition.: TryTransition.</summary>
     public bool TryTransition(ConstructionAgentState next)
     {
         var allowed = (State, next) switch
@@ -86,6 +104,7 @@ public sealed class ConstructionAgent
         return true;
     }
 
+    /// <summary>Gets the agent's current discrete grid position.: Position.</summary>
     public void SetPosition(GridCell position) => Position = position;
 }
 
@@ -99,10 +118,14 @@ public sealed class ConstructionTaskScheduler
     private readonly Dictionary<ulong, (ulong AgentId, PlacementTask Task)> _assigned = [];
     private readonly HashSet<ulong> _completed = [];
 
+    /// <summary>Gets the number of queued tasks not yet assigned or completed.: PendingCount.</summary>
     public int PendingCount => _pending.Count;
+    /// <summary>Gets the number of tasks currently assigned to agents.: AssignedCount.</summary>
     public int AssignedCount => _assigned.Count;
+    /// <summary>Gets the number of tasks committed as completed.: CompletedCount.</summary>
     public int CompletedCount => _completed.Count;
 
+    /// <summary>Adds a unique valid placement task to the pending queue.: Enqueue.</summary>
     public bool Enqueue(PlacementTask task)
     {
         ArgumentNullException.ThrowIfNull(task);
@@ -112,6 +135,7 @@ public sealed class ConstructionTaskScheduler
         return true;
     }
 
+    /// <summary>Initializes an agent with a stable identifier and starting cell.: ConstructionAgent.</summary>
     public bool TryAssignNext(ConstructionAgent agent, out PlacementTask? task)
     {
         ArgumentNullException.ThrowIfNull(agent);
@@ -126,6 +150,7 @@ public sealed class ConstructionTaskScheduler
         return true;
     }
 
+    /// <summary>Initializes an agent with a stable identifier and starting cell.: ConstructionAgent.</summary>
     public bool Complete(ulong taskId, ConstructionAgent agent)
     {
         ArgumentNullException.ThrowIfNull(agent);
@@ -137,6 +162,7 @@ public sealed class ConstructionTaskScheduler
         return true;
     }
 
+    /// <summary>Initializes an agent with a stable identifier and starting cell.: ConstructionAgent.</summary>
     public bool Requeue(ulong taskId, ConstructionAgent agent)
     {
         ArgumentNullException.ThrowIfNull(agent);
@@ -148,5 +174,6 @@ public sealed class ConstructionTaskScheduler
         return true;
     }
 
+    /// <summary>Gets whether the specified task identifier has been completed.: IsCompleted.</summary>
     public bool IsCompleted(ulong taskId) => _completed.Contains(taskId);
 }
