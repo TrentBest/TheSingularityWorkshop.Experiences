@@ -75,4 +75,38 @@ public sealed class ConstructionSimulationTests
             agents: agents,
             emitters: [new PositionedBlockEmitter(new GridCell(1, 0), new BlockEmitter("emitter", 1))]));
     }
+    [Fact]
+    public void Simulation_RejectsNullEmitterBeforeOrderingResources()
+    {
+        var emitters = new PositionedBlockEmitter[]
+        {
+            null!
+        };
+
+        Assert.Throws<ArgumentException>(() => new ConstructionSimulation(
+            width: 1,
+            height: 1,
+            requiredHeight: (_, _) => 0,
+            agents: [],
+            emitters: emitters));
+    }
+
+    [Fact]
+    public void SnapshotCollectionsCannotBeMutatedByConsumers()
+    {
+        var simulation = new ConstructionSimulation(
+            width: 1,
+            height: 1,
+            requiredHeight: (_, _) => 0,
+            agents: [new ConstructionAgent(1, new GridCell(0, 0))],
+            emitters: [new PositionedBlockEmitter(new GridCell(0, 0), new BlockEmitter("emitter", 0))]);
+
+        var snapshot = simulation.Snapshot();
+
+        Assert.IsAssignableFrom<IList<ConstructionAgentSnapshot>>(snapshot.Agents);
+        Assert.Throws<NotSupportedException>(() => ((IList<ConstructionAgentSnapshot>)snapshot.Agents).Clear());
+        Assert.IsAssignableFrom<IList<int>>(snapshot.CellPlacedBlocks);
+        Assert.Throws<NotSupportedException>(() => ((IList<int>)snapshot.CellPlacedBlocks)[0] = 99);
+    }
+
 }
