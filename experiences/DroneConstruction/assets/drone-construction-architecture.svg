@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Drone Construction architecture</title>
+  <desc id="desc">A renderer-independent construction simulation: image height field and build grid, ten resource emitters, agents, layered cellular traffic with skylanes, hover lanes and slipstreams, deterministic simulation, and Renderer plus GUI.SVG observers.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#06101e"/><stop offset="1" stop-color="#101d31"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#00a8ff"/><stop offset="1" stop-color="#52e05a"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#8aa9c8"/></marker>
+    <style>
+      .panel{fill:#0b1a2b;stroke:#31516f;stroke-width:2}.title{font:700 22px Consolas,monospace;fill:#f2f7fc}.label{font:16px Consolas,monospace;fill:#d4e2ef}.small{font:13px Consolas,monospace;fill:#a8bfd4}.line{fill:none;stroke:#8aa9c8;stroke-width:2;marker-end:url(#arrow)}.grid{stroke:#31516f;stroke-width:1;fill:none}
+    </style>
+  </defs>
+  <rect width="1200" height="760" rx="22" fill="url(#bg)"/>
+  <text x="48" y="52" class="small">THE SINGULARITY WORKSHOP / EXPERIENCE DESIGN</text>
+  <text x="48" y="88" class="title" style="font-size:32px">DRONE CONSTRUCTION</text>
+  <rect x="48" y="120" width="270" height="122" rx="12" class="panel"/>
+  <text x="68" y="153" class="title">IMAGE → HEIGHT FIELD</text>
+  <text x="68" y="180" class="label">Versioned channel mapping</text>
+  <text x="68" y="205" class="small">Target height per build cell</text>
+  <rect x="354" y="120" width="270" height="122" rx="12" class="panel"/>
+  <text x="374" y="153" class="title">BUILD GRID</text>
+  <text x="374" y="180" class="label">Required / placed blocks</text>
+  <text x="374" y="205" class="small">Idempotent placement tasks</text>
+  <path d="M318 181 H354" class="line"/>
+  <rect x="660" y="120" width="238" height="122" rx="12" class="panel"/>
+  <text x="680" y="153" class="title">10 EMITTERS</text>
+  <text x="680" y="180" class="label">Inventory + pickup queues</text>
+  <text x="680" y="205" class="small">Resource conservation</text>
+  <rect x="934" y="120" width="218" height="122" rx="12" class="panel"/>
+  <text x="954" y="153" class="title">AGENTS</text>
+  <text x="954" y="180" class="label">Stable IDs + task state</text>
+  <text x="954" y="205" class="small">Discrete simulation first</text>
+  <path d="M489 242 V275 H530 V300" class="line"/>
+  <path d="M779 242 V275 H700 V300" class="line"/>
+  <path d="M1043 242 V275 H870 V300" class="line"/>
+  <rect x="48" y="300" width="1104" height="245" rx="16" class="panel"/>
+  <text x="76" y="337" class="title">LAYERED CELLULAR TRAFFIC</text>
+  <text x="76" y="362" class="small">Separate ordinary movement, holding, and transition admission</text>
+  <rect x="76" y="390" width="300" height="112" rx="10" fill="#0c2a40" stroke="#00a8ff" stroke-width="2"/>
+  <text x="96" y="420" class="title">SKYLANE</text>
+  <text x="96" y="445" class="label">2D cellular grid</text>
+  <text x="96" y="469" class="small">One-way / declared speed</text>
+  <g class="grid"><path d="M96 480 H350 M145 455 V492 M194 455 V492 M243 455 V492 M292 455 V492 M341 455 V492"/></g>
+  <rect x="450" y="390" width="300" height="112" rx="10" fill="#25203b" stroke="#b18cff" stroke-width="2"/>
+  <text x="470" y="420" class="title">SLIPSTREAM</text>
+  <text x="470" y="445" class="label">Bounded transition volume</text>
+  <text x="470" y="469" class="small">Reservation + conflict check</text>
+  <rect x="824" y="390" width="300" height="112" rx="10" fill="#203426" stroke="#52e05a" stroke-width="2"/>
+  <text x="844" y="420" class="title">HOVER LANE</text>
+  <text x="844" y="445" class="label">2D cellular holding grid</text>
+  <text x="844" y="469" class="small">Wait until admitted</text>
+  <path d="M376 446 H450" class="line"/>
+  <path d="M824 446 H750" class="line"/>
+  <text x="76" y="526" class="small">Five-cell lookahead = tunable initial parameter, not a universal safety guarantee.</text>
+  <path d="M600 545 V579 H325 V605" class="line"/>
+  <path d="M600 579 H875 V605" class="line"/>
+  <rect x="112" y="605" width="426" height="105" rx="12" class="panel"/>
+  <text x="136" y="638" class="title">DETERMINISTIC SIMULATION</text>
+  <text x="136" y="665" class="label">Validate → commit → publish snapshot</text>
+  <text x="136" y="689" class="small">Authoritative state and event log</text>
+  <rect x="662" y="605" width="426" height="105" rx="12" class="panel"/>
+  <text x="686" y="638" class="title">OBSERVERS</text>
+  <text x="686" y="665" class="label">Renderer + GUI.SVG</text>
+  <text x="686" y="689" class="small">Render actual snapshots; expose real telemetry</text>
+  <text x="48" y="742" class="small">CONCEPT CONTRACT • NOT YET AN EXECUTABLE SIMULATION • UNITY-INDEPENDENT</text>
+</svg>
