@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1000" role="img" aria-labelledby="title desc">
+<title id="title">Drone Construction vision board</title>
+<desc id="desc">Concept storyboard: a grayscale image is translated into a height-map target, ten emitters supply blocks, simulated quadcopters move through cellular skylanes, hover holding lanes and reserved slipstreams, and the built structure is compared with the target. The diagram is an explanatory concept, not a live simulation.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#06101e"/><stop offset="1" stop-color="#152943"/></linearGradient>
+ <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#32c5ff"/><stop offset="1" stop-color="#70f0d0"/></linearGradient>
+ <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L8 3 L0 6Z" fill="#9bb8d2"/></marker>
+ <style>
+ .panel{fill:#0a1b2d;stroke:#355779;stroke-width:2}.h{font:700 24px 'Segoe UI',Arial,sans-serif;fill:#f3f8ff}.sub{font:700 17px 'Segoe UI',Arial,sans-serif;fill:#d8e9f8}.txt{font:14px 'Segoe UI',Arial,sans-serif;fill:#aec5d9}.tiny{font:12px 'Segoe UI',Arial,sans-serif;fill:#9db5cc}.edge{fill:none;stroke:#9bb8d2;stroke-width:2;marker-end:url(#arr)}.cell{stroke:#42627f;stroke-width:1}
+ </style>
+</defs>
+<rect width="1440" height="1000" rx="24" fill="url(#bg)"/>
+<text x="48" y="48" class="tiny">THE SINGULARITY WORKSHOP • EXPERIENCE CONCEPT • RENDERER-INDEPENDENT</text>
+<text x="48" y="92" class="h" style="font-size:38px">DRONE CONSTRUCTION</text>
+<text x="48" y="123" class="txt">From a picture to a physical-looking structure — built one block, one reservation, one verified step at a time.</text>
+<rect x="48" y="155" width="260" height="270" rx="16" class="panel"/>
+<text x="70" y="190" class="sub">01 / SOURCE IMAGE</text>
+<rect x="72" y="210" width="212" height="145" rx="8" fill="#dbe5ed"/>
+<g fill="#344b60">
+ <rect x="87" y="322" width="22" height="20"/><rect x="109" y="300" width="22" height="42"/><rect x="131" y="278" width="22" height="64"/><rect x="153" y="256" width="22" height="86"/><rect x="175" y="278" width="22" height="64"/><rect x="197" y="300" width="22" height="42"/><rect x="219" y="322" width="22" height="20"/>
+</g>
+<text x="70" y="382" class="txt">Any image or authored height map</text>
+<text x="70" y="404" class="tiny">Mapping is explicit and repeatable</text>
+<path d="M308 286 H345" class="edge"/>
+<rect x="352" y="155" width="260" height="270" rx="16" class="panel"/>
+<text x="374" y="190" class="sub">02 / TARGET GRID</text>
+<g transform="translate(382 216)">
+ <rect width="196" height="126" rx="5" fill="#0e2a42"/>
+ <g class="cell" fill="none"><path d="M0 21H196M0 42H196M0 63H196M0 84H196M0 105H196M28 0V126M56 0V126M84 0V126M112 0V126M140 0V126M168 0V126"/></g>
+ <g fill="#35c8f4"><rect x="28" y="84" width="28" height="21"/><rect x="56" y="63" width="28" height="42"/><rect x="84" y="42" width="28" height="63"/><rect x="112" y="21" width="28" height="84"/><rect x="140" y="42" width="28" height="63"/><rect x="168" y="63" width="28" height="42"/></g>
+</g>
+<text x="374" y="370" class="txt">Each cell has a required height</text><text x="374" y="393" class="tiny">Tasks represent missing block slots</text>
+<path d="M612 286 H649" class="edge"/>
+<rect x="656" y="155" width="300" height="270" rx="16" class="panel"/>
+<text x="678" y="190" class="sub">03 / TEN EMITTERS</text>
+<g transform="translate(680 216)">
+ <g fill="#153d58" stroke="#3ac7f2" stroke-width="1.5">
+  <rect x="0" y="0" width="48" height="48" rx="7"/><rect x="54" y="0" width="48" height="48" rx="7"/><rect x="108" y="0" width="48" height="48" rx="7"/><rect x="162" y="0" width="48" height="48" rx="7"/><rect x="216" y="0" width="48" height="48" rx="7"/>
+  <rect x="0" y="58" width="48" height="48" rx="7"/><rect x="54" y="58" width="48" height="48" rx="7"/><rect x="108" y="58" width="48" height="48" rx="7"/><rect x="162" y="58" width="48" height="48" rx="7"/><rect x="216" y="58" width="48" height="48" rx="7"/>
+ </g>
+ <g fill="#f0f8ff" font-family="Consolas,monospace" font-size="13" text-anchor="middle"><text x="24" y="28">01</text><text x="78" y="28">02</text><text x="132" y="28">03</text><text x="186" y="28">04</text><text x="240" y="28">05</text><text x="24" y="86">06</text><text x="78" y="86">07</text><text x="132" y="86">08</text><text x="186" y="86">09</text><text x="240" y="86">10</text></g>
+</g>
+<text x="678" y="370" class="txt">Finite inventory + pickup queues</text><text x="678" y="393" class="tiny">Block accounting must conserve resources</text>
+<path d="M956 286 H993" class="edge"/>
+<rect x="1000" y="155" width="392" height="270" rx="16" class="panel"/>
+<text x="1022" y="190" class="sub">04 / BUILD IN PROGRESS</text>
+<g transform="translate(1030 218)">
+ <path d="M0 150 L150 70 L310 150 L160 232Z" fill="#132c43" stroke="#5a7895" stroke-width="2"/>
+ <path d="M0 150 L160 232 L160 248 L0 166Z" fill="#244761"/><path d="M160 232 L310 150 L310 166 L160 248Z" fill="#1b3b56"/>
+ <g stroke="#76cde9" stroke-width="1">
+ <path d="M32 134L184 213M64 117L216 197M96 101L248 181M128 85L280 165M40 170L190 90M80 190L230 110M120 211L270 131" fill="none"/>
+ </g>
+ <g fill="#35c8f4" stroke="#a4edff" stroke-width="1">
+ <path d="M52 138l18 -10 18 10 -18 10Z"/><path d="M52 138v13l18 10v-13Z" fill="#167eae"/><path d="M70 148l18 -10v13l-18 10Z" fill="#12638e"/>
+ <path d="M86 119l18 -10 18 10 -18 10Z"/><path d="M86 119v13l18 10v-13Z" fill="#167eae"/><path d="M104 129l18 -10v13l-18 10Z" fill="#12638e"/>
+ <path d="M120 100l18 -10 18 10 -18 10Z"/><path d="M120 100v13l18 10v-13Z" fill="#167eae"/><path d="M138 110l18 -10v13l-18 10Z" fill="#12638e"/>
+ <path d="M154 81l18 -10 18 10 -18 10Z"/><path d="M154 81v13l18 10v-13Z" fill="#167eae"/><path d="M172 91l18 -10v13l-18 10Z" fill="#12638e"/>
+ </g>
+ <g stroke="#c3f3ff" stroke-width="3" fill="none"><path d="M64 62l-14 -7m14 7l14 -7m-14 7v12M202 53l-14 -7m14 7l14 -7m-14 7v12M252 90l-14 -7m14 7l14 -7m-14 7v12"/></g>
+ <g fill="#9feaff"><circle cx="64" cy="62" r="4"/><circle cx="202" cy="53" r="4"/><circle cx="252" cy="90" r="4"/></g>
+</g>
+<text x="1022" y="397" class="tiny">The visible build should reflect committed state</text>
+<path d="M1180 425 V462 H720 V490" class="edge"/>
+<rect x="48" y="490" width="1344" height="290" rx="18" class="panel"/>
+<text x="76" y="530" class="h">THE TRAFFIC SYSTEM / TOP-DOWN CELLULAR MODEL</text>
+<text x="76" y="555" class="txt">Agents don't simply fly wherever they want: they reserve space, wait for clearance, then traverse a bounded transition.</text>
+<rect x="78" y="590" width="500" height="126" rx="12" fill="#0b3049" stroke="#32c5ff" stroke-width="2"/>
+<text x="100" y="620" class="sub">SKYLANE · ONE-WAY GRID</text>
+<g transform="translate(100 638)" class="cell" fill="none"><path d="M0 24H454M0 48H454M0 72H454M50 0V72M100 0V72M150 0V72M200 0V72M250 0V72M300 0V72M350 0V72M400 0V72"/></g>
+<g fill="#55d9ff"><circle cx="128" cy="650" r="7"/><circle cx="228" cy="674" r="7"/><circle cx="378" cy="698" r="7"/></g>
+<path d="M145 650H190M245 674H290M395 698H440" stroke="#a4edff" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="660" y="590" width="240" height="126" rx="12" fill="#29213f" stroke="#bca1ff" stroke-width="2"/>
+<text x="682" y="620" class="sub">SLIPSTREAM</text>
+<g transform="translate(686 638)"><rect x="0" y="0" width="32" height="32" fill="#543e78" stroke="#bca1ff"/><rect x="40" y="0" width="32" height="32" fill="#543e78" stroke="#bca1ff"/><rect x="80" y="0" width="32" height="32" fill="#543e78" stroke="#bca1ff"/><rect x="120" y="0" width="32" height="32" fill="#543e78" stroke="#bca1ff"/><rect x="160" y="0" width="32" height="32" fill="#543e78" stroke="#bca1ff"/></g>
+<text x="682" y="696" class="tiny">5-cell lookahead (tunable)</text>
+<rect x="982" y="590" width="382" height="126" rx="12" fill="#18372c" stroke="#70df9a" stroke-width="2"/>
+<text x="1004" y="620" class="sub">HOVER LANE · HOLDING GRID</text>
+<g transform="translate(1004 638)" class="cell" fill="none"><path d="M0 24H336M0 48H336M0 72H336M48 0V72M96 0V72M144 0V72M192 0V72M240 0V72M288 0V72"/></g>
+<g fill="#70df9a"><circle cx="1028" cy="650" r="7"/><circle cx="1124" cy="674" r="7"/><circle cx="1268" cy="698" r="7"/></g>
+<path d="M578 650H660M900 650H982" class="edge"/>
+<text x="76" y="752" class="tiny">CLEARANCE CHECK → RESERVE → TRANSIT → RELEASE • A five-cell rule is a model parameter, not a real-world safety guarantee.</text>
+<rect x="48" y="812" width="1344" height="118" rx="16" fill="#10243a" stroke="#355779" stroke-width="2"/>
+<text x="76" y="850" class="sub">WHAT MAKES THIS A REAL PROOF?</text>
+<text x="76" y="880" class="txt">One deterministic state source → validated resource/occupancy changes → event snapshot → Renderer + GUI.SVG observers.</text>
+<text x="76" y="906" class="tiny">NEXT: a small live pickup → lane admission → transit → placement loop. Only then scale and measure; 100,000 agents remains an unverified target.</text>
+<text x="48" y="970" class="tiny">CONCEPT STORYBOARD • AUTHORED SVG • NOT A LIVE RENDERER/GUI.SVG RUNTIME CAPTURE</text>
+</svg>
