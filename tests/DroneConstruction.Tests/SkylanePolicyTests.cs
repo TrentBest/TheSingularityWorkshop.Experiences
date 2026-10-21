@@ -41,6 +41,18 @@ public sealed class SkylanePolicyTests
         Assert.Equal(new GridCell(x, y), next);
     }
 
+    [Theory]
+    [InlineData(4, 4, 5, 5)]
+    [InlineData(4, 4, 4, 4)]
+    public void NextCellRejectsDiagonalOrAlreadyReachedTarget(int x, int y, int targetX, int targetY)
+    {
+        var lane = new Skylane("lane", 10, 10, LaneDirection.East, elevation: 0);
+        var current = new GridCell(x, y);
+
+        Assert.False(lane.TryGetNextCell(current, new GridCell(targetX, targetY), out var next));
+        Assert.Equal(current, next);
+    }
+
     [Fact]
     public void NextCellRejectsTargetsOutsideLane()
     {
