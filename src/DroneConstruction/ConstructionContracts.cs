@@ -338,7 +338,7 @@ public sealed class Slipstream
         var seen = new HashSet<GridCell>();
         foreach (var cell in lookahead)
         {
-            if (cell == destination || !seen.Add(cell)) return false;
+            if (!destinationLane.Contains(cell) || cell == destination || !seen.Add(cell)) return false;
         }
         if (!destinationLane.IsClear(lookahead)) return false;
         _reservedBy = agentId;
