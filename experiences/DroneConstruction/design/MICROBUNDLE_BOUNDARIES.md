@@ -1,6 +1,6 @@
 # Drone Construction — MicroBundle Boundaries
 
-**Status:** proposed catalog. IDs below are reserved for this Experience proposal and must be checked against the repository-wide registry before executable packages are published. The catalog does not claim providers are implemented.
+**Status:** first provider slice implemented for IDs 3410–3416; remaining entries are planned contracts only. These IDs are local to this Experience proposal and must be checked against the repository-wide registry before executable packages are published. Provider implementation is tracked below.
 
 ## Ownership rule
 
@@ -10,21 +10,21 @@ Do not create one monolithic “DroneConstruction” bundle that hides image int
 
 ## Proposed catalog
 
-| Bundle ID | Provider ID | Responsibility | Depends on |
+| Bundle ID | Provider ID | Responsibility | Depends on | Status |
 |---:|---|---|---|
-| 3410 | `workshop-drone-construction.height-field` | Versioned image/channel-to-height mapping and validation | none |
-| 3411 | `workshop-drone-construction.build-grid` | Target cells, required/placed block counts, placement tasks | height-field contract |
-| 3412 | `workshop-drone-construction.resource-emitter` | Ten-emitter scene, inventory, pickup capacity, queue state | none |
-| 3413 | `workshop-drone-construction.skylane` | 2D one-way cellular lane, direction/speed/elevation policy, occupancy | traffic-cell contract |
-| 3414 | `workshop-drone-construction.hover-lane` | 2D cellular holding grid and admission queue | traffic-cell contract |
-| 3415 | `workshop-drone-construction.slipstream` | Bounded transition volume, reservations, conflict checks | traffic-cell contract |
-| 3416 | `workshop-drone-construction.traffic-cell` | Shared cell identity, occupancy, reservation and tick semantics | none |
-| 3417 | `workshop-drone-construction.agent` | Stable agent identity and explicit lifecycle/movement/task state | none |
-| 3418 | `workshop-drone-construction.task-scheduler` | Assigns pickup/placement work and commits idempotent task results | build-grid, resource-emitter, agent |
-| 3419 | `workshop-drone-construction.simulation` | Deterministic tick transaction, invariant validation, snapshot/event publication | all required domain contracts |
-| 3420 | `workshop-drone-construction.telemetry` | Run metadata, state counts, invariant failures, performance counters, replay digest | simulation event contract |
-| 3421 | `workshop-drone-construction.renderer-adapter` | Maps snapshots to renderer-facing semantic scene; no authority over simulation | simulation snapshot contract |
-| 3422 | `workshop-drone-construction.svg-observer` | Living diagrams of lanes, transitions, task flow, and actual telemetry | simulation snapshot/event contract |
+| 3410 | `workshop-drone-construction.height-field` | Versioned image/channel-to-height mapping and validation | none | Implemented
+| 3411 | `workshop-drone-construction.build-grid` | Target cells, required/placed block counts, placement tasks | height-field contract | Implemented
+| 3412 | `workshop-drone-construction.resource-emitter` | Ten-emitter scene, inventory, pickup capacity, queue state | none | Implemented
+| 3413 | `workshop-drone-construction.skylane` | 2D one-way cellular lane, direction/speed/elevation policy, occupancy | traffic-cell contract | Implemented
+| 3414 | `workshop-drone-construction.hover-lane` | 2D cellular holding grid and admission queue | traffic-cell contract | Implemented
+| 3415 | `workshop-drone-construction.slipstream` | Bounded transition volume, reservations, conflict checks | traffic-cell contract | Implemented
+| 3416 | `workshop-drone-construction.traffic-cell` | Shared cell identity, occupancy, reservation and tick semantics | none | Implemented
+| 3417 | `workshop-drone-construction.agent` | Stable agent identity and explicit lifecycle/movement/task state | none | Planned |
+| 3418 | `workshop-drone-construction.task-scheduler` | Assigns pickup/placement work and commits idempotent task results | build-grid, resource-emitter, agent | Planned |
+| 3419 | `workshop-drone-construction.simulation` | Deterministic tick transaction, invariant validation, snapshot/event publication | all required domain contracts | Planned |
+| 3420 | `workshop-drone-construction.telemetry` | Run metadata, state counts, invariant failures, performance counters, replay digest | simulation event contract | Planned |
+| 3421 | `workshop-drone-construction.renderer-adapter` | Maps snapshots to renderer-facing semantic scene; no authority over simulation | simulation snapshot contract | Planned |
+| 3422 | `workshop-drone-construction.svg-observer` | Living diagrams of lanes, transitions, task flow, and actual telemetry | simulation snapshot/event contract | Planned |
 
 ## Shared contracts before providers
 
