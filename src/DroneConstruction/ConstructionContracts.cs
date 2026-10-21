@@ -153,6 +153,13 @@ public sealed class TrafficCellGrid
         return _occupants.TryGetValue(cell, out agentId);
     }
 
+    /// <summary>Attempts to retrieve an agent's current cell from the grid's identity index.</summary>
+    public bool TryGetAgentCell(ulong agentId, out GridCell cell)
+    {
+        if (agentId == 0) throw new ArgumentOutOfRangeException(nameof(agentId), "Agent ID zero is reserved.");
+        return _agentCells.TryGetValue(agentId, out cell);
+    }
+
     /// <summary>Attempts to claim an unoccupied cell for an agent.: TryOccupy.</summary>
     public bool TryOccupy(GridCell cell, ulong agentId)
     {
