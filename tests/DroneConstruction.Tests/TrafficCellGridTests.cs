@@ -111,6 +111,37 @@ public sealed class TrafficCellGridTests
     }
 
     [Fact]
+    public void TransferWithinSameGridUsesAtomicMoveSemantics()
+    {
+        var grid = new TrafficCellGrid(3, 1);
+        var origin = new GridCell(0, 0);
+        var target = new GridCell(1, 0);
+        Assert.True(grid.TryOccupy(origin, 7));
+
+        Assert.True(grid.TryTransferTo(origin, target, 7, grid));
+
+        Assert.False(grid.IsOccupied(origin));
+        Assert.True(grid.TryGetOccupant(target, out var owner));
+        Assert.Equal((ulong)7, owner);
+    }
+
+    [Fact]
+    public void TransferFromWrongSourceOwnerDoesNotModifyEitherGrid()
+    {
+        var source = new TrafficCellGrid(2, 1);
+        var destination = new TrafficCellGrid(2, 1);
+        var origin = new GridCell(0, 0);
+        var target = new GridCell(1, 0);
+        Assert.True(source.TryOccupy(origin, 7));
+
+        Assert.False(source.TryTransferTo(origin, target, 8, destination));
+
+        Assert.True(source.TryGetOccupant(origin, out var owner));
+        Assert.Equal((ulong)7, owner);
+        Assert.False(destination.IsOccupied(target));
+    }
+
+    [Fact]
     public void TransferRejectsDestinationAgentAlreadyPresentInTargetGrid()
     {
         var source = new TrafficCellGrid(2, 1);
