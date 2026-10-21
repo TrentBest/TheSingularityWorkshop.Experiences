@@ -13,7 +13,7 @@ public sealed class ConstructionContractsTests
 
         Assert.Equal(0, field[0, 0]);
         Assert.Equal(10, field[1, 0]);
-        Assert.Equal(2, field.MaximumHeight);
+        Assert.Equal(10, field.MaximumHeight);
     }
 
     [Fact]
