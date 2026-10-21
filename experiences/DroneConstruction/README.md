@@ -31,7 +31,7 @@ The original Unity implementation was lost with its former machine. This folder 
 
 ## MicroBundle boundaries
 
-The initial catalog is defined in [MICROBUNDLE_BOUNDARIES.md](design/MICROBUNDLE_BOUNDARIES.md). Seven provider classes currently expose tested factories for height fields, build grids, resource emitters, traffic cells, skylanes, hover lanes, and slipstreams. Agent lifecycle, scheduling, simulation, telemetry, and rendering observers remain planned; the catalog marks those boundaries without pretending they already run.
+The initial catalog is defined in [MICROBUNDLE_BOUNDARIES.md](design/MICROBUNDLE_BOUNDARIES.md). Nine provider classes currently expose tested factories for height fields, build grids, resource emitters, traffic cells, skylanes, hover lanes, slipstreams, agent lifecycle, and deterministic task assignment. The full simulation loop, telemetry, and rendering observers remain planned; the catalog marks those boundaries without pretending they already run.
 
 ## Truthful milestones
 
