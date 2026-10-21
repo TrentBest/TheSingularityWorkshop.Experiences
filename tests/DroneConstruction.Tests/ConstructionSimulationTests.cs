@@ -76,6 +76,20 @@ public sealed class ConstructionSimulationTests
             emitters: [new PositionedBlockEmitter(new GridCell(1, 0), new BlockEmitter("emitter", 1))]));
     }
     [Fact]
+    public void Simulation_RejectsAgentsThatAlreadyHaveLifecycleState()
+    {
+        var agent = new ConstructionAgent(1, new GridCell(0, 0));
+        Assert.True(agent.TryAssign(new PlacementTask(99, 1, 0, 1)));
+
+        Assert.Throws<ArgumentException>(() => new ConstructionSimulation(
+            width: 2,
+            height: 1,
+            requiredHeight: (x, _) => x == 1 ? 1 : 0,
+            agents: [agent],
+            emitters: [new PositionedBlockEmitter(new GridCell(0, 0), new BlockEmitter("emitter", 1))]));
+    }
+
+    [Fact]
     public void Simulation_RejectsNullEmitterBeforeOrderingResources()
     {
         var emitters = new PositionedBlockEmitter[]
