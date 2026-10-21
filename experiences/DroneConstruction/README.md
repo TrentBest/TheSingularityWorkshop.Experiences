@@ -8,6 +8,10 @@ Drone Construction is a benign large-scale multi-agent construction experience. 
 
 The original Unity implementation was lost with its former machine. This folder is the canonical reconstruction brief. The new implementation must be renderer-independent and must not require Unity.
 
+![Drone Construction vision storyboard](assets/vision-board.svg)
+
+*This storyboard is an authored concept diagram, not yet a live GUI.SVG rendering of simulation state.*
+
 ![Drone Construction architecture](assets/drone-construction-architecture.svg)
 
 ## The idea in a minute
