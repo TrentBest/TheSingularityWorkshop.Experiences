@@ -1,0 +1,100 @@
+using TheSingularityWorkshop.Experiences.DroneConstruction;
+using Xunit;
+
+namespace TheSingularityWorkshop.Experiences.DroneConstruction.Tests;
+
+public sealed class ConstructionContractsTests
+{
+    [Fact]
+    public void HeightField_MapsRgbChannelToBoundedIntegerHeight()
+    {
+        var field = ImageHeightField.FromRgb(2, 1, [0, 127, 255, 255, 10, 0], 10,
+            ChannelHeightMapping.Red, "sha256:example");
+
+        Assert.Equal(0, field[0, 0]);
+        Assert.Equal(10, field[1, 0]);
+        Assert.Equal(2, field.MaximumHeight);
+    }
+
+    [Fact]
+    public void HeightField_RejectsWrongPixelBufferLengthAndInvalidCoordinates()
+    {
+        Assert.Throws<ArgumentException>(() =>
+            ImageHeightField.FromRgb(2, 1, [1, 2, 3], 10, ChannelHeightMapping.Red, "digest"));
+
+        var field = ImageHeightField.FromRgb(1, 1, [0, 0, 0], 5, ChannelHeightMapping.Average, "digest");
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = field[1, 0]);
+    }
+
+    [Fact]
+    public void TrafficGrid_EnforcesExclusiveOccupancyAndOwnerRelease()
+    {
+        var grid = new TrafficCellGrid(3, 2);
+        var cell = new GridCell(1, 1);
+
+        Assert.True(grid.TryOccupy(cell, 7));
+        Assert.False(grid.TryOccupy(cell, 8));
+        Assert.False(grid.Release(cell, 8));
+        Assert.True(grid.IsOccupied(cell));
+        Assert.True(grid.Release(cell, 7));
+        Assert.False(grid.IsOccupied(cell));
+    }
+
+    [Fact]
+    public void TrafficGrid_DoesNotAllowOneAgentInTwoCells()
+    {
+        var grid = new TrafficCellGrid(3, 2);
+        Assert.True(grid.TryOccupy(new GridCell(0, 0), 7));
+        Assert.False(grid.TryOccupy(new GridCell(1, 0), 7));
+    }
+
+    [Fact]
+    public void Slipstream_RequiresClearDestinationAndExactlyConfiguredLookahead()
+    {
+        var lane = new TrafficCellGrid(10, 2);
+        var slipstream = new Slipstream("transition-a", transitionCellCount: 2, lookaheadCells: 5);
+        var destination = new GridCell(8, 0);
+        GridCell[] lookahead =
+        [
+            new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)
+        ];
+
+        Assert.True(slipstream.TryReserve(7, destination, lookahead, lane));
+        Assert.Equal(7UL, slipstream.ReservedBy);
+        Assert.False(slipstream.TryReserve(8, destination, lookahead, lane));
+        Assert.True(slipstream.Release(7));
+        Assert.Null(slipstream.ReservedBy);
+    }
+
+    [Fact]
+    public void Slipstream_RejectsOccupiedLookaheadAndWrongLookaheadLength()
+    {
+        var lane = new TrafficCellGrid(10, 2);
+        var slipstream = new Slipstream("transition-a", transitionCellCount: 2, lookaheadCells: 5);
+        GridCell[] lookahead =
+        [
+            new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)
+        ];
+
+        Assert.True(lane.TryOccupy(new GridCell(4, 0), 99));
+        Assert.False(slipstream.TryReserve(7, new GridCell(8, 0), lookahead, lane));
+        Assert.Throws<ArgumentException>(() => slipstream.TryReserve(7, new GridCell(8, 0), lookahead[..4], lane));
+    }
+
+    [Fact]
+    public void BuildCell_AndEmitterConserveBlockCounts()
+    {
+        var target = new BuildCell(requiredBlocks: 2);
+        var emitter = new BlockEmitter("emitter-01", initialInventory: 2);
+
+        Assert.True(emitter.TryTakeBlock());
+        Assert.True(target.TryPlaceBlock());
+        Assert.True(emitter.TryTakeBlock());
+        Assert.True(target.TryPlaceBlock());
+        Assert.True(target.IsComplete);
+        Assert.False(target.TryPlaceBlock());
+        Assert.False(emitter.TryTakeBlock());
+        Assert.Equal(0, emitter.Inventory);
+        Assert.Equal(2, target.PlacedBlocks);
+    }
+}
