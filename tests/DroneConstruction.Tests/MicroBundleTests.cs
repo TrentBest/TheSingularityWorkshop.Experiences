@@ -74,7 +74,6 @@ public sealed class MicroBundleTests
         Assert.Equal(5, slipstream.LookaheadCells);
         Assert.Equal(2, slipstream.TransitionCellCount);
     }
-}
 
     [Fact]
     public void TaskScheduler_AssignsInStableTaskIdOrderAndRejectsDuplicateCompletion()
