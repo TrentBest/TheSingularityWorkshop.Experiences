@@ -89,7 +89,7 @@ public sealed class TrafficCellGridTests
         Assert.False(source.IsOccupied(origin));
         Assert.True(destination.TryGetOccupant(target, out var owner));
         Assert.Equal((ulong)7, owner);
-        Assert.False(source.TryOccupy(new GridCell(1, 0), 7) == false); // Source no longer owns this agent.
+        Assert.True(source.TryOccupy(new GridCell(1, 0), 7)); // Source no longer owns this agent.
     }
 
     [Fact]
