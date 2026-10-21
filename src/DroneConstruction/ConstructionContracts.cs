@@ -120,6 +120,7 @@ public enum LaneDirection
 public sealed class TrafficCellGrid
 {
     private readonly Dictionary<GridCell, ulong> _occupants = [];
+    private readonly Dictionary<ulong, GridCell> _agentCells = [];
 
     /// <summary>Creates an exclusive-occupancy grid with the specified dimensions.: TrafficCellGrid.</summary>
     public TrafficCellGrid(int width, int height)
@@ -157,9 +158,9 @@ public sealed class TrafficCellGrid
     {
         EnsureInBounds(cell);
         if (agentId == 0) throw new ArgumentOutOfRangeException(nameof(agentId), "Agent ID zero is reserved.");
-        if (_occupants.ContainsKey(cell)) return false;
-        if (_occupants.Values.Contains(agentId)) return false;
+        if (_occupants.ContainsKey(cell) || _agentCells.ContainsKey(agentId)) return false;
         _occupants.Add(cell, agentId);
+        _agentCells.Add(agentId, cell);
         return true;
     }
 
@@ -167,9 +168,10 @@ public sealed class TrafficCellGrid
     public bool Release(GridCell cell, ulong agentId)
     {
         EnsureInBounds(cell);
-        return _occupants.TryGetValue(cell, out var occupant) &&
-            occupant == agentId &&
-            _occupants.Remove(cell);
+        if (!_occupants.TryGetValue(cell, out var occupant) || occupant != agentId) return false;
+        _occupants.Remove(cell);
+        _agentCells.Remove(agentId);
+        return true;
     }
 
     /// <summary>Gets whether every supplied cell is currently unoccupied.: IsClear.</summary>
