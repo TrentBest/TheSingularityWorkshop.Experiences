@@ -76,9 +76,14 @@ public sealed class MicroBundleTests
         Assert.Equal(2UL, task!.TaskId);
         Assert.Equal(new GridCell(0, 0), agent.Position);
         Assert.Equal(ConstructionAgentState.QueuedAtEmitter, agent.State);
-        Assert.False(scheduler.Complete(2, 99));
-        Assert.True(scheduler.Complete(2, 12));
-        Assert.False(scheduler.Complete(2, 12));
+        Assert.False(scheduler.Complete(2, agent));
+        Assert.True(agent.TryTransition(ConstructionAgentState.CarryingBlock));
+        Assert.True(agent.TryTransition(ConstructionAgentState.AwaitingTransition));
+        Assert.True(agent.TryTransition(ConstructionAgentState.Traveling));
+        Assert.True(agent.TryTransition(ConstructionAgentState.PlacingBlock));
+        Assert.True(agent.TryTransition(ConstructionAgentState.Completed));
+        Assert.True(scheduler.Complete(2, agent));
+        Assert.False(scheduler.Complete(2, agent));
         Assert.True(scheduler.IsCompleted(2));
         Assert.Equal(1, scheduler.PendingCount);
         Assert.Equal(0, scheduler.AssignedCount);
