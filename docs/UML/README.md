@@ -8,6 +8,7 @@ This inventory maps the new Drone Construction production source files to manual
 |---|---|---|
 | src/DroneConstruction/ConstructionContracts.cs | [Construction contracts](assets/drone-construction-contracts.svg) | Height field, traffic cells, skylane, hover lane, slipstream, build cell, emitter |
 | src/DroneConstruction/BuildGrid.cs | [Build grid](assets/drone-construction-build-grid.svg) | Required/placed counts and completion invariants |
+| src/DroneConstruction/AgentAndTaskContracts.cs | [Agent and task contracts](assets/drone-construction-agent-task.svg) | Agent lifecycle, deterministic assignment, completion and requeue |
 | src/DroneConstruction.MicroBundles/DroneConstructionMicroBundles.cs | [MicroBundle providers](assets/drone-construction-microbundles.svg) | Seven implemented provider identities and typed factories |
 
 ## Grounding rules
