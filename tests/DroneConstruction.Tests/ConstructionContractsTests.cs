@@ -85,6 +85,23 @@ public sealed class ConstructionContractsTests
     }
 
     [Fact]
+    public void Slipstream_RejectsReleaseByNonOwnerAndPreservesReservation()
+    {
+        var lane = new TrafficCellGrid(10, 1);
+        var slipstream = new Slipstream("transition-a", transitionCellCount: 2, lookaheadCells: 5);
+        GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+
+        Assert.True(slipstream.TryReserve(7, new GridCell(8, 0), lookahead, lane));
+
+        Assert.False(slipstream.Release(8));
+        Assert.Equal(7UL, slipstream.ReservedBy);
+        Assert.False(slipstream.TryReserve(8, new GridCell(9, 0), lookahead, lane));
+
+        Assert.True(slipstream.Release(7));
+        Assert.Null(slipstream.ReservedBy);
+    }
+
+    [Fact]
     public void Slipstream_RejectsOccupiedLookaheadAndWrongLookaheadLength()
     {
         var lane = new TrafficCellGrid(10, 2);
