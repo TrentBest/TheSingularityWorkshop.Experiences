@@ -17,5 +17,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/DroneConstruction/TheSingularityWorkshop.Experiences.DroneConstruction.csproj" />
+    <ProjectReference Include="../../src/DroneConstruction.MicroBundles/TheSingularityWorkshop.Experiences.DroneConstruction.MicroBundles.csproj" />
   </ItemGroup>
 </Project>
