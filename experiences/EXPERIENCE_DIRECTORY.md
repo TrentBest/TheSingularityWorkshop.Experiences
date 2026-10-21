@@ -38,6 +38,20 @@ The WebApp is the intended distribution and discovery surface; the Experiences r
 - [Implementation and tests](../src/DominoStudio/)
 - [Physics/MicroBundle boundary and milestones](../docs/MARBLE_RUN_AND_DOMINO_MICROBUNDLE_BOUNDARY.md)
 
+
+### Drone Construction — large-scale coordination
+
+**Try:** reconstruct the image-to-block construction concept using discrete agents, ten resource emitters, and explicit cellular traffic contracts.
+
+**Why visit:** a shared target makes large-scale coordination tangible: routine travel stays in directed skylanes, waiting is explicit in hover lanes, and slipstreams isolate the transition points where conflict checks matter.
+
+**Current truth:** the design and proposed MicroBundle catalog are authored; no executable simulator, physical flight model, or 100,000-agent performance result is claimed yet. The five-cell lookahead is a tunable starting parameter, not a validated universal safety distance.
+
+- [Experience home](DroneConstruction/README.md)
+- [Experience contract](DroneConstruction/design/EXPERIENCE.md)
+- [MicroBundle boundaries](DroneConstruction/design/MICROBUNDLE_BOUNDARIES.md)
+- [Architecture SVG](DroneConstruction/assets/drone-construction-architecture.svg)
+
 ### Marble Run — continuous motion
 
 **Try:** author a track and terrain, configure gravity and marble properties, release marbles, and observe how changes to the course affect the run.
