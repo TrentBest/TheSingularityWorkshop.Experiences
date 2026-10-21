@@ -76,6 +76,41 @@ public sealed class TrafficCellGridTests
     }
 
     [Fact]
+    public void TransferMovesOwnershipBetweenGridsWithoutDuplicatingAgent()
+    {
+        var source = new TrafficCellGrid(2, 1);
+        var destination = new TrafficCellGrid(2, 1);
+        var origin = new GridCell(0, 0);
+        var target = new GridCell(1, 0);
+        Assert.True(source.TryOccupy(origin, 7));
+
+        Assert.True(source.TryTransferTo(origin, target, 7, destination));
+
+        Assert.False(source.IsOccupied(origin));
+        Assert.True(destination.TryGetOccupant(target, out var owner));
+        Assert.Equal((ulong)7, owner);
+        Assert.False(source.TryOccupy(new GridCell(1, 0), 7) == false); // Source no longer owns this agent.
+    }
+
+    [Fact]
+    public void BlockedTransferPreservesSourceOccupancy()
+    {
+        var source = new TrafficCellGrid(2, 1);
+        var destination = new TrafficCellGrid(2, 1);
+        var origin = new GridCell(0, 0);
+        var target = new GridCell(1, 0);
+        Assert.True(source.TryOccupy(origin, 7));
+        Assert.True(destination.TryOccupy(target, 8));
+
+        Assert.False(source.TryTransferTo(origin, target, 7, destination));
+
+        Assert.True(source.TryGetOccupant(origin, out var sourceOwner));
+        Assert.Equal((ulong)7, sourceOwner);
+        Assert.True(destination.TryGetOccupant(target, out var destinationOwner));
+        Assert.Equal((ulong)8, destinationOwner);
+    }
+
+    [Fact]
     public void RejectsReservedAgentIdZero()
     {
         var grid = new TrafficCellGrid(1, 1);
