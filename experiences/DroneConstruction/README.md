@@ -2,7 +2,7 @@
 
 # Drone Construction
 
-**Status:** a small deterministic discrete simulation loop is implemented on `development`; lane-transition integration, live GUI.SVG observation, and scale/performance evidence remain incomplete.
+**Status:** a small deterministic discrete simulation loop and a separately tested slipstream admission primitive are implemented on `development`; lane-transition integration into the simulation lifecycle, live GUI.SVG observation, and scale/performance evidence remain incomplete.
 
 Drone Construction is a benign large-scale multi-agent construction experience. A source image is converted into a discrete target structure; simulated quadcopters collect blocks from ten emitters and place them into the target. The showcase goal is to demonstrate how a large population can coordinate through explicit state, resource, and traffic contracts.
 
@@ -35,7 +35,7 @@ The original Unity implementation was lost with its former machine. This folder 
 
 ## MicroBundle boundaries
 
-The initial catalog is defined in [MICROBUNDLE_BOUNDARIES.md](design/MICROBUNDLE_BOUNDARIES.md). Nine provider classes currently expose tested factories for height fields, build grids, resource emitters, traffic cells, skylanes, hover lanes, slipstreams, agent lifecycle, and deterministic task assignment. The initial single-threaded simulation loop now assigns tasks, picks up finite-inventory blocks, moves agents one cell at a time under exclusive occupancy, places blocks, and emits immutable snapshots. Skylane direction, hover-lane admission, slipstream reservation, event replay/digests, and renderer observers are not yet integrated into that loop.
+The initial catalog is defined in [MICROBUNDLE_BOUNDARIES.md](design/MICROBUNDLE_BOUNDARIES.md). Nine provider classes currently expose tested factories for height fields, build grids, resource emitters, traffic cells, skylanes, hover lanes, slipstreams, agent lifecycle, and deterministic task assignment. The initial single-threaded simulation loop now assigns tasks, picks up finite-inventory blocks, moves agents one cell at a time under exclusive occupancy, places blocks, and emits immutable snapshots. The standalone `Slipstream.TryAdmit` primitive checks a clear destination/lookahead, transfers occupancy between grids, retains its single-agent reservation until explicitly released, and rolls back that reservation if transfer fails or throws; regression tests cover duplicate admission and invalid source coordinates. This is not yet wired into `ConstructionSimulation.Step()`, and the lookahead check is an admission-time check rather than a persistent reservation of every lookahead cell. Skylane direction, hover-lane admission, event replay/digests, and renderer observers are not yet integrated into the loop.
 
 ## Truthful milestones
 
