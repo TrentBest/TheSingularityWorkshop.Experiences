@@ -20,7 +20,7 @@ public sealed class SkylanePolicyTests
         int expectedX,
         int expectedY)
     {
-        var lane = new Skylane("lane", 10, 10, direction, elevation: 2, cellsPerTick);
+        var lane = new Skylane("lane", 10, 10, direction, elevation: 2, cellsPerTick: cellsPerTick);
         Assert.True(lane.TryGetNextCell(
             new GridCell(currentX, currentY),
             new GridCell(targetX, targetY),
