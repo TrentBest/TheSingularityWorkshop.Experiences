@@ -21,7 +21,7 @@ Do not create one monolithic “DroneConstruction” bundle that hides image int
 | 3416 | `workshop-drone-construction.traffic-cell` | Shared cell identity, occupancy, reservation and tick semantics | none | Implemented |
 | 3417 | `workshop-drone-construction.agent` | Stable agent identity and explicit lifecycle/movement/task state | none | Implemented |
 | 3418 | `workshop-drone-construction.task-scheduler` | Assigns pickup/placement work and commits idempotent task results | build-grid, resource-emitter, agent | Implemented |
-| 3419 | `workshop-drone-construction.simulation` | Deterministic tick transaction, invariant validation, snapshot/event publication | all required domain contracts | Planned |
+| 3419 | `workshop-drone-construction.simulation` | Single-threaded deterministic step, task assignment, pickup, cell movement, placement, immutable snapshots | build grid, agent, task scheduler, emitters, traffic occupancy | Partial implementation |
 | 3420 | `workshop-drone-construction.telemetry` | Run metadata, state counts, invariant failures, performance counters, replay digest | simulation event contract | Planned |
 | 3421 | `workshop-drone-construction.renderer-adapter` | Maps snapshots to renderer-facing semantic scene; no authority over simulation | simulation snapshot contract | Planned |
 | 3422 | `workshop-drone-construction.svg-observer` | Living diagrams of lanes, transitions, task flow, and actual telemetry | simulation snapshot/event contract | Planned |
