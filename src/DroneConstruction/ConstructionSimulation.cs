@@ -164,10 +164,10 @@ public sealed class ConstructionSimulation
             _buildGrid.RequiredBlockCount,
             _buildGrid.PlacedBlockCount,
             _buildGrid.IsComplete,
-            _agents.Select(agent => new ConstructionAgentSnapshot(agent.AgentId, agent.Position, agent.State,
-                agent.IsCarryingBlock, agent.AssignedTaskId)).ToArray(),
-            _emitters.Select(item => new ConstructionEmitterSnapshot(item.Emitter.EmitterId, item.Position, item.Emitter.Inventory)).ToArray(),
-            placed);
+            Array.AsReadOnly(_agents.Select(agent => new ConstructionAgentSnapshot(agent.AgentId, agent.Position, agent.State,
+                agent.IsCarryingBlock, agent.AssignedTaskId)).ToArray()),
+            Array.AsReadOnly(_emitters.Select(item => new ConstructionEmitterSnapshot(item.Emitter.EmitterId, item.Position, item.Emitter.Inventory)).ToArray()),
+            Array.AsReadOnly(placed));
     }
 
     private void MoveOneCell(ConstructionAgent agent, GridCell target)
