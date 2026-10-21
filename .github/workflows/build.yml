@@ -26,6 +26,7 @@ jobs:
           - src/DominoStudio/TheSingularityWorkshop.Experiences.DominoStudio.csproj
           - src/MarbleRun/TheSingularityWorkshop.Experiences.MarbleRun.csproj
           - src/DroneConstruction/TheSingularityWorkshop.Experiences.DroneConstruction.csproj
+          - src/DroneConstruction.MicroBundles/TheSingularityWorkshop.Experiences.DroneConstruction.MicroBundles.csproj
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
@@ -78,6 +79,7 @@ jobs:
           dotnet restore src/DominoStudio/TheSingularityWorkshop.Experiences.DominoStudio.csproj
           dotnet restore src/MarbleRun/TheSingularityWorkshop.Experiences.MarbleRun.csproj
           dotnet restore src/DroneConstruction/TheSingularityWorkshop.Experiences.DroneConstruction.csproj
+          dotnet restore src/DroneConstruction.MicroBundles/TheSingularityWorkshop.Experiences.DroneConstruction.MicroBundles.csproj
           dotnet pack src/Forge/TheSingularityWorkshop.Experiences.Forge.csproj --configuration Release --output ./artifacts
           dotnet pack src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj --configuration Release --output ./artifacts
           dotnet pack src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj --configuration Release --output ./artifacts
@@ -88,6 +90,7 @@ jobs:
           dotnet pack src/DominoStudio/TheSingularityWorkshop.Experiences.DominoStudio.csproj --configuration Release --output ./artifacts
           dotnet pack src/MarbleRun/TheSingularityWorkshop.Experiences.MarbleRun.csproj --configuration Release --output ./artifacts
           dotnet pack src/DroneConstruction/TheSingularityWorkshop.Experiences.DroneConstruction.csproj --configuration Release --output ./artifacts
+          dotnet pack src/DroneConstruction.MicroBundles/TheSingularityWorkshop.Experiences.DroneConstruction.MicroBundles.csproj --configuration Release --output ./artifacts
       - uses: actions/upload-artifact@v4
         with:
           name: experience-packages
@@ -291,6 +294,10 @@ jobs:
       - name: Test StoryForge against source graph
         working-directory: Experiences
         run: dotnet test tests/StoryForge.Tests/TheSingularityWorkshop.Experiences.StoryForge.Tests.csproj --configuration Release -p:WorkshopUseRepositorySources=true
+
+      - name: Test Drone Construction MicroBundles against source graph
+        working-directory: Experiences
+        run: dotnet test tests/DroneConstruction.Tests/TheSingularityWorkshop.Experiences.DroneConstruction.Tests.csproj --configuration Release -p:WorkshopUseRepositorySources=true
 
       - name: Test Castle Siege against source graph
         working-directory: Experiences
