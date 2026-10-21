@@ -131,6 +131,12 @@ public sealed class ConstructionContractsTests
         Assert.True(lane.TryGetOccupant(destination, out var occupant));
         Assert.Equal(7UL, occupant);
         Assert.Equal(7UL, slipstream.ReservedBy);
+
+        // A second admission attempt cannot undo the active reservation after the
+        // first transfer has already removed the agent from the source grid.
+        Assert.False(slipstream.TryAdmit(7, source, origin, destination, lookahead, lane));
+        Assert.Equal(7UL, slipstream.ReservedBy);
+
         Assert.True(slipstream.Release(7));
         Assert.Null(slipstream.ReservedBy);
     }
@@ -152,6 +158,21 @@ public sealed class ConstructionContractsTests
         Assert.Equal(99UL, sourceOwner);
         Assert.False(lane.IsOccupied(destination));
         Assert.Null(slipstream.ReservedBy);
+    }
+
+    [Fact]
+    public void SlipstreamAdmission_ReleasesReservationWhenSourceCoordinateThrows()
+    {
+        var source = new TrafficCellGrid(2, 1);
+        var lane = new TrafficCellGrid(10, 1);
+        var slipstream = new Slipstream("transition-a", transitionCellCount: 2, lookaheadCells: 5);
+        GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            slipstream.TryAdmit(7, source, new GridCell(2, 0), new GridCell(8, 0), lookahead, lane));
+
+        Assert.Null(slipstream.ReservedBy);
+        Assert.False(lane.IsOccupied(new GridCell(8, 0)));
     }
 
     [Fact]
