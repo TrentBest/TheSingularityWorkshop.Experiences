@@ -5,6 +5,7 @@ public sealed class BuildGrid
 {
     private readonly BuildCell[] _cells;
 
+    /// <summary>Creates a rectangular grid from a required-height function.: BuildGrid.</summary>
     public BuildGrid(int width, int height, Func<int, int, int> requiredHeight)
     {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
@@ -23,12 +24,18 @@ public sealed class BuildGrid
         }
     }
 
+    /// <summary>Gets the number of cells across the grid.: Width.</summary>
     public int Width { get; }
+    /// <summary>Gets the number of cells down the grid.: Height.</summary>
     public int Height { get; }
+    /// <summary>Gets whether every cell has its required number of blocks.: IsComplete.</summary>
     public bool IsComplete => _cells.All(cell => cell.IsComplete);
+    /// <summary>Gets the total number of blocks required by all cells.: RequiredBlockCount.</summary>
     public int RequiredBlockCount => _cells.Sum(cell => cell.RequiredBlocks);
+    /// <summary>Gets the total number of blocks committed to cells.: PlacedBlockCount.</summary>
     public int PlacedBlockCount => _cells.Sum(cell => cell.PlacedBlocks);
 
+    /// <summary>Gets the build cell at the specified grid coordinates.: this.</summary>
     public BuildCell this[int x, int y]
     {
         get
@@ -38,6 +45,7 @@ public sealed class BuildGrid
         }
     }
 
+    /// <summary>Attempts to commit one block to the specified cell without exceeding its target.: TryPlaceBlock.</summary>
     public bool TryPlaceBlock(int x, int y) => this[x, y].TryPlaceBlock();
 
     private void ValidateCoordinate(int x, int y)
