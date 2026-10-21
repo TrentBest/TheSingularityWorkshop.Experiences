@@ -138,8 +138,9 @@ public sealed class ConstructionTaskScheduler
     public bool Requeue(ulong taskId, ConstructionAgent agent)
     {
         ArgumentNullException.ThrowIfNull(agent);
-        if (taskId == 0 || !agent.TryCancelAssignment(taskId)) return false;
-        if (!_assigned.TryGetValue(taskId, out var assigned) || assigned.AgentId != agent.AgentId) return false;
+        if (taskId == 0 || !_assigned.TryGetValue(taskId, out var assigned) || assigned.AgentId != agent.AgentId)
+            return false;
+        if (!agent.TryCancelAssignment(taskId)) return false;
         _assigned.Remove(taskId);
         _pending.Add(taskId, assigned.Task);
         return true;
