@@ -194,6 +194,28 @@ public sealed class TrafficCellGrid
         return true;
     }
 
+    /// <summary>
+    /// Transfers an agent between distinct occupancy grids without leaving it registered in both.
+    /// This is a synchronous model operation; the grid type itself is not thread-safe.
+    /// </summary>
+    public bool TryTransferTo(GridCell current, GridCell destination, ulong agentId, TrafficCellGrid destinationGrid)
+    {
+        ArgumentNullException.ThrowIfNull(destinationGrid);
+        EnsureInBounds(current);
+        if (agentId == 0) throw new ArgumentOutOfRangeException(nameof(agentId), "Agent ID zero is reserved.");
+        if (ReferenceEquals(this, destinationGrid)) return TryMove(current, destination, agentId);
+        if (!destinationGrid.Contains(destination)) throw new ArgumentOutOfRangeException(nameof(destination));
+        if (!_occupants.TryGetValue(current, out var owner) || owner != agentId) return false;
+        if (!_agentCells.TryGetValue(agentId, out var indexedCell) || indexedCell != current) return false;
+        if (destinationGrid._occupants.ContainsKey(destination) || destinationGrid._agentCells.ContainsKey(agentId)) return false;
+
+        _occupants.Remove(current);
+        _agentCells.Remove(agentId);
+        destinationGrid._occupants.Add(destination, agentId);
+        destinationGrid._agentCells.Add(agentId, destination);
+        return true;
+    }
+
     /// <summary>Gets whether every supplied cell is currently unoccupied.: IsClear.</summary>
     public bool IsClear(IEnumerable<GridCell> cells)
     {
