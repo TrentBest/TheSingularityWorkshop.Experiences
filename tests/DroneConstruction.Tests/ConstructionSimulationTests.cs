@@ -38,6 +38,53 @@ public sealed class ConstructionSimulationTests
     }
 
     [Fact]
+    public void Simulation_ExposesQualifiedAgentLocationAndUpdatesItAfterMovement()
+    {
+        var agent = new ConstructionAgent(1, new GridCell(0, 0));
+        var simulation = new ConstructionSimulation(
+            width: 3,
+            height: 1,
+            requiredHeight: (x, _) => x == 2 ? 1 : 0,
+            agents: [agent],
+            emitters: [new PositionedBlockEmitter(new GridCell(0, 0), new BlockEmitter("emitter", 1))],
+            spaceId: "yard-east");
+
+        var initial = simulation.GetAgentLocation(1);
+        Assert.Equal(ConstructionSpaceKind.SimulationGrid, initial.SpaceKind);
+        Assert.Equal("yard-east", initial.SpaceId);
+        Assert.Equal(new GridCell(0, 0), initial.Cell);
+
+        for (var i = 0; i < 6; i++)
+            simulation.Step();
+
+        var current = simulation.GetAgentLocation(1);
+        Assert.Equal("yard-east", current.SpaceId);
+        Assert.Equal(agent.Position, current.Cell);
+        Assert.NotEqual(initial.Cell, current.Cell);
+    }
+
+    [Fact]
+    public void Simulation_RejectsUnknownAgentLocationQueryAndBlankSpaceIdentity()
+    {
+        var simulation = new ConstructionSimulation(
+            width: 1,
+            height: 1,
+            requiredHeight: (_, _) => 0,
+            agents: [],
+            emitters: [],
+            spaceId: "yard-east");
+
+        Assert.Throws<KeyNotFoundException>(() => simulation.GetAgentLocation(404));
+        Assert.Throws<ArgumentException>(() => new ConstructionSimulation(
+            width: 1,
+            height: 1,
+            requiredHeight: (_, _) => 0,
+            agents: [],
+            emitters: [],
+            spaceId: " "));
+    }
+
+    [Fact]
     public void Simulation_DoesNotConsumeInventoryWhenAllEmittersAreEmpty()
     {
         var agent = new ConstructionAgent(1, new GridCell(0, 0));
