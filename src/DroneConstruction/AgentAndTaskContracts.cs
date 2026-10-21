@@ -47,6 +47,15 @@ public sealed class ConstructionAgent
         return true;
     }
 
+    public bool TryCancelAssignment(ulong taskId)
+    {
+        if (taskId == 0 || AssignedTaskId != taskId || State != ConstructionAgentState.QueuedAtEmitter || IsCarryingBlock)
+            return false;
+        AssignedTaskId = null;
+        State = ConstructionAgentState.Idle;
+        return true;
+    }
+
     public bool TryTransition(ConstructionAgentState next)
     {
         var allowed = (State, next) switch
@@ -87,7 +96,7 @@ public sealed class ConstructionAgent
 public sealed class ConstructionTaskScheduler
 {
     private readonly SortedDictionary<ulong, PlacementTask> _pending = [];
-    private readonly Dictionary<ulong, ulong> _assigned = [];
+    private readonly Dictionary<ulong, (ulong AgentId, PlacementTask Task)> _assigned = [];
     private readonly HashSet<ulong> _completed = [];
 
     public int PendingCount => _pending.Count;
@@ -112,7 +121,7 @@ public sealed class ConstructionTaskScheduler
         var first = _pending.First();
         if (!agent.TryAssign(first.Value)) return false;
         _pending.Remove(first.Key);
-        _assigned.Add(first.Key, agent.AgentId);
+        _assigned.Add(first.Key, (agent.AgentId, first.Value));
         task = first.Value;
         return true;
     }
@@ -120,18 +129,19 @@ public sealed class ConstructionTaskScheduler
     public bool Complete(ulong taskId, ulong agentId)
     {
         if (taskId == 0 || agentId == 0) return false;
-        if (!_assigned.TryGetValue(taskId, out var owner) || owner != agentId) return false;
+        if (!_assigned.TryGetValue(taskId, out var assigned) || assigned.AgentId != agentId) return false;
         _assigned.Remove(taskId);
         _completed.Add(taskId);
         return true;
     }
 
-    public bool Requeue(ulong taskId, ulong agentId)
+    public bool Requeue(ulong taskId, ConstructionAgent agent)
     {
-        if (taskId == 0 || agentId == 0) return false;
-        if (!_assigned.TryGetValue(taskId, out var owner) || owner != agentId) return false;
+        ArgumentNullException.ThrowIfNull(agent);
+        if (taskId == 0 || !agent.TryCancelAssignment(taskId)) return false;
+        if (!_assigned.TryGetValue(taskId, out var assigned) || assigned.AgentId != agent.AgentId) return false;
         _assigned.Remove(taskId);
-        _pending.Add(taskId, new PlacementTask(taskId, 0, 0, 1));
+        _pending.Add(taskId, assigned.Task);
         return true;
     }
 
