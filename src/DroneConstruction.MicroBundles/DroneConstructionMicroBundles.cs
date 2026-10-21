@@ -101,3 +101,23 @@ public sealed class TrafficCellMicroBundle : DroneConstructionMicroBundleBase
 
     public TrafficCellGrid Create(int width, int height) => new(width, height);
 }
+
+/// <summary>MicroBundle provider for stable construction-agent identity and lifecycle state.</summary>
+public sealed class ConstructionAgentMicroBundle : DroneConstructionMicroBundleBase
+{
+    public const ulong BundleId = 3417;
+    public const string ProviderId = "workshop-drone-construction.agent";
+    public ConstructionAgentMicroBundle() : base(BundleId, ProviderId) { }
+
+    public ConstructionAgent Create(ulong agentId, GridCell initialPosition) => new(agentId, initialPosition);
+}
+
+/// <summary>MicroBundle provider for deterministic, idempotent placement-task assignment.</summary>
+public sealed class ConstructionTaskSchedulerMicroBundle : DroneConstructionMicroBundleBase
+{
+    public const ulong BundleId = 3418;
+    public const string ProviderId = "workshop-drone-construction.task-scheduler";
+    public ConstructionTaskSchedulerMicroBundle() : base(BundleId, ProviderId) { }
+
+    public ConstructionTaskScheduler Create() => new();
+}
