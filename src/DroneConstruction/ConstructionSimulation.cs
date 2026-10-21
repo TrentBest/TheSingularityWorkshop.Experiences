@@ -52,10 +52,13 @@ public sealed class ConstructionSimulation
         ArgumentNullException.ThrowIfNull(emitters);
         _buildGrid = new BuildGrid(width, height, requiredHeight);
         _traffic = new TrafficCellGrid(width, height);
-        _agents = agents.OrderBy(agent => agent?.AgentId ?? 0).ToArray();
-        _emitters = emitters.OrderBy(emitter => emitter?.Emitter.EmitterId, StringComparer.Ordinal).ToArray();
-        if (_agents.Any(agent => agent is null)) throw new ArgumentException("Agents cannot contain null entries.", nameof(agents));
-        if (_emitters.Any(emitter => emitter is null || emitter.Emitter is null)) throw new ArgumentException("Emitters cannot contain null entries.", nameof(emitters));
+        var agentArray = agents.ToArray();
+        if (agentArray.Any(agent => agent is null)) throw new ArgumentException("Agents cannot contain null entries.", nameof(agents));
+        var emitterArray = emitters.ToArray();
+        if (emitterArray.Any(emitter => emitter is null || emitter.Emitter is null))
+            throw new ArgumentException("Emitters cannot contain null entries or null emitter resources.", nameof(emitters));
+        _agents = agentArray.OrderBy(agent => agent.AgentId).ToArray();
+        _emitters = emitterArray.OrderBy(emitter => emitter.Emitter.EmitterId, StringComparer.Ordinal).ToArray();
         if (_agents.Select(agent => agent.AgentId).Distinct().Count() != _agents.Length)
             throw new ArgumentException("Agent IDs must be unique.", nameof(agents));
         if (_emitters.Select(emitter => emitter.Emitter.EmitterId).Distinct(StringComparer.Ordinal).Count() != _emitters.Length)
