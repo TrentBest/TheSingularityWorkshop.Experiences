@@ -126,10 +126,12 @@ public sealed class ConstructionTaskScheduler
         return true;
     }
 
-    public bool Complete(ulong taskId, ulong agentId)
+    public bool Complete(ulong taskId, ConstructionAgent agent)
     {
-        if (taskId == 0 || agentId == 0) return false;
-        if (!_assigned.TryGetValue(taskId, out var assigned) || assigned.AgentId != agentId) return false;
+        ArgumentNullException.ThrowIfNull(agent);
+        if (taskId == 0 || agent.State != ConstructionAgentState.Idle || agent.AssignedTaskId is not null || agent.IsCarryingBlock)
+            return false;
+        if (!_assigned.TryGetValue(taskId, out var assigned) || assigned.AgentId != agent.AgentId) return false;
         _assigned.Remove(taskId);
         _completed.Add(taskId);
         return true;
