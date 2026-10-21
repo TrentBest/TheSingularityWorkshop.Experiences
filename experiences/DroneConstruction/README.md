@@ -2,7 +2,7 @@
 
 # Drone Construction
 
-**Status:** concept and architecture contract; executable simulation and performance claims are not yet implemented.
+**Status:** a small deterministic discrete simulation loop is implemented on `development`; lane-transition integration, live GUI.SVG observation, and scale/performance evidence remain incomplete.
 
 Drone Construction is a benign large-scale multi-agent construction experience. A source image is converted into a discrete target structure; simulated quadcopters collect blocks from ten emitters and place them into the target. The showcase goal is to demonstrate how a large population can coordinate through explicit state, resource, and traffic contracts.
 
@@ -35,14 +35,14 @@ The original Unity implementation was lost with its former machine. This folder 
 
 ## MicroBundle boundaries
 
-The initial catalog is defined in [MICROBUNDLE_BOUNDARIES.md](design/MICROBUNDLE_BOUNDARIES.md). Nine provider classes currently expose tested factories for height fields, build grids, resource emitters, traffic cells, skylanes, hover lanes, slipstreams, agent lifecycle, and deterministic task assignment. The full simulation loop, telemetry, and rendering observers remain planned; the catalog marks those boundaries without pretending they already run.
+The initial catalog is defined in [MICROBUNDLE_BOUNDARIES.md](design/MICROBUNDLE_BOUNDARIES.md). Nine provider classes currently expose tested factories for height fields, build grids, resource emitters, traffic cells, skylanes, hover lanes, slipstreams, agent lifecycle, and deterministic task assignment. The initial single-threaded simulation loop now assigns tasks, picks up finite-inventory blocks, moves agents one cell at a time under exclusive occupancy, places blocks, and emits immutable snapshots. Skylane direction, hover-lane admission, slipstream reservation, event replay/digests, and renderer observers are not yet integrated into that loop.
 
 ## Truthful milestones
 
 - **M0 — authored contract:** this design, vocabulary, bundle boundaries, and architecture diagram.
-- **M1 — deterministic discrete model:** image-height mapping, target cells, stable agent IDs, emitter inventory, lane occupancy, and event log; no 3D physics claim.
+- **M1 — deterministic discrete model:** image-height mapping, target cells, stable agent IDs, finite emitter inventory, exclusive cell occupancy, one-cell movement, placement, and immutable snapshots; no 3D physics claim.
 - **M2 — lane transition proof:** tested skylane/hover-lane/slipstream admission and conflict invariants in a small deterministic grid.
-- **M3 — rendered vertical slice:** a small agent population collects and places blocks, with the Renderer and GUI.SVG reflecting actual simulation state.
+- **M3 — rendered vertical slice:** the pickup → cell movement → placement loop exists for a small discrete grid. Renderer/GUI.SVG must next consume the actual snapshots; the current vision board remains conceptual.
 - **M4 — scale evidence:** repeatable population sweeps, correctness checks, throughput, memory, allocation, and frame-time reports. 100,000 agents remains a target until measured.
 - **M5 — optional physical model:** add a tested physics provider only when its API, units, stepping, and collision evidence are explicit.
 
