@@ -101,6 +101,20 @@ public sealed class ConstructionContractsTests
     }
 
     [Fact]
+    public void Slipstream_RejectsOutOfBoundsLookaheadWithoutThrowing()
+    {
+        var lane = new TrafficCellGrid(10, 2);
+        var slipstream = new Slipstream("transition-b", transitionCellCount: 2, lookaheadCells: 5);
+        GridCell[] lookahead =
+        [
+            new(2, 0), new(3, 0), new(10, 0), new(5, 0), new(6, 0)
+        ];
+
+        Assert.False(slipstream.TryReserve(8, new GridCell(8, 0), lookahead, lane));
+        Assert.Null(slipstream.ReservedBy);
+    }
+
+    [Fact]
     public void BuildCell_AndEmitterConserveBlockCounts()
     {
         var target = new BuildCell(requiredBlocks: 2);
