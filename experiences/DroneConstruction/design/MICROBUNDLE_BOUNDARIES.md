@@ -12,13 +12,13 @@ Do not create one monolithic “DroneConstruction” bundle that hides image int
 
 | Bundle ID | Provider ID | Responsibility | Depends on | Status |
 |---:|---|---|---|
-| 3410 | `workshop-drone-construction.height-field` | Versioned image/channel-to-height mapping and validation | none | Implemented
-| 3411 | `workshop-drone-construction.build-grid` | Target cells, required/placed block counts, placement tasks | height-field contract | Implemented
-| 3412 | `workshop-drone-construction.resource-emitter` | Ten-emitter scene, inventory, pickup capacity, queue state | none | Implemented
-| 3413 | `workshop-drone-construction.skylane` | 2D one-way cellular lane, direction/speed/elevation policy, occupancy | traffic-cell contract | Implemented
-| 3414 | `workshop-drone-construction.hover-lane` | 2D cellular holding grid and admission queue | traffic-cell contract | Implemented
-| 3415 | `workshop-drone-construction.slipstream` | Bounded transition volume, reservations, conflict checks | traffic-cell contract | Implemented
-| 3416 | `workshop-drone-construction.traffic-cell` | Shared cell identity, occupancy, reservation and tick semantics | none | Implemented
+| 3410 | `workshop-drone-construction.height-field` | Versioned image/channel-to-height mapping and validation | none | Implemented |
+| 3411 | `workshop-drone-construction.build-grid` | Target cells, required/placed block counts, placement tasks | height-field contract | Implemented |
+| 3412 | `workshop-drone-construction.resource-emitter` | Ten-emitter scene, inventory, pickup capacity, queue state | none | Implemented |
+| 3413 | `workshop-drone-construction.skylane` | 2D one-way cellular lane, direction/speed/elevation policy, occupancy | traffic-cell contract | Implemented |
+| 3414 | `workshop-drone-construction.hover-lane` | 2D cellular holding grid and admission queue | traffic-cell contract | Implemented |
+| 3415 | `workshop-drone-construction.slipstream` | Bounded transition volume, reservations, conflict checks | traffic-cell contract | Implemented |
+| 3416 | `workshop-drone-construction.traffic-cell` | Shared cell identity, occupancy, reservation and tick semantics | none | Implemented |
 | 3417 | `workshop-drone-construction.agent` | Stable agent identity and explicit lifecycle/movement/task state | none | Planned |
 | 3418 | `workshop-drone-construction.task-scheduler` | Assigns pickup/placement work and commits idempotent task results | build-grid, resource-emitter, agent | Planned |
 | 3419 | `workshop-drone-construction.simulation` | Deterministic tick transaction, invariant validation, snapshot/event publication | all required domain contracts | Planned |
@@ -36,7 +36,7 @@ A provider must publish:
 - tests that establish advertised invariants;
 - an explicit distinction between implemented, experimental, and planned behavior.
 
-A provider ID is metadata, not a service locator. Do not claim that composition has resolved a typed runtime service until the host's typed resolution contract exists and is tested.
+A provider ID is metadata, not a service locator. The current seven provider classes expose typed factories and have no declared runtime dependencies; the dependency column above is the intended capability graph, not yet an encoded FSM_COS dependency graph. Do not claim that composition has resolved a typed runtime service until the host's typed resolution contract exists and is tested.
 
 ## Why skylane, hover lane, and slipstream are separate
 
@@ -60,9 +60,9 @@ This is a capability graph, not a claim that every dependency must be loaded int
 
 ## Implementation sequence
 
-1. Implement pure contracts and deterministic invariants in a dependency-light project.
-2. Test the traffic-cell, skylane, hover-lane, and slipstream rules independently.
-3. Implement image-to-height mapping and block/inventory conservation.
-4. Implement the end-to-end agent loop and deterministic replay.
+1. **Done in the first slice:** pure height-field, build-grid, emitter, traffic-cell, skylane, hover-lane, and slipstream contracts with initial unit tests.
+2. **Next:** add stable agent lifecycle and movement/task state.
+3. Implement a deterministic task scheduler and end-to-end pickup → transit → placement loop.
+4. Add deterministic simulation ticks, event snapshots, and replay digests.
 5. Add renderer and SVG observers after snapshots are stable.
-6. Only then split independently publishable providers where artifact boundaries and host resolution are real.
+6. Measure scale in stages; only then advertise a 100,000-agent result or split additional independently publishable providers.
