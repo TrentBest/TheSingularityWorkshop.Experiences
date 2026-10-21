@@ -61,6 +61,8 @@ public sealed class ConstructionSimulation
         _emitters = emitterArray.OrderBy(emitter => emitter.Emitter.EmitterId, StringComparer.Ordinal).ToArray();
         if (_agents.Select(agent => agent.AgentId).Distinct().Count() != _agents.Length)
             throw new ArgumentException("Agent IDs must be unique.", nameof(agents));
+        if (_agents.Any(agent => agent.State != ConstructionAgentState.Idle || agent.AssignedTaskId is not null || agent.IsCarryingBlock))
+            throw new ArgumentException("Agents must be idle, unassigned, and not carrying a block when a simulation is created.", nameof(agents));
         if (_emitters.Select(emitter => emitter.Emitter.EmitterId).Distinct(StringComparer.Ordinal).Count() != _emitters.Length)
             throw new ArgumentException("Emitter IDs must be unique.", nameof(emitters));
         foreach (var emitter in _emitters)
