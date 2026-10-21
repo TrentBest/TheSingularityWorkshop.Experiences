@@ -38,6 +38,7 @@ public sealed class ConstructionSimulation
     private readonly PositionedBlockEmitter[] _emitters;
     private readonly Dictionary<ulong, PlacementTask> _agentTasks = [];
     private readonly TrafficCellGrid _traffic;
+    private readonly string _spaceId;
     private long _tick;
 
     /// <summary>Creates a deterministic simulation over one shared exclusive-occupancy grid.</summary>
@@ -46,10 +47,13 @@ public sealed class ConstructionSimulation
         int height,
         Func<int, int, int> requiredHeight,
         IEnumerable<ConstructionAgent> agents,
-        IEnumerable<PositionedBlockEmitter> emitters)
+        IEnumerable<PositionedBlockEmitter> emitters,
+        string spaceId = "construction-main")
     {
         ArgumentNullException.ThrowIfNull(agents);
         ArgumentNullException.ThrowIfNull(emitters);
+        if (string.IsNullOrWhiteSpace(spaceId)) throw new ArgumentException("A stable simulation-space identity is required.", nameof(spaceId));
+        _spaceId = spaceId;
         _buildGrid = new BuildGrid(width, height, requiredHeight);
         _traffic = new TrafficCellGrid(width, height);
         var agentArray = agents.ToArray();
@@ -88,6 +92,17 @@ public sealed class ConstructionSimulation
 
     /// <summary>Gets the number of committed ticks.</summary>
     public long TickCount => _tick;
+    /// <summary>Gets the stable identity of this simulation's traffic coordinate space.</summary>
+    public string SpaceId => _spaceId;
+
+    /// <summary>Gets the current space-qualified location of a registered agent.</summary>
+    public QualifiedGridLocation GetAgentLocation(ulong agentId)
+    {
+        var agent = Array.Find(_agents, candidate => candidate.AgentId == agentId);
+        if (agent is null) throw new KeyNotFoundException($"Agent {agentId} is not registered in this simulation.");
+        return new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, _spaceId, agent.Position);
+    }
+
     /// <summary>Gets the authoritative target grid.</summary>
     public BuildGrid BuildGrid => _buildGrid;
 
