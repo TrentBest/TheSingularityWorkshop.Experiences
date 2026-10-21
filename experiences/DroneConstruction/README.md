@@ -31,7 +31,7 @@ The original Unity implementation was lost with its former machine. This folder 
 
 ## MicroBundle boundaries
 
-The initial bundle catalog is defined in [MICROBUNDLE_BOUNDARIES.md](design/MICROBUNDLE_BOUNDARIES.md). Each bundle owns one stable contract. A descriptor does not imply that the behavior is implemented: executable providers, composition tests, and integration tests must be added before a capability is marked available.
+The initial catalog is defined in [MICROBUNDLE_BOUNDARIES.md](design/MICROBUNDLE_BOUNDARIES.md). Seven provider classes currently expose tested factories for height fields, build grids, resource emitters, traffic cells, skylanes, hover lanes, and slipstreams. Agent lifecycle, scheduling, simulation, telemetry, and rendering observers remain planned; the catalog marks those boundaries without pretending they already run.
 
 ## Truthful milestones
 
