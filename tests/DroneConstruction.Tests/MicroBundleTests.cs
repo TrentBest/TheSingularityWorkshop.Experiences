@@ -135,3 +135,4 @@ public sealed class MicroBundleTests
         Assert.False(agent.IsCarryingBlock);
         Assert.Null(agent.AssignedTaskId);
     }
+}
