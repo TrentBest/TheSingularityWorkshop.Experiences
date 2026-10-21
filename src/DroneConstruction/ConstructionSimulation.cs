@@ -36,6 +36,7 @@ public sealed class ConstructionSimulation
     private readonly BuildGrid _buildGrid;
     private readonly ConstructionTaskScheduler _scheduler = new();
     private readonly ConstructionAgent[] _agents;
+    private readonly Dictionary<ulong, ConstructionAgent> _agentsById;
     private readonly PositionedBlockEmitter[] _emitters;
     private readonly Dictionary<ulong, PlacementTask> _agentTasks = [];
     private readonly TrafficCellGrid _traffic;
@@ -66,6 +67,7 @@ public sealed class ConstructionSimulation
         _emitters = emitterArray.OrderBy(emitter => emitter.Emitter.EmitterId, StringComparer.Ordinal).ToArray();
         if (_agents.Select(agent => agent.AgentId).Distinct().Count() != _agents.Length)
             throw new ArgumentException("Agent IDs must be unique.", nameof(agents));
+        _agentsById = _agents.ToDictionary(agent => agent.AgentId);
         if (_agents.Any(agent => agent.State != ConstructionAgentState.Idle || agent.AssignedTaskId is not null || agent.IsCarryingBlock))
             throw new ArgumentException("Agents must be idle, unassigned, and not carrying a block when a simulation is created.", nameof(agents));
         if (_emitters.Select(emitter => emitter.Emitter.EmitterId).Distinct(StringComparer.Ordinal).Count() != _emitters.Length)
@@ -99,8 +101,8 @@ public sealed class ConstructionSimulation
     /// <summary>Gets the current space-qualified location of a registered agent.</summary>
     public QualifiedGridLocation GetAgentLocation(ulong agentId)
     {
-        var agent = Array.Find(_agents, candidate => candidate.AgentId == agentId);
-        if (agent is null) throw new KeyNotFoundException($"Agent {agentId} is not registered in this simulation.");
+        if (!_agentsById.TryGetValue(agentId, out var agent))
+            throw new KeyNotFoundException($"Agent {agentId} is not registered in this simulation.");
         return new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, _spaceId, agent.Position);
     }
 
