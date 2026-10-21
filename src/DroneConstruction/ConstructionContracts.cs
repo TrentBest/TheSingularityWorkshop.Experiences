@@ -220,6 +220,39 @@ public sealed class Skylane
     public int CellsPerTick { get; }
     /// <summary>Creates an exclusive-occupancy grid with the specified dimensions.: TrafficCellGrid.</summary>
     public TrafficCellGrid Cells { get; }
+
+    /// <summary>
+    /// Computes the next cell toward a target only when it lies on this lane's declared one-way axis.
+    /// This is a route-policy primitive; it does not reserve occupancy or perform a transition.
+    /// </summary>
+    public bool TryGetNextCell(GridCell current, GridCell target, out GridCell next)
+    {
+        next = current;
+        if (!Cells.Contains(current) || !Cells.Contains(target)) return false;
+
+        var dx = target.X - current.X;
+        var dy = target.Y - current.Y;
+        var legalAxis = Direction switch
+        {
+            LaneDirection.East => dy == 0 && dx > 0,
+            LaneDirection.West => dy == 0 && dx < 0,
+            LaneDirection.North => dx == 0 && dy < 0,
+            LaneDirection.South => dx == 0 && dy > 0,
+            _ => false
+        };
+        if (!legalAxis) return false;
+
+        var distance = Math.Min(CellsPerTick, Math.Abs(dx != 0 ? dx : dy));
+        next = Direction switch
+        {
+            LaneDirection.East => new GridCell(current.X + distance, current.Y),
+            LaneDirection.West => new GridCell(current.X - distance, current.Y),
+            LaneDirection.North => new GridCell(current.X, current.Y - distance),
+            LaneDirection.South => new GridCell(current.X, current.Y + distance),
+            _ => current
+        };
+        return true;
+    }
 }
 
 /// <summary>A 2D cellular holding area for agents waiting for transition clearance.</summary>
