@@ -3,10 +3,15 @@ namespace TheSingularityWorkshop.Experiences.DroneConstruction;
 /// <summary>Maps RGB source pixels to a discrete target height field.</summary>
 public enum ChannelHeightMapping
 {
+    /// <summary>Maps the red image channel to target height.: Red.</summary>
     Red,
+    /// <summary>Maps the green image channel to target height.: Green.</summary>
     Green,
+    /// <summary>Maps the blue image channel to target height.: Blue.</summary>
     Blue,
+    /// <summary>Maps the maximum RGB channel value to target height.: Maximum.</summary>
     Maximum,
+    /// <summary>Maps the average RGB channel value to target height.: Average.</summary>
     Average
 }
 
@@ -25,12 +30,18 @@ public sealed class ImageHeightField
         SourceDigest = sourceDigest;
     }
 
+    /// <summary>Gets the width of the height field or grid.: Width.</summary>
     public int Width { get; }
+    /// <summary>Gets the height of the height field or grid.: Height.</summary>
     public int Height { get; }
+    /// <summary>Gets the upper bound used for mapped target heights.: MaximumHeight.</summary>
     public int MaximumHeight { get; }
+    /// <summary>Gets the channel-to-height mapping applied to the source image.: Mapping.</summary>
     public ChannelHeightMapping Mapping { get; }
+    /// <summary>Gets the source-image digest used to identify the input.: SourceDigest.</summary>
     public string SourceDigest { get; }
 
+    /// <summary>Gets the target height at the specified grid coordinates.: this.</summary>
     public int this[int x, int y]
     {
         get
@@ -93,9 +104,13 @@ public readonly record struct GridCell(int X, int Y);
 /// <summary>Declared travel direction for a one-way skylane.</summary>
 public enum LaneDirection
 {
+    /// <summary>Specifies movement toward increasing X coordinates.: East.</summary>
     East,
+    /// <summary>Specifies movement toward decreasing X coordinates.: West.</summary>
     West,
+    /// <summary>Specifies movement toward decreasing Y coordinates.: North.</summary>
     North,
+    /// <summary>Specifies movement toward increasing Y coordinates.: South.</summary>
     South
 }
 
@@ -106,6 +121,7 @@ public sealed class TrafficCellGrid
 {
     private readonly Dictionary<GridCell, ulong> _occupants = [];
 
+    /// <summary>Creates an exclusive-occupancy grid with the specified dimensions.: TrafficCellGrid.</summary>
     public TrafficCellGrid(int width, int height)
     {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
@@ -114,23 +130,29 @@ public sealed class TrafficCellGrid
         Height = height;
     }
 
+    /// <summary>Gets the width of the height field or grid.: Width.</summary>
     public int Width { get; }
+    /// <summary>Gets the height of the height field or grid.: Height.</summary>
     public int Height { get; }
 
+    /// <summary>Gets the width of the height field or grid.: Width.</summary>
     public bool Contains(GridCell cell) => (uint)cell.X < (uint)Width && (uint)cell.Y < (uint)Height;
 
+    /// <summary>Gets whether the specified cell currently has an occupant.: IsOccupied.</summary>
     public bool IsOccupied(GridCell cell)
     {
         EnsureInBounds(cell);
         return _occupants.ContainsKey(cell);
     }
 
+    /// <summary>Attempts to retrieve the identifier occupying a cell.: TryGetOccupant.</summary>
     public bool TryGetOccupant(GridCell cell, out ulong agentId)
     {
         EnsureInBounds(cell);
         return _occupants.TryGetValue(cell, out agentId);
     }
 
+    /// <summary>Attempts to claim an unoccupied cell for an agent.: TryOccupy.</summary>
     public bool TryOccupy(GridCell cell, ulong agentId)
     {
         EnsureInBounds(cell);
@@ -141,6 +163,7 @@ public sealed class TrafficCellGrid
         return true;
     }
 
+    /// <summary>Releases a cell only when the supplied agent owns it.: Release.</summary>
     public bool Release(GridCell cell, ulong agentId)
     {
         EnsureInBounds(cell);
@@ -149,6 +172,7 @@ public sealed class TrafficCellGrid
             _occupants.Remove(cell);
     }
 
+    /// <summary>Gets whether every supplied cell is currently unoccupied.: IsClear.</summary>
     public bool IsClear(IEnumerable<GridCell> cells)
     {
         ArgumentNullException.ThrowIfNull(cells);
@@ -171,6 +195,7 @@ public sealed class TrafficCellGrid
 /// </summary>
 public sealed class Skylane
 {
+    /// <summary>Creates a one-way cellular lane with direction, elevation, and movement policy.: Skylane.</summary>
     public Skylane(string laneId, int width, int height, LaneDirection direction, int elevation, int cellsPerTick = 1)
     {
         if (string.IsNullOrWhiteSpace(laneId)) throw new ArgumentException("Lane identity is required.", nameof(laneId));
@@ -183,16 +208,22 @@ public sealed class Skylane
         Cells = new TrafficCellGrid(width, height);
     }
 
+    /// <summary>Gets the stable identifier of the lane.: LaneId.</summary>
     public string LaneId { get; }
+    /// <summary>Gets the declared direction of travel.: Direction.</summary>
     public LaneDirection Direction { get; }
+    /// <summary>Gets the logical elevation assigned to the lane.: Elevation.</summary>
     public int Elevation { get; }
+    /// <summary>Gets the maximum configured cells traversed per tick.: CellsPerTick.</summary>
     public int CellsPerTick { get; }
+    /// <summary>Creates an exclusive-occupancy grid with the specified dimensions.: TrafficCellGrid.</summary>
     public TrafficCellGrid Cells { get; }
 }
 
 /// <summary>A 2D cellular holding area for agents waiting for transition clearance.</summary>
 public sealed class HoverLane
 {
+    /// <summary>Creates a cellular holding lane with the specified dimensions.: HoverLane.</summary>
     public HoverLane(string laneId, int width, int height)
     {
         if (string.IsNullOrWhiteSpace(laneId)) throw new ArgumentException("Lane identity is required.", nameof(laneId));
@@ -200,7 +231,9 @@ public sealed class HoverLane
         Cells = new TrafficCellGrid(width, height);
     }
 
+    /// <summary>Gets the stable identifier of the lane.: LaneId.</summary>
     public string LaneId { get; }
+    /// <summary>Creates an exclusive-occupancy grid with the specified dimensions.: TrafficCellGrid.</summary>
     public TrafficCellGrid Cells { get; }
 }
 
@@ -212,6 +245,7 @@ public sealed class Slipstream
 {
     private ulong? _reservedBy;
 
+    /// <summary>Creates a bounded transition with a configured lookahead length.: Slipstream.</summary>
     public Slipstream(string slipstreamId, int transitionCellCount, int lookaheadCells = 5)
     {
         if (string.IsNullOrWhiteSpace(slipstreamId)) throw new ArgumentException("Slipstream identity is required.", nameof(slipstreamId));
@@ -222,9 +256,13 @@ public sealed class Slipstream
         LookaheadCells = lookaheadCells;
     }
 
+    /// <summary>Gets the stable identifier of the transition.: SlipstreamId.</summary>
     public string SlipstreamId { get; }
+    /// <summary>Gets the number of cells in the transition.: TransitionCellCount.</summary>
     public int TransitionCellCount { get; }
+    /// <summary>Gets the configured number of cells checked before admission.: LookaheadCells.</summary>
     public int LookaheadCells { get; }
+    /// <summary>Gets the identifier of the agent holding the reservation, if any.: ReservedBy.</summary>
     public ulong? ReservedBy => _reservedBy;
 
     /// <summary>
@@ -244,6 +282,7 @@ public sealed class Slipstream
         return true;
     }
 
+    /// <summary>Releases a cell only when the supplied agent owns it.: Release.</summary>
     public bool Release(ulong agentId)
     {
         if (agentId == 0) throw new ArgumentOutOfRangeException(nameof(agentId));
@@ -256,16 +295,21 @@ public sealed class Slipstream
 /// <summary>Tracks required and committed block counts for one target cell.</summary>
 public sealed class BuildCell
 {
+    /// <summary>Creates a target cell with a required block count.: BuildCell.</summary>
     public BuildCell(int requiredBlocks)
     {
         if (requiredBlocks < 0) throw new ArgumentOutOfRangeException(nameof(requiredBlocks));
         RequiredBlocks = requiredBlocks;
     }
 
+    /// <summary>Gets the number of blocks required by the cell.: RequiredBlocks.</summary>
     public int RequiredBlocks { get; }
+    /// <summary>Gets the number of blocks committed to the cell.: PlacedBlocks.</summary>
     public int PlacedBlocks { get; private set; }
+    /// <summary>Gets the number of blocks required by the cell.: RequiredBlocks.</summary>
     public bool IsComplete => PlacedBlocks == RequiredBlocks;
 
+    /// <summary>Attempts to commit one block without exceeding the required count.: TryPlaceBlock.</summary>
     public bool TryPlaceBlock()
     {
         if (PlacedBlocks >= RequiredBlocks) return false;
@@ -277,6 +321,7 @@ public sealed class BuildCell
 /// <summary>Finite block inventory at one emitter.</summary>
 public sealed class BlockEmitter
 {
+    /// <summary>Creates a block emitter with finite inventory and pickup capacity.: BlockEmitter.</summary>
     public BlockEmitter(string emitterId, int initialInventory, int pickupCapacity = 1)
     {
         if (string.IsNullOrWhiteSpace(emitterId)) throw new ArgumentException("Emitter identity is required.", nameof(emitterId));
@@ -287,10 +332,14 @@ public sealed class BlockEmitter
         PickupCapacity = pickupCapacity;
     }
 
+    /// <summary>Gets the stable identifier of the emitter.: EmitterId.</summary>
     public string EmitterId { get; }
+    /// <summary>Gets the number of blocks currently available.: Inventory.</summary>
     public int Inventory { get; private set; }
+    /// <summary>Gets the maximum configured pickup capacity.: PickupCapacity.</summary>
     public int PickupCapacity { get; }
 
+    /// <summary>Attempts to remove one available block from inventory.: TryTakeBlock.</summary>
     public bool TryTakeBlock()
     {
         if (Inventory == 0) return false;
@@ -298,6 +347,7 @@ public sealed class BlockEmitter
         return true;
     }
 
+    /// <summary>Adds blocks to inventory after validating the requested amount.: Restock.</summary>
     public void Restock(int count)
     {
         if (count <= 0) throw new ArgumentOutOfRangeException(nameof(count));
