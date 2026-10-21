@@ -352,7 +352,9 @@ public sealed class Slipstream
         ArgumentNullException.ThrowIfNull(lookahead);
         ArgumentNullException.ThrowIfNull(destinationLane);
         if (lookahead.Count != LookaheadCells) throw new ArgumentException($"Exactly {LookaheadCells} lookahead cells are required.", nameof(lookahead));
-        if (_reservedBy is not null && _reservedBy != agentId) return false;
+        // A live reservation is immutable until its owner releases it; even the same agent
+        // cannot silently replace its destination/lookahead with a different route.
+        if (_reservedBy is not null) return false;
         if (!destinationLane.Contains(destination) || destinationLane.IsOccupied(destination)) return false;
 
         // Lookahead represents distinct future cells beyond the transition destination.
