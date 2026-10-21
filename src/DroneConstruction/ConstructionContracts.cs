@@ -382,10 +382,25 @@ public sealed class Slipstream
     {
         ArgumentNullException.ThrowIfNull(sourceGrid);
         ArgumentNullException.ThrowIfNull(destinationLane);
+
+        // Admission is a one-shot operation. In particular, a repeated call by the same
+        // agent must not reuse and then accidentally release its already-active reservation.
+        if (_reservedBy is not null) return false;
         if (!TryReserve(agentId, destination, lookahead, destinationLane)) return false;
-        if (sourceGrid.TryTransferTo(sourceCell, destination, agentId, destinationLane)) return true;
-        Release(agentId);
-        return false;
+
+        try
+        {
+            if (sourceGrid.TryTransferTo(sourceCell, destination, agentId, destinationLane)) return true;
+            Release(agentId);
+            return false;
+        }
+        catch
+        {
+            // Transfer validates source coordinates and can throw before moving occupancy.
+            // Do not strand the transition reservation when validation fails.
+            Release(agentId);
+            throw;
+        }
     }
 
     /// <summary>Releases a cell only when the supplied agent owns it.: Release.</summary>
