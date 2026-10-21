@@ -367,6 +367,27 @@ public sealed class Slipstream
         return true;
     }
 
+    /// <summary>
+    /// Reserves this transition and transfers an agent from a source grid into the destination lane.
+    /// A successful admission retains the reservation until the caller releases it after the agent exits
+    /// the transition. A failed transfer releases the reservation and leaves source occupancy unchanged.
+    /// </summary>
+    public bool TryAdmit(
+        ulong agentId,
+        TrafficCellGrid sourceGrid,
+        GridCell sourceCell,
+        GridCell destination,
+        IReadOnlyList<GridCell> lookahead,
+        TrafficCellGrid destinationLane)
+    {
+        ArgumentNullException.ThrowIfNull(sourceGrid);
+        ArgumentNullException.ThrowIfNull(destinationLane);
+        if (!TryReserve(agentId, destination, lookahead, destinationLane)) return false;
+        if (sourceGrid.TryTransferTo(sourceCell, destination, agentId, destinationLane)) return true;
+        Release(agentId);
+        return false;
+    }
+
     /// <summary>Releases a cell only when the supplied agent owns it.: Release.</summary>
     public bool Release(ulong agentId)
     {
