@@ -332,6 +332,14 @@ public sealed class Slipstream
         if (lookahead.Count != LookaheadCells) throw new ArgumentException($"Exactly {LookaheadCells} lookahead cells are required.", nameof(lookahead));
         if (_reservedBy is not null && _reservedBy != agentId) return false;
         if (!destinationLane.Contains(destination) || destinationLane.IsOccupied(destination)) return false;
+
+        // Lookahead represents distinct future cells beyond the transition destination.
+        // Reject malformed routes rather than letting duplicates inflate the apparent clearance.
+        var seen = new HashSet<GridCell>();
+        foreach (var cell in lookahead)
+        {
+            if (cell == destination || !seen.Add(cell)) return false;
+        }
         if (!destinationLane.IsClear(lookahead)) return false;
         _reservedBy = agentId;
         return true;
