@@ -9,7 +9,8 @@ public sealed record ConstructionAgentSnapshot(
     GridCell Position,
     ConstructionAgentState State,
     bool IsCarryingBlock,
-    ulong? AssignedTaskId);
+    ulong? AssignedTaskId,
+    QualifiedGridLocation Location);
 
 /// <summary>Immutable renderer-neutral view of one emitter at a committed simulation tick.</summary>
 public sealed record ConstructionEmitterSnapshot(string EmitterId, GridCell Position, int Inventory);
@@ -185,7 +186,8 @@ public sealed class ConstructionSimulation
             _buildGrid.PlacedBlockCount,
             _buildGrid.IsComplete,
             Array.AsReadOnly(_agents.Select(agent => new ConstructionAgentSnapshot(agent.AgentId, agent.Position, agent.State,
-                agent.IsCarryingBlock, agent.AssignedTaskId)).ToArray()),
+                agent.IsCarryingBlock, agent.AssignedTaskId,
+                new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, _spaceId, agent.Position))).ToArray()),
             Array.AsReadOnly(_emitters.Select(item => new ConstructionEmitterSnapshot(item.Emitter.EmitterId, item.Position, item.Emitter.Inventory)).ToArray()),
             Array.AsReadOnly(placed));
     }
