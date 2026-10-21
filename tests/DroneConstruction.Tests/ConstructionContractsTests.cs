@@ -82,6 +82,25 @@ public sealed class ConstructionContractsTests
     }
 
     [Fact]
+    public void Slipstream_RejectsDuplicateLookaheadCellsAndDestinationOverlap()
+    {
+        var lane = new TrafficCellGrid(10, 2);
+        var slipstream = new Slipstream("transition-a", transitionCellCount: 2, lookaheadCells: 5);
+        GridCell[] duplicateLookahead =
+        [
+            new(2, 0), new(3, 0), new(3, 0), new(5, 0), new(6, 0)
+        ];
+        GridCell[] destinationOverlap =
+        [
+            new(2, 0), new(3, 0), new(8, 0), new(5, 0), new(6, 0)
+        ];
+
+        Assert.False(slipstream.TryReserve(7, new GridCell(8, 0), duplicateLookahead, lane));
+        Assert.False(slipstream.TryReserve(7, new GridCell(8, 0), destinationOverlap, lane));
+        Assert.Null(slipstream.ReservedBy);
+    }
+
+    [Fact]
     public void BuildCell_AndEmitterConserveBlockCounts()
     {
         var target = new BuildCell(requiredBlocks: 2);
