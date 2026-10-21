@@ -8,6 +8,7 @@ namespace TheSingularityWorkshop.Experiences.DroneConstruction.MicroBundles;
 /// </summary>
 public abstract class DroneConstructionMicroBundleBase : IMicroBundle
 {
+    /// <summary>Initializes the base provider identity and stable identifier.</summary>
     protected DroneConstructionMicroBundleBase(ulong bundleId, string providerId)
     {
         if (bundleId == 0) throw new ArgumentOutOfRangeException(nameof(bundleId));
@@ -17,7 +18,7 @@ public abstract class DroneConstructionMicroBundleBase : IMicroBundle
 
     /// <summary>Gets the immutable descriptor for this MicroBundle.</summary>
     public MicroBundleDescriptor Descriptor { get; }
-    /// <summary>Gets the immutable descriptor for this MicroBundle.</summary>
+    /// <summary>Gets this MicroBundle's stable identifier.</summary>
     public ulong Id => Descriptor.Id;
     /// <summary>Gets the declared MicroBundle dependencies.</summary>
     public IReadOnlyList<MicroBundleDependencyRequest> Dependencies => [];
