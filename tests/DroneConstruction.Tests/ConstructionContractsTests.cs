@@ -115,6 +115,46 @@ public sealed class ConstructionContractsTests
     }
 
     [Fact]
+    public void SlipstreamAdmission_TransfersOccupancyAndRetainsReservationUntilReleased()
+    {
+        var source = new TrafficCellGrid(2, 1);
+        var lane = new TrafficCellGrid(10, 1);
+        var slipstream = new Slipstream("transition-a", transitionCellCount: 2, lookaheadCells: 5);
+        var origin = new GridCell(0, 0);
+        var destination = new GridCell(8, 0);
+        GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+        Assert.True(source.TryOccupy(origin, 7));
+
+        Assert.True(slipstream.TryAdmit(7, source, origin, destination, lookahead, lane));
+
+        Assert.False(source.IsOccupied(origin));
+        Assert.True(lane.TryGetOccupant(destination, out var occupant));
+        Assert.Equal(7UL, occupant);
+        Assert.Equal(7UL, slipstream.ReservedBy);
+        Assert.True(slipstream.Release(7));
+        Assert.Null(slipstream.ReservedBy);
+    }
+
+    [Fact]
+    public void SlipstreamAdmission_RollsBackReservationWhenSourceTransferFails()
+    {
+        var source = new TrafficCellGrid(2, 1);
+        var lane = new TrafficCellGrid(10, 1);
+        var slipstream = new Slipstream("transition-a", transitionCellCount: 2, lookaheadCells: 5);
+        var origin = new GridCell(0, 0);
+        var destination = new GridCell(8, 0);
+        GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+        Assert.True(source.TryOccupy(origin, 99));
+
+        Assert.False(slipstream.TryAdmit(7, source, origin, destination, lookahead, lane));
+
+        Assert.True(source.TryGetOccupant(origin, out var sourceOwner));
+        Assert.Equal(99UL, sourceOwner);
+        Assert.False(lane.IsOccupied(destination));
+        Assert.Null(slipstream.ReservedBy);
+    }
+
+    [Fact]
     public void BuildCell_AndEmitterConserveBlockCounts()
     {
         var target = new BuildCell(requiredBlocks: 2);
