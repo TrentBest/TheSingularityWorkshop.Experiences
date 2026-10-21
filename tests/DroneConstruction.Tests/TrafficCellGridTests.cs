@@ -93,6 +93,35 @@ public sealed class TrafficCellGridTests
     }
 
     [Fact]
+    public void AgentCellLookupTracksMovesAndCrossGridTransfers()
+    {
+        var source = new TrafficCellGrid(3, 1);
+        var destination = new TrafficCellGrid(3, 1);
+        var origin = new GridCell(0, 0);
+        var moved = new GridCell(1, 0);
+        var transferred = new GridCell(2, 0);
+
+        Assert.False(source.TryGetAgentCell(7, out _));
+        Assert.Throws<ArgumentOutOfRangeException>(() => source.TryGetAgentCell(0, out _));
+
+        Assert.True(source.TryOccupy(origin, 7));
+        Assert.True(source.TryGetAgentCell(7, out var indexedOrigin));
+        Assert.Equal(origin, indexedOrigin);
+
+        Assert.True(source.TryMove(origin, moved, 7));
+        Assert.True(source.TryGetAgentCell(7, out var indexedMove));
+        Assert.Equal(moved, indexedMove);
+
+        Assert.True(source.TryTransferTo(moved, transferred, 7, destination));
+        Assert.False(source.TryGetAgentCell(7, out _));
+        Assert.True(destination.TryGetAgentCell(7, out var indexedDestination));
+        Assert.Equal(transferred, indexedDestination);
+
+        Assert.True(destination.Release(transferred, 7));
+        Assert.False(destination.TryGetAgentCell(7, out _));
+    }
+
+    [Fact]
     public void BlockedTransferPreservesSourceOccupancy()
     {
         var source = new TrafficCellGrid(2, 1);
