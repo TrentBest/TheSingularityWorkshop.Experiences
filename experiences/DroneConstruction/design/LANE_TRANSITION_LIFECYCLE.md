@@ -40,7 +40,7 @@ Coordinates are local to their named space. Equal `GridCell` values in different
 
 ## Integration sequence
 
-1. **Completed on development:** add `ConstructionSpaceKind` and `QualifiedGridLocation`, with tests proving that equal coordinates in different spaces are distinct and invalid space identities/kinds are rejected. This type is not yet wired into agent state or snapshots.
+1. **Completed on development:** add `ConstructionSpaceKind` and `QualifiedGridLocation`; expose `ConstructionSimulation.SpaceId`, `GetAgentLocation(agentId)`, and qualified `ConstructionAgentSnapshot.Location`. Tests cover cross-space equality, validation, movement updates, and agreement between queries and snapshots. The simulation currently reports only `SimulationGrid` locations because lane transitions are not yet integrated.
 2. Add a transition lifecycle owner that coordinates source grid, slipstream reservation, transition occupancy, and exit transfer; keep the operation synchronous unless a later design explicitly adds concurrency.
 3. Test entry success/rejection, traversal blockage, exit success/rejection, rollback, and reservation lifetime against multiple grids.
 4. Integrate the lifecycle into `ConstructionSimulation` only after the agent state machine can represent lane-resident states without misusing `GridCell`.
