@@ -174,6 +174,10 @@ public sealed class ConstructionContractsTests
 
         Assert.True(slipstream.Release(7));
         Assert.Null(slipstream.ReservedBy);
+
+        // Releasing transition capacity must not erase the admitted agent's lane occupancy.
+        Assert.True(lane.TryGetOccupant(destination, out occupant));
+        Assert.Equal(7UL, occupant);
     }
 
     [Fact]
