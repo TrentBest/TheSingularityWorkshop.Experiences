@@ -58,6 +58,21 @@ public sealed class ResourceEmitterMicroBundle : DroneConstructionMicroBundleBas
     public ResourceEmitterMicroBundle() : base(BundleId, ProviderId) { }
 
     public BlockEmitter Create(string emitterId, int initialInventory, int pickupCapacity = 1) => new(emitterId, initialInventory, pickupCapacity);
+
+    /// <summary>Creates the Experience's ten independently inventoried block emitters.</summary>
+    public IReadOnlyList<BlockEmitter> CreateTen(Func<int, int> initialInventoryByIndex, int pickupCapacity = 1)
+    {
+        ArgumentNullException.ThrowIfNull(initialInventoryByIndex);
+        if (pickupCapacity <= 0) throw new ArgumentOutOfRangeException(nameof(pickupCapacity));
+        var emitters = new BlockEmitter[10];
+        for (var index = 0; index < emitters.Length; index++)
+        {
+            var inventory = initialInventoryByIndex(index);
+            if (inventory < 0) throw new ArgumentOutOfRangeException(nameof(initialInventoryByIndex), "Emitter inventory cannot be negative.");
+            emitters[index] = new BlockEmitter($"emitter-{index + 1:D2}", inventory, pickupCapacity);
+        }
+        return emitters;
+    }
 }
 
 /// <summary>MicroBundle provider for one-way 2D cellular skylanes.</summary>
