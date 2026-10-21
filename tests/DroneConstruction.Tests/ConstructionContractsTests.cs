@@ -67,6 +67,24 @@ public sealed class ConstructionContractsTests
     }
 
     [Fact]
+    public void Slipstream_DoesNotAllowOwnerToReplaceActiveReservation()
+    {
+        var lane = new TrafficCellGrid(12, 1);
+        var slipstream = new Slipstream("transition-a", transitionCellCount: 2, lookaheadCells: 5);
+        GridCell[] firstLookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+        GridCell[] secondLookahead = [new(3, 0), new(4, 0), new(5, 0), new(6, 0), new(7, 0)];
+        var firstDestination = new GridCell(8, 0);
+        var secondDestination = new GridCell(9, 0);
+
+        Assert.True(slipstream.TryReserve(7, firstDestination, firstLookahead, lane));
+
+        Assert.False(slipstream.TryReserve(7, secondDestination, secondLookahead, lane));
+        Assert.Equal(7UL, slipstream.ReservedBy);
+        Assert.True(slipstream.Release(7));
+        Assert.True(slipstream.TryReserve(8, secondDestination, secondLookahead, lane));
+    }
+
+    [Fact]
     public void Slipstream_RejectsOccupiedLookaheadAndWrongLookaheadLength()
     {
         var lane = new TrafficCellGrid(10, 2);
