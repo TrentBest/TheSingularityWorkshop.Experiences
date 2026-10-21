@@ -180,14 +180,7 @@ public sealed class ConstructionSimulation
             ? new GridCell(current.X + Math.Sign(target.X - current.X), current.Y)
             : new GridCell(current.X, current.Y + Math.Sign(target.Y - current.Y));
         if (!_traffic.Contains(next)) return;
-        if (!_traffic.Release(current, agent.AgentId))
-            throw new InvalidOperationException("Traffic occupancy ownership was lost.");
-        if (!_traffic.TryOccupy(next, agent.AgentId))
-        {
-            if (!_traffic.TryOccupy(current, agent.AgentId))
-                throw new InvalidOperationException("Failed to restore traffic occupancy after a blocked move.");
-            return;
-        }
+        if (!_traffic.TryMove(current, next, agent.AgentId)) return;
         agent.SetPosition(next);
     }
 }

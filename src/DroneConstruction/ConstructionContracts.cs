@@ -174,6 +174,26 @@ public sealed class TrafficCellGrid
         return true;
     }
 
+    /// <summary>Atomically moves an agent between cells while preserving exclusive occupancy on failure.</summary>
+    public bool TryMove(GridCell current, GridCell destination, ulong agentId)
+    {
+        EnsureInBounds(current);
+        EnsureInBounds(destination);
+        if (agentId == 0) throw new ArgumentOutOfRangeException(nameof(agentId), "Agent ID zero is reserved.");
+        if (current == destination)
+            return _occupants.TryGetValue(current, out var sameCellOwner) && sameCellOwner == agentId
+                && _agentCells.TryGetValue(agentId, out var recordedCell) && recordedCell == current;
+
+        if (!_occupants.TryGetValue(current, out var owner) || owner != agentId) return false;
+        if (!_agentCells.TryGetValue(agentId, out var indexedCell) || indexedCell != current) return false;
+        if (_occupants.ContainsKey(destination)) return false;
+
+        _occupants.Remove(current);
+        _occupants.Add(destination, agentId);
+        _agentCells[agentId] = destination;
+        return true;
+    }
+
     /// <summary>Gets whether every supplied cell is currently unoccupied.: IsClear.</summary>
     public bool IsClear(IEnumerable<GridCell> cells)
     {
