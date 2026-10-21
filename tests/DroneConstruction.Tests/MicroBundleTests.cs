@@ -42,6 +42,19 @@ public sealed class MicroBundleTests
     }
 
     [Fact]
+    public void ResourceEmitterBundleCreatesTenIndependentEmitters()
+    {
+        var emitters = new ResourceEmitterMicroBundle().CreateTen(index => 100 + index);
+
+        Assert.Equal(10, emitters.Count);
+        Assert.Equal(10, emitters.Select(emitter => emitter.EmitterId).Distinct().Count());
+        Assert.Equal("emitter-01", emitters[0].EmitterId);
+        Assert.Equal("emitter-10", emitters[9].EmitterId);
+        Assert.Equal(100, emitters[0].Inventory);
+        Assert.Equal(109, emitters[9].Inventory);
+    }
+
+    [Fact]
     public void SkylaneAndHoverLaneAreIndependentCellularGrids()
     {
         var sky = new SkylaneMicroBundle().Create("sky-east", 8, 2, LaneDirection.East, elevation: 3);
