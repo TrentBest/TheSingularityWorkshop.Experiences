@@ -61,21 +61,25 @@ public sealed class LaneTransitionAdmissionPolicyTests
     }
 
     [Fact]
-    public void Step_DoesNotAdvanceAgentWhileExplicitIntentIsPending()
+    public void Step_RetriesBlockedTransitionAdmissionAndConsumesIntentOnSuccess()
     {
-        var (simulation, agent, intent, _) = CreateReadyScenario(registerLifecycle: true);
+        var (simulation, agent, intent, destinationGrid) = CreateReadyScenario(registerLifecycle: true);
         var policy = new LaneTransitionAdmissionPolicy(simulation);
         Assert.True(policy.TrySubmit(agent.AgentId, intent));
 
-        var waitingSnapshot = simulation.Step();
-        Assert.Equal(ConstructionAgentState.AwaitingTransition,
-            waitingSnapshot.Agents.Single(item => item.AgentId == agent.AgentId).State);
+        // A blocked lookahead must leave the agent at its source and retain the intent.
+        Assert.True(destinationGrid!.TryOccupy(new GridCell(4, 0), 77));
+        simulation.Step();
         Assert.Equal(intent.Source, simulation.GetAgentLocation(agent.AgentId));
+        Assert.Equal(1, policy.PendingCount);
 
-        Assert.True(policy.TryCancel(agent.AgentId));
-        var resumedSnapshot = simulation.Step();
-        Assert.Equal(ConstructionAgentState.Traveling,
-            resumedSnapshot.Agents.Single(item => item.AgentId == agent.AgentId).State);
+        // The next tick retries deterministically once the protected cell is clear.
+        Assert.True(destinationGrid.Release(new GridCell(4, 0), 77));
+        var admittedSnapshot = simulation.Step();
+        Assert.Equal(intent.TransitionEntry, simulation.GetAgentLocation(agent.AgentId));
+        Assert.Equal(0, policy.PendingCount);
+        Assert.Equal(ConstructionAgentState.AwaitingTransition,
+            admittedSnapshot.Agents.Single(item => item.AgentId == agent.AgentId).State);
     }
 
     private static (ConstructionSimulation Simulation, ConstructionAgent Agent, LaneTransitionIntent Intent, TrafficCellGrid? DestinationGrid)
