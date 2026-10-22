@@ -299,7 +299,11 @@ public sealed class ConstructionContractsTests
         Assert.Equal(7UL, lifecycle.AgentId);
 
         Assert.False(lifecycle.TryAdvance(7, new GridCell(2, 0)));
+        Assert.True(transition.TryOccupy(new GridCell(2, 0), 99));
         Assert.True(lifecycle.TryAdvance(7, new GridCell(1, 0)));
+        Assert.False(lifecycle.TryAdvance(7, new GridCell(2, 0)));
+        Assert.Equal(7UL, lifecycle.AgentId);
+        Assert.True(transition.Release(new GridCell(2, 0), 99));
         Assert.True(lifecycle.TryAdvance(7, new GridCell(2, 0)));
         Assert.True(lifecycle.TryAdvance(7, new GridCell(3, 0)));
 
