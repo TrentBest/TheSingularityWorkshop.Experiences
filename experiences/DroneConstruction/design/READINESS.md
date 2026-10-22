@@ -6,7 +6,7 @@
 
 ## Readiness
 
-**Current engineering readiness estimate: 60%.** This is a scoped audit estimate for the stated 100,000-agent showcase, not a test pass rate or release approval. The discrete construction slice, standalone SVG output, and a source-graph GUI.SVG integration test are verified. Autonomous lane routing, a maintained live observation/telemetry view, and measured scale remain outstanding.
+**Current engineering readiness estimate: 60%.** This is a scoped audit estimate for the stated 100,000-agent showcase, not a test pass rate or release approval. The discrete construction slice, standalone SVG output, source-graph GUI.SVG integration test, and immutable snapshot contract tests are verified. Autonomous lane routing, a maintained live observation/telemetry view, and measured scale remain outstanding.
 
 | Workstream | Status | Evidence / exit condition |
 |---|---|---|
@@ -21,6 +21,7 @@
 | Persistent lookahead/conflict model | **Open** | Configurable five-cell initial policy and tests for moving occupancy/reservation lifetime |
 | Deterministic replay digest | **Open** | Same inputs/revision reproduce digest; mismatch diagnostics |
 | Snapshot-to-standalone-SVG rendering | Implemented; focused tests and CI artifact verified | [Renderer source](../../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.cs), [tests](../../../tests/DroneConstruction.Tests/ConstructionSnapshotSvgRendererTests.cs), and [contract](../../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md); renders committed tick/progress/agents/emitters and respects qualified grid identity |
+| Snapshot stability and read-only collections | **Implemented and CI-verified** | [Snapshot contract tests](../../../tests/DroneConstruction.Tests/ConstructionSimulationSnapshotContractTests.cs) prove captured observations remain unchanged after later ticks and agent/emitter/cell collections reject mutation through mutable interfaces |
 | Snapshot-to-GUI.SVG integration test | **Implemented and CI-verified; ongoing live observation remains open** | [Integration test](../../../tests/DroneConstruction.Tests/ConstructionSnapshotGuiSvgIntegrationTests.cs) runs in the optional repository-source graph and verifies rendered initial/completed snapshot state. It does not establish a continuously updated application view or telemetry stream. |
 | 1k / 10k / 25k / 50k / 100k runs | **Open** | Reproducible raw results and correctness gates at every stage |
 | Benchmark and observer-overhead artifacts | **Open** | Run metadata, raw output, summary |
@@ -28,11 +29,13 @@
 
 ## Latest verified CI checkpoints
 
+[Snapshot contract test run 39854040177](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39854040177) succeeded on commit [d31b61d6](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/commit/d31b61d69e44433baa1490be6cc25f0d10f23d85). The DroneConstruction tests and the optional source-integration test job both passed. The new tests verify that an observed tick-0 snapshot retains its original agent, emitter, cell counts, completion state, and tick after subsequent simulation steps; collection views report read-only and throw on mutation attempts.
+
 [GUI.SVG source-graph integration run 39853079623](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39853079623) succeeded on commit [db795fec](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/commit/db795fecc043e40496665c898a3a2909064569f5). All 25 applicable workflow jobs passed; one job was intentionally skipped. The `test-drone-construction` and `source-integration-tests` jobs both passed. The optional source-graph test renders initial and completed committed simulation snapshots through `GuiBuilder` / `SvgGuiRenderer` and checks tick/progress labels, agent identity, placed-block identity, and stale-tick exclusion. GUI.SVG remains an optional test-side boundary; the core simulation does not take a GUI dependency.
 
 [Standalone SVG artifact run 39851568716](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39851568716) also succeeded on [327c5b48](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/commit/327c5b48befa310d8b938b3704347d0315fdb814). The DroneConstruction test job passed, including the `Upload renderer-produced snapshot SVG` step. Artifact: [`drone-construction-snapshot-svg`](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39851568716) (817 bytes; artifact ID 12457363888; SHA-256 `6a394ea68cc75a83ff77bfee3002624fbe6e0fd2bbb5f7077904198d3d8c34a8`). The absolute workspace path resolved the prior upload failure.
 
-These checkpoints verify standalone SVG output and an optional snapshot-to-GUI.SVG source-graph test. They do not verify a continuously updated live view, a 100k population, or the proposed coordinate-only hot path.
+These checkpoints verify snapshot immutability, standalone SVG output, and an optional snapshot-to-GUI.SVG source-graph test. They do not verify a continuously updated live view, a 100k population, or the proposed coordinate-only hot path.
 
 ## Work sequence
 
