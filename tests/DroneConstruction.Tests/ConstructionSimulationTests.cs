@@ -376,6 +376,18 @@ public sealed class ConstructionSimulationTests
         Assert.Equal(new GridCell(2, 0), agent.Position);
         Assert.True(simulation.TryAdvanceSkylane(1, lane.LaneId, lane, new GridCell(7, 0)));
         Assert.Equal(new GridCell(4, 0), agent.Position);
+
+        // The public agent object can be externally mutated, but the registered lane grid
+        // remains authoritative. A stale local coordinate must not advance or rewrite occupancy.
+        agent.SetPosition(new GridCell(6, 0));
+        Assert.False(simulation.TryAdvanceSkylane(1, lane.LaneId, lane, new GridCell(7, 0)));
+        Assert.Equal(new GridCell(6, 0), agent.Position);
+        Assert.Equal(
+            new QualifiedGridLocation(ConstructionSpaceKind.Skylane, lane.LaneId, new GridCell(4, 0)),
+            simulation.GetAgentLocation(1));
+        Assert.True(lane.Cells.TryGetOccupant(new GridCell(4, 0), out var owner));
+        Assert.Equal(1UL, owner);
+        Assert.False(lane.Cells.IsOccupied(new GridCell(6, 0)));
     }
 
     [Fact]
