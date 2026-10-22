@@ -25,4 +25,4 @@ Use a snapshot captured after a committed tick. For a review artifact, record th
 
 ## Scope boundary
 
-This implementation proves that committed snapshot values can be portrayed as SVG. It does **not** prove autonomous skylane routing, a live GUI.SVG manifest, 100,000-agent rendering, or performance at scale. See [snapshot observability](../../../experiences/DroneConstruction/design/SIMULATION_OBSERVABILITY.md) and [the UML/use cases](ConstructionSnapshotSvgRendererUML.md).
+This implementation proves that committed snapshot values can be portrayed as SVG. It does **not** prove autonomous skylane routing, a live GUI.SVG manifest, 100,000-agent rendering, or performance at scale. See [snapshot observability](../../experiences/DroneConstruction/design/SIMULATION_OBSERVABILITY.md) and [the UML/use cases](ConstructionSnapshotSvgRendererUML.md).
