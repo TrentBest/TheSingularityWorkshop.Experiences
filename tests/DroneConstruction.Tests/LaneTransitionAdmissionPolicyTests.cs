@@ -12,11 +12,13 @@ public sealed class LaneTransitionAdmissionPolicyTests
         var policy = new LaneTransitionAdmissionPolicy(simulation);
 
         Assert.False(policy.TrySubmit(99, intent));
-        Assert.False(policy.TrySubmit(agent.AgentId, intent with
-        {
-            // A different qualified source is not the agent's committed location.
-            Source = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(1, 0))
-        }));
+        // A different qualified source is not the agent's committed location.
+        var mismatchedSourceIntent = new LaneTransitionIntent(
+            new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(1, 0)),
+            intent.TransitionEntry,
+            intent.Destination,
+            intent.Lookahead);
+        Assert.False(policy.TrySubmit(agent.AgentId, mismatchedSourceIntent));
 
         Assert.True(policy.TrySubmit(agent.AgentId, intent));
         Assert.False(policy.TrySubmit(agent.AgentId, intent));
