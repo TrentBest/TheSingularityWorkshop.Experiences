@@ -263,6 +263,37 @@ public sealed class ConstructionSimulationTests
 
 
     [Fact]
+    public void Simulation_RejectsCorruptedExternalSpacePositionBeforeTickMutation()
+    {
+        var agent = new ConstructionAgent(1, new GridCell(0, 0));
+        var simulation = new ConstructionSimulation(
+            width: 4,
+            height: 1,
+            requiredHeight: (_, _) => 0,
+            agents: [agent],
+            emitters: [new PositionedBlockEmitter(new GridCell(0, 0), new BlockEmitter("emitter", 0))],
+            spaceId: "yard");
+        var transitionGrid = new TrafficCellGrid(3, 1);
+        var lifecycle = new SlipstreamLifecycle(
+            new Slipstream("yard-transition", transitionCellCount: 3, lookaheadCells: 1),
+            transitionGrid);
+        Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.Slipstream, "transition", transitionGrid));
+
+        var source = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(0, 0));
+        var entry = new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "transition", new GridCell(0, 0));
+        var destination = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(3, 0));
+        Assert.True(simulation.TryEnterSlipstream(1, source, entry, lifecycle, destination, [new GridCell(1, 0)]));
+
+        SetPositionForInvariantTest(agent, new GridCell(2, 0));
+        var error = Assert.Throws<InvalidOperationException>(() => simulation.Step());
+
+        Assert.Contains("does not match committed location", error.Message, StringComparison.Ordinal);
+        Assert.Equal(0, simulation.TickCount);
+        Assert.Equal(entry, simulation.GetAgentLocation(1));
+        Assert.Equal(new GridCell(2, 0), agent.Position);
+    }
+
+    [Fact]
     public void Simulation_IntegratesSlipstreamEntryTraversalExitAndResumesMainGridMovement()
     {
         var agent = new ConstructionAgent(1, new GridCell(0, 0));
