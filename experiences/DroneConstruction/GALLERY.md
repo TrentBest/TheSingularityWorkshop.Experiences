@@ -18,6 +18,14 @@
 
 *Concept illustration of boundary validation, admitted coordinate-based travel, target arrival, and blocked-move retry. This is authored documentation—not a live simulation capture or evidence that autonomous lane execution is implemented.*
 
+## Snapshot-to-SVG proof
+
+The source now contains `ConstructionSnapshotSvgRenderer.Render(snapshot, width, height, spaceId)`, which renders a committed snapshot as standalone SVG. Its labels and cell/agent/emitter marks come from snapshot data; agents from other qualified spaces are not projected onto the selected grid.
+
+*Implementation proof: [renderer source](../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.cs) · [tests](../../tests/DroneConstruction.Tests/ConstructionSnapshotSvgRendererTests.cs) · [contract](../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md).*
+
+This is a snapshot-to-SVG proof, not a GUI.SVG integration or a checked-in live capture. The existing SVGs above remain concept/architecture assets.
+
 ## What is real today
 
 - Deterministic discrete-grid construction loop: task assignment, finite-inventory pickup, one-cell movement, placement, and immutable snapshots.
@@ -28,7 +36,7 @@
 ## What is not yet a live proof
 
 - End-to-end autonomous routing through hover lane → slipstream → skylane inside ConstructionSimulation.Step().
-- GUI.SVG manifestation driven from actual snapshots.
+- GUI.SVG manifestation driven from actual snapshots; the standalone SVG renderer is the first step, not the finished adapter.
 - A measured 100,000-agent run with repeatable throughput, memory, and correctness results.
 
 ## Reviewer entry points
