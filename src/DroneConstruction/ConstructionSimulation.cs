@@ -43,6 +43,8 @@ public sealed class ConstructionSimulation
     private readonly ConstructionSpaceCatalog _spaces = new();
     private readonly Dictionary<string, SlipstreamLifecycle> _slipstreamLifecycles = new(StringComparer.Ordinal);
     private readonly Dictionary<ulong, LaneTransitionIntent> _pendingLaneTransitionIntents = [];
+    private readonly Dictionary<string, Skylane> _skylanes = new(StringComparer.Ordinal);
+    private readonly Dictionary<ulong, (string LaneId, GridCell Target)> _skylaneRoutes = [];
     private readonly string _spaceId;
     private long _tick;
 
@@ -132,6 +134,51 @@ public sealed class ConstructionSimulation
         if (kind == ConstructionSpaceKind.SimulationGrid)
             throw new ArgumentOutOfRangeException(nameof(kind), "The simulation's primary grid identity cannot be replaced.");
         return _spaces.TryRegister(kind, spaceId, grid);
+    }
+
+    /// <summary>Registers a skylane as an authoritative traffic space for autonomous tick movement.</summary>
+    public bool TryRegisterSkylane(Skylane lane)
+    {
+        ArgumentNullException.ThrowIfNull(lane);
+        if (_skylanes.ContainsKey(lane.LaneId)
+            || !_spaces.TryRegister(ConstructionSpaceKind.Skylane, lane.LaneId, lane.Cells))
+            return false;
+        _skylanes.Add(lane.LaneId, lane);
+        return true;
+    }
+
+    /// <summary>
+    /// Assigns an on-lane agent a qualified lane-local target. The route is advanced by Step();
+    /// blocked movement keeps the same target and retries on a later tick.
+    /// </summary>
+    public bool TrySetSkylaneDestination(ulong agentId, string laneId, GridCell target)
+    {
+        if (!_agentsById.ContainsKey(agentId)
+            || string.IsNullOrWhiteSpace(laneId)
+            || !_skylanes.TryGetValue(laneId, out var lane)
+            || !lane.Cells.Contains(target)
+            || !_spaces.TryGetAgentLocation(agentId, out var location)
+            || location.SpaceKind != ConstructionSpaceKind.Skylane
+            || !StringComparer.Ordinal.Equals(location.SpaceId, laneId)
+            || location.Cell == target
+            || !lane.TryGetNextCell(location.Cell, target, out _)
+            || _skylaneRoutes.ContainsKey(agentId))
+            return false;
+
+        _skylaneRoutes.Add(agentId, (laneId, target));
+        return true;
+    }
+
+    /// <summary>Returns the assigned lane-local destination for an agent, if one exists.</summary>
+    public bool TryGetSkylaneDestination(ulong agentId, out GridCell target)
+    {
+        if (_skylaneRoutes.TryGetValue(agentId, out var route))
+        {
+            target = route.Target;
+            return true;
+        }
+        target = default;
+        return false;
     }
 
     /// <summary>Registers the single lifecycle coordinator that owns a registered slipstream space.</summary>
@@ -322,8 +369,30 @@ public sealed class ConstructionSimulation
 
         foreach (var agent in _agents)
         {
-            // Coordinates are local to their owning grid. Until lane lifecycle integration is
-            // complete, this simulation may advance only agents authoritatively occupying its grid.
+            if (!_spaces.TryGetAgentLocation(agent.AgentId, out var laneLocation)
+                || laneLocation!.SpaceKind != ConstructionSpaceKind.Skylane
+                || !_skylaneRoutes.TryGetValue(agent.AgentId, out var route))
+                continue;
+
+            if (laneLocation.Cell == route.Target)
+            {
+                _skylaneRoutes.Remove(agent.AgentId);
+                continue;
+            }
+
+            if (_skylanes.TryGetValue(route.LaneId, out var lane))
+            {
+                TryAdvanceSkylane(agent.AgentId, route.LaneId, lane, route.Target);
+                if (_spaces.TryGetAgentLocation(agent.AgentId, out var afterMove)
+                    && afterMove!.Cell == route.Target)
+                    _skylaneRoutes.Remove(agent.AgentId);
+            }
+        }
+
+        foreach (var agent in _agents)
+        {
+            // Coordinates are local to their owning grid. The primary task scheduler advances only
+            // agents occupying the simulation grid; registered skylane routes are advanced above.
             if (!_spaces.TryGetAgentLocation(agent.AgentId, out var committedLocation)
                 || committedLocation!.SpaceKind != ConstructionSpaceKind.SimulationGrid
                 || !StringComparer.Ordinal.Equals(committedLocation.SpaceId, _spaceId))
