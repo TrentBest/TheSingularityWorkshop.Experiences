@@ -309,12 +309,13 @@ public sealed class ConstructionSimulation
         // agents had already advanced, leaving a partially applied tick with an unchanged tick ID.
         foreach (var agent in _agents)
         {
-            if (!_spaces.TryGetAgentLocation(agent.AgentId, out var committedLocation)
-                || committedLocation!.SpaceKind != ConstructionSpaceKind.SimulationGrid
-                || !StringComparer.Ordinal.Equals(committedLocation.SpaceId, _spaceId))
-                continue;
+            if (!_spaces.TryGetAgentLocation(agent.AgentId, out var committedLocation))
+                throw new InvalidOperationException(
+                    $"Agent {agent.AgentId} must occupy exactly one registered traffic space before a tick can commit.");
 
-            if (agent.Position != committedLocation.Cell)
+            // Position is local to whichever registered space currently owns the agent, not
+            // only the primary grid. Validate external-space agents too before mutating any state.
+            if (agent.Position != committedLocation!.Cell)
                 throw new InvalidOperationException(
                     $"Agent {agent.AgentId} position {agent.Position} does not match committed location {committedLocation}.");
         }
