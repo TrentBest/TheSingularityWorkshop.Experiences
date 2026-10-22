@@ -1,6 +1,6 @@
 # Drone Construction — Lane Transition Lifecycle Contract
 
-**Status:** controlled slipstream entry/traversal/exit and policy-driven skylane movement are integrated on `development`; tests cover same-grid round trips, blocked-exit reservation retention, snapshot/location consistency, direction/speed enforcement, and occupied intermediate cells. This is a discrete lifecycle, not a physical flight model.
+**Status:** controlled slipstream entry/traversal/exit and policy-driven skylane movement are integrated on `development`; tests cover same-grid round trips, blocked-exit reservation retention, snapshot/location consistency, direction/speed enforcement, occupied intermediate cells, and rejection of mismatched lane identity/grid or out-of-bounds targets. The latest CI run passed these contracts. This is a discrete lifecycle, not a physical flight model.
 **Scope:** renderer-independent, deterministic, single-threaded discrete simulation.
 
 ## Why this contract comes first
@@ -48,7 +48,8 @@ Coordinates are local to their named spaces. Equal `GridCell` values in differen
 3. **Completed as a standalone component on development:** `ConstructionSpaceCatalog` resolves an agent's unique occupied grid to a `QualifiedGridLocation`, validates qualified grid resolution, rejects duplicate registration aliases, and fails closed for missing or ambiguous occupancy.
 4. **Integrated on development:** `ConstructionSimulation` supports controlled registration of external traffic grids and controlled slipstream entry, one-cell traversal, and exit. It validates that supplied qualified locations resolve to the expected grid instances and that the agent currently occupies the declared source/transition location. Successful operations synchronize `ConstructionAgent.Position`; failed operations preserve the committed location and reservation.
 5. **Covered by integration tests:** successful transition and return to the main grid, main-grid movement resuming on subsequent ticks, blocked exit retaining transition occupancy and reservation, and snapshots matching the authoritative qualified location.
-6. **Next:** add lane-policy-driven traversal (including `Skylane.Direction` and `CellsPerTick`), transition lifecycle ownership across multiple transition resources, and more adversarial/error-path tests. Add GUI.SVG observation only after the model lifecycle and test contract is stable.
+6. **Completed on development:** `ConstructionSimulation.TryAdvanceSkylane` validates the registered lane identity and grid instance, enforces `Skylane.Direction` and `CellsPerTick`, checks every traversed cell, and preserves position/occupancy on failure. Tests cover wrong lane identity, a different grid reusing the same lane ID, out-of-bounds targets, reverse travel, and occupied intermediate cells.
+7. **Next:** centralize transition lifecycle ownership across multiple transition resources and add adversarial tests for entry rollback and reservation ownership/retry edges. Add GUI.SVG observation only after the model lifecycle and test contract is stable.
 
 ## Explicit non-claims
 
