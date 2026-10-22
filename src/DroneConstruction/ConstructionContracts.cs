@@ -328,6 +328,11 @@ public sealed class HoverLane
 public sealed class Slipstream
 {
     private ulong? _reservedBy;
+    private TrafficCellGrid? _reservedDestinationLane;
+    private GridCell? _reservedDestinationCell;
+
+    internal TrafficCellGrid? ReservedDestinationLane => _reservedDestinationLane;
+    internal GridCell? ReservedDestinationCell => _reservedDestinationCell;
 
     /// <summary>Creates a bounded transition with a configured lookahead length.: Slipstream.</summary>
     public Slipstream(string slipstreamId, int transitionCellCount, int lookaheadCells = 5)
@@ -373,6 +378,8 @@ public sealed class Slipstream
         }
         if (!destinationLane.IsClear(lookahead)) return false;
         _reservedBy = agentId;
+        _reservedDestinationLane = destinationLane;
+        _reservedDestinationCell = destination;
         return true;
     }
 
@@ -423,6 +430,8 @@ public sealed class Slipstream
         if (agentId == 0) throw new ArgumentOutOfRangeException(nameof(agentId));
         if (_reservedBy != agentId) return false;
         _reservedBy = null;
+        _reservedDestinationLane = null;
+        _reservedDestinationCell = null;
         return true;
     }
 }
