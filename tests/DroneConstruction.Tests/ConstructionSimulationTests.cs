@@ -355,4 +355,41 @@ public sealed class ConstructionSimulationTests
         Assert.Equal(new GridCell(2, 0), agent.Position);
     }
 
+    [Fact]
+    public void Simulation_SkylaneTraversalRejectsMismatchedLaneIdentityGridAndTarget()
+    {
+        var agent = new ConstructionAgent(1, new GridCell(0, 0));
+        var simulation = new ConstructionSimulation(
+            width: 2,
+            height: 1,
+            requiredHeight: (_, _) => 0,
+            agents: [agent],
+            emitters: [new PositionedBlockEmitter(new GridCell(0, 0), new BlockEmitter("emitter", 0))],
+            spaceId: "yard");
+        var transitionGrid = new TrafficCellGrid(1, 1);
+        var lane = new Skylane("skylane-east", 8, 1, LaneDirection.East, elevation: 4, cellsPerTick: 2);
+        var sameIdDifferentGrid = new Skylane("skylane-east", 8, 1, LaneDirection.East, elevation: 4, cellsPerTick: 2);
+        var lifecycle = new SlipstreamLifecycle(
+            new Slipstream("yard-to-skylane", transitionCellCount: 1, lookaheadCells: 5),
+            transitionGrid);
+
+        Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.Slipstream, "transition", transitionGrid));
+        Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.Skylane, lane.LaneId, lane.Cells));
+        var source = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(0, 0));
+        var entry = new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "transition", new GridCell(0, 0));
+        var destination = new QualifiedGridLocation(ConstructionSpaceKind.Skylane, lane.LaneId, new GridCell(0, 0));
+        GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+
+        Assert.True(simulation.TryEnterSlipstream(1, source, entry, lifecycle, destination, lookahead));
+        Assert.True(simulation.TryExitSlipstream(1, "transition", lifecycle, destination));
+
+        Assert.False(simulation.TryAdvanceSkylane(1, "skylane-west", lane, new GridCell(7, 0)));
+        Assert.False(simulation.TryAdvanceSkylane(1, lane.LaneId, sameIdDifferentGrid, new GridCell(7, 0)));
+        Assert.False(simulation.TryAdvanceSkylane(1, lane.LaneId, lane, new GridCell(8, 0)));
+        Assert.Equal(destination, simulation.GetAgentLocation(1));
+        Assert.Equal(new GridCell(0, 0), agent.Position);
+        Assert.True(simulation.TryAdvanceSkylane(1, lane.LaneId, lane, new GridCell(7, 0)));
+        Assert.Equal(new GridCell(2, 0), agent.Position);
+    }
+
 }
