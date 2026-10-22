@@ -1,6 +1,6 @@
 # Drone Construction — Autonomous Lane Execution Contract
 
-**Status:** design contract for the next implementation slice. This document does not claim autonomous lane execution is implemented.
+**Status:** partial operational implementation. Registered skylane routes advance from `ConstructionSimulation.Step()`; autonomous admission and end-to-end transition itinerary execution remain incomplete.
 
 ## Goal
 
@@ -21,8 +21,10 @@ The optimization target is less repeated route discovery and policy work, not th
 - `LaneTransitionIntent` is immutable intent data containing qualified source, slipstream entry, qualified destination, and lookahead cells. It does not reserve or move anything by itself.
 - `LaneTransitionAdmissionPolicy` validates the committed source and holds an intent while admission is blocked; a successful admission consumes it.
 - `SlipstreamLifecycle` reserves the destination and lookahead, transfers the agent into the transition grid, advances one orthogonal cell per call, and transfers into the exact reserved destination. A failed exit preserves transition occupancy and the reservation.
-- `ConstructionSimulation.TryAdvanceSkylane` computes the next lane position, checks every traversed cell, then moves atomically. It is a manual movement API today.
-- `ConstructionSimulation.Step()` advances the primary simulation-grid task loop only. It does not yet execute an admitted lane/transition itinerary autonomously.
+- `ConstructionSimulation.TryAdvanceSkylane` computes the next lane position, checks every traversed cell, then moves atomically.
+- `TryRegisterSkylane` registers the lane's occupancy grid as a qualified traffic space. `TrySetSkylaneDestination` assigns a direction-valid destination to an agent already occupying that lane.
+- `ConstructionSimulation.Step()` advances registered skylane routes in stable agent-ID order. Each tick attempts one safe lane move (bounded by the lane movement policy); a blocked move leaves the agent in place and retains its destination for retry. Reaching the destination clears the route.
+- `Step()` still does not automatically admit pending transition intents, traverse slipstreams, or chain transition exit into a next lane route. Those remain explicit lifecycle operations.
 
 These primitives are useful, but they are not yet a complete autonomous itinerary.
 
@@ -141,8 +143,8 @@ If any whole-tick preflight is intended to guarantee no partial tick, it must co
 ## Implementation sequence
 
 1. Introduce the simulation-owned itinerary state and validate its relationship to the committed location catalog.
-2. Make `Step()` advance one explicit itinerary phase for external-space agents without running the primary-grid placement scheduler on them.
-3. Preserve the existing safe occupancy path and add deterministic blocked/retry outcomes.
+2. Make `Step()` advance registered skylane destinations (implemented); keep external-space agents out of the primary-grid placement scheduler.
+3. Preserve the existing safe occupancy path and add deterministic blocked/retry outcomes (implemented for registered skylane destinations).
 4. Add transition and lane lifecycle tests, including two-agent contention and cancellation.
 5. Add a repeatable small-run replay/invariant harness.
 6. Benchmark the safe baseline; only then implement a reserved-segment or slot fast path if measurements justify it.
@@ -150,4 +152,4 @@ If any whole-tick preflight is intended to guarantee no partial tick, it must co
 
 ## Exit criteria
 
-Autonomous lane execution is complete only when the lifecycle advances from a submitted intent through admission, transition, lane movement, and route completion through `Step()`, with deterministic conflict handling, occupancy/retry invariants, and tests for blocked and competing agents. The coordinate-only optimization is a separate milestone and requires measured evidence.
+Autonomous lane execution is complete only when the lifecycle advances from a submitted intent through admission, transition, lane movement, and route completion through `Step()`, with deterministic conflict handling, occupancy/retry invariants, and tests for blocked and competing agents. The current implementation closes only the registered skylane-destination slice; admission and slipstream traversal are still caller-driven. The coordinate-only optimization is a separate milestone and requires measured evidence.
