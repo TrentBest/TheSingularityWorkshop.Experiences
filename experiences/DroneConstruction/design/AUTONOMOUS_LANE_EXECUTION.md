@@ -1,6 +1,6 @@
 # Drone Construction — Autonomous Lane Execution Contract
 
-**Status:** partial operational implementation. Registered skylane routes advance from `ConstructionSimulation.Step()`; autonomous admission and end-to-end transition itinerary execution remain incomplete.
+**Status:** partial operational implementation. Registered skylane routes advance from `ConstructionSimulation.Step()`, and pending transition intents are admitted/retried there in stable agent-ID order. Automatic slipstream traversal, exit retry, and end-to-end itinerary execution remain incomplete.
 
 ## Goal
 
@@ -14,7 +14,7 @@ The optimization target is less repeated route discovery and policy work, not th
 
 ![Autonomous lane execution concept](../assets/autonomous-lane-execution-concept.svg)
 
-*Concept illustration only: the existing lane movement remains occupancy-checked, and autonomous `Step()` integration is still open.*
+*Concept illustration only: skylane movement and pending transition admission are tick-driven; slipstream traversal, exit retry, and complete itinerary execution remain open.*
 
 ## What exists today
 
@@ -24,7 +24,8 @@ The optimization target is less repeated route discovery and policy work, not th
 - `ConstructionSimulation.TryAdvanceSkylane` computes the next lane position, checks every traversed cell, then moves atomically.
 - `TryRegisterSkylane` registers the lane's occupancy grid as a qualified traffic space. `TrySetSkylaneDestination` assigns a direction-valid destination to an agent already occupying that lane.
 - `ConstructionSimulation.Step()` advances registered skylane routes in stable agent-ID order. Each tick attempts one safe lane move (bounded by the lane movement policy); a blocked move leaves the agent in place and retains its destination for retry. Reaching the destination clears the route.
-- `Step()` still does not automatically admit pending transition intents, traverse slipstreams, or chain transition exit into a next lane route. Those remain explicit lifecycle operations.
+- `ConstructionSimulation.Step()` attempts pending transition admissions in stable agent-ID order before lane movement. Successful admission removes the pending intent only after the occupancy transfer commits; failed admission retains the intent and leaves the source occupancy unchanged for a later-tick retry.
+- `Step()` does not yet advance agents through slipstream cells, automatically retry blocked exits, or chain a successful exit into a next lane route. Those lifecycle stages remain explicit operations.
 
 These primitives are useful, but they are not yet a complete autonomous itinerary.
 
@@ -143,7 +144,7 @@ If any whole-tick preflight is intended to guarantee no partial tick, it must co
 ## Implementation sequence
 
 1. Introduce the simulation-owned itinerary state and validate its relationship to the committed location catalog.
-2. Make `Step()` advance registered skylane destinations (implemented); keep external-space agents out of the primary-grid placement scheduler.
+2. Make `Step()` advance registered skylane destinations and retry pending transition admission (implemented); keep external-space agents out of the primary-grid placement scheduler.
 3. Preserve the existing safe occupancy path and add deterministic blocked/retry outcomes (implemented for registered skylane destinations).
 4. Add transition and lane lifecycle tests, including two-agent contention and cancellation.
 5. Add a repeatable small-run replay/invariant harness.
@@ -152,4 +153,4 @@ If any whole-tick preflight is intended to guarantee no partial tick, it must co
 
 ## Exit criteria
 
-Autonomous lane execution is complete only when the lifecycle advances from a submitted intent through admission, transition, lane movement, and route completion through `Step()`, with deterministic conflict handling, occupancy/retry invariants, and tests for blocked and competing agents. The current implementation closes only the registered skylane-destination slice; admission and slipstream traversal are still caller-driven. The coordinate-only optimization is a separate milestone and requires measured evidence.
+Autonomous lane execution is complete only when the lifecycle advances from a submitted intent through admission, transition, lane movement, and route completion through `Step()`, with deterministic conflict handling, occupancy/retry invariants, and tests for blocked and competing agents. The current implementation closes registered skylane-destination movement and tick-driven pending-intent admission/retry. Slipstream traversal, exit retry, and full itinerary completion remain caller-driven. The coordinate-only optimization is a separate milestone and requires measured evidence.
