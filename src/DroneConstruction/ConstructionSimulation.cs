@@ -368,6 +368,18 @@ public sealed class ConstructionSimulation
                     $"Agent {agent.AgentId} position {agent.Position} does not match committed location {committedLocation}.");
         }
 
+        // Admit pending transitions in stable agent-ID order. Failed admission leaves the
+        // intent pending and the source occupancy unchanged, so the next tick retries safely.
+        foreach (var agent in _agents)
+        {
+            if (!_pendingLaneTransitionIntents.TryGetValue(agent.AgentId, out var intent))
+                continue;
+
+            if (TryEnterSlipstream(agent.AgentId, intent.Source, intent.TransitionEntry,
+                    intent.Destination, intent.Lookahead))
+                _pendingLaneTransitionIntents.Remove(agent.AgentId);
+        }
+
         foreach (var agent in _agents)
         {
             if (!_spaces.TryGetAgentLocation(agent.AgentId, out var laneLocation)
