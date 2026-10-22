@@ -60,7 +60,7 @@ flowchart TD
   COS --> WA[WebApp / WebPage manifestation]
 ```
 
-An Experience remains host-independent, while each domain capability belongs in its proper repository. StoryBuilder owns story semantics and Story Forge (including temporal queries, chronology, provenance, and publication coverage); this repository owns reusable Experience definitions, MicroBundle lifecycle/CRUD, manifests, and publishable artifacts. AnyApp is a host that can run a selected Experience. The source-mode StoryBuilder launch in AnyApp is an early authoring integration proof, not yet proof that the complete package-to-manifest-to-FSM_COS path is finished. Story Forge currently exists under `src/StoryForge` here only as legacy placement; its implementation and tests are being relocated to StoryBuilder.
+An Experience remains host-independent, while each domain capability belongs in its proper repository. StoryBuilder owns story semantics and Story Forge (including temporal queries, chronology, provenance, and publication coverage); this repository owns reusable Experience definitions, MicroBundle lifecycle/CRUD, manifests, and publishable artifacts. AnyApp is a host that can run a selected Experience. The source-mode StoryBuilder launch in AnyApp is an early authoring integration proof, not yet proof that the complete package-to-manifest-to-FSM_COS path is finished. The former `src/StoryForge` implementation and tests have been removed from this repository; the directory contains only a migration pointer.
 
 Do not make the Experiences repository depend on StoryBuilder, and do not move the general composition kernel into either project. Connect them through stable domain/package contracts and the existing MicroBundle manifest conventions.
 
