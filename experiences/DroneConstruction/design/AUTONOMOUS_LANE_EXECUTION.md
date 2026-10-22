@@ -12,6 +12,10 @@ Make lane travel progress from the authoritative `ConstructionSimulation.Step()`
 
 The optimization target is less repeated route discovery and policy work, not the removal of traffic correctness.
 
+![Autonomous lane execution concept](../assets/autonomous-lane-execution-concept.svg)
+
+*Concept illustration only: the existing lane movement remains occupancy-checked, and autonomous `Step()` integration is still open.*
+
 ## What exists today
 
 - `LaneTransitionIntent` is immutable intent data containing qualified source, slipstream entry, qualified destination, and lookahead cells. It does not reserve or move anything by itself.
