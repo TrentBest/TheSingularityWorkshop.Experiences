@@ -354,7 +354,7 @@ public sealed class ConstructionContractsTests
 
         Assert.True(source.TryGetAgentCell(7, out var sourceCell));
         Assert.Equal(origin, sourceCell);
-        Assert.Equal(99UL, slipstream.ReservedBy is null ? 99UL : 0UL);
+        Assert.Null(slipstream.ReservedBy);
         Assert.Null(lifecycle.AgentId);
     }
 
