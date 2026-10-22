@@ -44,6 +44,26 @@ This repository contains preforge Experience definitions, independent publishabl
 
 It is deliberately separate from WebApp/WebPage, AnyApp, FSM_COS, MicroBundleRepository, GUI, and FSM_API.
 
+## StoryBuilder authors; Experiences define; AnyApp hosts
+
+[StoryBuilder](https://github.com/TrentBest/StoryBuilder) is the authoring workbench for constructing an Experience's story: characters, world claims, scenes, timeline branches, event placement, observer knowledge, and manuscript portrayals. It coordinates those authoring records and compiles a validated composition package; it does not replace the Experience domain or the host runtime.
+
+The ownership path is:
+
+```mermaid
+flowchart TD
+  SB[StoryBuilder authoring and plot composition] --> PK[Validated composition package]
+  PK --> EX[Experience identity and MicroBundle artifacts]
+  EX --> MF[Manifest and resolved configuration]
+  MF --> COS[FSM_COS composition at host boundary]
+  COS --> AA[AnyApp native manifestation]
+  COS --> WA[WebApp / WebPage manifestation]
+```
+
+The Experience remains host-independent and owns its domain semantics. StoryBuilder helps author and connect the story-bearing records; the Experiences repository holds reusable Experience definitions and publishable artifacts; AnyApp is a host that can run a selected Experience. The source-mode StoryBuilder launch in AnyApp is an early authoring integration proof, not yet proof that the complete package-to-manifest-to-FSM_COS path is finished.
+
+Do not make the Experiences repository depend on StoryBuilder, and do not move the general composition kernel into either project. Connect them through stable domain/package contracts and the existing MicroBundle manifest conventions.
+
 ## The central idea
 
 ![One Experience, multiple manifestations](docs/assets/experience-manifestations.svg)
