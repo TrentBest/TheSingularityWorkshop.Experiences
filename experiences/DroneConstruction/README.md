@@ -25,6 +25,12 @@ The original Unity implementation was lost with its former machine. This folder 
 5. **Agents → observable state.** Each simulated agent has a stable identity, current task, location, movement mode, and lifecycle state.
 6. **Renderer + living diagrams.** Renderer presents the world; GUI.SVG documents and visualizes contracts, state transitions, and measured telemetry from actual snapshots.
 
+## Lane execution concept
+
+![Autonomous lane execution concept](assets/autonomous-lane-execution-concept.svg)
+
+*This SVG illustrates the intended hot path: validate and admit at a boundary, move along a known axis toward a precomputed coordinate, and preserve occupancy when blocked. It is a concept image, not a live GUI.SVG rendering or a claim that autonomous lane execution is already integrated.*
+
 ## Phone-friendly review
 
 - **[Gallery — what is real vs. concept](GALLERY.md)**
