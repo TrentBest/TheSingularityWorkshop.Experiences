@@ -122,6 +122,45 @@ public sealed class ConstructionSimulation
     /// Enters a registered slipstream from the agent's exact committed source location.
     /// Position is synchronized only after occupancy transfer succeeds.
     /// </summary>
+    /// <summary>Registers the single lifecycle coordinator that owns a registered slipstream space.</summary>
+    public bool TryRegisterSlipstreamLifecycle(string transitionSpaceId, SlipstreamLifecycle lifecycle)
+    {
+        ArgumentNullException.ThrowIfNull(lifecycle);
+        if (string.IsNullOrWhiteSpace(transitionSpaceId)
+            || !_spaces.TryResolve(new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, transitionSpaceId, new GridCell(0, 0)), out var registeredGrid)
+            || !ReferenceEquals(registeredGrid, lifecycle.TransitionCells)
+            || _slipstreamLifecycles.ContainsKey(transitionSpaceId))
+            return false;
+
+        _slipstreamLifecycles.Add(transitionSpaceId, lifecycle);
+        return true;
+    }
+
+    /// <summary>Enters using the coordinator registered for the transition space.</summary>
+    public bool TryEnterSlipstream(
+        ulong agentId,
+        QualifiedGridLocation source,
+        QualifiedGridLocation transitionEntry,
+        QualifiedGridLocation destination,
+        IReadOnlyList<GridCell> lookahead)
+    {
+        ArgumentNullException.ThrowIfNull(transitionEntry);
+        return _slipstreamLifecycles.TryGetValue(transitionEntry.SpaceId, out var lifecycle)
+            && TryEnterSlipstream(agentId, source, transitionEntry, lifecycle, destination, lookahead);
+    }
+
+    /// <summary>Advances using the coordinator registered for the transition space.</summary>
+    public bool TryAdvanceSlipstream(ulong agentId, string transitionSpaceId, GridCell nextCell) =>
+        !string.IsNullOrWhiteSpace(transitionSpaceId)
+        && _slipstreamLifecycles.TryGetValue(transitionSpaceId, out var lifecycle)
+        && TryAdvanceSlipstream(agentId, transitionSpaceId, lifecycle, nextCell);
+
+    /// <summary>Exits using the coordinator registered for the transition space.</summary>
+    public bool TryExitSlipstream(ulong agentId, string transitionSpaceId, QualifiedGridLocation destination) =>
+        !string.IsNullOrWhiteSpace(transitionSpaceId)
+        && _slipstreamLifecycles.TryGetValue(transitionSpaceId, out var lifecycle)
+        && TryExitSlipstream(agentId, transitionSpaceId, lifecycle, destination);
+
     public bool TryEnterSlipstream(
         ulong agentId,
         QualifiedGridLocation source,
