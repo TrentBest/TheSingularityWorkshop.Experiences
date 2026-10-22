@@ -6,7 +6,7 @@
 
 ## Readiness
 
-**Current engineering readiness estimate: 60%.** This is a scoped audit estimate for the stated 100,000-agent showcase, not a test pass rate or release approval. The discrete construction slice, standalone SVG output, source-graph GUI.SVG integration test, immutable snapshot contract tests, monotonic observer, and maintained pull-based snapshot-to-SVG view are implemented. The view coalesces to the latest accepted sequence, renders each sequence once, exposes run/tick identity, and does not consume a snapshot when rendering fails. Focused tests have been added for this view; their new commit still requires CI. Autonomous lane routing, a hosted GUI.SVG application/telemetry, and measured scale remain outstanding.
+**Current engineering readiness estimate: 60%.** This is a scoped audit estimate for the stated 100,000-agent showcase, not a test pass rate or release approval. The discrete construction slice, standalone SVG output, source-graph GUI.SVG integration test, immutable snapshot contract tests, monotonic observer, and maintained pull-based snapshot-to-SVG view are implemented. The view coalesces to the latest accepted sequence, renders each sequence once, exposes run/tick identity, and does not consume a snapshot when rendering fails. Focused tests have been added for this view; their new commit still requires CI. Autonomous skylane destination assignment and tick-driven movement are now implemented with blocked-move retry tests; automatic transition admission/traversal, a hosted GUI.SVG application/telemetry, and measured scale remain outstanding.
 
 | Workstream | Status | Evidence / exit condition |
 |---|---|---|
@@ -17,7 +17,8 @@
 | Skylane policy primitive | Implemented/tested | Direction, bounds, cells-per-tick tests |
 | Velocity-aware gravity-sort braking | Pure decision policy and focused tests added; latest CI verified | Current vertical velocity, net braking acceleration, stopping-distance threshold, altitude/speed capture tolerances; integrate with authoritative cohort state |
 | Hover/slipstream lifecycle primitives | Implemented/tested as separate contracts | Admission, ownership, blocked-exit retry, reservation invariants |
-| Lane lifecycle inside autonomous Step() | **Open; execution contract documented** | [Autonomous Lane Execution](AUTONOMOUS_LANE_EXECUTION.md) defines authoritative itinerary state, phase transitions, occupancy/retry invariants, conflict tests, and hot-path preconditions; implementation and tests remain open |
+| Skylane destination movement inside Step() | Implemented; CI pending | Registered lane spaces accept a direction-valid destination; Step advances in stable agent order, preserves target on blockage, and clears it on arrival. Focused route and retry tests added. [Operational contract](AUTONOMOUS_LANE_EXECUTION.md) |
+| Automatic transition admission and end-to-end itinerary | **Open** | Pending intent admission, slipstream traversal/exit, and chained lane routing are still caller-driven; add deterministic lifecycle orchestration and conflict tests |
 | Persistent lookahead/conflict model | **Open** | Configurable five-cell initial policy and tests for moving occupancy/reservation lifetime |
 | Deterministic replay digest | **Open** | Same inputs/revision reproduce digest; mismatch diagnostics |
 | Snapshot-to-standalone-SVG rendering | Implemented; focused tests and CI artifact verified | [Renderer source](../../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.cs), [tests](../../../tests/DroneConstruction.Tests/ConstructionSnapshotSvgRendererTests.cs), and [contract](../../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md); renders committed tick/progress/agents/emitters and respects qualified grid identity |
