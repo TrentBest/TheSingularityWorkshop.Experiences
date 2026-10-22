@@ -1,11 +1,11 @@
 # Drone Construction — Lane Transition Lifecycle Contract
 
-**Status:** design contract for M2; not evidence that lane transitions are integrated.
+**Status:** design contract for M2; the standalone lifecycle is tested, but lane transitions are not integrated into the simulation state machine.
 **Scope:** renderer-independent, deterministic, single-threaded discrete simulation.
 
 ## Why this contract comes first
 
-`ConstructionSimulation` currently treats each agent position as a coordinate in one authoritative simulation traffic grid. `Slipstream.TryAdmit` transfers occupancy between separate `TrafficCellGrid` instances and keeps a single-agent reservation until explicitly released. Connecting those pieces without a location model would make `ConstructionAgent.Position` ambiguous: the same `GridCell` could refer to different grids, and the current movement loop could attempt to move an agent in the wrong occupancy grid.
+`ConstructionSimulation` currently treats each agent position as a coordinate in one authoritative simulation traffic grid. `SlipstreamLifecycle` transfers occupancy between distinct `TrafficCellGrid` instances and keeps a single-agent reservation until successful exit. Integrating those pieces without a location model would make `ConstructionAgent.Position` ambiguous: the same `GridCell` could refer to different grids, and the current movement loop could attempt to move an agent in the wrong occupancy grid.
 
 ## Required location model
 
@@ -16,23 +16,26 @@ An agent's committed location must identify both its space and its cell. A locat
 - **Slipstream:** bounded transition cells; reservation ownership and cell occupancy are separate facts.
 - **Skylane:** directed cells subject to the lane's direction and cells-per-tick policy.
 
-Coordinates are local to their named space. Equal `GridCell` values in different spaces do not mean the same physical location. Renderer-facing snapshots must expose the space identity along with the coordinate; they must not infer a space from coordinates.
+Coordinates are local to their named spaces. Equal `GridCell` values in different spaces do not mean the same physical location. Renderer-facing snapshots must expose the space identity along with the coordinate; they must not infer a space from coordinates.
+
+`ConstructionSpaceCatalog` is now a small, standalone resolver over registered grids. It derives locations from each grid's occupancy index rather than duplicating occupancy state, rejects duplicate space identities and grid aliases, and refuses to guess when an agent is missing or appears in multiple registered spaces. It is not yet wired into `ConstructionSimulation` or `SlipstreamLifecycle`.
 
 ## Lifecycle
 
 1. **Approach / stage.** The agent remains in its current grid and keeps its source occupancy while waiting for a transition.
 2. **Request admission.** Validate the source owner and source location, destination lane cell, transition cells, bounds, and lookahead policy. A rejected request must leave source occupancy and agent location unchanged.
 3. **Commit entry.** Reserve the transition for the agent and transfer occupancy from the source space to the transition's entry cell as one logical operation. After commit, the agent is present in exactly one occupancy grid. If transfer fails or throws, release the newly acquired reservation and preserve the original location/occupancy.
-4. **Traverse.** Each tick, calculate the next transition/lane cell under the lane's declared direction and speed policy. Check occupancy before moving. A blocked step preserves the previous cell, reservation, and location.
-5. **Commit exit.** Validate the destination space and exit cell, transfer occupancy to that space, update the agent's qualified location, and release the transition reservation only after the exit transfer succeeds.
+4. **Traverse.** Each tick, calculate the next transition/lane cell under the lane's declared direction and speed policy. Check occupancy before moving. A blocked step preserves the previous cell, reservation, and occupancy.
+5. **Commit exit.** Validate the exact destination grid and cell bound to the reservation, transfer occupancy to that destination, and release the transition reservation only after the exit transfer succeeds.
 6. **Resume simulation.** Ordinary construction movement resumes only after the agent is back in the simulation grid. The movement loop must never move a lane-resident agent using simulation-grid coordinates.
 
 ## Invariants to test
 
 - **Single occupancy:** every active agent is registered in exactly one occupancy grid matching its qualified location.
 - **Stable identity:** an agent ID cannot be registered twice, including in a destination grid it is entering.
-- **Failure atomicity:** rejected/blocked entry or exit leaves location, source/destination occupancy, and existing reservation state unchanged.
+- **Failure atomicity:** rejected/blocked entry or exit leaves source/destination occupancy and existing reservation state unchanged.
 - **Reservation ownership:** only the owner can release an active transition reservation; a reservation cannot be overwritten by a repeated request.
+- **Reservation target:** a reservation cannot be used to exit through a different grid or cell.
 - **Reservation lifetime:** capacity remains reserved through traversal and is released only after successful exit, not merely because a tick or admission call returned.
 - **Directional movement:** skylane traversal never moves against the declared direction and respects the configured cells-per-tick rule.
 - **Determinism:** stable agent order and fixed inputs produce identical location, occupancy, reservation, and snapshot sequences.
@@ -40,12 +43,12 @@ Coordinates are local to their named space. Equal `GridCell` values in different
 
 ## Integration sequence
 
-1. **Completed on development:** add `ConstructionSpaceKind` and `QualifiedGridLocation`; expose `ConstructionSimulation.SpaceId`, `GetAgentLocation(agentId)`, and qualified `ConstructionAgentSnapshot.Location`. Tests cover cross-space equality, validation, movement updates, and agreement between queries and snapshots. The simulation currently reports only `SimulationGrid` locations because lane transitions are not yet integrated.
-2. **Partially completed on development:** `SlipstreamLifecycle` coordinates reservation, source-to-transition entry, one-cell orthogonal traversal, and transition-to-destination exit across distinct grids. Entry rollback, blocked exit retention, successful exit, and reservation release have regression tests. The lifecycle is standalone: it does not yet update a `ConstructionAgent`'s qualified location or integrate with the simulation state machine.
-3. Extend tests to cover blocked traversal and invalid/occupied exit cells, then integrate the lifecycle only after the agent state machine can represent lane-resident states without misusing `GridCell`.
-4. Integrate the lifecycle into `ConstructionSimulation` only after the agent state machine can represent lane-resident states without misusing `GridCell`.
-5. Extend immutable snapshots to expose qualified locations and verify every snapshot against authoritative occupancy.
-6. Add GUI.SVG observation only after the model contract and tests pass.
+1. **Completed on development:** add `ConstructionSpaceKind` and `QualifiedGridLocation`; expose `ConstructionSimulation.SpaceId`, `GetAgentLocation(agentId)`, and qualified `ConstructionAgentSnapshot.Location`. Tests cover validation, movement updates, and agreement between simulation queries and snapshots. The simulation currently reports only `SimulationGrid` locations because lane transitions are not integrated.
+2. **Completed as a standalone component on development:** `SlipstreamLifecycle` coordinates reservation, source-to-transition entry, one-cell orthogonal traversal, and transition-to-destination exit across distinct grids. Regression tests cover entry rollback, blocked traversal, blocked exit retention, successful exit, exact reserved destination enforcement, and reservation release.
+3. **Completed as a standalone component on development:** `ConstructionSpaceCatalog` resolves an agent's unique occupied grid to a `QualifiedGridLocation`, validates qualified grid resolution, rejects duplicate registration aliases, and fails closed for missing or ambiguous occupancy. It is not integrated into the simulation yet.
+4. **Next:** connect the catalog and lifecycle to agent location/state updates with an explicit transition-resident state. Do not integrate them into `ConstructionSimulation.Step()` until ordinary movement cannot misuse local coordinates across spaces.
+5. Extend immutable snapshots to expose qualified locations from the integrated occupancy authority and verify each snapshot against actual occupancy.
+6. Add GUI.SVG observation only after the integrated model contract and tests pass.
 
 ## Explicit non-claims
 
