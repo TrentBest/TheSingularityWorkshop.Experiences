@@ -406,4 +406,47 @@ public sealed class ConstructionContractsTests
         Assert.Equal(0, emitter.Inventory);
         Assert.Equal(2, target.PlacedBlocks);
     }
+
+    [Fact]
+    public void SlipstreamLifecycle_RollsBackReservationWhenEntryTransferFails()
+    {
+        var source = new TrafficCellGrid(2, 1);
+        var transition = new TrafficCellGrid(4, 1);
+        var destination = new TrafficCellGrid(10, 1);
+        var slipstream = new Slipstream("lifecycle-rollback", transitionCellCount: 4, lookaheadCells: 5);
+        var lifecycle = new SlipstreamLifecycle(slipstream, transition);
+        GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+
+        // Reservation can succeed before the source transfer discovers that the claimed
+        // source cell is not occupied by this agent. The failed entry must release its own reservation.
+        Assert.False(lifecycle.TryEnter(
+            agentId: 7,
+            sourceGrid: source,
+            sourceCell: new GridCell(0, 0),
+            transitionEntryCell: new GridCell(0, 0),
+            destinationLane: destination,
+            destinationCell: new GridCell(8, 0),
+            lookahead: lookahead));
+
+        Assert.Null(lifecycle.AgentId);
+        Assert.False(transition.IsOccupied(new GridCell(0, 0)));
+        Assert.False(destination.IsOccupied(new GridCell(8, 0)));
+        Assert.False(source.IsOccupied(new GridCell(0, 0)));
+
+        // The same lifecycle remains reusable after the failed attempt.
+        Assert.True(source.TryOccupy(new GridCell(0, 0), 7));
+        Assert.True(lifecycle.TryEnter(
+            agentId: 7,
+            sourceGrid: source,
+            sourceCell: new GridCell(0, 0),
+            transitionEntryCell: new GridCell(0, 0),
+            destinationLane: destination,
+            destinationCell: new GridCell(8, 0),
+            lookahead: lookahead));
+        Assert.Equal(7UL, lifecycle.AgentId);
+        Assert.True(transition.TryGetOccupant(new GridCell(0, 0), out var transitionOwner));
+        Assert.Equal(7UL, transitionOwner);
+        Assert.False(source.IsOccupied(new GridCell(0, 0)));
+    }
+
 }
