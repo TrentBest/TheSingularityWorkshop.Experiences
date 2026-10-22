@@ -392,4 +392,43 @@ public sealed class ConstructionSimulationTests
         Assert.Equal(new GridCell(2, 0), agent.Position);
     }
 
+
+    [Fact]
+    public void Simulation_RegisteredSlipstreamLifecycleOwnsTransitionAndRejectsSubstitution()
+    {
+        var agent = new ConstructionAgent(1, new GridCell(0, 0));
+        var simulation = new ConstructionSimulation(
+            width: 10,
+            height: 1,
+            requiredHeight: (_, _) => 0,
+            agents: [agent],
+            emitters: []);
+        var transitionGrid = new TrafficCellGrid(3, 1);
+        var lifecycle = new SlipstreamLifecycle(
+            new Slipstream("resource-east", transitionCellCount: 3, lookaheadCells: 5),
+            transitionGrid);
+        var substitute = new SlipstreamLifecycle(
+            new Slipstream("substitute-east", transitionCellCount: 3, lookaheadCells: 5),
+            new TrafficCellGrid(3, 1));
+
+        Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.Slipstream, "transition-east", transitionGrid));
+        Assert.False(simulation.TryRegisterSlipstreamLifecycle("transition-east", substitute));
+        Assert.True(simulation.TryRegisterSlipstreamLifecycle("transition-east", lifecycle));
+        Assert.False(simulation.TryRegisterSlipstreamLifecycle("transition-east", lifecycle));
+
+        var source = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, simulation.SpaceId, new GridCell(0, 0));
+        var entry = new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "transition-east", new GridCell(0, 0));
+        var destination = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, simulation.SpaceId, new GridCell(8, 0));
+        GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+
+        Assert.False(simulation.TryEnterSlipstream(1, source, entry, substitute, destination, lookahead));
+        Assert.True(simulation.TryEnterSlipstream(1, source, entry, destination, lookahead));
+        Assert.False(simulation.TryAdvanceSlipstream(1, "transition-east", substitute, new GridCell(1, 0)));
+        Assert.True(simulation.TryAdvanceSlipstream(1, "transition-east", new GridCell(1, 0)));
+        Assert.False(simulation.TryExitSlipstream(1, "transition-east", substitute, destination));
+        Assert.True(simulation.TryExitSlipstream(1, "transition-east", destination));
+        Assert.Equal(destination, simulation.GetAgentLocation(1));
+        Assert.Null(lifecycle.AgentId);
+    }
+
 }
