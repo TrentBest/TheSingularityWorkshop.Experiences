@@ -13,11 +13,12 @@ public static class ConstructionSnapshotSvgRenderer
     /// <param name="width">Grid width used by the simulation that produced the snapshot.</param>
     /// <param name="height">Grid height used by the simulation that produced the snapshot.</param>
     /// <param name="cellSize">Pixel width and height of each grid cell.</param>
-    public static string Render(ConstructionSimulationSnapshot snapshot, int width, int height, int cellSize = 48)
+    public static string Render(ConstructionSimulationSnapshot snapshot, int width, int height, string spaceId = "construction-main", int cellSize = 48)
     {
         ArgumentNullException.ThrowIfNull(snapshot);
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        if (string.IsNullOrWhiteSpace(spaceId)) throw new ArgumentException("A stable simulation-space identity is required.", nameof(spaceId));
         if (cellSize < 16) throw new ArgumentOutOfRangeException(nameof(cellSize), "Cell size must be at least 16 pixels.");
         if (snapshot.CellPlacedBlocks.Count != checked(width * height))
             throw new ArgumentException("Snapshot cell data must match the supplied grid dimensions.", nameof(snapshot));
@@ -64,7 +65,11 @@ public static class ConstructionSnapshotSvgRenderer
 
         foreach (var agent in snapshot.Agents)
         {
-            if ((uint)agent.Position.X >= (uint)width || (uint)agent.Position.Y >= (uint)height) continue;
+            // Coordinates are local to a qualified space; do not project a lane agent onto this grid.
+            if (agent.Location.SpaceKind != ConstructionSpaceKind.SimulationGrid
+                || !StringComparer.Ordinal.Equals(agent.Location.SpaceId, spaceId)
+                || (uint)agent.Position.X >= (uint)width
+                || (uint)agent.Position.Y >= (uint)height) continue;
             var cx = margin + agent.Position.X * cellSize + cellSize / 2;
             var cy = originY + agent.Position.Y * cellSize + cellSize / 2;
             var color = agent.IsCarryingBlock ? "#ff8c69" : "#75b9ff";
