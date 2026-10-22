@@ -40,6 +40,7 @@ public sealed class ConstructionSimulation
     private readonly PositionedBlockEmitter[] _emitters;
     private readonly Dictionary<ulong, PlacementTask> _agentTasks = [];
     private readonly TrafficCellGrid _traffic;
+    private readonly ConstructionSpaceCatalog _spaces = new();
     private readonly string _spaceId;
     private long _tick;
 
@@ -58,6 +59,8 @@ public sealed class ConstructionSimulation
         _spaceId = spaceId;
         _buildGrid = new BuildGrid(width, height, requiredHeight);
         _traffic = new TrafficCellGrid(width, height);
+        if (!_spaces.TryRegister(ConstructionSpaceKind.SimulationGrid, _spaceId, _traffic))
+            throw new InvalidOperationException("The simulation traffic space could not be registered.");
         var agentArray = agents.ToArray();
         if (agentArray.Any(agent => agent is null)) throw new ArgumentException("Agents cannot contain null entries.", nameof(agents));
         var emitterArray = emitters.ToArray();
@@ -101,9 +104,9 @@ public sealed class ConstructionSimulation
     /// <summary>Gets the current space-qualified location of a registered agent.</summary>
     public QualifiedGridLocation GetAgentLocation(ulong agentId)
     {
-        if (!_agentsById.TryGetValue(agentId, out var agent))
+        if (!_agentsById.ContainsKey(agentId))
             throw new KeyNotFoundException($"Agent {agentId} is not registered in this simulation.");
-        return new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, _spaceId, agent.Position);
+        return _spaces.GetAgentLocation(agentId);
     }
 
     /// <summary>Gets the authoritative target grid.</summary>
@@ -114,6 +117,13 @@ public sealed class ConstructionSimulation
     {
         foreach (var agent in _agents)
         {
+            // Coordinates are local to their owning grid. Until lane lifecycle integration is
+            // complete, this simulation may advance only agents authoritatively occupying its grid.
+            if (!_spaces.TryGetAgentLocation(agent.AgentId, out var committedLocation)
+                || committedLocation!.SpaceKind != ConstructionSpaceKind.SimulationGrid
+                || !StringComparer.Ordinal.Equals(committedLocation.SpaceId, _spaceId))
+                continue;
+
             switch (agent.State)
             {
                 case ConstructionAgentState.Idle:
@@ -187,9 +197,12 @@ public sealed class ConstructionSimulation
             _buildGrid.RequiredBlockCount,
             _buildGrid.PlacedBlockCount,
             _buildGrid.IsComplete,
-            Array.AsReadOnly(_agents.Select(agent => new ConstructionAgentSnapshot(agent.AgentId, agent.Position, agent.State,
-                agent.IsCarryingBlock, agent.AssignedTaskId,
-                new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, _spaceId, agent.Position))).ToArray()),
+            Array.AsReadOnly(_agents.Select(agent =>
+            {
+                var location = _spaces.GetAgentLocation(agent.AgentId);
+                return new ConstructionAgentSnapshot(agent.AgentId, location.Cell, agent.State,
+                    agent.IsCarryingBlock, agent.AssignedTaskId, location);
+            }).ToArray()),
             Array.AsReadOnly(_emitters.Select(item => new ConstructionEmitterSnapshot(item.Emitter.EmitterId, item.Position, item.Emitter.Inventory)).ToArray()),
             Array.AsReadOnly(placed));
     }
