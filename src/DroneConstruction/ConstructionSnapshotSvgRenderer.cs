@@ -10,6 +10,7 @@ public static class ConstructionSnapshotSvgRenderer
     /// <param name="snapshot">The committed simulation snapshot to portray.</param>
     /// <param name="width">Grid width used by the simulation that produced the snapshot.</param>
     /// <param name="height">Grid height used by the simulation that produced the snapshot.</param>
+    /// <param name="spaceId">Stable identity of the simulation-grid space whose agents should be shown.</param>
     /// <param name="cellSize">Pixel width and height of each grid cell.</param>
     public static string Render(ConstructionSimulationSnapshot snapshot, int width, int height, string spaceId = "construction-main", int cellSize = 48)
     {
