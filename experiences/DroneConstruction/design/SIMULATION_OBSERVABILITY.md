@@ -74,3 +74,30 @@ Before coding, choose snapshot polling (simpler first proof) or an event stream 
 - [ ] Does the view remain correct when frames are dropped?
 - [ ] Can the same snapshot be rendered twice with the same semantic output?
 - [ ] Are visual claims backed by measured data or explicit labels?
+
+
+## Scale-aware presentation and level of detail
+
+The production showcase must not require one full visual object per simulated drone. The authoritative simulation may track every agent, while each observer chooses an appropriate representation based on camera relevance, distance, importance, and current display budget.
+
+A useful tiered policy is:
+
+- **Near / selected:** render individual drones with detailed state, direction, carrying status, and relevant lane/transition cues.
+- **Mid-range:** render simplified individual markers or instanced glyphs, retaining meaningful direction and phase.
+- **Far field:** aggregate drones into lane/cohort density, occupancy bands, or counts by committed state and region. Avoid allocating a separate visual object for every distant drone.
+- **Off-screen / irrelevant:** omit individual marks from the current frame while retaining their authoritative simulation, occupancy, task, and clearance participation.
+
+LOD is a presentation policy only. It must never remove an agent from simulation, release its cell, skip a collision/traffic check, or change task scheduling. Aggregate values must be derived from a coherent committed snapshot and should identify their tick. If the view samples or coalesces snapshots, expose that behavior instead of implying every simulation tick was rendered.
+
+Renderer and Visualize serve complementary observer roles: Renderer can provide a compact, text-oriented portrayal for AI/diagnostics, while Visualize/GUI.SVG provides the spatial view. Both consume the same committed snapshot or renderer-neutral semantic scene; neither is a second simulation authority. The SVG path should avoid creating and updating 100,000 independently detailed DOM elements as the default strategy. Prefer cohort/group primitives, lane-level summaries, bounded near-field detail, and selective expansion of an agent or region when requested. Any optimization must preserve truthful counts and make aggregation/omission policy inspectable.
+
+The simulation architecture should also avoid a Unity-style requirement for one heavyweight rigid body and four independently simulated rotors per drone. Use the project's deterministic aggregate/discrete motion model and validated average parameters for the population-level choreography; reserve detailed physical simulation for a smaller explicitly selected subset only if a future requirement justifies it. Do not introduce Unity types or dependencies into the domain core.
+
+### LOD correctness checks
+
+- [ ] Changing camera distance or display budget does not change the simulation digest.
+- [ ] Agent totals and cohort totals reconcile with the authoritative snapshot.
+- [ ] Hidden/aggregated agents still occupy cells and participate in lane clearance.
+- [ ] A selected drone can be expanded without changing its simulation state.
+- [ ] The same snapshot and LOD configuration produce deterministic semantic output.
+- [ ] Observer backpressure and dropped/coalesced frames are visible in diagnostics.
