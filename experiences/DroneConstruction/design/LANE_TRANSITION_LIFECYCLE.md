@@ -1,6 +1,6 @@
 # Drone Construction — Lane Transition Lifecycle Contract
 
-**Status:** controlled slipstream entry/traversal/exit and policy-driven skylane movement are integrated on `development`. CI has passed same-grid round trips, blocked-exit reservation retention, snapshot/location consistency, direction/speed enforcement, occupied intermediate cells, rejection of mismatched lane identity/grid or out-of-bounds targets, and independent ownership of two registered lifecycle instances. A simulation-level failed-entry rollback/retry regression test has been added and is pending CI. This is a discrete lifecycle, not a physical flight model.
+**Status:** controlled slipstream entry/traversal/exit and policy-driven skylane movement are integrated on `development`. CI has passed same-grid round trips, blocked-exit reservation retention, snapshot/location consistency, direction/speed enforcement, occupied intermediate cells, rejection of mismatched lane identity/grid or out-of-bounds targets, independent ownership of two registered lifecycle instances, and simulation-level failed-entry rollback/retry. A regression assertion that ordinary `Step()` leaves a lane-resident agent untouched has now been added and is pending CI. This is a discrete lifecycle, not a physical flight model.
 **Scope:** renderer-independent, deterministic, single-threaded discrete simulation.
 
 ## Why this contract comes first
