@@ -158,6 +158,7 @@ public sealed class ConstructionSimulation
             || !_skylanes.TryGetValue(laneId, out var lane)
             || !lane.Cells.Contains(target)
             || !_spaces.TryGetAgentLocation(agentId, out var location)
+            || location is null
             || location.SpaceKind != ConstructionSpaceKind.Skylane
             || !StringComparer.Ordinal.Equals(location.SpaceId, laneId)
             || location.Cell == target
