@@ -287,10 +287,26 @@ public sealed class ConstructionSimulationTests
         Assert.Equal(entry, Assert.Single(simulation.Snapshot().Agents).Location);
 
         Assert.True(simulation.TryAdvanceSlipstream(1, "transition-east", lifecycle, new GridCell(1, 0)));
+
+        // Reject externally mutated local coordinates instead of silently reconciling them during movement.
+        agent.Position = new GridCell(2, 0);
+        Assert.False(simulation.TryAdvanceSlipstream(1, "transition-east", lifecycle, new GridCell(2, 0)));
+        Assert.Equal(new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "transition-east", new GridCell(1, 0)),
+            simulation.GetAgentLocation(1));
+        Assert.Equal(new GridCell(2, 0), agent.Position);
+
+        agent.Position = new GridCell(1, 0);
         Assert.True(simulation.TryAdvanceSlipstream(1, "transition-east", lifecycle, new GridCell(2, 0)));
         Assert.True(simulation.TryAdvanceSlipstream(1, "transition-east", lifecycle, new GridCell(3, 0)));
         Assert.Equal(new GridCell(3, 0), agent.Position);
 
+        agent.Position = new GridCell(2, 0);
+        Assert.False(simulation.TryExitSlipstream(1, "transition-east", lifecycle, destination));
+        Assert.Equal(new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "transition-east", new GridCell(3, 0)),
+            simulation.GetAgentLocation(1));
+        Assert.Equal(1UL, lifecycle.AgentId);
+
+        agent.Position = new GridCell(3, 0);
         Assert.True(simulation.TryExitSlipstream(1, "transition-east", lifecycle, destination));
         Assert.Equal(destination, simulation.GetAgentLocation(1));
         Assert.Equal(destination.Cell, agent.Position);
