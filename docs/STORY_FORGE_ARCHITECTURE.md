@@ -4,7 +4,7 @@
 
 ![Diegetic evidence wall concept](assets/story-forge-evidence-wall.svg)
 
-Story Forge is a capability inside the Forge Experience. It is not a separate host application and does not replace FSM_COS, FSM_API, the MicroBundle contracts, or a future renderer. The Experience describes the authoring capability; manifestations decide how to present it.
+Story Forge is a StoryBuilder-owned story-domain capability, not a domain engine inside the Experiences repository or Forge Experience. It is not a separate host application and does not replace FSM_COS, FSM_API, the MicroBundle contracts, or a renderer. StoryBuilder owns canonical story records and temporal projections; Experiences may define reusable Experience content that consumes those capabilities, and manifestations decide how to present them. This file and its concept art are retained as historical design reference; active implementation lives in [StoryBuilder](https://github.com/TrentBest/StoryBuilder/tree/development/src/StoryBuilder.StoryForge).
 
 ## The core idea
 
