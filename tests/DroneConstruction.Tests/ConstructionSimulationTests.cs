@@ -312,7 +312,7 @@ public sealed class ConstructionSimulationTests
 
         Assert.True(simulation.TryAdvanceSkylane(1, lane.LaneId, lane, new GridCell(7, 0)));
         Assert.Equal(new GridCell(2, 0), agent.Position);
-        Assert.Equal(destination with { Cell = new GridCell(2, 0) }, simulation.GetAgentLocation(1));
+        Assert.Equal(new QualifiedGridLocation(ConstructionSpaceKind.Skylane, lane.LaneId, new GridCell(2, 0)), simulation.GetAgentLocation(1));
         Assert.False(simulation.TryAdvanceSkylane(1, lane.LaneId, lane, new GridCell(0, 0)));
         Assert.Equal(new GridCell(2, 0), agent.Position);
         Assert.True(simulation.TryAdvanceSkylane(1, lane.LaneId, lane, new GridCell(7, 0)));
