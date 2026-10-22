@@ -6,7 +6,7 @@
 
 ## Readiness
 
-**Current engineering readiness estimate: 55%.** This is a scoped audit estimate for the stated 100,000-agent showcase, not a test pass rate or release approval. A working discrete slice and meaningful tests exist, while the differentiators—integrated lane routing, live observation, and measured scale—remain outstanding.
+**Current engineering readiness estimate: 56%.** This is a scoped audit estimate for the stated 100,000-agent showcase, not a test pass rate or release approval. A working discrete slice and meaningful tests exist, while the differentiators—integrated lane routing, live observation, and measured scale—remain outstanding.
 
 | Workstream | Status | Evidence / exit condition |
 |---|---|---|
@@ -20,18 +20,20 @@
 | Lane lifecycle inside autonomous Step() | **Open; execution contract documented** | [Autonomous Lane Execution](AUTONOMOUS_LANE_EXECUTION.md) defines authoritative itinerary state, phase transitions, occupancy/retry invariants, conflict tests, and hot-path preconditions; implementation and tests remain open |
 | Persistent lookahead/conflict model | **Open** | Configurable five-cell initial policy and tests for moving occupancy/reservation lifetime |
 | Deterministic replay digest | **Open** | Same inputs/revision reproduce digest; mismatch diagnostics |
-| Live Renderer / GUI.SVG observation | **Open** | Real committed snapshots drive view; no mock motion |
+| Snapshot-to-standalone-SVG rendering | Implemented; focused tests added; CI pending | [Renderer source](../../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.cs), [tests](../../../tests/DroneConstruction.Tests/ConstructionSnapshotSvgRendererTests.cs), and [contract](../../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md); renders committed tick/progress/agents/emitters and respects qualified grid identity |
+| Live Renderer / GUI.SVG observation | **Open** | Wire the snapshot renderer into GUI.SVG/Renderer and publish a CI-produced snapshot artifact; no mock motion |
 | 1k / 10k / 25k / 50k / 100k runs | **Open** | Reproducible raw results and correctness gates at every stage |
 | Benchmark and observer-overhead artifacts | **Open** | Run metadata, raw output, summary |
 | Registry/release readiness | **Open** | Global IDs, dependency contract, docs, CI, and explicit approval before publication |
 
 ## Latest verified CI checkpoint
 
-The latest verified workflow is [build run 39846422281](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39846422281), commit `1aa12fcae9d35d112364315d29c3b6a45c14603d`. It completed successfully. The latest code checkpoint is [build run 39846206600](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39846206600), which included the Drone Construction test job and project build/pack job. The newly added lane-execution contract is documentation only and has not yet had its own workflow verified. These checks do not test a 100k population, prove live visualization, or measure the proposed coordinate-only hot path.
+The latest previously verified workflow is [build run 39846422281](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39846422281). New renderer/test commits are currently awaiting CI: [build run 39848124050](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39848124050). Do not treat the new renderer as CI-verified until that run completes successfully. No workflow here tests a 100k population, proves live GUI.SVG integration, or measures the proposed coordinate-only hot path.
 
 ## Work sequence
 
-1. **Close the loop:** implement the state machine in [AUTONOMOUS_LANE_EXECUTION.md](AUTONOMOUS_LANE_EXECUTION.md), then wire lane admission, movement, and exit into deterministic tick execution. Preserve occupancy and retry safety.
+1. **Wire the first visual proof:** verify the snapshot-to-SVG renderer in CI, then make the example artifact reproducible and integrate the semantic scene with GUI.SVG.
+2. **Close the loop:** implement the state machine in [AUTONOMOUS_LANE_EXECUTION.md](AUTONOMOUS_LANE_EXECUTION.md), then wire lane admission, movement, and exit into deterministic tick execution. Preserve occupancy and retry safety.
 2. **Prove safety boundaries:** version lookahead and transition configuration; test blocked paths, waiting, retry, competing agents, and starvation.
 3. **Add observability:** expose coherent committed snapshots to a renderer-neutral adapter, then create a live GUI.SVG view and telemetry.
 4. **Establish baseline:** create a repeatable small-run harness and invariant report before optimizing.
