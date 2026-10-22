@@ -27,7 +27,10 @@ public sealed class GravitySortBrakingPolicyTests
             currentAltitude: 8, laneAltitude: 0, verticalVelocity: -12,
             gravity: 10, maximumThrustAcceleration: 14, safetyMargin: 0);
 
-        Assert.False(slowerDrone); // stopping distance = 8 m, exactly at threshold should brake
+        Assert.False(slowerDrone); // The 8.1 m gap is just outside the 8 m stopping distance.
+        Assert.True(GravitySortBrakingPolicy.ShouldBeginBraking(
+            currentAltitude: 8, laneAltitude: 0, verticalVelocity: -8,
+            gravity: 10, maximumThrustAcceleration: 14, safetyMargin: 0)); // Inclusive boundary.
         Assert.True(fasterDrone);
     }
 
