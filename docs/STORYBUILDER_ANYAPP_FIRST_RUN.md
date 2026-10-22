@@ -10,7 +10,7 @@ Prove that a story authored in StoryBuilder can be opened and operated as a real
 
 - **StoryBuilder** owns story composition and authoring records: characters, scenes, world events and claims, timeline placements, observer knowledge, and manuscript portrayals.
 - **TheSingularityWorkshop.Experiences** owns reusable, host-independent Experience definitions and MicroBundle projects. An Experience describes what the user can do and the domain behavior that makes it real.
-- **Story Forge** is a StoryBuilder-owned story-domain capability. Its current implementation under `src/StoryForge` in this repository is historical and is being relocated to `TrentBest/StoryBuilder`; it must not remain an Experiences-owned domain engine. StoryBuilder will own temporal story data, timelines, events, time-bounded entity-state assertions, publication coverage, provenance, and temporal queries. Experiences must not depend on StoryBuilder.
+- **Story Forge** is a StoryBuilder-owned story-domain capability. Its implementation and tests have been relocated to `TrentBest/StoryBuilder`; `src/StoryForge/README.md` here is only a migration pointer. StoryBuilder owns temporal story data, timelines, events, time-bounded entity-state assertions, publication coverage, provenance, and temporal queries. Experiences must not depend on StoryBuilder.
 - **FSM_COS** owns host-boundary composition and arbitration. StoryBuilder's neutral MicroBundle must not depend on FSM_COS.
 - **MicroBundleDomain / MicroBundleRepository** own the neutral bundle contract and immutable artifact delivery/identity respectively.
 - **AnyApp** owns the desktop host, validation and consumption of an already captured manifest/package, and the native presentation adapter.
