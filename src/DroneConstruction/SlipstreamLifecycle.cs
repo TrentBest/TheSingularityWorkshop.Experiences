@@ -18,6 +18,9 @@ public sealed class SlipstreamLifecycle
         _transitionCells = transitionCells;
     }
 
+    /// <summary>Gets the dedicated occupancy grid used for transition-local coordinates.</summary>
+    public TrafficCellGrid TransitionCells => _transitionCells;
+
     /// <summary>Gets the agent currently occupying the transition, if any.</summary>
     public ulong? AgentId => _slipstream.ReservedBy;
 
