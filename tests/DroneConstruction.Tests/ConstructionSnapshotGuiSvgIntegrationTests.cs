@@ -68,7 +68,7 @@ public sealed class ConstructionSnapshotGuiSvgIntegrationTests
         Assert.False(observer.TryPublish(initial));
         Assert.False(observer.TryPublish(latest));
         Assert.Equal(latest.Tick, observer.LatestSnapshot!.Tick);
-        Assert.Equal(latest.Tick, observer.Sequence);
+        Assert.Equal(latest.Tick + 1, observer.Sequence);
 
         var svg = RenderSnapshot(observer.LatestSnapshot!, width: 3, height: 1);
         Assert.Contains($"TICK {latest.Tick}", svg);
