@@ -209,7 +209,6 @@ jobs:
           - src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj
           - src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj
           - src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
-          - src/StoryForge/TheSingularityWorkshop.Experiences.StoryForge.csproj
           - src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj
     steps:
       - name: Checkout Experiences
@@ -274,10 +273,6 @@ jobs:
       - name: Test Moniker.Motion.Wave against source graph
         working-directory: Experiences
         run: dotnet test tests/Moniker.Motion.Wave.Tests/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.Tests.csproj --configuration Release -p:WorkshopUseRepositorySources=true
-
-      - name: Test StoryForge against source graph
-        working-directory: Experiences
-        run: dotnet test tests/StoryForge.Tests/TheSingularityWorkshop.Experiences.StoryForge.Tests.csproj --configuration Release -p:WorkshopUseRepositorySources=true
 
       - name: Test Drone Construction MicroBundles against source graph
         working-directory: Experiences
