@@ -295,7 +295,7 @@ jobs:
         run: dotnet restore tests/DroneConstruction.Tests/TheSingularityWorkshop.Experiences.DroneConstruction.Tests.csproj
       - name: Run construction, occupancy, transition, and inventory invariants
         env:
-          DRONE_CONSTRUCTION_SVG_ARTIFACT: artifacts/drone-construction-snapshot.svg
+          DRONE_CONSTRUCTION_SVG_ARTIFACT: ${{ github.workspace }}/artifacts/drone-construction-snapshot.svg
         run: dotnet test tests/DroneConstruction.Tests/TheSingularityWorkshop.Experiences.DroneConstruction.Tests.csproj --configuration Release --no-restore
       - name: Upload renderer-produced snapshot SVG
         uses: actions/upload-artifact@v4
