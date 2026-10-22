@@ -18,6 +18,9 @@ public sealed class SlipstreamLifecycle
         _transitionCells = transitionCells;
     }
 
+    /// <summary>Gets the stable identity of the underlying slipstream resource.</summary>
+    public string SlipstreamId => _slipstream.SlipstreamId;
+
     /// <summary>Gets the dedicated occupancy grid used for transition-local coordinates.</summary>
     public TrafficCellGrid TransitionCells => _transitionCells;
 
