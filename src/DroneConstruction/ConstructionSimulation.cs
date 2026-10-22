@@ -301,6 +301,21 @@ public sealed class ConstructionSimulation
     /// <summary>Advances each agent once in stable identifier order and commits resulting state.</summary>
     public ConstructionSimulationSnapshot Step()
     {
+        // Validate every agent that this scheduler can advance before mutating any agent, task,
+        // emitter, or build-grid state. Otherwise a later mismatch could throw after earlier
+        // agents had already advanced, leaving a partially applied tick with an unchanged tick ID.
+        foreach (var agent in _agents)
+        {
+            if (!_spaces.TryGetAgentLocation(agent.AgentId, out var committedLocation)
+                || committedLocation!.SpaceKind != ConstructionSpaceKind.SimulationGrid
+                || !StringComparer.Ordinal.Equals(committedLocation.SpaceId, _spaceId))
+                continue;
+
+            if (agent.Position != committedLocation.Cell)
+                throw new InvalidOperationException(
+                    $"Agent {agent.AgentId} position {agent.Position} does not match committed location {committedLocation}.");
+        }
+
         foreach (var agent in _agents)
         {
             // Coordinates are local to their owning grid. Until lane lifecycle integration is
@@ -309,13 +324,6 @@ public sealed class ConstructionSimulation
                 || committedLocation!.SpaceKind != ConstructionSpaceKind.SimulationGrid
                 || !StringComparer.Ordinal.Equals(committedLocation.SpaceId, _spaceId))
                 continue;
-
-            // The occupancy catalog is authoritative, but ordinary scheduling also consumes
-            // the agent's local Position. Refuse to advance a split-brain state rather than
-            // allowing a stale coordinate to drive movement or placement.
-            if (agent.Position != committedLocation.Cell)
-                throw new InvalidOperationException(
-                    $"Agent {agent.AgentId} position {agent.Position} does not match committed location {committedLocation}.");
 
             switch (agent.State)
             {
