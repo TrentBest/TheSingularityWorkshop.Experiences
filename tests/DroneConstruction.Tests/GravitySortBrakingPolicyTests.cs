@@ -21,7 +21,7 @@ public sealed class GravitySortBrakingPolicyTests
     public void BrakingWindowRespondsToInstantaneousVelocity()
     {
         var slowerDrone = GravitySortBrakingPolicy.ShouldBeginBraking(
-            currentAltitude: 8, laneAltitude: 0, verticalVelocity: -8,
+            currentAltitude: 8.1, laneAltitude: 0, verticalVelocity: -8,
             gravity: 10, maximumThrustAcceleration: 14, safetyMargin: 0);
         var fasterDrone = GravitySortBrakingPolicy.ShouldBeginBraking(
             currentAltitude: 8, laneAltitude: 0, verticalVelocity: -12,
