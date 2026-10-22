@@ -17,7 +17,7 @@
 | Skylane policy primitive | Implemented/tested | Direction, bounds, cells-per-tick tests |
 | Velocity-aware gravity-sort braking | Pure decision policy and focused tests added; latest CI verified | Current vertical velocity, net braking acceleration, stopping-distance threshold, altitude/speed capture tolerances; integrate with authoritative cohort state |
 | Hover/slipstream lifecycle primitives | Implemented/tested as separate contracts | Admission, ownership, blocked-exit retry, reservation invariants |
-| Lane lifecycle inside autonomous Step() | **Open** | Agent admitted, advances according to lane direction/speed, exits without external manual calls |
+| Lane lifecycle inside autonomous Step() | **Open; execution contract documented** | [Autonomous Lane Execution](AUTONOMOUS_LANE_EXECUTION.md) defines authoritative itinerary state, phase transitions, occupancy/retry invariants, conflict tests, and hot-path preconditions; implementation and tests remain open |
 | Persistent lookahead/conflict model | **Open** | Configurable five-cell initial policy and tests for moving occupancy/reservation lifetime |
 | Deterministic replay digest | **Open** | Same inputs/revision reproduce digest; mismatch diagnostics |
 | Live Renderer / GUI.SVG observation | **Open** | Real committed snapshots drive view; no mock motion |
@@ -27,11 +27,11 @@
 
 ## Latest verified CI checkpoint
 
-The latest verified workflow is [build run 39846206600](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39846206600), commit `271d099ff51eceb7aef0f4c5daacf303eedb7c0f`. The workflow completed successfully, including the Drone Construction test job and project build/pack job. This validates the checks that ran on this commit; it does not test a 100k population, prove live visualization, or measure the proposed coordinate-only hot path. Any later code change needs its own CI result before it is called green.
+The latest verified workflow is [build run 39846422281](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39846422281), commit `1aa12fcae9d35d112364315d29c3b6a45c14603d`. It completed successfully. The latest code checkpoint is [build run 39846206600](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39846206600), which included the Drone Construction test job and project build/pack job. The newly added lane-execution contract is documentation only and has not yet had its own workflow verified. These checks do not test a 100k population, prove live visualization, or measure the proposed coordinate-only hot path.
 
 ## Work sequence
 
-1. **Close the loop:** wire lane admission, movement, and exit into deterministic tick execution. Preserve occupancy and retry safety.
+1. **Close the loop:** implement the state machine in [AUTONOMOUS_LANE_EXECUTION.md](AUTONOMOUS_LANE_EXECUTION.md), then wire lane admission, movement, and exit into deterministic tick execution. Preserve occupancy and retry safety.
 2. **Prove safety boundaries:** version lookahead and transition configuration; test blocked paths, waiting, retry, competing agents, and starvation.
 3. **Add observability:** expose coherent committed snapshots to a renderer-neutral adapter, then create a live GUI.SVG view and telemetry.
 4. **Establish baseline:** create a repeatable small-run harness and invariant report before optimizing.
