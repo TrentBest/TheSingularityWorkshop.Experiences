@@ -1,6 +1,6 @@
 # Drone Construction — Lane Transition Lifecycle Contract
 
-**Status:** controlled slipstream entry/traversal/exit are integrated on `development`; the end-to-end simulation tests cover successful return to the main grid, blocked-exit reservation retention, and snapshot/location consistency. This is a discrete lifecycle, not a physical flight model.
+**Status:** controlled slipstream entry/traversal/exit and policy-driven skylane movement are integrated on `development`; tests cover same-grid round trips, blocked-exit reservation retention, snapshot/location consistency, direction/speed enforcement, and occupied intermediate cells. This is a discrete lifecycle, not a physical flight model.
 **Scope:** renderer-independent, deterministic, single-threaded discrete simulation.
 
 ## Why this contract comes first
@@ -25,7 +25,7 @@ Coordinates are local to their named spaces. Equal `GridCell` values in differen
 1. **Approach / stage.** The agent remains in its current grid and keeps its source occupancy while waiting for a transition.
 2. **Request admission.** Validate the source owner and source location, destination lane cell, transition cells, bounds, and lookahead policy. A rejected request must leave source occupancy and agent location unchanged.
 3. **Commit entry.** Reserve the transition for the agent and transfer occupancy from the source space to the transition's entry cell as one logical operation. After commit, the agent is present in exactly one occupancy grid. If transfer fails or throws, release the newly acquired reservation and preserve the original location/occupancy.
-4. **Traverse.** Each tick, calculate the next transition/lane cell under the lane's declared direction and speed policy. Check occupancy before moving. A blocked step preserves the previous cell, reservation, and occupancy.
+4. **Traverse.** Transition cells advance one orthogonal cell at a time. Skylane movement uses `Skylane.Direction` and `CellsPerTick`; the simulation validates every intermediate cell before committing the move, so speed cannot skip through an occupied cell. A blocked step preserves the previous cell and occupancy.
 5. **Commit exit.** Validate the exact destination grid and cell bound to the reservation, transfer occupancy to that destination, and release the transition reservation only after the exit transfer succeeds.
 6. **Resume simulation.** Ordinary construction movement resumes only after the agent is back in the simulation grid. The movement loop must never move a lane-resident agent using simulation-grid coordinates.
 
