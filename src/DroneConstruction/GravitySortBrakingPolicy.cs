@@ -55,9 +55,6 @@ public static class GravitySortBrakingPolicy
             return false;
 
         var altitudeGap = currentAltitude - laneAltitude;
-        if (altitudeGap < 0)
-            return false;
-
         var stoppingDistance = GetStoppingDistance(
             verticalVelocity, gravity, maximumThrustAcceleration);
         return altitudeGap <= stoppingDistance + safetyMargin;
