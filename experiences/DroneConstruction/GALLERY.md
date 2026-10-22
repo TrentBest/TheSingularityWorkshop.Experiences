@@ -24,7 +24,7 @@ The source now contains `ConstructionSnapshotSvgRenderer.Render(snapshot, width,
 
 *Implementation proof: [renderer source](../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.cs) · [tests](../../tests/DroneConstruction.Tests/ConstructionSnapshotSvgRendererTests.cs) · [contract](../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md).*
 
-This is a snapshot-to-SVG proof, not a GUI.SVG integration or a checked-in live capture. The existing SVGs above remain concept/architecture assets.
+This is a snapshot-to-SVG implementation proof, not a GUI.SVG integration or a checked-in live capture. The Drone Construction test workflow is now configured to preserve the completed-simulation SVG as a downloadable `drone-construction-snapshot-svg` artifact when the test succeeds. That artifact must be produced by a successful CI run before it is treated as verified evidence. The existing SVGs above remain concept/architecture assets.
 
 ## What is real today
 
