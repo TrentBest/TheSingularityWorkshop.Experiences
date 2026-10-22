@@ -203,6 +203,39 @@ public sealed class ConstructionSimulation
         return true;
     }
 
+    /// <summary>
+    /// Advances an agent along a registered skylane toward a target using the lane's direction and
+    /// cells-per-tick policy. Every traversed cell must be clear; failure preserves occupancy and position.
+    /// </summary>
+    public bool TryAdvanceSkylane(ulong agentId, string skylaneSpaceId, Skylane lane, GridCell target)
+    {
+        ArgumentNullException.ThrowIfNull(lane);
+        if (!_agentsById.TryGetValue(agentId, out var agent)
+            || string.IsNullOrWhiteSpace(skylaneSpaceId)
+            || !StringComparer.Ordinal.Equals(skylaneSpaceId, lane.LaneId)
+            || !_spaces.TryGetAgentLocation(agentId, out var current)
+            || current!.SpaceKind != ConstructionSpaceKind.Skylane
+            || !StringComparer.Ordinal.Equals(current.SpaceId, skylaneSpaceId)
+            || !_spaces.TryResolve(current, out var registeredGrid)
+            || !ReferenceEquals(registeredGrid, lane.Cells)
+            || !lane.TryGetNextCell(current.Cell, target, out var next))
+            return false;
+
+        var distance = Math.Abs(next.X - current.Cell.X) + Math.Abs(next.Y - current.Cell.Y);
+        var dx = Math.Sign(next.X - current.Cell.X);
+        var dy = Math.Sign(next.Y - current.Cell.Y);
+        var cell = current.Cell;
+        for (var step = 0; step < distance; step++)
+        {
+            cell = new GridCell(cell.X + dx, cell.Y + dy);
+            if (lane.Cells.IsOccupied(cell)) return false;
+        }
+
+        if (!lane.Cells.TryMove(current.Cell, next, agentId)) return false;
+        agent.SetPosition(next);
+        return true;
+    }
+
     /// <summary>Gets the authoritative target grid.</summary>
     public BuildGrid BuildGrid => _buildGrid;
 
