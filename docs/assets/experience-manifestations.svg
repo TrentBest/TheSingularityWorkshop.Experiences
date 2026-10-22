@@ -1,12 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
   <title id="title">One Experience, multiple manifestations</title>
-  <desc id="desc">One Experience, multiple manifestations. An Experience retains shared identity while WebApp, AnyApp, and MyVR provide different capabilities.</desc>
-  <style>
-    .bg{fill:#0b1020}.box{fill:#121a2d;stroke:#7dd3fc;stroke-width:2;rx:16}.core{fill:#172554;stroke:#a5b4fc;stroke-width:2;rx:16}.accent{fill:#132e2a;stroke:#5eead4;stroke-width:2;rx:16}.warn{fill:#2b2110;stroke:#fbbf24;stroke-width:2;rx:16}
-    .t{fill:#f8fafc;font:600 24px system-ui,sans-serif}.s{fill:#cbd5e1;font:400 18px system-ui,sans-serif}.h{fill:#7dd3fc;font:700 30px system-ui,sans-serif}.arrow{stroke:#94a3b8;stroke-width:3;fill:none;marker-end:url(#a)}
-  </style>
-  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#94a3b8"/></marker></defs>
-  <rect class="bg" width="1200" height="680"/>
-  An Experience retains shared identity while WebApp, AnyApp, and MyVR provide different capabilities.
+  <desc id="desc">An Experience definition and its shared identity feed a manifest and configuration, which FSM_COS composes for browser, native application, and VR presentations.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#94a3b8"/>
+    </marker>
+    <style>
+      .background { fill: #0b1020; }
+      .panel { fill: #121a2d; stroke: #7dd3fc; stroke-width: 2; }
+      .core { fill: #172554; stroke: #a5b4fc; stroke-width: 2; }
+      .host { fill: #132e2a; stroke: #5eead4; stroke-width: 2; }
+      .heading { fill: #f8fafc; font: 700 30px system-ui, sans-serif; }
+      .label { fill: #f8fafc; font: 650 23px system-ui, sans-serif; }
+      .detail { fill: #cbd5e1; font: 400 17px system-ui, sans-serif; }
+      .eyebrow { fill: #7dd3fc; font: 700 14px system-ui, sans-serif; letter-spacing: 2px; }
+      .connector { fill: none; stroke: #94a3b8; stroke-width: 3; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect class="background" width="1200" height="680"/>
+  <text class="eyebrow" x="600" y="58" text-anchor="middle">THE SINGULARITY WORKSHOP · EXPERIENCES</text>
+  <text class="heading" x="600" y="100" text-anchor="middle">One Experience. Multiple manifestations.</text>
+  <text class="detail" x="600" y="132" text-anchor="middle">Keep identity and meaning stable while the host changes how people experience it.</text>
+
+  <rect class="panel" x="330" y="168" width="540" height="104" rx="16"/>
+  <text class="label" x="600" y="207" text-anchor="middle">Experience definition</text>
+  <text class="detail" x="600" y="237" text-anchor="middle">Shared identity · semantics · authored intent</text>
+
+  <path class="connector" d="M600 272 V314"/>
+  <rect class="core" x="390" y="316" width="420" height="94" rx="16"/>
+  <text class="label" x="600" y="354" text-anchor="middle">Manifest + configuration</text>
+  <text class="detail" x="600" y="382" text-anchor="middle">Describes the selected artifacts and setup</text>
+
+  <path class="connector" d="M600 410 V444"/>
+  <rect class="panel" x="330" y="446" width="540" height="82" rx="16"/>
+  <text class="label" x="600" y="479" text-anchor="middle">FSM_COS composition boundary</text>
+  <text class="detail" x="600" y="505" text-anchor="middle">Composes capabilities for a chosen host</text>
+
+  <path class="connector" d="M600 528 V548 H205 V570"/>
+  <path class="connector" d="M600 548 V570"/>
+  <path class="connector" d="M600 548 H995 V570"/>
+
+  <rect class="host" x="65" y="572" width="280" height="76" rx="14"/>
+  <text class="label" x="205" y="603" text-anchor="middle">WebApp / WebPage</text>
+  <text class="detail" x="205" y="628" text-anchor="middle">Browser presentation</text>
+
+  <rect class="host" x="460" y="572" width="280" height="76" rx="14"/>
+  <text class="label" x="600" y="603" text-anchor="middle">AnyApp</text>
+  <text class="detail" x="600" y="628" text-anchor="middle">Native application host</text>
+
+  <rect class="host" x="855" y="572" width="280" height="76" rx="14"/>
+  <text class="label" x="995" y="603" text-anchor="middle">VR manifestation</text>
+  <text class="detail" x="995" y="628" text-anchor="middle">Immersive presentation</text>
 </svg>
