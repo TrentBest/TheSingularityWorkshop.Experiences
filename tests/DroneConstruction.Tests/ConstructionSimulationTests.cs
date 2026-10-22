@@ -486,6 +486,43 @@ public sealed class ConstructionSimulationTests
     }
 
     [Fact]
+    public void Simulation_FailedSlipstreamEntryLeavesSourceAndCanRetry()
+    {
+        var agent = new ConstructionAgent(1, new GridCell(0, 0));
+        var simulation = new ConstructionSimulation(
+            width: 3,
+            height: 1,
+            requiredHeight: (_, _) => 0,
+            agents: [agent],
+            emitters: [],
+            spaceId: "yard");
+        var transitionGrid = new TrafficCellGrid(3, 1);
+        var destinationGrid = new TrafficCellGrid(10, 1);
+        var lifecycle = new SlipstreamLifecycle(
+            new Slipstream("yard-to-east", transitionCellCount: 3, lookaheadCells: 5),
+            transitionGrid);
+        Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.Slipstream, "transition-east", transitionGrid));
+        Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.Skylane, "destination-east", destinationGrid));
+
+        var source = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(0, 0));
+        var entry = new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "transition-east", new GridCell(0, 0));
+        var destination = new QualifiedGridLocation(ConstructionSpaceKind.Skylane, "destination-east", new GridCell(8, 0));
+        GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+        Assert.True(simulation.TryRegisterSlipstreamLifecycle("transition-east", lifecycle));
+
+        Assert.True(destinationGrid.TryOccupy(new GridCell(4, 0), 99));
+        Assert.False(simulation.TryEnterSlipstream(1, source, entry, destination, lookahead));
+        Assert.Equal(source, simulation.GetAgentLocation(1));
+        Assert.Equal(new GridCell(0, 0), agent.Position);
+        Assert.Null(lifecycle.AgentId);
+
+        Assert.True(destinationGrid.Release(new GridCell(4, 0), 99));
+        Assert.True(simulation.TryEnterSlipstream(1, source, entry, destination, lookahead));
+        Assert.Equal(entry, simulation.GetAgentLocation(1));
+        Assert.Equal(1UL, lifecycle.AgentId);
+    }
+
+    [Fact]
     public void Simulation_FailedSlipstreamExitRetainsOwnershipAndCanRetry()
     {
         var agent = new ConstructionAgent(1, new GridCell(0, 0));
