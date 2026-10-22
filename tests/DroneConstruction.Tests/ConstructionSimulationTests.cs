@@ -443,7 +443,7 @@ public sealed class ConstructionSimulationTests
             agents: [agent],
             emitters: []);
         var transitionGrid = new TrafficCellGrid(3, 1);
-        var destinationGrid = new TrafficCellGrid(3, 1);
+        var destinationGrid = new TrafficCellGrid(10, 1);
         var lifecycle = new SlipstreamLifecycle(
             new Slipstream("resource-retry", transitionCellCount: 3, lookaheadCells: 5),
             transitionGrid);
@@ -454,8 +454,8 @@ public sealed class ConstructionSimulationTests
 
         var source = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, simulation.SpaceId, new GridCell(0, 0));
         var entry = new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "transition-retry", new GridCell(0, 0));
-        var destination = new QualifiedGridLocation(ConstructionSpaceKind.Skylane, "destination-retry", new GridCell(2, 0));
-        GridCell[] lookahead = [new(0, 0), new(1, 0), new(2, 0), new(1, 0), new(0, 0)];
+        var destination = new QualifiedGridLocation(ConstructionSpaceKind.Skylane, "destination-retry", new GridCell(8, 0));
+        GridCell[] lookahead = [new(1, 0), new(2, 0), new(3, 0), new(4, 0), new(5, 0)];
 
         Assert.True(simulation.TryEnterSlipstream(1, source, entry, destination, lookahead));
         Assert.True(destinationGrid.TryOccupy(destination.Cell, 99));
