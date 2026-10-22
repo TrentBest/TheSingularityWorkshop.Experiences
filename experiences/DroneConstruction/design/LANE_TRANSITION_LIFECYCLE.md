@@ -41,8 +41,8 @@ Coordinates are local to their named space. Equal `GridCell` values in different
 ## Integration sequence
 
 1. **Completed on development:** add `ConstructionSpaceKind` and `QualifiedGridLocation`; expose `ConstructionSimulation.SpaceId`, `GetAgentLocation(agentId)`, and qualified `ConstructionAgentSnapshot.Location`. Tests cover cross-space equality, validation, movement updates, and agreement between queries and snapshots. The simulation currently reports only `SimulationGrid` locations because lane transitions are not yet integrated.
-2. Add a transition lifecycle owner that coordinates source grid, slipstream reservation, transition occupancy, and exit transfer; keep the operation synchronous unless a later design explicitly adds concurrency.
-3. Test entry success/rejection, traversal blockage, exit success/rejection, rollback, and reservation lifetime against multiple grids.
+2. **Partially completed on development:** `SlipstreamLifecycle` coordinates reservation, source-to-transition entry, one-cell orthogonal traversal, and transition-to-destination exit across distinct grids. Entry rollback, blocked exit retention, successful exit, and reservation release have regression tests. The lifecycle is standalone: it does not yet update a `ConstructionAgent`'s qualified location or integrate with the simulation state machine.
+3. Extend tests to cover blocked traversal and invalid/occupied exit cells, then integrate the lifecycle only after the agent state machine can represent lane-resident states without misusing `GridCell`.
 4. Integrate the lifecycle into `ConstructionSimulation` only after the agent state machine can represent lane-resident states without misusing `GridCell`.
 5. Extend immutable snapshots to expose qualified locations and verify every snapshot against authoritative occupancy.
 6. Add GUI.SVG observation only after the model contract and tests pass.
