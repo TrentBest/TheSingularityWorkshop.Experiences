@@ -33,12 +33,12 @@ The latest previously verified workflow is [build run 39846422281](https://githu
 ## Work sequence
 
 1. **Wire the first visual proof:** verify the snapshot-to-SVG renderer and downloadable CI artifact, then integrate the semantic scene with GUI.SVG.
-3. **Close the loop:** implement the state machine in [AUTONOMOUS_LANE_EXECUTION.md](AUTONOMOUS_LANE_EXECUTION.md), then wire lane admission, movement, and exit into deterministic tick execution. Preserve occupancy and retry safety.
 2. **Prove safety boundaries:** version lookahead and transition configuration; test blocked paths, waiting, retry, competing agents, and starvation.
-3. **Add observability:** expose coherent committed snapshots to a renderer-neutral adapter, then create a live GUI.SVG view and telemetry.
-4. **Establish baseline:** create a repeatable small-run harness and invariant report before optimizing.
-5. **Scale honestly:** run the population ramp in 100K_SCALE_VALIDATION.md; preserve raw evidence and optimize measured hot paths.
-6. **Release audit:** verify bundle IDs against shared registry, provider dependencies against actual runtime composition, documentation and CI, and obtain explicit approval for publication.
+3. **Close the loop:** implement the state machine in [AUTONOMOUS_LANE_EXECUTION.md](AUTONOMOUS_LANE_EXECUTION.md), then wire lane admission, movement, and exit into deterministic tick execution. Preserve occupancy and retry safety.
+4. **Add observability:** expose coherent committed snapshots to a renderer-neutral adapter, then create a live GUI.SVG view and telemetry.
+5. **Establish baseline:** create a repeatable small-run harness and invariant report before optimizing.
+6. **Scale honestly:** run the population ramp in [100K_SCALE_VALIDATION.md](100K_SCALE_VALIDATION.md); preserve raw evidence and optimize measured hot paths.
+7. **Release audit:** verify bundle IDs against shared registry, provider dependencies against actual runtime composition, documentation and CI, and obtain explicit approval for publication.
 
 ## Explicit non-claims
 
