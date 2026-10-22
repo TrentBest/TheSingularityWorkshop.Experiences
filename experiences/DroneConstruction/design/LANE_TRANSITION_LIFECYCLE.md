@@ -1,6 +1,6 @@
 # Drone Construction — Lane Transition Lifecycle Contract
 
-**Status:** design contract for M2; the standalone lifecycle is tested, but lane transitions are not integrated into the simulation state machine.
+**Status:** partial integration on `development`; the simulation now resolves locations and snapshots through the occupancy catalog, but lane entry/traversal/exit are not yet exposed through the simulation state machine.
 **Scope:** renderer-independent, deterministic, single-threaded discrete simulation.
 
 ## Why this contract comes first
@@ -45,9 +45,9 @@ Coordinates are local to their named spaces. Equal `GridCell` values in differen
 
 1. **Completed on development:** add `ConstructionSpaceKind` and `QualifiedGridLocation`; expose `ConstructionSimulation.SpaceId`, `GetAgentLocation(agentId)`, and qualified `ConstructionAgentSnapshot.Location`. Tests cover validation, movement updates, and agreement between simulation queries and snapshots. The simulation currently reports only `SimulationGrid` locations because lane transitions are not integrated.
 2. **Completed as a standalone component on development:** `SlipstreamLifecycle` coordinates reservation, source-to-transition entry, one-cell orthogonal traversal, and transition-to-destination exit across distinct grids. Regression tests cover entry rollback, blocked traversal, blocked exit retention, successful exit, exact reserved destination enforcement, and reservation release.
-3. **Completed as a standalone component on development:** `ConstructionSpaceCatalog` resolves an agent's unique occupied grid to a `QualifiedGridLocation`, validates qualified grid resolution, rejects duplicate registration aliases, and fails closed for missing or ambiguous occupancy. It is not integrated into the simulation yet.
-4. **Next:** connect the catalog and lifecycle to agent location/state updates with an explicit transition-resident state. Do not integrate them into `ConstructionSimulation.Step()` until ordinary movement cannot misuse local coordinates across spaces.
-5. Extend immutable snapshots to expose qualified locations from the integrated occupancy authority and verify each snapshot against actual occupancy.
+3. **Completed as a standalone component on development:** `ConstructionSpaceCatalog` resolves an agent's unique occupied grid to a `QualifiedGridLocation`, validates qualified grid resolution, rejects duplicate registration aliases, and fails closed for missing or ambiguous occupancy.
+4. **Partially integrated on development:** `ConstructionSimulation` registers its main grid with the catalog, derives `GetAgentLocation` and snapshot locations from authoritative occupancy, and skips agents whose catalog location is not the simulation grid. This prevents the ordinary movement loop from interpreting an external grid's local coordinates as main-grid coordinates. The simulation does not yet expose controlled lane registration or lifecycle entry/traversal/exit, so end-to-end lane movement is not claimed.
+5. **Next:** add an explicit transition-resident lifecycle and controlled simulation APIs for external spaces and `SlipstreamLifecycle`, including safe position synchronization when an agent returns to the main grid. Add end-to-end tests for blocked exit, reservation retention, snapshot location, and resumed main-grid movement.
 6. Add GUI.SVG observation only after the integrated model contract and tests pass.
 
 ## Explicit non-claims
