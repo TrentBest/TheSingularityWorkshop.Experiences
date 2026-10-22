@@ -42,6 +42,7 @@ public sealed class ConstructionSimulation
     private readonly TrafficCellGrid _traffic;
     private readonly ConstructionSpaceCatalog _spaces = new();
     private readonly Dictionary<string, SlipstreamLifecycle> _slipstreamLifecycles = new(StringComparer.Ordinal);
+    private readonly Dictionary<ulong, LaneTransitionIntent> _pendingLaneTransitionIntents = [];
     private readonly string _spaceId;
     private long _tick;
 
@@ -101,6 +102,21 @@ public sealed class ConstructionSimulation
     public long TickCount => _tick;
     /// <summary>Gets the stable identity of this simulation's traffic coordinate space.</summary>
     public string SpaceId => _spaceId;
+
+    /// <summary>Gets the number of agents with an unadmitted lane-transition intent.</summary>
+    internal int PendingLaneTransitionIntentCount => _pendingLaneTransitionIntents.Count;
+
+    /// <summary>Gets a pending lane-transition intent owned by this simulation.</summary>
+    internal bool TryGetPendingLaneTransitionIntent(ulong agentId, out LaneTransitionIntent? intent) =>
+        _pendingLaneTransitionIntents.TryGetValue(agentId, out intent);
+
+    /// <summary>Records one pending intent after the caller validates the agent's committed source.</summary>
+    internal bool TryRegisterPendingLaneTransitionIntent(ulong agentId, LaneTransitionIntent intent) =>
+        agentId != 0 && _pendingLaneTransitionIntents.TryAdd(agentId, intent);
+
+    /// <summary>Removes a pending intent after cancellation or successful admission.</summary>
+    internal bool TryRemovePendingLaneTransitionIntent(ulong agentId) =>
+        _pendingLaneTransitionIntents.Remove(agentId);
 
     /// <summary>Gets the current space-qualified location of a registered agent.</summary>
     public QualifiedGridLocation GetAgentLocation(ulong agentId)
@@ -325,7 +341,10 @@ public sealed class ConstructionSimulation
                     break;
 
                 case ConstructionAgentState.AwaitingTransition:
-                    agent.TryTransition(ConstructionAgentState.Traveling);
+                    // Explicit intent belongs to this simulation and must be admitted or cancelled
+                    // before ordinary scheduling may advance the agent.
+                    if (!_pendingLaneTransitionIntents.ContainsKey(agent.AgentId))
+                        agent.TryTransition(ConstructionAgentState.Traveling);
                     break;
 
                 case ConstructionAgentState.Traveling:
