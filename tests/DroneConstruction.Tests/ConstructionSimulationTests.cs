@@ -227,6 +227,12 @@ public sealed class ConstructionSimulationTests
         Assert.Equal(new GridCell(0, 0), agent.Position);
         Assert.Equal(entry, Assert.Single(simulation.Snapshot().Agents).Location);
 
+        // A normal simulation tick must not interpret lane-local coordinates as main-grid coordinates.
+        simulation.Step();
+        Assert.Equal(entry, simulation.GetAgentLocation(1));
+        Assert.Equal(new GridCell(0, 0), agent.Position);
+        Assert.Equal(entry, Assert.Single(simulation.Snapshot().Agents).Location);
+
         Assert.True(simulation.TryAdvanceSlipstream(1, "transition-east", lifecycle, new GridCell(1, 0)));
         Assert.True(simulation.TryAdvanceSlipstream(1, "transition-east", lifecycle, new GridCell(2, 0)));
         Assert.True(simulation.TryAdvanceSlipstream(1, "transition-east", lifecycle, new GridCell(3, 0)));
