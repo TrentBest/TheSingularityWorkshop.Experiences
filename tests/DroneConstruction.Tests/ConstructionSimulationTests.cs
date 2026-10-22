@@ -67,6 +67,31 @@ public sealed class ConstructionSimulationTests
     }
 
     [Fact]
+    public void Simulation_RejectsSchedulingWhenAgentPositionDisagreesWithCommittedOccupancy()
+    {
+        var agent = new ConstructionAgent(1, new GridCell(0, 0));
+        var simulation = new ConstructionSimulation(
+            width: 3,
+            height: 1,
+            requiredHeight: (_, _) => 0,
+            agents: [agent],
+            emitters: []);
+
+        // Simulate an external mutation of the public agent object. The traffic grid remains
+        // authoritative, so the scheduler must not consume this stale coordinate.
+        agent.SetPosition(new GridCell(2, 0));
+
+        var error = Assert.Throws<InvalidOperationException>(() => simulation.Step());
+
+        Assert.Contains("does not match committed location", error.Message);
+        Assert.Equal(new QualifiedGridLocation(
+            ConstructionSpaceKind.SimulationGrid, simulation.SpaceId, new GridCell(0, 0)),
+            simulation.GetAgentLocation(1));
+        Assert.Equal(new GridCell(2, 0), agent.Position);
+        Assert.Equal(0, simulation.Snapshot().Tick);
+    }
+
+    [Fact]
     public void Simulation_RejectsUnknownAgentLocationQueryAndBlankSpaceIdentity()
     {
         var simulation = new ConstructionSimulation(
