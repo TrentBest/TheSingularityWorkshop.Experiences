@@ -431,4 +431,43 @@ public sealed class ConstructionSimulationTests
         Assert.Null(lifecycle.AgentId);
     }
 
+
+    [Fact]
+    public void Simulation_FailedSlipstreamExitRetainsOwnershipAndCanRetry()
+    {
+        var agent = new ConstructionAgent(1, new GridCell(0, 0));
+        var simulation = new ConstructionSimulation(
+            width: 10,
+            height: 1,
+            requiredHeight: (_, _) => 0,
+            agents: [agent],
+            emitters: []);
+        var transitionGrid = new TrafficCellGrid(3, 1);
+        var destinationGrid = new TrafficCellGrid(3, 1);
+        var lifecycle = new SlipstreamLifecycle(
+            new Slipstream("resource-retry", transitionCellCount: 3, lookaheadCells: 5),
+            transitionGrid);
+
+        Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.Slipstream, "transition-retry", transitionGrid));
+        Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.Skylane, "destination-retry", destinationGrid));
+        Assert.True(simulation.TryRegisterSlipstreamLifecycle("transition-retry", lifecycle));
+
+        var source = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, simulation.SpaceId, new GridCell(0, 0));
+        var entry = new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "transition-retry", new GridCell(0, 0));
+        var destination = new QualifiedGridLocation(ConstructionSpaceKind.Skylane, "destination-retry", new GridCell(2, 0));
+        GridCell[] lookahead = [new(0, 0), new(1, 0), new(2, 0), new(1, 0), new(0, 0)];
+
+        Assert.True(simulation.TryEnterSlipstream(1, source, entry, destination, lookahead));
+        Assert.True(destinationGrid.TryOccupy(destination.Cell, 99));
+
+        Assert.False(simulation.TryExitSlipstream(1, "transition-retry", destination));
+        Assert.Equal(entry, simulation.GetAgentLocation(1));
+        Assert.Equal(1UL, lifecycle.AgentId);
+
+        Assert.True(destinationGrid.Release(destination.Cell, 99));
+        Assert.True(simulation.TryExitSlipstream(1, "transition-retry", destination));
+        Assert.Equal(destination, simulation.GetAgentLocation(1));
+        Assert.Null(lifecycle.AgentId);
+    }
+
 }
