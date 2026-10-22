@@ -9,6 +9,7 @@ public sealed class LaneTransitionAdmissionPolicy
     private readonly ConstructionSimulation _simulation;
     private readonly Dictionary<ulong, LaneTransitionIntent> _pending = [];
 
+    /// <summary>Creates a policy bound to one simulation instance.</summary>
     public LaneTransitionAdmissionPolicy(ConstructionSimulation simulation) =>
         _simulation = simulation ?? throw new ArgumentNullException(nameof(simulation));
 
