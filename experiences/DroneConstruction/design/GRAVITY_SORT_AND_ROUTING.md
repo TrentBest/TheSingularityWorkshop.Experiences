@@ -106,3 +106,15 @@ At lane capture, require both altitude error within a configured tolerance and v
 **Important:** thrust that exactly balances gravity cancels downward acceleration but does not cancel existing downward velocity. To stop descending, thrust must exceed weight long enough to reduce the downward velocity. The planner must verify that the available braking distance and time allow lane capture; it must not assume that reaching the lane's altitude automatically means the drone can safely turn horizontal.
 
 Model these as explicit configuration/state, not a single magic delay: initial vertical velocity, gravity, thrust/net acceleration or a discrete motion policy, braking lead height, lane-capture velocity tolerance, follower separation, and the conflict-clearance condition. If the production simulation is discrete rather than a physical integrator, define deterministic tick-based equivalents and test their invariants.
+
+## The cheap lane hot path: coordinate, not perception
+
+The quoted word **free** means negligible work relative to alternatives such as raycasts or image-based scene interpretation—not literally zero instructions. Once a drone has been admitted to a one-way lane and its next leg is fixed, traversal should not repeatedly solve the route or inspect the rendered scene. It advances along the lane's declared axis and checks the relevant integer coordinate against the precomputed exit/target coordinate. When the values match, it performs the already-planned boundary transition; otherwise, it advances along the lane. For a discrete grid this is an exact integer comparison. Continuous-coordinate variants should use a directional crossing test (reached or passed the target), not rely on floating-point equality.
+
+Keep the cost split explicit:
+
+- **Boundary work:** choose the next leg, determine the target coordinate, verify lane direction, validate destination/clearance, and acquire any required reservation.
+- **Lane hot path:** advance by the configured cells-per-tick and test the target-axis coordinate. Do not rerun pathfinding, raycasting, or image analysis on each cell.
+- **Exit work:** on the target coordinate, perform the precomputed transition and its occupancy/reservation checks. If admission or exit can fail, preserve the existing retry-safe occupancy contract.
+
+This is the intended optimization, not yet a claim that autonomous traversal is integrated into `ConstructionSimulation.Step()`. The current `TryAdvanceSkylane` primitive still validates lane identity/direction and traversed-cell occupancy on each call. A later integrated scheduler can separate validated leg setup from the minimal per-tick movement check only if doing so preserves the exclusive-occupancy and one-way-direction invariants. Benchmark that change against the checked implementation rather than assuming the speedup.
