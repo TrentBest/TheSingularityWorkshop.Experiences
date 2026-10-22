@@ -31,6 +31,7 @@ The original Unity implementation was lost with its former machine. This folder 
 - **[Readiness ledger and next gates](design/READINESS.md)**
 - **[100,000-agent validation protocol](design/100K_SCALE_VALIDATION.md)**
 - **[Snapshot and living-view contract](design/SIMULATION_OBSERVABILITY.md)**
+- **[Gravity sort, five-cell offsets, and route choreography](design/GRAVITY_SORT_AND_ROUTING.md)**
 - [MicroBundle boundaries](design/MICROBUNDLE_BOUNDARIES.md)
 - [Lane transition lifecycle](design/LANE_TRANSITION_LIFECYCLE.md)
 
