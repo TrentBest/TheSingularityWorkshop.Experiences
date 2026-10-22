@@ -28,12 +28,12 @@
 
 ## Latest verified CI checkpoint
 
-The latest previously verified workflow is [build run 39846422281](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39846422281). New renderer/test commits are currently awaiting CI: [build run 39848124050](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39848124050). Do not treat the new renderer as CI-verified until that run completes successfully. No workflow here tests a 100k population, proves live GUI.SVG integration, or measures the proposed coordinate-only hot path.
+The latest previously verified workflow is [build run 39846422281](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39846422281). The renderer and CI-artifact changes are awaiting verification in [build run 39848658704](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39848658704); at the latest check, the run was queued. The test is configured to write the completed simulation's renderer-produced SVG and the workflow is configured to upload it as `drone-construction-snapshot-svg`, but neither test success nor artifact production is verified yet. No workflow here tests a 100k population, proves live GUI.SVG integration, or measures the proposed coordinate-only hot path.
 
 ## Work sequence
 
-1. **Wire the first visual proof:** verify the snapshot-to-SVG renderer in CI, then make the example artifact reproducible and integrate the semantic scene with GUI.SVG.
-2. **Close the loop:** implement the state machine in [AUTONOMOUS_LANE_EXECUTION.md](AUTONOMOUS_LANE_EXECUTION.md), then wire lane admission, movement, and exit into deterministic tick execution. Preserve occupancy and retry safety.
+1. **Wire the first visual proof:** verify the snapshot-to-SVG renderer and downloadable CI artifact, then integrate the semantic scene with GUI.SVG.
+3. **Close the loop:** implement the state machine in [AUTONOMOUS_LANE_EXECUTION.md](AUTONOMOUS_LANE_EXECUTION.md), then wire lane admission, movement, and exit into deterministic tick execution. Preserve occupancy and retry safety.
 2. **Prove safety boundaries:** version lookahead and transition configuration; test blocked paths, waiting, retry, competing agents, and starvation.
 3. **Add observability:** expose coherent committed snapshots to a renderer-neutral adapter, then create a live GUI.SVG view and telemetry.
 4. **Establish baseline:** create a repeatable small-run harness and invariant report before optimizing.
