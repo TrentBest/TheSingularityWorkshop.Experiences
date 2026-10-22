@@ -32,6 +32,14 @@ public sealed class GravitySortBrakingPolicyTests
             currentAltitude: 8, laneAltitude: 0, verticalVelocity: -8,
             gravity: 10, maximumThrustAcceleration: 14, safetyMargin: 0)); // Inclusive boundary.
         Assert.True(fasterDrone);
+        // Once below lane altitude, continue arresting descent; the caller must also flag overshoot
+        // and must not claim successful lane capture.
+        Assert.True(GravitySortBrakingPolicy.ShouldBeginBraking(
+            currentAltitude: -0.5, laneAltitude: 0, verticalVelocity: -8,
+            gravity: 10, maximumThrustAcceleration: 14, safetyMargin: 0));
+        Assert.False(GravitySortBrakingPolicy.IsLaneCaptured(
+            currentAltitude: -0.5, laneAltitude: 0, verticalVelocity: 0,
+            altitudeTolerance: 0.05, verticalSpeedTolerance: 0.05));
     }
 
     [Fact]
