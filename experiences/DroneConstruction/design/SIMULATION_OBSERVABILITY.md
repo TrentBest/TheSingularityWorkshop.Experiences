@@ -1,6 +1,6 @@
 # Drone Construction — Snapshot and Living-View Contract
 
-**Status:** immutable snapshot contract and standalone SVG renderer are tested; an optional GUI.SVG source-graph integration test is CI-verified. A continuously updated application view and telemetry stream are still open.
+**Status:** immutable snapshots, the standalone SVG renderer, and a maintained pull-based SVG view are implemented with focused tests. The optional GUI.SVG source-graph integration test is CI-verified. A hosted GUI.SVG application and telemetry stream remain open.
 
 ## Authority boundary
 
@@ -69,14 +69,14 @@ The optional source-graph test [ConstructionSnapshotGuiSvgIntegrationTests.cs](.
 
 Keep the domain snapshot as stable input. A renderer adapter may transform it into a renderer-neutral semantic scene. GUI.SVG manifests that scene as SVG; Renderer may provide text-oriented or other portrayals. ConstructionSimulation must not reference either adapter.
 
-The next step is a maintained snapshot-polling view (simpler first proof) with an explicit refresh/backpressure policy. An event stream can follow only if ordering, replay, and recovery semantics are specified. Do not add a second source of truth. Events describe committed changes; snapshots are authoritative checkpoints.
+`ConstructionSnapshotSvgView` is the first maintained polling component. The host publishes each committed snapshot to `ConstructionSnapshotObserver` and calls `TryRefresh` on its own cadence. The view renders only a new accepted sequence and exposes the corresponding run ID/tick; because the observer retains only the latest value, intermediate snapshots can be coalesced. A failed render leaves the cursor unchanged for retry. The component does not schedule ticks, run a timer, host a GUI.SVG manifest, or collect telemetry. An event stream can follow only if ordering, replay, and recovery semantics are specified. Do not add a second source of truth.
 
 ## Review checklist
 
 - [x] Can a consumer render a snapshot without a reference to the simulation object? The standalone SVG renderer takes only a snapshot, dimensions, and space identity.
 - [x] Can the optional source graph render initial and completed committed snapshots through GUI.SVG? Verified by CI run 39853079623.
-- [ ] Is there a maintained, continuously updated view rather than a test-only rendering helper?
-- [ ] Does the consumer show the exact tick and actual agent count?
+- [x] Is there a maintained snapshot-polling SVG view rather than only a test helper? `ConstructionSnapshotSvgView` refreshes on demand and coalesces to the newest observer sequence; hosted GUI.SVG integration remains open.
+- [x] Does the standalone SVG consumer show the exact tick and snapshot agent count? Yes; a hosted application still needs to surface refresh failures and its own cadence.
 - [ ] Are cross-space locations represented without coordinate ambiguity?
 - [ ] Can a failed transition be seen as blocked/waiting rather than silently disappearing?
 - [ ] Does the view remain correct when frames are dropped?
