@@ -35,6 +35,20 @@ public sealed class ConstructionSnapshotObserver
     }
 
     /// <summary>
+    /// Reads the latest snapshot and its acceptance sequence atomically.
+    /// Returns false until the first snapshot has been published.
+    /// </summary>
+    public bool TryGetLatest(out ConstructionSimulationSnapshot? snapshot, out long sequence)
+    {
+        lock (_gate)
+        {
+            snapshot = _latestSnapshot;
+            sequence = _sequence;
+            return snapshot is not null;
+        }
+    }
+
+    /// <summary>
     /// Publishes a committed snapshot if its tick is strictly newer than the currently observed tick.
     /// Duplicate and out-of-order ticks are ignored, so delayed producers cannot roll the view backward.
     /// The run identity is fixed at construction; create a new observer for a new simulation run.
