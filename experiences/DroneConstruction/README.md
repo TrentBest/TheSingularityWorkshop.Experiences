@@ -31,6 +31,12 @@ The original Unity implementation was lost with its former machine. This folder 
 
 *This SVG illustrates the intended hot path: validate and admit at a boundary, move along a known axis toward a precomputed coordinate, and preserve occupancy when blocked. It is a concept image, not a live GUI.SVG rendering or a claim that autonomous lane execution is already integrated.*
 
+## Snapshot-driven SVG renderer
+
+The first renderer-neutral visual bridge is now implemented in `ConstructionSnapshotSvgRenderer`. It accepts an immutable committed snapshot and emits standalone SVG containing the tick, placed/required progress, emitter inventory, and agents on the explicitly selected simulation grid. The renderer is read-only and keeps local coordinates scoped to their qualified grid identity.
+
+This is a real snapshot-to-SVG implementation with focused tests; it is **not yet** a GUI.SVG manifest/live view, and no autonomous lane routing or scale claim follows from it. See [renderer contract](../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md) and [UML/use cases](../../src/DroneConstruction/ConstructionSnapshotSvgRendererUML.md).
+
 ## Phone-friendly review
 
 - **[Gallery — what is real vs. concept](GALLERY.md)**
