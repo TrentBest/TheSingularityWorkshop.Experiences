@@ -281,17 +281,13 @@ Castle Siege is the planned physics-based build-and-destroy Experience: first a 
 
 See [Castle Siege Experience design and implementation contract](experiences/CastleSiege/design/EXPERIENCE.md) and the [Physics experiment catalog](https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/docs/CASTLE_SIEGE_EXPERIMENT_CATALOG.md).
 
-## Story Forge — temporal story authoring
+## Story Forge — StoryBuilder-owned capability
 
 ![Story Forge temporal model](docs/assets/story-forge-temporal-model.svg)
 
-Story Forge is being developed as a capability inside the Forge Experience. Its first domain library defines named story timelines, event markers, story-time ranges, publication coverage, and immutable published-edition snapshots.
+Story Forge belongs to [StoryBuilder](https://github.com/TrentBest/StoryBuilder), where its renderer-independent temporal model and query engine project from canonical StoryBuilder workspace records. Experiences does not own or build the story-domain engine. This repository may still contain Experience-authored content or MicroBundles that StoryBuilder authors against, but it must not duplicate story facts, timelines, provenance, or publication semantics.
 
-The key distinction is between **when something happens in the story world** and **where a chapter or book chooses to present it**. Multiple timelines and coverage bands will let authors add flashbacks or earlier-discovered events without silently rewriting published editions.
-
-The planned diegetic tools include a hashed 2D timeline, clickable event markers, chapter/book coverage lanes, a character workshop, an evidence/string board, temporal queries, and scene playback. The current code includes a renderer-independent temporal model and first temporal query engine with provenance-aware events, time-bounded entity state, proposal filtering, and explicit conflict reporting. The interactive timeline, character workshop, evidence/string board, scene planner, and host integration remain the next milestones.
-
-See [Story Forge architecture](docs/STORY_FORGE_ARCHITECTURE.md) and [the project README](src/StoryForge/README.md).
+The temporal-model concept art and historical architecture notes remain here as reference material; active implementation and tests are maintained in StoryBuilder. See the [StoryBuilder Story Forge project](https://github.com/TrentBest/StoryBuilder/tree/development/src/StoryBuilder.StoryForge) and [ownership/migration record](https://github.com/TrentBest/StoryBuilder/blob/development/docs/STORY_FORGE_OWNERSHIP_AND_MIGRATION.md).
 
 ## What belongs here?
 
