@@ -279,6 +279,86 @@ public sealed class ConstructionContractsTests
     }
 
     [Fact]
+    public void SlipstreamLifecycle_TransfersThroughTransitionAndReleasesAfterExit()
+    {
+        var source = new TrafficCellGrid(2, 1);
+        var transition = new TrafficCellGrid(4, 1);
+        var destination = new TrafficCellGrid(10, 1);
+        var slipstream = new Slipstream("lifecycle-a", transitionCellCount: 4, lookaheadCells: 5);
+        var lifecycle = new SlipstreamLifecycle(slipstream, transition);
+        var origin = new GridCell(0, 0);
+        var entry = new GridCell(0, 0);
+        var destinationCell = new GridCell(8, 0);
+        GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+        Assert.True(source.TryOccupy(origin, 7));
+
+        Assert.True(lifecycle.TryEnter(7, source, origin, entry, destination, destinationCell, lookahead));
+        Assert.False(source.TryGetAgentCell(7, out _));
+        Assert.True(transition.TryGetAgentCell(7, out var enteredCell));
+        Assert.Equal(entry, enteredCell);
+        Assert.Equal(7UL, lifecycle.AgentId);
+
+        Assert.False(lifecycle.TryAdvance(7, new GridCell(2, 0)));
+        Assert.True(lifecycle.TryAdvance(7, new GridCell(1, 0)));
+        Assert.True(lifecycle.TryAdvance(7, new GridCell(2, 0)));
+        Assert.True(lifecycle.TryAdvance(7, new GridCell(3, 0)));
+
+        Assert.True(lifecycle.TryExit(7, destination, destinationCell));
+        Assert.False(transition.TryGetAgentCell(7, out _));
+        Assert.True(destination.TryGetAgentCell(7, out var exitedCell));
+        Assert.Equal(destinationCell, exitedCell);
+        Assert.Null(lifecycle.AgentId);
+    }
+
+    [Fact]
+    public void SlipstreamLifecycle_BlockedExitRetainsTransitionOccupancyAndReservation()
+    {
+        var source = new TrafficCellGrid(2, 1);
+        var transition = new TrafficCellGrid(2, 1);
+        var destination = new TrafficCellGrid(10, 1);
+        var slipstream = new Slipstream("lifecycle-b", transitionCellCount: 2, lookaheadCells: 5);
+        var lifecycle = new SlipstreamLifecycle(slipstream, transition);
+        var origin = new GridCell(0, 0);
+        var entry = new GridCell(0, 0);
+        var destinationCell = new GridCell(8, 0);
+        GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+        Assert.True(source.TryOccupy(origin, 7));
+        Assert.True(lifecycle.TryEnter(7, source, origin, entry, destination, destinationCell, lookahead));
+        Assert.True(destination.TryOccupy(destinationCell, 99));
+
+        Assert.False(lifecycle.TryExit(7, destination, destinationCell));
+
+        Assert.True(transition.TryGetAgentCell(7, out var transitionCell));
+        Assert.Equal(entry, transitionCell);
+        Assert.Equal(7UL, lifecycle.AgentId);
+        Assert.True(destination.TryGetOccupant(destinationCell, out var occupant));
+        Assert.Equal(99UL, occupant);
+    }
+
+    [Fact]
+    public void SlipstreamLifecycle_FailedEntryPreservesSourceAndDoesNotKeepReservation()
+    {
+        var source = new TrafficCellGrid(2, 1);
+        var transition = new TrafficCellGrid(1, 1);
+        var destination = new TrafficCellGrid(10, 1);
+        var slipstream = new Slipstream("lifecycle-c", transitionCellCount: 1, lookaheadCells: 5);
+        var lifecycle = new SlipstreamLifecycle(slipstream, transition);
+        var origin = new GridCell(0, 0);
+        var entry = new GridCell(0, 0);
+        var destinationCell = new GridCell(8, 0);
+        GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+        Assert.True(source.TryOccupy(origin, 7));
+        Assert.True(transition.TryOccupy(entry, 99));
+
+        Assert.False(lifecycle.TryEnter(7, source, origin, entry, destination, destinationCell, lookahead));
+
+        Assert.True(source.TryGetAgentCell(7, out var sourceCell));
+        Assert.Equal(origin, sourceCell);
+        Assert.Equal(99UL, slipstream.ReservedBy is null ? 99UL : 0UL);
+        Assert.Null(lifecycle.AgentId);
+    }
+
+    [Fact]
     public void BuildCell_AndEmitterConserveBlockCounts()
     {
         var target = new BuildCell(requiredBlocks: 2);
