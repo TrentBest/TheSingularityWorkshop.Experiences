@@ -480,6 +480,13 @@ public sealed class ConstructionSimulationTests
         Assert.Equal(1UL, firstLifecycle.AgentId);
         Assert.Equal(2UL, secondLifecycle.AgentId);
 
+        // A resident agent cannot be admitted again; failure must preserve the existing owner and location.
+        Assert.False(simulation.TryEnterSlipstream(1, firstSource, firstEntry, firstDestination, firstLookahead));
+        Assert.Equal(firstEntry, simulation.GetAgentLocation(1));
+        Assert.Equal(1UL, firstLifecycle.AgentId);
+        Assert.Equal(secondEntry, simulation.GetAgentLocation(2));
+        Assert.Equal(2UL, secondLifecycle.AgentId);
+
         Assert.False(simulation.TryAdvanceSlipstream(1, "transition-west", new GridCell(1, 0)));
         Assert.True(simulation.TryAdvanceSlipstream(1, "transition-east", new GridCell(1, 0)));
         Assert.True(simulation.TryAdvanceSlipstream(2, "transition-west", new GridCell(1, 0)));
