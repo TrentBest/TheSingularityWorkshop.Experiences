@@ -224,6 +224,7 @@ public sealed class ConstructionSimulation
             || !StringComparer.Ordinal.Equals(current.SpaceId, transitionSpaceId)
             || !_spaces.TryResolve(current, out var transitionGrid)
             || !ReferenceEquals(transitionGrid, lifecycle.TransitionCells)
+            || agent.Position != current.Cell
             || (_slipstreamLifecycles.TryGetValue(transitionSpaceId, out var registeredLifecycle) && !ReferenceEquals(registeredLifecycle, lifecycle)))
             return false;
 
@@ -254,6 +255,7 @@ public sealed class ConstructionSimulation
             || !StringComparer.Ordinal.Equals(current.SpaceId, transitionSpaceId)
             || !_spaces.TryResolve(current, out var transitionGrid)
             || !ReferenceEquals(transitionGrid, lifecycle.TransitionCells)
+            || agent.Position != current.Cell
             || (_slipstreamLifecycles.TryGetValue(transitionSpaceId, out var registeredLifecycle) && !ReferenceEquals(registeredLifecycle, lifecycle)))
             return false;
 
