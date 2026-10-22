@@ -433,6 +433,59 @@ public sealed class ConstructionSimulationTests
 
 
     [Fact]
+    public void Simulation_RegistersAndOperatesIndependentSlipstreamLifecycleOwners()
+    {
+        var firstAgent = new ConstructionAgent(1, new GridCell(0, 0));
+        var secondAgent = new ConstructionAgent(2, new GridCell(1, 0));
+        var simulation = new ConstructionSimulation(
+            width: 12,
+            height: 1,
+            requiredHeight: (_, _) => 0,
+            agents: [firstAgent, secondAgent],
+            emitters: [],
+            spaceId: "yard");
+        var firstTransition = new TrafficCellGrid(3, 1);
+        var secondTransition = new TrafficCellGrid(3, 1);
+        var firstLifecycle = new SlipstreamLifecycle(
+            new Slipstream("yard-to-east", transitionCellCount: 3, lookaheadCells: 5),
+            firstTransition);
+        var secondLifecycle = new SlipstreamLifecycle(
+            new Slipstream("yard-to-west", transitionCellCount: 3, lookaheadCells: 5),
+            secondTransition);
+
+        Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.Slipstream, "transition-east", firstTransition));
+        Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.Slipstream, "transition-west", secondTransition));
+        Assert.True(simulation.TryRegisterSlipstreamLifecycle("transition-east", firstLifecycle));
+        Assert.True(simulation.TryRegisterSlipstreamLifecycle("transition-west", secondLifecycle));
+
+        var firstSource = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(0, 0));
+        var secondSource = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(1, 0));
+        var firstEntry = new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "transition-east", new GridCell(0, 0));
+        var secondEntry = new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "transition-west", new GridCell(0, 0));
+        var firstDestination = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(10, 0));
+        var secondDestination = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(11, 0));
+        GridCell[] firstLookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+        GridCell[] secondLookahead = [new(3, 0), new(4, 0), new(5, 0), new(6, 0), new(7, 0)];
+
+        Assert.True(simulation.TryEnterSlipstream(1, firstSource, firstEntry, firstDestination, firstLookahead));
+        Assert.True(simulation.TryEnterSlipstream(2, secondSource, secondEntry, secondDestination, secondLookahead));
+        Assert.Equal(firstEntry, simulation.GetAgentLocation(1));
+        Assert.Equal(secondEntry, simulation.GetAgentLocation(2));
+        Assert.Equal(1UL, firstLifecycle.AgentId);
+        Assert.Equal(2UL, secondLifecycle.AgentId);
+
+        Assert.False(simulation.TryAdvanceSlipstream(1, "transition-west", new GridCell(1, 0)));
+        Assert.True(simulation.TryAdvanceSlipstream(1, "transition-east", new GridCell(1, 0)));
+        Assert.True(simulation.TryAdvanceSlipstream(2, "transition-west", new GridCell(1, 0)));
+        Assert.True(simulation.TryExitSlipstream(1, "transition-east", firstDestination));
+        Assert.True(simulation.TryExitSlipstream(2, "transition-west", secondDestination));
+        Assert.Equal(firstDestination, simulation.GetAgentLocation(1));
+        Assert.Equal(secondDestination, simulation.GetAgentLocation(2));
+        Assert.Null(firstLifecycle.AgentId);
+        Assert.Null(secondLifecycle.AgentId);
+    }
+
+    [Fact]
     public void Simulation_FailedSlipstreamExitRetainsOwnershipAndCanRetry()
     {
         var agent = new ConstructionAgent(1, new GridCell(0, 0));
