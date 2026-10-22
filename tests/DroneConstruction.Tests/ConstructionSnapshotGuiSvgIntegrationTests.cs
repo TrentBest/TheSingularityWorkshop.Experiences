@@ -42,6 +42,40 @@ public sealed class ConstructionSnapshotGuiSvgIntegrationTests
         Assert.DoesNotContain($"TICK {initial.Tick}", completedSvg);
     }
 
+
+    [Fact]
+    public void Observer_PublishesCommittedTicksToSvgAndRejectsDelayedSnapshots()
+    {
+        var simulation = new ConstructionSimulation(
+            width: 3,
+            height: 1,
+            requiredHeight: (x, _) => x == 2 ? 1 : 0,
+            agents: [new ConstructionAgent(7, new GridCell(0, 0))],
+            emitters: [new PositionedBlockEmitter(new GridCell(0, 0), new BlockEmitter("emitter", 1))]);
+        var observer = new ConstructionSnapshotObserver("integration-run-1");
+        var initial = simulation.Snapshot();
+
+        Assert.True(observer.TryPublish(initial));
+        Assert.Equal(1, observer.Sequence);
+        Assert.Equal("integration-run-1", observer.RunId);
+
+        for (var i = 0; i < 12 && observer.LatestSnapshot is { IsComplete: false }; i++)
+            Assert.True(observer.TryPublish(simulation.Step()));
+
+        var latest = Assert.IsType<ConstructionSimulationSnapshot>(observer.LatestSnapshot);
+        Assert.True(latest.IsComplete);
+        Assert.True(latest.Tick > initial.Tick);
+        Assert.False(observer.TryPublish(initial));
+        Assert.False(observer.TryPublish(latest));
+        Assert.Equal(latest.Tick, observer.LatestSnapshot!.Tick);
+        Assert.Equal(latest.Tick, observer.Sequence);
+
+        var svg = RenderSnapshot(observer.LatestSnapshot!, width: 3, height: 1);
+        Assert.Contains($"TICK {latest.Tick}", svg);
+        Assert.Contains("1/1 BLOCKS PLACED", svg);
+        Assert.DoesNotContain($"TICK {initial.Tick}", svg);
+    }
+
     private static string RenderSnapshot(ConstructionSimulationSnapshot snapshot, int width, int height)
     {
         const int cellSize = 64;
