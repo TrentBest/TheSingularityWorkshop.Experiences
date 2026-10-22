@@ -6,7 +6,7 @@
 
 ## Readiness
 
-**Current engineering readiness estimate: 60%.** This is a scoped audit estimate for the stated 100,000-agent showcase, not a test pass rate or release approval. The discrete construction slice, standalone SVG output, source-graph GUI.SVG integration test, and immutable snapshot contract tests are verified. Autonomous lane routing, a maintained live observation/telemetry view, and measured scale remain outstanding.
+**Current engineering readiness estimate: 60%.** This is a scoped audit estimate for the stated 100,000-agent showcase, not a test pass rate or release approval. The discrete construction slice, standalone SVG output, source-graph GUI.SVG integration test, immutable snapshot contract tests, and the first monotonic snapshot observer implementation are in place. The observer has explicit caller-owned run identity, a latest committed snapshot, an acceptance sequence, and stale/duplicate-tick rejection; its focused tests are awaiting CI verification. Autonomous lane routing, a maintained GUI.SVG view/telemetry, and measured scale remain outstanding.
 
 | Workstream | Status | Evidence / exit condition |
 |---|---|---|
@@ -21,6 +21,7 @@
 | Persistent lookahead/conflict model | **Open** | Configurable five-cell initial policy and tests for moving occupancy/reservation lifetime |
 | Deterministic replay digest | **Open** | Same inputs/revision reproduce digest; mismatch diagnostics |
 | Snapshot-to-standalone-SVG rendering | Implemented; focused tests and CI artifact verified | [Renderer source](../../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.cs), [tests](../../../tests/DroneConstruction.Tests/ConstructionSnapshotSvgRendererTests.cs), and [contract](../../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md); renders committed tick/progress/agents/emitters and respects qualified grid identity |
+| Renderer-neutral snapshot observer | Implemented; focused tests awaiting CI | [Observer](../../../src/DroneConstruction/ConstructionSnapshotObserver.cs) is bound to an explicit run ID and accepts only strictly newer committed ticks; tests cover duplicate/stale rejection and distinct run identities |
 | Snapshot stability and read-only collections | **Implemented and CI-verified** | [Snapshot contract tests](../../../tests/DroneConstruction.Tests/ConstructionSimulationSnapshotContractTests.cs) prove captured observations remain unchanged after later ticks and agent/emitter/cell collections reject mutation through mutable interfaces |
 | Snapshot-to-GUI.SVG integration test | **Implemented and CI-verified; ongoing live observation remains open** | [Integration test](../../../tests/DroneConstruction.Tests/ConstructionSnapshotGuiSvgIntegrationTests.cs) runs in the optional repository-source graph and verifies rendered initial/completed snapshot state. It does not establish a continuously updated application view or telemetry stream. |
 | 1k / 10k / 25k / 50k / 100k runs | **Open** | Reproducible raw results and correctness gates at every stage |
@@ -39,7 +40,7 @@ These checkpoints verify snapshot immutability, standalone SVG output, and an op
 
 ## Work sequence
 
-1. **Visual boundary proof:** standalone snapshot-to-SVG output and the optional GUI.SVG source-graph integration test are verified. Next, build a maintained observer/view that refreshes from committed snapshots and exposes run/tick identity.
+1. **Visual boundary proof:** standalone snapshot-to-SVG output and the optional GUI.SVG source-graph integration test are verified. A renderer-neutral monotonic observer is now implemented; verify it in CI, then connect committed snapshots to a maintained GUI.SVG view with run/tick identity.
 2. **Prove safety boundaries:** version lookahead and transition configuration; test blocked paths, waiting, retry, competing agents, and starvation.
 3. **Close the loop:** implement the state machine in [AUTONOMOUS_LANE_EXECUTION.md](AUTONOMOUS_LANE_EXECUTION.md), then wire lane admission, movement, and exit into deterministic tick execution. Preserve occupancy and retry safety.
 4. **Add observability:** expose coherent committed snapshots to a renderer-neutral adapter, then create a maintained GUI.SVG view and telemetry.
@@ -52,6 +53,6 @@ These checkpoints verify snapshot immutability, standalone SVG output, and an op
 - 100,000 agents have **not** yet been demonstrated by a measured, reproducible run.
 - Skylane/hover/slipstream components exist, but autonomous lane traversal is **not yet integrated into** ConstructionSimulation.Step().
 - The authored storyboard is a concept illustration, not live GUI.SVG output.
-- The GUI.SVG source-graph test is a verified integration test, not proof of a continuously running live view or production observer.
+- The GUI.SVG source-graph test is a verified integration test, not proof of a continuously running live view. The new observer is a push-based latest-snapshot holder, not yet a simulation-owned event stream or a maintained GUI.SVG application view.
 - Passing unit tests is not evidence of a particular throughput or frame rate.
 - No Unity dependency is required or planned for this reconstruction.
