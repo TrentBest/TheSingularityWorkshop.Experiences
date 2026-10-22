@@ -340,6 +340,34 @@ public sealed class ConstructionContractsTests
     }
 
     [Fact]
+    public void SlipstreamLifecycle_RejectsExitToUnreservedLaneOrCell()
+    {
+        var source = new TrafficCellGrid(2, 1);
+        var transition = new TrafficCellGrid(2, 1);
+        var reservedLane = new TrafficCellGrid(10, 1);
+        var otherLane = new TrafficCellGrid(10, 1);
+        var slipstream = new Slipstream("lifecycle-bound-exit", transitionCellCount: 2, lookaheadCells: 5);
+        var lifecycle = new SlipstreamLifecycle(slipstream, transition);
+        var origin = new GridCell(0, 0);
+        var entry = new GridCell(0, 0);
+        var destination = new GridCell(8, 0);
+        GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+        Assert.True(source.TryOccupy(origin, 7));
+        Assert.True(lifecycle.TryEnter(7, source, origin, entry, reservedLane, destination, lookahead));
+
+        Assert.False(lifecycle.TryExit(7, otherLane, destination));
+        Assert.False(lifecycle.TryExit(7, reservedLane, new GridCell(9, 0)));
+        Assert.True(transition.TryGetAgentCell(7, out var currentCell));
+        Assert.Equal(entry, currentCell);
+        Assert.Equal(7UL, lifecycle.AgentId);
+        Assert.False(otherLane.IsOccupied(destination));
+        Assert.False(reservedLane.IsOccupied(destination));
+
+        Assert.True(lifecycle.TryExit(7, reservedLane, destination));
+        Assert.Null(lifecycle.AgentId);
+    }
+
+    [Fact]
     public void SlipstreamLifecycle_FailedEntryPreservesSourceAndDoesNotKeepReservation()
     {
         var source = new TrafficCellGrid(2, 1);
