@@ -6,7 +6,7 @@
 
 ## Readiness
 
-**Current engineering readiness estimate: 60%.** This is a scoped audit estimate for the stated 100,000-agent showcase, not a test pass rate or release approval. The discrete construction slice, standalone SVG output, source-graph GUI.SVG integration test, immutable snapshot contract tests, monotonic observer, and maintained pull-based snapshot-to-SVG view are implemented. The view coalesces to the latest accepted sequence, renders each sequence once, exposes run/tick identity, and does not consume a snapshot when rendering fails. Focused tests have been added for this view; their new commit still requires CI. Autonomous skylane destination assignment and tick-driven movement are now implemented with blocked-move retry tests; automatic transition admission/traversal, a hosted GUI.SVG application/telemetry, and measured scale remain outstanding.
+**Current engineering readiness estimate: 60%.** This is a scoped audit estimate for the stated 100,000-agent showcase, not a test pass rate or release approval. The discrete construction slice, standalone SVG output, source-graph GUI.SVG integration test, immutable snapshot contract tests, monotonic observer, and maintained pull-based snapshot-to-SVG view are implemented. The view coalesces to the latest accepted sequence, renders each sequence once, exposes run/tick identity, and does not consume a snapshot when rendering fails. Focused tests have been added for this view; their new commit still requires CI. Autonomous skylane destination assignment and tick-driven movement are implemented with blocked-move retry tests. Pending transition admission/retry is now also driven by `Step()` with a focused blocked-admission test; slipstream traversal/exit orchestration, a hosted GUI.SVG application/telemetry, and measured scale remain outstanding.
 
 | Workstream | Status | Evidence / exit condition |
 |---|---|---|
@@ -18,7 +18,7 @@
 | Velocity-aware gravity-sort braking | Pure decision policy and focused tests added; latest CI verified | Current vertical velocity, net braking acceleration, stopping-distance threshold, altitude/speed capture tolerances; integrate with authoritative cohort state |
 | Hover/slipstream lifecycle primitives | Implemented/tested as separate contracts | Admission, ownership, blocked-exit retry, reservation invariants |
 | Skylane destination movement inside Step() | Implemented; CI pending | Registered lane spaces accept a direction-valid destination; Step advances in stable agent order, preserves target on blockage, and clears it on arrival. Focused route and retry tests added. [Operational contract](AUTONOMOUS_LANE_EXECUTION.md) |
-| Automatic transition admission and end-to-end itinerary | **Open** | Pending intent admission, slipstream traversal/exit, and chained lane routing are still caller-driven; add deterministic lifecycle orchestration and conflict tests |
+| Tick-driven transition admission and end-to-end itinerary | **Partial** | `Step()` retries pending admission in stable agent-ID order and retains blocked intents; slipstream traversal/exit, chained lane routing, and conflict tests remain open |
 | Persistent lookahead/conflict model | **Open** | Configurable five-cell initial policy and tests for moving occupancy/reservation lifetime |
 | Deterministic replay digest | **Open** | Same inputs/revision reproduce digest; mismatch diagnostics |
 | Snapshot-to-standalone-SVG rendering | Implemented; focused tests and CI artifact verified | [Renderer source](../../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.cs), [tests](../../../tests/DroneConstruction.Tests/ConstructionSnapshotSvgRendererTests.cs), and [contract](../../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md); renders committed tick/progress/agents/emitters and respects qualified grid identity |
@@ -44,7 +44,7 @@ These checkpoints verify snapshot immutability, standalone SVG output, and an op
 
 1. **Visual boundary proof:** standalone snapshot-to-SVG output, the optional GUI.SVG source-graph integration test, and renderer-neutral observer are CI-verified. A maintained pull-based SVG view is now implemented; validate its new tests in CI, then host it in GUI.SVG with run/tick identity.
 2. **Prove safety boundaries:** version lookahead and transition configuration; test blocked paths, waiting, retry, competing agents, and starvation.
-3. **Close the loop:** implement the state machine in [AUTONOMOUS_LANE_EXECUTION.md](AUTONOMOUS_LANE_EXECUTION.md), then wire lane admission, movement, and exit into deterministic tick execution. Preserve occupancy and retry safety.
+3. **Close the loop:** continue the state machine in [AUTONOMOUS_LANE_EXECUTION.md](AUTONOMOUS_LANE_EXECUTION.md): add tick-driven slipstream traversal, blocked-exit retry, and route chaining. Preserve occupancy and retry safety.
 4. **Add observability:** expose coherent committed snapshots to a renderer-neutral adapter, then create a maintained GUI.SVG view and telemetry.
 5. **Establish baseline:** create a repeatable small-run harness and invariant report before optimizing.
 6. **Scale honestly:** run the population ramp in [100K_SCALE_VALIDATION.md](100K_SCALE_VALIDATION.md); preserve raw evidence and optimize measured hot paths.
