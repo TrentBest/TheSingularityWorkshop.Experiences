@@ -60,6 +60,24 @@ public sealed class LaneTransitionAdmissionPolicyTests
         Assert.Equal(0, policy.PendingCount);
     }
 
+    [Fact]
+    public void Step_DoesNotAdvanceAgentWhileExplicitIntentIsPending()
+    {
+        var (simulation, agent, intent, _) = CreateReadyScenario(registerLifecycle: true);
+        var policy = new LaneTransitionAdmissionPolicy(simulation);
+        Assert.True(policy.TrySubmit(agent.AgentId, intent));
+
+        var waitingSnapshot = simulation.Step();
+        Assert.Equal(ConstructionAgentState.AwaitingTransition,
+            waitingSnapshot.Agents.Single(item => item.AgentId == agent.AgentId).State);
+        Assert.Equal(intent.Source, simulation.GetAgentLocation(agent.AgentId));
+
+        Assert.True(policy.TryCancel(agent.AgentId));
+        var resumedSnapshot = simulation.Step();
+        Assert.Equal(ConstructionAgentState.Traveling,
+            resumedSnapshot.Agents.Single(item => item.AgentId == agent.AgentId).State);
+    }
+
     private static (ConstructionSimulation Simulation, ConstructionAgent Agent, LaneTransitionIntent Intent, TrafficCellGrid? DestinationGrid)
         CreateReadyScenario(bool registerLifecycle)
     {
