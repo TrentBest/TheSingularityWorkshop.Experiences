@@ -31,11 +31,19 @@ The original Unity implementation was lost with its former machine. This folder 
 
 *This SVG illustrates the intended hot path: validate and admit at a boundary, move along a known axis toward a precomputed coordinate, and preserve occupancy when blocked. It is a concept image, not a live GUI.SVG rendering or a claim that autonomous lane execution is already integrated.*
 
-## Snapshot-driven SVG renderer
+## Snapshot-driven SVG view
 
-The first renderer-neutral visual bridge is now implemented in `ConstructionSnapshotSvgRenderer`. It accepts an immutable committed snapshot and emits standalone SVG containing the tick, placed/required progress, emitter inventory, and agents on the explicitly selected simulation grid. The renderer is read-only and keeps local coordinates scoped to their qualified grid identity.
+`ConstructionSnapshotSvgView` now closes the first maintained-view gap: the host publishes committed snapshots to a run-scoped `ConstructionSnapshotObserver`, then calls `TryRefresh` at its chosen cadence. The view renders only when a new accepted snapshot is available, reports its rendered run/tick/sequence, and coalesces intermediate snapshots instead of building an unbounded queue. It never advances the simulation. A failed render does not consume the update.
 
-This is a real snapshot-to-SVG implementation with focused tests; it is **not yet** a GUI.SVG manifest/live view, and no autonomous lane routing or scale claim follows from it. See [renderer contract](../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md) and [UML/use cases](../../src/DroneConstruction/ConstructionSnapshotSvgRendererUML.md).
+```csharp
+var observer = new ConstructionSnapshotObserver("run-001");
+var view = new ConstructionSnapshotSvgView(observer, width: 20, height: 12);
+observer.TryPublish(simulation.Snapshot());
+if (view.TryRefresh(out var svg))
+    File.WriteAllText("construction-live.svg", svg!);
+```
+
+This is a maintained pull-based standalone SVG view with focused tests; the host owns refresh cadence and snapshot publication. It is **not yet** a GUI.SVG-hosted application/manifest or telemetry feed, and no autonomous lane routing or scale claim follows from it. See [renderer contract](../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md), [view source](../../src/DroneConstruction/ConstructionSnapshotSvgView.cs), and [UML/use cases](../../src/DroneConstruction/ConstructionSnapshotSvgRendererUML.md).
 
 ## Phone-friendly review
 
