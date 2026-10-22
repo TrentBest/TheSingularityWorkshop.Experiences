@@ -41,6 +41,7 @@ public sealed class ConstructionSimulation
     private readonly Dictionary<ulong, PlacementTask> _agentTasks = [];
     private readonly TrafficCellGrid _traffic;
     private readonly ConstructionSpaceCatalog _spaces = new();
+    private readonly Dictionary<string, SlipstreamLifecycle> _slipstreamLifecycles = new(StringComparer.Ordinal);
     private readonly string _spaceId;
     private long _tick;
 
@@ -142,6 +143,7 @@ public sealed class ConstructionSimulation
             || !_spaces.TryResolve(transitionEntry, out var transitionGrid)
             || !_spaces.TryResolve(destination, out var destinationGrid)
             || !ReferenceEquals(transitionGrid, lifecycle.TransitionCells)
+            || (_slipstreamLifecycles.TryGetValue(transitionEntry.SpaceId, out var registeredLifecycle) && !ReferenceEquals(registeredLifecycle, lifecycle))
             || !_spaces.TryGetAgentLocation(agentId, out var current)
             || current != source
             || agent.Position != source.Cell)
@@ -166,7 +168,8 @@ public sealed class ConstructionSimulation
             || current!.SpaceKind != ConstructionSpaceKind.Slipstream
             || !StringComparer.Ordinal.Equals(current.SpaceId, transitionSpaceId)
             || !_spaces.TryResolve(current, out var transitionGrid)
-            || !ReferenceEquals(transitionGrid, lifecycle.TransitionCells))
+            || !ReferenceEquals(transitionGrid, lifecycle.TransitionCells)
+            || (_slipstreamLifecycles.TryGetValue(transitionSpaceId, out var registeredLifecycle) && !ReferenceEquals(registeredLifecycle, lifecycle)))
             return false;
 
         if (!lifecycle.TryAdvance(agentId, nextCell)) return false;
@@ -195,7 +198,8 @@ public sealed class ConstructionSimulation
             || current!.SpaceKind != ConstructionSpaceKind.Slipstream
             || !StringComparer.Ordinal.Equals(current.SpaceId, transitionSpaceId)
             || !_spaces.TryResolve(current, out var transitionGrid)
-            || !ReferenceEquals(transitionGrid, lifecycle.TransitionCells))
+            || !ReferenceEquals(transitionGrid, lifecycle.TransitionCells)
+            || (_slipstreamLifecycles.TryGetValue(transitionSpaceId, out var registeredLifecycle) && !ReferenceEquals(registeredLifecycle, lifecycle)))
             return false;
 
         if (!lifecycle.TryExit(agentId, destinationGrid!, destination.Cell)) return false;
