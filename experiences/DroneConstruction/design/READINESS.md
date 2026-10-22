@@ -15,6 +15,7 @@
 | Stable agent identity and occupancy invariants | Implemented/tested | Qualified location, reverse occupancy, identity regression tests |
 | Discrete pickup → travel → placement loop | Implemented for simulation grid | Tests plus complete scenario result record |
 | Skylane policy primitive | Implemented/tested | Direction, bounds, cells-per-tick tests |
+| Velocity-aware gravity-sort braking | Pure decision policy and focused tests added; CI not yet verified | Current vertical velocity, net braking acceleration, stopping-distance threshold, altitude/speed capture tolerances; integrate with authoritative cohort state |
 | Hover/slipstream lifecycle primitives | Implemented/tested as separate contracts | Admission, ownership, blocked-exit retry, reservation invariants |
 | Lane lifecycle inside autonomous Step() | **Open** | Agent admitted, advances according to lane direction/speed, exits without external manual calls |
 | Persistent lookahead/conflict model | **Open** | Configurable five-cell initial policy and tests for moving occupancy/reservation lifetime |
