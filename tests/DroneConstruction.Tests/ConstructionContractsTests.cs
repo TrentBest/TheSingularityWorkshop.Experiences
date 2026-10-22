@@ -181,6 +181,26 @@ public sealed class ConstructionContractsTests
     }
 
     [Fact]
+    public void SlipstreamAdmission_RejectsUsingOneGridAsBothSourceAndDestination()
+    {
+        var grid = new TrafficCellGrid(10, 1);
+        var slipstream = new Slipstream("transition-same-grid", transitionCellCount: 2, lookaheadCells: 5);
+        var origin = new GridCell(0, 0);
+        var destination = new GridCell(8, 0);
+        GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+        Assert.True(grid.TryOccupy(origin, 7));
+
+        Assert.False(slipstream.TryAdmit(7, grid, origin, destination, lookahead, grid));
+
+        Assert.True(grid.TryGetAgentCell(7, out var indexedCell));
+        Assert.Equal(origin, indexedCell);
+        Assert.True(grid.TryGetOccupant(origin, out var owner));
+        Assert.Equal(7UL, owner);
+        Assert.False(grid.IsOccupied(destination));
+        Assert.Null(slipstream.ReservedBy);
+    }
+
+    [Fact]
     public void SlipstreamAdmission_LeavesSourceOccupiedWhenDestinationIsBlocked()
     {
         var source = new TrafficCellGrid(2, 1);
