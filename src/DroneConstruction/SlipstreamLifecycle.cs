@@ -82,6 +82,11 @@ public sealed class SlipstreamLifecycle
         ArgumentNullException.ThrowIfNull(destinationLane);
         if (_slipstream.ReservedBy != agentId) return false;
         if (ReferenceEquals(destinationLane, _transitionCells)) return false;
+        // Exit must honor the exact destination bound by admission; otherwise a caller
+        // could use one lane's clearance reservation to enter a different lane or cell.
+        if (!ReferenceEquals(destinationLane, _slipstream.ReservedDestinationLane)
+            || _slipstream.ReservedDestinationCell != destinationCell)
+            return false;
         if (!_transitionCells.TryGetAgentCell(agentId, out var currentCell)) return false;
 
         if (!_transitionCells.TryTransferTo(currentCell, destinationCell, agentId, destinationLane))
