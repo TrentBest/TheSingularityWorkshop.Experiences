@@ -92,6 +92,34 @@ public sealed class ConstructionSimulationTests
     }
 
     [Fact]
+    public void Simulation_PreflightsAllAgentLocationsBeforeMutatingAnyAgent()
+    {
+        var first = new ConstructionAgent(1, new GridCell(0, 0));
+        var second = new ConstructionAgent(2, new GridCell(1, 0));
+        var simulation = new ConstructionSimulation(
+            width: 4,
+            height: 1,
+            requiredHeight: (_, _) => 0,
+            agents: [first, second],
+            emitters: [new PositionedBlockEmitter(new GridCell(0, 0), new BlockEmitter("emitter", 1))]);
+
+        // The first agent could be assigned work, but a later invalid agent must abort the
+        // tick before any earlier agent or shared resource is mutated.
+        second.SetPosition(new GridCell(3, 0));
+
+        var error = Assert.Throws<InvalidOperationException>(() => simulation.Step());
+
+        Assert.Contains("does not match committed location", error.Message);
+        Assert.Equal(ConstructionAgentState.Idle, first.State);
+        Assert.Null(first.AssignedTaskId);
+        Assert.Equal(1, Assert.Single(simulation.Snapshot().Emitters).Inventory);
+        Assert.Equal(0, simulation.Snapshot().Tick);
+        Assert.Equal(new QualifiedGridLocation(
+            ConstructionSpaceKind.SimulationGrid, simulation.SpaceId, new GridCell(0, 0)),
+            simulation.GetAgentLocation(1));
+    }
+
+    [Fact]
     public void Simulation_RejectsUnknownAgentLocationQueryAndBlankSpaceIdentity()
     {
         var simulation = new ConstructionSimulation(
