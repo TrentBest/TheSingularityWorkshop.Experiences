@@ -15,7 +15,7 @@
 | Stable agent identity and occupancy invariants | Implemented/tested | Qualified location, reverse occupancy, identity regression tests |
 | Discrete pickup → travel → placement loop | Implemented for simulation grid | Tests plus complete scenario result record |
 | Skylane policy primitive | Implemented/tested | Direction, bounds, cells-per-tick tests |
-| Velocity-aware gravity-sort braking | Pure decision policy and focused tests added; CI not yet verified | Current vertical velocity, net braking acceleration, stopping-distance threshold, altitude/speed capture tolerances; integrate with authoritative cohort state |
+| Velocity-aware gravity-sort braking | Pure decision policy and focused tests added; latest CI verified | Current vertical velocity, net braking acceleration, stopping-distance threshold, altitude/speed capture tolerances; integrate with authoritative cohort state |
 | Hover/slipstream lifecycle primitives | Implemented/tested as separate contracts | Admission, ownership, blocked-exit retry, reservation invariants |
 | Lane lifecycle inside autonomous Step() | **Open** | Agent admitted, advances according to lane direction/speed, exits without external manual calls |
 | Persistent lookahead/conflict model | **Open** | Configurable five-cell initial policy and tests for moving occupancy/reservation lifetime |
@@ -27,7 +27,7 @@
 
 ## Latest verified CI checkpoint
 
-The latest observed workflow before this documentation batch was [build run 39725809829](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39725809829), commit 7c3e20a2d4dff31c40225feaf09d31af8c5b4f71. Its Drone Construction test job completed successfully. This validates the tests that ran on that commit; it does not test a 100k population or prove live visualization. New commits need their own CI result before being called green.
+The latest verified workflow is [build run 39846206600](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39846206600), commit `271d099ff51eceb7aef0f4c5daacf303eedb7c0f`. The workflow completed successfully, including the Drone Construction test job and project build/pack job. This validates the checks that ran on this commit; it does not test a 100k population, prove live visualization, or measure the proposed coordinate-only hot path. Any later code change needs its own CI result before it is called green.
 
 ## Work sequence
 
