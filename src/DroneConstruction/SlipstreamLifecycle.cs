@@ -41,9 +41,10 @@ public sealed class SlipstreamLifecycle
         ArgumentNullException.ThrowIfNull(sourceGrid);
         ArgumentNullException.ThrowIfNull(destinationLane);
         ArgumentNullException.ThrowIfNull(lookahead);
+        // A slipstream may depart from and return to the same traffic grid. The transition grid
+        // must remain distinct; destination reservation protects the re-entry cell and lookahead.
         if (ReferenceEquals(sourceGrid, _transitionCells)
-            || ReferenceEquals(destinationLane, _transitionCells)
-            || ReferenceEquals(sourceGrid, destinationLane))
+            || ReferenceEquals(destinationLane, _transitionCells))
             return false;
         if (!_transitionCells.Contains(transitionEntryCell) || _transitionCells.IsOccupied(transitionEntryCell))
             return false;
