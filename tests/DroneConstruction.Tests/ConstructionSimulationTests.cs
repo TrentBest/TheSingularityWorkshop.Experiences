@@ -200,4 +200,87 @@ public sealed class ConstructionSimulationTests
         Assert.False(snapshot.IsComplete);
     }
 
+
+    [Fact]
+    public void Simulation_IntegratesSlipstreamEntryTraversalExitAndResumesMainGridMovement()
+    {
+        var agent = new ConstructionAgent(1, new GridCell(0, 0));
+        var simulation = new ConstructionSimulation(
+            width: 10,
+            height: 1,
+            requiredHeight: (x, _) => x == 9 ? 1 : 0,
+            agents: [agent],
+            emitters: [new PositionedBlockEmitter(new GridCell(0, 0), new BlockEmitter("emitter", 1))],
+            spaceId: "yard");
+        var transitionGrid = new TrafficCellGrid(4, 1);
+        var destinationSlipstream = new Slipstream("yard-to-skylane", transitionCellCount: 4, lookaheadCells: 5);
+        var lifecycle = new SlipstreamLifecycle(destinationSlipstream, transitionGrid);
+
+        Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.Slipstream, "transition-east", transitionGrid));
+        var source = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(0, 0));
+        var entry = new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "transition-east", new GridCell(0, 0));
+        var destination = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(8, 0));
+        GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+
+        Assert.True(simulation.TryEnterSlipstream(1, source, entry, lifecycle, destination, lookahead));
+        Assert.Equal(entry, simulation.GetAgentLocation(1));
+        Assert.Equal(new GridCell(0, 0), agent.Position);
+        Assert.Equal(entry, Assert.Single(simulation.Snapshot().Agents).Location);
+
+        Assert.True(simulation.TryAdvanceSlipstream(1, "transition-east", lifecycle, new GridCell(1, 0)));
+        Assert.True(simulation.TryAdvanceSlipstream(1, "transition-east", lifecycle, new GridCell(2, 0)));
+        Assert.True(simulation.TryAdvanceSlipstream(1, "transition-east", lifecycle, new GridCell(3, 0)));
+        Assert.Equal(new GridCell(3, 0), agent.Position);
+
+        Assert.True(simulation.TryExitSlipstream(1, "transition-east", lifecycle, destination));
+        Assert.Equal(destination, simulation.GetAgentLocation(1));
+        Assert.Equal(destination.Cell, agent.Position);
+        Assert.Null(lifecycle.AgentId);
+
+        // The ordinary simulation tick now owns the agent again and moves it using main-grid coordinates.
+        simulation.Step();
+        simulation.Step();
+        Assert.Equal(new GridCell(7, 0), agent.Position);
+        Assert.Equal(new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", agent.Position),
+            simulation.GetAgentLocation(1));
+    }
+
+    [Fact]
+    public void Simulation_BlockedSlipstreamExitRetainsReservationAndSnapshotLocation()
+    {
+        var agent = new ConstructionAgent(1, new GridCell(0, 0));
+        var simulation = new ConstructionSimulation(
+            width: 2,
+            height: 1,
+            requiredHeight: (_, _) => 0,
+            agents: [agent],
+            emitters: [new PositionedBlockEmitter(new GridCell(0, 0), new BlockEmitter("emitter", 0))],
+            spaceId: "yard");
+        var transitionGrid = new TrafficCellGrid(2, 1);
+        var laneGrid = new TrafficCellGrid(10, 1);
+        var slipstream = new Slipstream("yard-to-hover", transitionCellCount: 2, lookaheadCells: 5);
+        var lifecycle = new SlipstreamLifecycle(slipstream, transitionGrid);
+        Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.Slipstream, "transition", transitionGrid));
+        Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.HoverLane, "hover-east", laneGrid));
+
+        var source = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(0, 0));
+        var entry = new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "transition", new GridCell(0, 0));
+        var destination = new QualifiedGridLocation(ConstructionSpaceKind.HoverLane, "hover-east", new GridCell(8, 0));
+        GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
+
+        Assert.True(simulation.TryEnterSlipstream(1, source, entry, lifecycle, destination, lookahead));
+        Assert.True(laneGrid.TryOccupy(destination.Cell, 99));
+
+        Assert.False(simulation.TryExitSlipstream(1, "transition", lifecycle, destination));
+        Assert.Equal(1UL, lifecycle.AgentId);
+        Assert.Equal(entry, simulation.GetAgentLocation(1));
+        Assert.Equal(entry, Assert.Single(simulation.Snapshot().Agents).Location);
+        Assert.Equal(entry.Cell, agent.Position);
+
+        Assert.True(laneGrid.Release(destination.Cell, 99));
+        Assert.True(simulation.TryExitSlipstream(1, "transition", lifecycle, destination));
+        Assert.Equal(destination, simulation.GetAgentLocation(1));
+        Assert.Null(lifecycle.AgentId);
+    }
+
 }
