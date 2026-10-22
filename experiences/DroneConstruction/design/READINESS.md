@@ -6,7 +6,7 @@
 
 ## Readiness
 
-**Current engineering readiness estimate: 58%.** This is a scoped audit estimate for the stated 100,000-agent showcase, not a test pass rate or release approval. A working discrete slice and meaningful tests exist, while the differentiators—integrated lane routing, live observation, and measured scale—remain outstanding.
+**Current engineering readiness estimate: 60%.** This is a scoped audit estimate for the stated 100,000-agent showcase, not a test pass rate or release approval. The discrete construction slice, standalone SVG output, and a source-graph GUI.SVG integration test are verified. Autonomous lane routing, a maintained live observation/telemetry view, and measured scale remain outstanding.
 
 | Workstream | Status | Evidence / exit condition |
 |---|---|---|
@@ -21,23 +21,25 @@
 | Persistent lookahead/conflict model | **Open** | Configurable five-cell initial policy and tests for moving occupancy/reservation lifetime |
 | Deterministic replay digest | **Open** | Same inputs/revision reproduce digest; mismatch diagnostics |
 | Snapshot-to-standalone-SVG rendering | Implemented; focused tests and CI artifact verified | [Renderer source](../../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.cs), [tests](../../../tests/DroneConstruction.Tests/ConstructionSnapshotSvgRendererTests.cs), and [contract](../../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md); renders committed tick/progress/agents/emitters and respects qualified grid identity |
-| Live Renderer / GUI.SVG observation | **Open; standalone artifact verified** | Integrate committed snapshot data with GUI.SVG/Renderer; current artifact is standalone SVG, not live GUI.SVG observation |
+| Snapshot-to-GUI.SVG integration test | **Implemented and CI-verified; ongoing live observation remains open** | [Integration test](../../../tests/DroneConstruction.Tests/ConstructionSnapshotGuiSvgIntegrationTests.cs) runs in the optional repository-source graph and verifies rendered initial/completed snapshot state. It does not establish a continuously updated application view or telemetry stream. |
 | 1k / 10k / 25k / 50k / 100k runs | **Open** | Reproducible raw results and correctness gates at every stage |
 | Benchmark and observer-overhead artifacts | **Open** | Run metadata, raw output, summary |
 | Registry/release readiness | **Open** | Global IDs, dependency contract, docs, CI, and explicit approval before publication |
 
-## Latest verified CI checkpoint
+## Latest verified CI checkpoints
 
-[Build run 39851568716](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39851568716) succeeded on commit [327c5b48](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/commit/327c5b48befa310d8b938b3704347d0315fdb814). All 26 workflow jobs completed successfully or were intentionally skipped; the DroneConstruction test job passed, including the `Upload renderer-produced snapshot SVG` step. The downloadable artifact is [`drone-construction-snapshot-svg`](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39851568716) (817 bytes; artifact ID 12457363888; SHA-256 `6a394ea68cc75a83ff77bfee3002624fbe6e0fd2bbb5f7077904198d3d8c34a8`). The absolute workspace path resolved the prior upload failure.
+[GUI.SVG source-graph integration run 39853079623](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39853079623) succeeded on commit [db795fec](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/commit/db795fecc043e40496665c898a3a2909064569f5). All 25 applicable workflow jobs passed; one job was intentionally skipped. The `test-drone-construction` and `source-integration-tests` jobs both passed. The optional source-graph test renders initial and completed committed simulation snapshots through `GuiBuilder` / `SvgGuiRenderer` and checks tick/progress labels, agent identity, placed-block identity, and stale-tick exclusion. GUI.SVG remains an optional test-side boundary; the core simulation does not take a GUI dependency.
 
-This verifies the standalone snapshot-to-SVG output and CI preservation. It does not verify live GUI.SVG integration, a 100k population, or the proposed coordinate-only hot path.
+[Standalone SVG artifact run 39851568716](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39851568716) also succeeded on [327c5b48](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/commit/327c5b48befa310d8b938b3704347d0315fdb814). The DroneConstruction test job passed, including the `Upload renderer-produced snapshot SVG` step. Artifact: [`drone-construction-snapshot-svg`](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39851568716) (817 bytes; artifact ID 12457363888; SHA-256 `6a394ea68cc75a83ff77bfee3002624fbe6e0fd2bbb5f7077904198d3d8c34a8`). The absolute workspace path resolved the prior upload failure.
+
+These checkpoints verify standalone SVG output and an optional snapshot-to-GUI.SVG source-graph test. They do not verify a continuously updated live view, a 100k population, or the proposed coordinate-only hot path.
 
 ## Work sequence
 
-1. **Wire the first visual proof:** snapshot-to-SVG rendering and its downloadable CI artifact are verified; next integrate the semantic scene with GUI.SVG.
+1. **Visual boundary proof:** standalone snapshot-to-SVG output and the optional GUI.SVG source-graph integration test are verified. Next, build a maintained observer/view that refreshes from committed snapshots and exposes run/tick identity.
 2. **Prove safety boundaries:** version lookahead and transition configuration; test blocked paths, waiting, retry, competing agents, and starvation.
 3. **Close the loop:** implement the state machine in [AUTONOMOUS_LANE_EXECUTION.md](AUTONOMOUS_LANE_EXECUTION.md), then wire lane admission, movement, and exit into deterministic tick execution. Preserve occupancy and retry safety.
-4. **Add observability:** expose coherent committed snapshots to a renderer-neutral adapter, then create a live GUI.SVG view and telemetry.
+4. **Add observability:** expose coherent committed snapshots to a renderer-neutral adapter, then create a maintained GUI.SVG view and telemetry.
 5. **Establish baseline:** create a repeatable small-run harness and invariant report before optimizing.
 6. **Scale honestly:** run the population ramp in [100K_SCALE_VALIDATION.md](100K_SCALE_VALIDATION.md); preserve raw evidence and optimize measured hot paths.
 7. **Release audit:** verify bundle IDs against shared registry, provider dependencies against actual runtime composition, documentation and CI, and obtain explicit approval for publication.
@@ -47,5 +49,6 @@ This verifies the standalone snapshot-to-SVG output and CI preservation. It does
 - 100,000 agents have **not** yet been demonstrated by a measured, reproducible run.
 - Skylane/hover/slipstream components exist, but autonomous lane traversal is **not yet integrated into** ConstructionSimulation.Step().
 - The authored storyboard is a concept illustration, not live GUI.SVG output.
+- The GUI.SVG source-graph test is a verified integration test, not proof of a continuously running live view or production observer.
 - Passing unit tests is not evidence of a particular throughput or frame rate.
 - No Unity dependency is required or planned for this reconstruction.
