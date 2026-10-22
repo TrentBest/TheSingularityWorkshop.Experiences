@@ -1,6 +1,6 @@
 # Drone Construction — Snapshot and Living-View Contract
 
-**Status:** immutable snapshot contract plus a tested standalone SVG renderer; GUI.SVG/Renderer integration is not yet demonstrated.
+**Status:** immutable snapshot contract and standalone SVG renderer are tested; an optional GUI.SVG source-graph integration test is CI-verified. A continuously updated application view and telemetry stream are still open.
 
 ## Authority boundary
 
@@ -49,11 +49,13 @@ The current snapshot surface is a useful foundation. Because lane transitions ar
 7. **Failure visibility:** surface stale observer state, parse errors, dropped frames, and simulation faults.
 8. **Layer separation:** domain simulation must not reference WPF, SVG, browser, or Unity types.
 
-## Implemented first visual slice
+## Implemented visual proof
 
-`ConstructionSnapshotSvgRenderer` consumes a committed `ConstructionSimulationSnapshot` and renders tick/progress, build cells, emitter inventory, and agents assigned to the selected simulation-grid identity. It does not advance or mutate simulation state. Focused tests check snapshot-derived values and invalid dimensions. This establishes the basic snapshot-to-SVG boundary but does not yet create a live GUI.SVG manifest or an automatically captured gallery artifact.
+`ConstructionSnapshotSvgRenderer` consumes a committed `ConstructionSimulationSnapshot` and renders tick/progress, build cells, emitter inventory, and agents assigned to the selected simulation-grid identity. It does not advance or mutate simulation state. Focused tests check snapshot-derived values and invalid dimensions. CI run [39851568716](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39851568716) produced the standalone SVG artifact.
 
-## First useful visual vertical slice
+The optional source-graph test [ConstructionSnapshotGuiSvgIntegrationTests.cs](../../../tests/DroneConstruction.Tests/ConstructionSnapshotGuiSvgIntegrationTests.cs) feeds initial and completed committed snapshots into `GuiBuilder` and `SvgGuiRenderer`. It checks tick/progress labels, agent identity, placed-block identity, and stale-tick exclusion. Its CI run [39853079623](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39853079623) succeeded. GUI.SVG remains a test-side optional boundary; this test renders two snapshots in a test and does **not** establish a continuously updated application view, telemetry, or 100k-scale performance.
+
+## First useful maintained visual vertical slice
 
 - Draw the target build grid from snapshot dimensions and placed-block counts.
 - Draw emitters and their actual remaining inventory.
@@ -67,19 +69,19 @@ The current snapshot surface is a useful foundation. Because lane transitions ar
 
 Keep the domain snapshot as stable input. A renderer adapter may transform it into a renderer-neutral semantic scene. GUI.SVG manifests that scene as SVG; Renderer may provide text-oriented or other portrayals. ConstructionSimulation must not reference either adapter.
 
-Before coding, choose snapshot polling (simpler first proof) or an event stream plus snapshots (requires ordering, replay, and recovery semantics). Do not add a second source of truth. Events describe committed changes; snapshots are authoritative checkpoints.
+The next step is a maintained snapshot-polling view (simpler first proof) with an explicit refresh/backpressure policy. An event stream can follow only if ordering, replay, and recovery semantics are specified. Do not add a second source of truth. Events describe committed changes; snapshots are authoritative checkpoints.
 
 ## Review checklist
 
 - [x] Can a consumer render a snapshot without a reference to the simulation object? The standalone SVG renderer takes only a snapshot, dimensions, and space identity.
-- [ ] Is the renderer wired into GUI.SVG and does the gallery include a CI-produced snapshot artifact?
+- [x] Can the optional source graph render initial and completed committed snapshots through GUI.SVG? Verified by CI run 39853079623.
+- [ ] Is there a maintained, continuously updated view rather than a test-only rendering helper?
 - [ ] Does the consumer show the exact tick and actual agent count?
 - [ ] Are cross-space locations represented without coordinate ambiguity?
 - [ ] Can a failed transition be seen as blocked/waiting rather than silently disappearing?
 - [ ] Does the view remain correct when frames are dropped?
 - [ ] Can the same snapshot be rendered twice with the same semantic output?
 - [ ] Are visual claims backed by measured data or explicit labels?
-
 
 ## Scale-aware presentation and level of detail
 
