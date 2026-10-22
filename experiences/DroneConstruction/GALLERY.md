@@ -18,11 +18,13 @@
 
 *Concept illustration of boundary validation, admitted coordinate-based travel, target arrival, and blocked-move retry. This is authored documentation—not a live simulation capture or evidence that autonomous lane execution is implemented.*
 
-## Snapshot-to-SVG proof
+## Maintained snapshot-to-SVG view
 
-The source contains `ConstructionSnapshotSvgRenderer.Render(snapshot, width, height, spaceId)`, which renders a committed snapshot as standalone SVG. Its labels and cell/agent/emitter marks come from snapshot data; agents from other qualified spaces are not projected onto the selected grid.
+`ConstructionSnapshotSvgView.TryRefresh` renders the newest accepted committed snapshot only when its observer sequence has advanced. The view exposes run identity, rendered tick, and rendered sequence; repeated refreshes do not regenerate identical output, and failed renders do not consume the update. The host chooses refresh cadence; intermediate snapshots are coalesced by the observer's latest-value contract.
 
-*Implementation proof: [renderer source](../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.cs) · [tests](../../tests/DroneConstruction.Tests/ConstructionSnapshotSvgRendererTests.cs) · [contract](../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md).*
+*Implementation proof: [view source](../../src/DroneConstruction/ConstructionSnapshotSvgView.cs) · [view tests](../../tests/DroneConstruction.Tests/ConstructionSnapshotSvgViewTests.cs) · [observer source](../../src/DroneConstruction/ConstructionSnapshotObserver.cs) · [renderer source](../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.cs).*
+
+The host still needs to publish snapshots and display or save returned SVG. This is a maintained polling component, not a GUI.SVG-hosted application or telemetry service.
 
 CI run [39851568716](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39851568716) passed and produced the downloadable `drone-construction-snapshot-svg` artifact (817 bytes; SHA-256 `6a394ea68cc75a83ff77bfee3002624fbe6e0fd2bbb5f7077904198d3d8c34a8`). The absolute workspace path fix is verified. The existing SVGs above remain concept/architecture assets; the artifact is output from the standalone renderer, not a GUI.SVG live view.
 
@@ -40,6 +42,7 @@ All 25 applicable jobs passed; one was intentionally skipped. This is a source-g
 - Qualified locations and occupancy catalog: an agent's cell is interpreted within a stable space identity.
 - Tested skylane direction/speed policy and separately tested hover/slipstream admission/lifecycle contracts.
 - Standalone snapshot-to-SVG rendering with a downloadable CI artifact.
+- Maintained pull-based view that refreshes from newly accepted committed snapshots, with run/tick/sequence identity and no duplicate refresh output.
 - Optional source-graph integration test that renders committed snapshots through GUI.SVG.
 - CI builds and tests the Drone Construction project on development.
 
