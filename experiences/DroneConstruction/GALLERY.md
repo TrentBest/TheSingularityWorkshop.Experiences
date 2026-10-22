@@ -12,6 +12,12 @@
 
 *Architecture sketch: the simulation remains authoritative; visual adapters observe committed state.*
 
+## Lane execution concept
+
+![Autonomous lane execution concept](assets/autonomous-lane-execution-concept.svg)
+
+*Concept illustration of boundary validation, admitted coordinate-based travel, target arrival, and blocked-move retry. This is authored documentation—not a live simulation capture or evidence that autonomous lane execution is implemented.*
+
 ## What is real today
 
 - Deterministic discrete-grid construction loop: task assignment, finite-inventory pickup, one-cell movement, placement, and immutable snapshots.
