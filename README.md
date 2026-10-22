@@ -64,6 +64,8 @@ The Experience remains host-independent and owns its domain semantics. StoryBuil
 
 Do not make the Experiences repository depend on StoryBuilder, and do not move the general composition kernel into either project. Connect them through stable domain/package contracts and the existing MicroBundle manifest conventions.
 
+See [StoryBuilder → Experiences → AnyApp: first runnable milestone](docs/STORYBUILDER_ANYAPP_FIRST_RUN.md) for the vertical-slice contract and the verified gaps between authoring, captured package, manifest, artifact resolution, FSM_COS composition, and native presentation.
+
 ## The central idea
 
 ![One Experience, multiple manifestations](docs/assets/experience-manifestations.svg)
