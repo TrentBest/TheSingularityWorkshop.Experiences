@@ -1,5 +1,3 @@
-using System.Security;
-
 namespace TheSingularityWorkshop.Experiences.DroneConstruction;
 
 /// <summary>
