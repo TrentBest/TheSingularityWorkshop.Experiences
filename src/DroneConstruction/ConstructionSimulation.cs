@@ -310,6 +310,13 @@ public sealed class ConstructionSimulation
                 || !StringComparer.Ordinal.Equals(committedLocation.SpaceId, _spaceId))
                 continue;
 
+            // The occupancy catalog is authoritative, but ordinary scheduling also consumes
+            // the agent's local Position. Refuse to advance a split-brain state rather than
+            // allowing a stale coordinate to drive movement or placement.
+            if (agent.Position != committedLocation.Cell)
+                throw new InvalidOperationException(
+                    $"Agent {agent.AgentId} position {agent.Position} does not match committed location {committedLocation}.");
+
             switch (agent.State)
             {
                 case ConstructionAgentState.Idle:
