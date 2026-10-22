@@ -161,6 +161,7 @@ public sealed class ConstructionSimulation
         && _slipstreamLifecycles.TryGetValue(transitionSpaceId, out var lifecycle)
         && TryExitSlipstream(agentId, transitionSpaceId, lifecycle, destination);
 
+    /// <summary>Enters a registered slipstream using the explicitly supplied lifecycle coordinator.</summary>
     public bool TryEnterSlipstream(
         ulong agentId,
         QualifiedGridLocation source,
