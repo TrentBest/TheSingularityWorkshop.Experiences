@@ -83,3 +83,22 @@ The reconstruction already has a deterministic discrete construction loop and te
 7. Only then run population ramps toward 100,000, preserving correctness and performance evidence at every stage.
 
 **Design principle:** make the choreography emerge from explicit local rules and verified reservations. The visual impression should be “all as one”; the implementation must still account for each drone, each cell, each transition, and every clearance decision.
+
+
+## Gravity-sort braking and clearance
+
+The first departing cohort begins its lane maneuver about **5 m above its assigned skylane**. It applies thrust to arrest its downward motion; once it reaches lane altitude with the required vertical speed, it transitions into horizontal travel. The remaining population continues falling, so the departing cohort and the falling population no longer share the same trajectory.
+
+Keep three events distinct:
+
+- **Braking begins:** the departing cohort starts applying thrust at the configured lead height.
+- **Lane capture:** the cohort reaches the lane's altitude and satisfies the vertical-speed tolerance required for a horizontal transition.
+- **Following traffic is clear:** the falling population has enough measured separation from the lane-entry/conflict region for the next cohort to proceed.
+
+A nominal delay such as half a second or one second can be a useful scheduling parameter, but it is not itself proof of clearance. Clearance depends on initial velocity, thrust acceleration, gravity, cohort spacing, lane geometry, and the dimensions of the conflict region.
+
+For a simple vertical model, take upward as positive and let the departing drone's net vertical acceleration be `a_depart = thrust_acceleration - g`; free-falling followers have acceleration `-g`. If both start with the same vertical velocity and the departing cohort holds altitude (net acceleration zero), idealized relative separation grows as `0.5 * g * t^2`: about 1.23 m after 0.5 s and 4.9 m after 1 s. These figures are only a baseline for those assumptions, not a claim about the original prototype. If the departing cohort accelerates upward, or there is initial separation or relative velocity, separation changes accordingly.
+
+**Important:** thrust that exactly balances gravity cancels downward acceleration but does not cancel existing downward velocity. To stop descending, thrust must exceed weight long enough to reduce the downward velocity. The planner must verify that the available braking distance and time allow lane capture; it must not assume that reaching the lane's altitude automatically means the drone can safely turn horizontal.
+
+Model these as explicit configuration/state, not a single magic delay: initial vertical velocity, gravity, thrust/net acceleration or a discrete motion policy, braking lead height, lane-capture velocity tolerance, follower separation, and the conflict-clearance condition. If the production simulation is discrete rather than a physical integrator, define deterministic tick-based equivalents and test their invariants.
