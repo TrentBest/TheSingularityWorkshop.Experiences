@@ -33,6 +33,15 @@ public sealed class ConstructionSnapshotSvgRendererTests
         Assert.Contains("fill=\"#245b55\"", completedSvg);
         Assert.Contains("fill=\"#49d6a2\"", completedSvg);
         Assert.DoesNotContain("TICK 0", completedSvg);
+
+        // CI can preserve this renderer-produced output as a reviewable artifact.
+        var artifactPath = Environment.GetEnvironmentVariable("DRONE_CONSTRUCTION_SVG_ARTIFACT");
+        if (!string.IsNullOrWhiteSpace(artifactPath))
+        {
+            var fullPath = Path.GetFullPath(artifactPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
+            File.WriteAllText(fullPath, completedSvg);
+        }
     }
 
     [Fact]
