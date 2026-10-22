@@ -78,6 +78,6 @@ public sealed class ConstructionSpaceCatalogTests
         Assert.Throws<ArgumentOutOfRangeException>(() => catalog.TryRegister((ConstructionSpaceKind)999, "yard", grid));
         Assert.Throws<ArgumentException>(() => catalog.TryRegister(ConstructionSpaceKind.SimulationGrid, " ", grid));
         Assert.Throws<ArgumentNullException>(() => catalog.TryRegister(ConstructionSpaceKind.SimulationGrid, "yard", null!));
-        Assert.Throws<ArgumentOutOfRangeException>(() => catalog.TryGetAgentLocation(0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => catalog.TryGetAgentLocation(0, out _));
     }
 }
