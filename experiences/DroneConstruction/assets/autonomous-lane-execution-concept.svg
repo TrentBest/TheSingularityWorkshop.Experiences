@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 920" role="img" aria-labelledby="title desc">
+<title id="title">Autonomous drone lane execution — concept sequence</title>
+<desc id="desc">A four-stage concept illustration shows route-boundary validation, lane admission and occupancy protection, coordinate-only progress along a known direction toward a target, and a blocked move that waits and retries without losing occupancy. It is an authored concept, not a live simulation capture.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#06101e"/><stop offset="1" stop-color="#142b43"/></linearGradient>
+ <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0L8 3L0 6Z" fill="#9cb8d2"/></marker>
+ <style>
+ .panel{fill:#0a1b2d;stroke:#355779;stroke-width:2}.heading{font:700 25px 'Segoe UI',Arial,sans-serif;fill:#f3f8ff}.sub{font:700 18px 'Segoe UI',Arial,sans-serif;fill:#d9eafa}.txt{font:15px 'Segoe UI',Arial,sans-serif;fill:#b5cadc}.small{font:13px 'Segoe UI',Arial,sans-serif;fill:#95afc7}.grid{stroke:#365975;stroke-width:1;fill:none}.path{fill:none;stroke:#8faec9;stroke-width:2;marker-end:url(#arrow)}.cell{fill:#0e2a42;stroke:#426782;stroke-width:1.5}.occupied{fill:#1b668b;stroke:#80e5ff;stroke-width:2}.target{fill:#173a2b;stroke:#70df9a;stroke-width:2}.reserved{fill:#382c55;stroke:#bca1ff;stroke-width:2}.blocked{fill:#542e38;stroke:#ff8293;stroke-width:2}
+ </style>
+</defs>
+<rect width="1440" height="920" rx="24" fill="url(#bg)"/>
+<text x="48" y="48" class="small">THE SINGULARITY WORKSHOP · DRONE CONSTRUCTION · DESIGN CONCEPT</text>
+<text x="48" y="96" class="heading" style="font-size:38px">THE LANE HOT PATH</text>
+<text x="48" y="128" class="txt">Do expensive decisions at boundaries. During admitted travel, follow a known axis toward a known coordinate.</text>
+<rect x="48" y="165" width="650" height="300" rx="16" class="panel"/>
+<text x="76" y="207" class="sub">01 / ROUTE BOUNDARY</text>
+<text x="76" y="235" class="txt">Validate direction, target, capacity and clearance once.</text>
+<g transform="translate(88 268)">
+ <rect width="570" height="112" rx="8" fill="#0b263c" stroke="#355779" stroke-width="1.5"/>
+ <g class="grid"><path d="M0 28H570M0 56H570M0 84H570M38 0V112M76 0V112M114 0V112M152 0V112M190 0V112M228 0V112M266 0V112M304 0V112M342 0V112M380 0V112M418 0V112M456 0V112M494 0V112M532 0V112"/></g>
+ <rect x="76" y="28" width="38" height="28" class="occupied"/><rect x="114" y="28" width="38" height="28" class="reserved"/><rect x="152" y="28" width="38" height="28" class="reserved"/><rect x="190" y="28" width="38" height="28" class="reserved"/><rect x="228" y="28" width="38" height="28" class="target"/>
+ <path d="M96 14V24M96 14H245M245 14V24" stroke="#bca1ff" stroke-width="2" fill="none"/>
+ <text x="260" y="19" class="small">validated segment</text>
+ <path d="M122 42H142M160 42H180M198 42H218" stroke="#cdbdff" stroke-width="2" marker-end="url(#arrow)"/>
+</g>
+<text x="76" y="420" class="small">Route planning + admission + occupancy claim</text>
+<rect x="742" y="165" width="650" height="300" rx="16" class="panel"/>
+<text x="770" y="207" class="sub">02 / KNOWN-LANE TRAVEL</text>
+<text x="770" y="235" class="txt">Use the stored direction, bounded step and target coordinate.</text>
+<g transform="translate(782 268)">
+ <rect width="570" height="112" rx="8" fill="#0b263c" stroke="#355779" stroke-width="1.5"/>
+ <g class="grid"><path d="M0 28H570M0 56H570M0 84H570M38 0V112M76 0V112M114 0V112M152 0V112M190 0V112M228 0V112M266 0V112M304 0V112M342 0V112M380 0V112M418 0V112M456 0V112M494 0V112M532 0V112"/></g>
+ <rect x="76" y="28" width="38" height="28" class="cell"/><rect x="114" y="28" width="38" height="28" class="cell"/><rect x="152" y="28" width="38" height="28" class="occupied"/><rect x="190" y="28" width="38" height="28" class="cell"/><rect x="228" y="28" width="38" height="28" class="cell"/><rect x="266" y="28" width="38" height="28" class="cell"/><rect x="304" y="28" width="38" height="28" class="target"/>
+ <path d="M170 42H323" stroke="#80e5ff" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arrow)"/>
+ <text x="152" y="100" class="small">x = 4</text><text x="304" y="100" class="small">target x = 8</text>
+</g>
+<text x="770" y="420" class="small">Compare coordinate to target; occupancy still needs a valid safety model</text>
+<rect x="48" y="495" width="650" height="300" rx="16" class="panel"/>
+<text x="76" y="537" class="sub">03 / TARGET REACHED</text>
+<text x="76" y="565" class="txt">Stop the segment and plan the next boundary.</text>
+<g transform="translate(88 598)">
+ <rect width="570" height="112" rx="8" fill="#0b263c" stroke="#355779" stroke-width="1.5"/>
+ <g class="grid"><path d="M0 28H570M0 56H570M0 84H570M38 0V112M76 0V112M114 0V112M152 0V112M190 0V112M228 0V112M266 0V112M304 0V112M342 0V112M380 0V112M418 0V112M456 0V112M494 0V112M532 0V112"/></g>
+ <rect x="76" y="28" width="38" height="28" class="cell"/><rect x="114" y="28" width="38" height="28" class="cell"/><rect x="152" y="28" width="38" height="28" class="cell"/><rect x="190" y="28" width="38" height="28" class="cell"/><rect x="228" y="28" width="38" height="28" class="cell"/><rect x="266" y="28" width="38" height="28" class="cell"/><rect x="304" y="28" width="38" height="28" class="target"/>
+ <circle cx="323" cy="42" r="10" fill="#70df9a"/><path d="M323 20V8M323 76V64" stroke="#70df9a" stroke-width="2"/>
+</g>
+<text x="76" y="750" class="small">Commit completion only after authoritative location agrees.</text>
+<rect x="742" y="495" width="650" height="300" rx="16" class="panel"/>
+<text x="770" y="537" class="sub">04 / BLOCKED = WAIT + RETRY</text>
+<text x="770" y="565" class="txt">A failed move never becomes a fake position update.</text>
+<g transform="translate(782 598)">
+ <rect width="570" height="112" rx="8" fill="#0b263c" stroke="#355779" stroke-width="1.5"/>
+ <g class="grid"><path d="M0 28H570M0 56H570M0 84H570M38 0V112M76 0V112M114 0V112M152 0V112M190 0V112M228 0V112M266 0V112M304 0V112M342 0V112M380 0V112M418 0V112M456 0V112M494 0V112M532 0V112"/></g>
+ <rect x="114" y="28" width="38" height="28" class="occupied"/><rect x="152" y="28" width="38" height="28" class="blocked"/><rect x="190" y="28" width="38" height="28" class="cell"/><path d="M126 42H143" stroke="#80e5ff" stroke-width="2" marker-end="url(#arrow)"/><path d="M161 22L181 58M181 22L161 58" stroke="#ff8293" stroke-width="4"/>
+ <text x="104" y="91" class="small">still here</text><text x="195" y="91" class="small">blocked cell</text>
+</g>
+<text x="770" y="750" class="small">Keep occupancy + intent; retry deterministically when clear.</text>
+<rect x="48" y="825" width="1344" height="54" rx="12" fill="#10243a" stroke="#355779" stroke-width="1.5"/>
+<text x="72" y="858" class="txt">CONCEPT ONLY · The current implementation still uses checked cell movement; autonomous Step() integration and measured fast-path gains remain open.</text>
+<text x="48" y="906" class="small">DESIGN VISUAL • NOT A LIVE GUI.SVG CAPTURE • OCCUPANCY SAFETY IS NOT OPTIONAL</text>
+</svg>
