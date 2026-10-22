@@ -109,6 +109,100 @@ public sealed class ConstructionSimulation
         return _spaces.GetAgentLocation(agentId);
     }
 
+    /// <summary>Registers an external traffic space without exposing the internal location catalog.</summary>
+    public bool TryRegisterTrafficSpace(ConstructionSpaceKind kind, string spaceId, TrafficCellGrid grid)
+    {
+        if (kind == ConstructionSpaceKind.SimulationGrid)
+            throw new ArgumentOutOfRangeException(nameof(kind), "The simulation's primary grid identity cannot be replaced.");
+        return _spaces.TryRegister(kind, spaceId, grid);
+    }
+
+    /// <summary>
+    /// Enters a registered slipstream from the agent's exact committed source location.
+    /// Position is synchronized only after occupancy transfer succeeds.
+    /// </summary>
+    public bool TryEnterSlipstream(
+        ulong agentId,
+        QualifiedGridLocation source,
+        QualifiedGridLocation transitionEntry,
+        SlipstreamLifecycle lifecycle,
+        QualifiedGridLocation destination,
+        IReadOnlyList<GridCell> lookahead)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(transitionEntry);
+        ArgumentNullException.ThrowIfNull(lifecycle);
+        ArgumentNullException.ThrowIfNull(destination);
+        ArgumentNullException.ThrowIfNull(lookahead);
+        if (!_agentsById.TryGetValue(agentId, out var agent)
+            || source.SpaceKind == ConstructionSpaceKind.Slipstream
+            || transitionEntry.SpaceKind != ConstructionSpaceKind.Slipstream
+            || destination.SpaceKind == ConstructionSpaceKind.Slipstream
+            || !_spaces.TryResolve(source, out var sourceGrid)
+            || !_spaces.TryResolve(transitionEntry, out var transitionGrid)
+            || !_spaces.TryResolve(destination, out var destinationGrid)
+            || !ReferenceEquals(transitionGrid, lifecycle.TransitionCells)
+            || !_spaces.TryGetAgentLocation(agentId, out var current)
+            || current != source
+            || agent.Position != source.Cell)
+            return false;
+
+        if (!lifecycle.TryEnter(agentId, sourceGrid!, source.Cell, transitionEntry.Cell,
+                destinationGrid!, destination.Cell, lookahead))
+            return false;
+
+        agent.SetPosition(transitionEntry.Cell);
+        return true;
+    }
+
+    /// <summary>Advances an agent within its registered slipstream and synchronizes its local position on success.</summary>
+    public bool TryAdvanceSlipstream(ulong agentId, string transitionSpaceId, SlipstreamLifecycle lifecycle, GridCell nextCell)
+    {
+        ArgumentNullException.ThrowIfNull(lifecycle);
+        if (!_agentsById.TryGetValue(agentId, out var agent)
+            || string.IsNullOrWhiteSpace(transitionSpaceId))
+            return false;
+        if (!_spaces.TryGetAgentLocation(agentId, out var current)
+            || current!.SpaceKind != ConstructionSpaceKind.Slipstream
+            || !StringComparer.Ordinal.Equals(current.SpaceId, transitionSpaceId)
+            || !_spaces.TryResolve(current, out var transitionGrid)
+            || !ReferenceEquals(transitionGrid, lifecycle.TransitionCells))
+            return false;
+
+        if (!lifecycle.TryAdvance(agentId, nextCell)) return false;
+        agent.SetPosition(nextCell);
+        return true;
+    }
+
+    /// <summary>
+    /// Exits a registered slipstream into the exact reserved destination. Failed exits preserve
+    /// transition occupancy, the agent position, and the lifecycle reservation for retry.
+    /// </summary>
+    public bool TryExitSlipstream(
+        ulong agentId,
+        string transitionSpaceId,
+        SlipstreamLifecycle lifecycle,
+        QualifiedGridLocation destination)
+    {
+        ArgumentNullException.ThrowIfNull(lifecycle);
+        ArgumentNullException.ThrowIfNull(destination);
+        if (!_agentsById.TryGetValue(agentId, out var agent)
+            || string.IsNullOrWhiteSpace(transitionSpaceId)
+            || destination.SpaceKind == ConstructionSpaceKind.Slipstream
+            || !_spaces.TryResolve(destination, out var destinationGrid))
+            return false;
+        if (!_spaces.TryGetAgentLocation(agentId, out var current)
+            || current!.SpaceKind != ConstructionSpaceKind.Slipstream
+            || !StringComparer.Ordinal.Equals(current.SpaceId, transitionSpaceId)
+            || !_spaces.TryResolve(current, out var transitionGrid)
+            || !ReferenceEquals(transitionGrid, lifecycle.TransitionCells))
+            return false;
+
+        if (!lifecycle.TryExit(agentId, destinationGrid!, destination.Cell)) return false;
+        agent.SetPosition(destination.Cell);
+        return true;
+    }
+
     /// <summary>Gets the authoritative target grid.</summary>
     public BuildGrid BuildGrid => _buildGrid;
 
