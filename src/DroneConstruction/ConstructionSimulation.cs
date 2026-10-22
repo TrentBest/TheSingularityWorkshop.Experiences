@@ -118,10 +118,6 @@ public sealed class ConstructionSimulation
         return _spaces.TryRegister(kind, spaceId, grid);
     }
 
-    /// <summary>
-    /// Enters a registered slipstream from the agent's exact committed source location.
-    /// Position is synchronized only after occupancy transfer succeeds.
-    /// </summary>
     /// <summary>Registers the single lifecycle coordinator that owns a registered slipstream space.</summary>
     public bool TryRegisterSlipstreamLifecycle(string transitionSpaceId, SlipstreamLifecycle lifecycle)
     {
@@ -161,7 +157,10 @@ public sealed class ConstructionSimulation
         && _slipstreamLifecycles.TryGetValue(transitionSpaceId, out var lifecycle)
         && TryExitSlipstream(agentId, transitionSpaceId, lifecycle, destination);
 
-    /// <summary>Enters a registered slipstream using the explicitly supplied lifecycle coordinator.</summary>
+    /// <summary>
+    /// Enters a registered slipstream from the agent's exact committed source location.
+    /// Position is synchronized only after occupancy transfer succeeds.
+    /// </summary>
     public bool TryEnterSlipstream(
         ulong agentId,
         QualifiedGridLocation source,
