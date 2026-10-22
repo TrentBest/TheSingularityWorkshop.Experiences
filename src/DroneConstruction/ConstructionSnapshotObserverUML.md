@@ -15,6 +15,7 @@ classDiagram
         +Sequence long
         +LatestSnapshot ConstructionSimulationSnapshot
         +TryPublish(snapshot) bool
+        +TryGetLatest(out snapshot, out sequence) bool
     }
     class ConstructionSimulationSnapshot {
         +Tick long
@@ -24,13 +25,15 @@ classDiagram
         +Emitters IReadOnlyList
         +CellPlacedBlocks IReadOnlyList
     }
-    class SnapshotDrivenView {
-        <<consumer>>
-        +Refresh(snapshot)
+    class ConstructionSnapshotSvgView {
+        +RunId string
+        +RenderedSequence long
+        +RenderedTick long?
+        +TryRefresh(out svg) bool
     }
     ConstructionSimulation ..> ConstructionSimulationSnapshot : produces committed state
     ConstructionSnapshotObserver o--> ConstructionSimulationSnapshot : latest accepted
-    ConstructionSnapshotObserver ..> SnapshotDrivenView : exposes latest snapshot to
+    ConstructionSnapshotObserver ..> ConstructionSnapshotSvgView : supplies latest accepted snapshot
 ~~~
 
 ## Use cases
@@ -39,7 +42,7 @@ classDiagram
 2. **Ignore delayed work:** if a producer delivers an older tick or repeats a tick, reject it without rolling the view backward.
 3. **Separate runs:** instantiate a separate observer for each run so that two runs both at tick zero remain distinct.
 4. **Keep the simulation authoritative:** consumers read snapshots; the observer does not advance simulation time or modify domain state.
-5. **Feed renderers:** a downstream renderer may refresh from the latest snapshot, but this class alone does not provide scheduling, event delivery, GUI.SVG integration, or telemetry.
+5. **Feed a maintained view:** `ConstructionSnapshotSvgView` polls the observer on demand, emits SVG only for a new accepted sequence, and exposes the rendered tick and sequence. The host owns refresh cadence and presentation; no timer, event queue, GUI.SVG host, or telemetry service is implied.
 
 ## Boundary
 
