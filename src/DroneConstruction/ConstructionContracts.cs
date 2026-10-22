@@ -392,6 +392,11 @@ public sealed class Slipstream
         ArgumentNullException.ThrowIfNull(sourceGrid);
         ArgumentNullException.ThrowIfNull(destinationLane);
 
+        // A slipstream connects distinct traffic spaces. Treating one grid as both source
+        // and destination would move within that grid while retaining a transition reservation,
+        // which misrepresents the agent's committed location and the resource being reserved.
+        if (ReferenceEquals(sourceGrid, destinationLane)) return false;
+
         // Admission is a one-shot operation. In particular, a repeated call by the same
         // agent must not reuse and then accidentally release its already-active reservation.
         if (_reservedBy is not null) return false;
