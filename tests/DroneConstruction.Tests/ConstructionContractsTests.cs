@@ -347,13 +347,13 @@ public sealed class ConstructionContractsTests
         var entry = new GridCell(0, 0);
         var destinationCell = new GridCell(8, 0);
         GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
-        Assert.True(source.TryOccupy(origin, 7));
-        Assert.True(transition.TryOccupy(entry, 99));
+        Assert.True(source.TryOccupy(origin, 99));
 
         Assert.False(lifecycle.TryEnter(7, source, origin, entry, destination, destinationCell, lookahead));
 
-        Assert.True(source.TryGetAgentCell(7, out var sourceCell));
+        Assert.True(source.TryGetAgentCell(99, out var sourceCell));
         Assert.Equal(origin, sourceCell);
+        Assert.False(transition.IsOccupied(entry));
         Assert.Null(slipstream.ReservedBy);
         Assert.Null(lifecycle.AgentId);
     }
