@@ -1,6 +1,6 @@
 # Drone Construction — Snapshot and Living-View Contract
 
-**Status:** contract and implementation plan; live GUI.SVG/Renderer adapter is not yet demonstrated.
+**Status:** immutable snapshot contract plus a tested standalone SVG renderer; GUI.SVG/Renderer integration is not yet demonstrated.
 
 ## Authority boundary
 
@@ -49,6 +49,10 @@ The current snapshot surface is a useful foundation. Because lane transitions ar
 7. **Failure visibility:** surface stale observer state, parse errors, dropped frames, and simulation faults.
 8. **Layer separation:** domain simulation must not reference WPF, SVG, browser, or Unity types.
 
+## Implemented first visual slice
+
+`ConstructionSnapshotSvgRenderer` consumes a committed `ConstructionSimulationSnapshot` and renders tick/progress, build cells, emitter inventory, and agents assigned to the selected simulation-grid identity. It does not advance or mutate simulation state. Focused tests check snapshot-derived values and invalid dimensions. This establishes the basic snapshot-to-SVG boundary but does not yet create a live GUI.SVG manifest or an automatically captured gallery artifact.
+
 ## First useful visual vertical slice
 
 - Draw the target build grid from snapshot dimensions and placed-block counts.
@@ -67,7 +71,8 @@ Before coding, choose snapshot polling (simpler first proof) or an event stream 
 
 ## Review checklist
 
-- [ ] Can a consumer render a snapshot without a reference to the simulation object?
+- [x] Can a consumer render a snapshot without a reference to the simulation object? The standalone SVG renderer takes only a snapshot, dimensions, and space identity.
+- [ ] Is the renderer wired into GUI.SVG and does the gallery include a CI-produced snapshot artifact?
 - [ ] Does the consumer show the exact tick and actual agent count?
 - [ ] Are cross-space locations represented without coordinate ambiguity?
 - [ ] Can a failed transition be seen as blocked/waiting rather than silently disappearing?
