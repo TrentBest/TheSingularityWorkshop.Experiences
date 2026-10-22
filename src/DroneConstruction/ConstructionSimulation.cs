@@ -277,6 +277,7 @@ public sealed class ConstructionSimulation
             || !StringComparer.Ordinal.Equals(current.SpaceId, skylaneSpaceId)
             || !_spaces.TryResolve(current, out var registeredGrid)
             || !ReferenceEquals(registeredGrid, lane.Cells)
+            || agent.Position != current.Cell
             || !lane.TryGetNextCell(current.Cell, target, out var next))
             return false;
 
