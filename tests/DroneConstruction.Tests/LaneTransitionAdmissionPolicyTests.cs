@@ -151,6 +151,29 @@ public sealed class LaneTransitionAdmissionPolicyTests
     }
 
     [Fact]
+    public void Step_RejectsInvalidDownstreamTargetBeforeTransitionAdmission()
+    {
+        var (simulation, agent, baseIntent, _, _) = CreateReadyScenario(registerLifecycle: true);
+        var invalidIntent = new LaneTransitionIntent(
+            baseIntent.Source,
+            baseIntent.TransitionEntry,
+            baseIntent.Destination,
+            baseIntent.Lookahead,
+            [new GridCell(0, 0), new GridCell(1, 0), new GridCell(2, 0)],
+            downstreamLaneTarget: new GridCell(7, 0)); // Eastbound lane target is behind the exit.
+
+        var policy = new LaneTransitionAdmissionPolicy(simulation);
+        Assert.True(policy.TrySubmit(agent.AgentId, invalidIntent));
+
+        simulation.Step();
+
+        // The route is rejected before any occupancy transfer; pending intent remains inspectable.
+        Assert.Equal(invalidIntent.Source, simulation.GetAgentLocation(agent.AgentId));
+        Assert.Equal(1, policy.PendingCount);
+        Assert.False(simulation.TryGetSkylaneDestination(agent.AgentId, out _));
+    }
+
+    [Fact]
     public void Constructor_RejectsMalformedExplicitTransitionPaths()
     {
         var (_, _, intent, _, _) = CreateReadyScenario(registerLifecycle: true);
