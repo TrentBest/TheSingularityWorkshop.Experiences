@@ -6,7 +6,7 @@ namespace TheSingularityWorkshop.Experiences.Moniker;
 /// <summary>
 /// The canonical Workshop Moniker MicroBundle.
 /// </summary>
-public sealed class MonikerMicroBundle : IMicroBundle
+public sealed class MonikerMicroBundle : IMicroBundle, IMicroBundleResolvedConfiguration
 {
     /// <summary>
     /// Stable identity of the Workshop Moniker MicroBundle.
@@ -91,6 +91,11 @@ public sealed class MonikerMicroBundle : IMicroBundle
     /// <summary>
     /// Participates in deterministic arbitration. The Moniker currently requires no arbitration changes.
     /// </summary>
+    /// <summary>
+    /// This content bundle has no configuration overrides; its resolved defaults are empty.
+    /// </summary>
+    public ReadOnlyMemory<byte> ExportResolvedConfiguration() => ReadOnlyMemory<byte>.Empty;
+
     public bool Arbitrate(IMicroBundleArbitrationContext context, int roundIndex)
     {
         ArgumentNullException.ThrowIfNull(context);
