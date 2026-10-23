@@ -412,6 +412,8 @@ public sealed class ConstructionSimulation
 
         // Advance previously admitted explicit paths once per tick, in stable agent-ID order.
         // A blocked intermediate cell or exit preserves the active path and reservation for retry.
+        // Agents that exit this tick begin their downstream lane leg on the next tick.
+        var exitedTransitionsThisTick = new HashSet<ulong>();
         foreach (var agent in _agents)
         {
             if (!_activeLaneTransitions.TryGetValue(agent.AgentId, out var active))
@@ -433,6 +435,7 @@ public sealed class ConstructionSimulation
             if (TryExitSlipstream(agent.AgentId, intent.TransitionEntry.SpaceId, intent.Destination))
             {
                 _activeLaneTransitions.Remove(agent.AgentId);
+                exitedTransitionsThisTick.Add(agent.AgentId);
                 if (intent.DownstreamLaneTarget is { } downstreamTarget
                     && !TrySetSkylaneDestination(agent.AgentId, intent.Destination.SpaceId, downstreamTarget))
                     throw new InvalidOperationException(
@@ -450,7 +453,8 @@ public sealed class ConstructionSimulation
 
         foreach (var agent in _agents)
         {
-            if (!_spaces.TryGetAgentLocation(agent.AgentId, out var laneLocation)
+            if (exitedTransitionsThisTick.Contains(agent.AgentId)
+                || !_spaces.TryGetAgentLocation(agent.AgentId, out var laneLocation)
                 || laneLocation!.SpaceKind != ConstructionSpaceKind.Skylane
                 || !_skylaneRoutes.TryGetValue(agent.AgentId, out var route))
                 continue;
