@@ -45,12 +45,13 @@ All 25 applicable jobs passed; one was intentionally skipped. This is a source-g
 - Maintained pull-based view that refreshes from newly accepted committed snapshots, with run/tick/sequence identity and no duplicate refresh output.
 - Optional source-graph integration test that renders committed snapshots through GUI.SVG.
 - CI builds and tests the Drone Construction project on development.
+- A separate rotor-driven quadrotor physics microbenchmark measures 1k/10k/100k dynamics populations; [results and limitations](../../benchmarks/DroneConstruction.Physics/README.md). This does **not** prove 100,000 construction agents in the full simulation.
 
 ## What is not yet a live proof
 
 - End-to-end autonomous routing through hover lane → slipstream → skylane inside ConstructionSimulation.Step().
 - A maintained, continuously updated GUI.SVG manifestation with run/tick telemetry; the passing source-graph test is a first integration proof, not that finished view.
-- A measured 100,000-agent run with repeatable throughput, memory, and correctness results.
+- A measured 100,000-construction-agent run with repeatable throughput, memory, and correctness results. The separate 100,000-quadrotor physics-kernel benchmark is not a substitute.
 
 ## Reviewer entry points
 
