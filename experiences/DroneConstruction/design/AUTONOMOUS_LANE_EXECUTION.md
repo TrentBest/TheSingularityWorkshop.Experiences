@@ -1,6 +1,6 @@
 # Drone Construction — Autonomous Lane Execution Contract
 
-**Status:** partial operational implementation. Registered skylane routes advance from `ConstructionSimulation.Step()`; pending transition intents are admitted/retried there in stable agent-ID order. Intents may now declare an explicit orthogonal transition path, which the simulation advances one cell per tick and retries across blocked intermediate cells or exits. CI verification of this new path is pending; automatic downstream target selection and end-to-end itinerary execution remain incomplete.
+**Status:** partial operational implementation. Registered skylane routes advance from `ConstructionSimulation.Step()`; pending transition intents are admitted/retried there in stable agent-ID order. Intents may now declare an explicit orthogonal transition path, which the simulation advances one cell per tick and retries across blocked intermediate cells or exits. CI verification passed on commit `eb12dcd` in [run 39893746201](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39893746201); automatic downstream target selection and end-to-end itinerary execution remain incomplete.
 
 ## Goal
 
@@ -14,7 +14,7 @@ The optimization target is less repeated route discovery and policy work, not th
 
 ![Autonomous lane execution concept](../assets/autonomous-lane-execution-concept.svg)
 
-*Concept illustration only: skylane movement and pending transition admission are tick-driven; slipstream traversal, exit retry, and complete itinerary execution remain open.*
+*Concept illustration only: skylane movement, pending transition admission, and explicit-path slipstream traversal with blocked-cell/exit retry are implemented and CI-verified; complete itinerary execution remains open.*
 
 ## What exists today
 
@@ -144,7 +144,7 @@ If any whole-tick preflight is intended to guarantee no partial tick, it must co
 ## Implementation sequence
 
 1. Introduce the simulation-owned itinerary state and validate its relationship to the committed location catalog.
-2. Make `Step()` advance registered skylane destinations, retry pending transition admission, and traverse an explicitly declared slipstream path with retry-safe exits (implementation added; CI pending); keep external-space agents out of the primary-grid placement scheduler.
+2. Make `Step()` advance registered skylane destinations, retry pending transition admission, and traverse an explicitly declared slipstream path with retry-safe exits (implemented and CI-verified); keep external-space agents out of the primary-grid placement scheduler.
 3. Preserve the existing safe occupancy path and add deterministic blocked/retry outcomes (implemented for registered skylane destinations).
 4. Add transition and lane lifecycle tests, including two-agent contention and cancellation.
 5. Add a repeatable small-run replay/invariant harness.
@@ -153,4 +153,4 @@ If any whole-tick preflight is intended to guarantee no partial tick, it must co
 
 ## Exit criteria
 
-Autonomous lane execution is complete only when the lifecycle advances from a submitted intent through admission, transition, lane movement, and route completion through `Step()`, with deterministic conflict handling, occupancy/retry invariants, and tests for blocked and competing agents. The implementation now includes explicit-path transition traversal and blocked intermediate/exit retry in Step(); these new behaviors require green CI before being treated as verified. Full itinerary completion still requires an explicit downstream skylane target and broader contention/fairness tests. The coordinate-only optimization is a separate milestone and requires measured evidence.
+Autonomous lane execution is complete only when the lifecycle advances from a submitted intent through admission, transition, lane movement, and route completion through `Step()`, with deterministic conflict handling, occupancy/retry invariants, and tests for blocked and competing agents. The implementation includes explicit-path transition traversal and blocked intermediate/exit retry in Step(); the focused tests passed in CI run 39893746201. Full itinerary completion still requires an explicit downstream skylane target and broader contention/fairness tests. The coordinate-only optimization is a separate milestone and requires measured evidence.
