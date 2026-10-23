@@ -2,7 +2,7 @@
 
 # Drone Construction
 
-**Status:** a deterministic discrete construction loop and tested traffic/lifecycle primitives are present on development. Autonomous lane routing inside the simulation tick, live GUI.SVG observation, and measured population-scale evidence remain open. **100,000 agents is the target, not a demonstrated result.**
+**Status:** a deterministic discrete construction loop and tested traffic/lifecycle primitives are present on development. A separate rotor-driven quadrotor physics microbenchmark now measures 1,000, 10,000, and 100,000 physics instances, but autonomous lane routing inside the construction simulation, hosted live GUI.SVG observation, and full construction-agent scale evidence remain open. **100,000 construction agents is the target, not a demonstrated result.**
 
 Drone Construction is a benign large-scale multi-agent construction experience. A source image is converted into a discrete target structure; simulated quadcopters collect blocks from ten emitters and place them in the target. The showcase goal is to demonstrate how a large population can coordinate through explicit state, resource, and traffic contracts.
 
@@ -44,6 +44,10 @@ if (view.TryRefresh(out var svg))
 ```
 
 This is a maintained pull-based standalone SVG view with focused tests; the host owns refresh cadence and snapshot publication. It is **not yet** a GUI.SVG-hosted application/manifest or telemetry feed, and no autonomous lane routing or scale claim follows from it. See [renderer contract](../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md), [view source](../../src/DroneConstruction/ConstructionSnapshotSvgView.cs), and [UML/use cases](../../src/DroneConstruction/ConstructionSnapshotSvgRendererUML.md).
+
+## Rotor-driven quadrotor physics benchmark
+
+A separate source-only physics harness now measures the propeller-driven rigid-body step at 1,000, 10,000, and 100,000 quadrotor instances. The recorded hosted-runner baseline completed two million physics steps in about 2.33 seconds. This is evidence for the isolated dynamics kernel only; it is **not** a 100,000-agent construction-simulation run and excludes routing, collision/ground contact, control loops, rendering, and networking. See the [benchmark methodology and results](../../benchmarks/DroneConstruction.Physics/README.md) and [workflow run 40040340639](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/40040340639).
 
 ## Phone-friendly review
 
