@@ -82,6 +82,58 @@ public sealed class LaneTransitionAdmissionPolicyTests
             admittedSnapshot.Agents.Single(item => item.AgentId == agent.AgentId).State);
     }
 
+    [Fact]
+    public void Step_AutonomouslyTraversesPathAndRetriesBlockedIntermediateCellAndExit()
+    {
+        var (autoSimulation, autoAgent, baseIntent, autoDestinationGrid) = CreateReadyScenario(registerLifecycle: true);
+        var autoIntent = new LaneTransitionIntent(
+            baseIntent.Source,
+            baseIntent.TransitionEntry,
+            baseIntent.Destination,
+            baseIntent.Lookahead,
+            [new GridCell(0, 0), new GridCell(1, 0), new GridCell(2, 0)]);
+        var policy = new LaneTransitionAdmissionPolicy(autoSimulation);
+        Assert.True(policy.TrySubmit(autoAgent.AgentId, autoIntent));
+
+        // Admission commits only the entry move; it must not also advance the path in this tick.
+        autoSimulation.Step();
+        Assert.Equal(autoIntent.TransitionEntry, autoSimulation.GetAgentLocation(autoAgent.AgentId));
+        Assert.Equal(0, policy.PendingCount);
+
+        // A blocked intermediate cell is retried without losing transition occupancy or reservation.
+        Assert.True(autoDestinationGrid!.TryOccupy(new GridCell(1, 0), 77));
+        autoSimulation.Step();
+        Assert.Equal(autoIntent.TransitionEntry, autoSimulation.GetAgentLocation(autoAgent.AgentId));
+        Assert.True(autoDestinationGrid.Release(new GridCell(1, 0), 77));
+        autoSimulation.Step();
+        Assert.Equal(new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "east-transition", new GridCell(1, 0)),
+            autoSimulation.GetAgentLocation(autoAgent.AgentId));
+        autoSimulation.Step();
+        Assert.Equal(new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "east-transition", new GridCell(2, 0)),
+            autoSimulation.GetAgentLocation(autoAgent.AgentId));
+
+        // A blocked exit is also retried automatically on a later tick.
+        Assert.True(autoDestinationGrid.TryOccupy(new GridCell(8, 0), 78));
+        autoSimulation.Step();
+        Assert.Equal(new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "east-transition", new GridCell(2, 0)),
+            autoSimulation.GetAgentLocation(autoAgent.AgentId));
+        Assert.True(autoDestinationGrid.Release(new GridCell(8, 0), 78));
+        autoSimulation.Step();
+        Assert.Equal(autoIntent.Destination, autoSimulation.GetAgentLocation(autoAgent.AgentId));
+    }
+
+    [Fact]
+    public void Constructor_RejectsMalformedExplicitTransitionPaths()
+    {
+        var (_, _, intent, _) = CreateReadyScenario(registerLifecycle: true);
+        Assert.Throws<ArgumentException>(() => new LaneTransitionIntent(
+            intent.Source, intent.TransitionEntry, intent.Destination, intent.Lookahead,
+            [new GridCell(1, 0), new GridCell(2, 0)]));
+        Assert.Throws<ArgumentException>(() => new LaneTransitionIntent(
+            intent.Source, intent.TransitionEntry, intent.Destination, intent.Lookahead,
+            [new GridCell(0, 0), new GridCell(2, 0)]));
+    }
+
     private static (ConstructionSimulation Simulation, ConstructionAgent Agent, LaneTransitionIntent Intent, TrafficCellGrid? DestinationGrid)
         CreateReadyScenario(bool registerLifecycle)
     {
