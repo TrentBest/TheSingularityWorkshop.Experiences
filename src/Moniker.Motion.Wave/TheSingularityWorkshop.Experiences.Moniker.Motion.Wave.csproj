@@ -16,6 +16,9 @@
     <RepositoryUrl>https://github.com/TrentBest/TheSingularityWorkshop.Experiences</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(WorkshopUseRepositorySources)' == 'true'">
+    <DefineConstants>$(DefineConstants);WORKSHOP_USE_REPOSITORY_SOURCES</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Moniker\TheSingularityWorkshop.Experiences.Moniker.csproj" />
     <PackageReference Include="TheSingularityWorkshop.GUI.Core" Version="0.1.0-alpha.4" Condition="'$(WorkshopUseRepositorySources)' != 'true'" />
