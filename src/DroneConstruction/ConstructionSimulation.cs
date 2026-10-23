@@ -137,6 +137,16 @@ public sealed class ConstructionSimulation
                 return false;
         }
 
+        // Validate the downstream leg before committing entry so malformed chaining cannot
+        // strand an agent after a successful transition. The destination remains the exact
+        // qualified exit; the optional target is a separate, lane-local next itinerary point.
+        if (intent.DownstreamLaneTarget is { } downstreamTarget
+            && (!_skylanes.TryGetValue(intent.Destination.SpaceId, out var downstreamLane)
+                || !downstreamLane.Cells.Contains(intent.Destination.Cell)
+                || !downstreamLane.TryGetNextCell(intent.Destination.Cell, downstreamTarget, out _)
+                || _skylaneRoutes.ContainsKey(agentId)))
+            return false;
+
         if (!TryEnterSlipstream(agentId, intent.Source, intent.TransitionEntry,
                 intent.Destination, intent.Lookahead))
             return false;
@@ -285,6 +295,9 @@ public sealed class ConstructionSimulation
                 destinationGrid!, destination.Cell, lookahead))
             return false;
 
+        // Leaving a lane invalidates its previous target; a new downstream target is installed
+        // only after the next transition exits successfully.
+        _skylaneRoutes.Remove(agentId);
         agent.SetPosition(transitionEntry.Cell);
         return true;
     }
@@ -418,7 +431,13 @@ public sealed class ConstructionSimulation
             }
 
             if (TryExitSlipstream(agent.AgentId, intent.TransitionEntry.SpaceId, intent.Destination))
+            {
                 _activeLaneTransitions.Remove(agent.AgentId);
+                if (intent.DownstreamLaneTarget is { } downstreamTarget
+                    && !TrySetSkylaneDestination(agent.AgentId, intent.Destination.SpaceId, downstreamTarget))
+                    throw new InvalidOperationException(
+                        $"Agent {agent.AgentId} exited into {intent.Destination} but its validated downstream target could not be installed.");
+            }
         }
 
         // Admission follows active-path advancement. A just-admitted agent cannot move again
