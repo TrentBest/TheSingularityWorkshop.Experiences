@@ -54,6 +54,23 @@ public sealed class QuadrotorDynamicsTests
     }
 
     [Fact]
+    public void NonFiniteInertiaIsRejected()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new QuadrotorDynamics(diagonalInertiaKgMetresSquared: new Vector3d(double.NaN, 0.018d, 0.032d)));
+    }
+
+    [Fact]
+    public void InvalidCarriedRotorSpeedIsRejected()
+    {
+        var dynamics = new QuadrotorDynamics(motorEfficiencyVariationFraction: 0d);
+        var initial = QuadrotorDynamics.CreateInitialState("bad-rotor-state", Vector3d.Zero);
+        var invalid = initial with { Rotor0RadiansPerSecond = double.NaN };
+
+        Assert.Throws<ArgumentException>(() => dynamics.Step(invalid, new[] { 0d, 0d, 0d, 0d }, 0.01d));
+    }
+
+    [Fact]
     public void InvalidMotorCommandsAreRejected()
     {
         var dynamics = new QuadrotorDynamics();
