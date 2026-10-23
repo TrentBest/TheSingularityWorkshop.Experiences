@@ -43,6 +43,7 @@ public sealed class ConstructionSimulation
     private readonly ConstructionSpaceCatalog _spaces = new();
     private readonly Dictionary<string, SlipstreamLifecycle> _slipstreamLifecycles = new(StringComparer.Ordinal);
     private readonly Dictionary<ulong, LaneTransitionIntent> _pendingLaneTransitionIntents = [];
+    private readonly Dictionary<ulong, ActiveLaneTransition> _activeLaneTransitions = [];
     private readonly Dictionary<string, Skylane> _skylanes = new(StringComparer.Ordinal);
     private readonly Dictionary<ulong, (string LaneId, GridCell Target)> _skylaneRoutes = [];
     private readonly string _spaceId;
@@ -119,6 +120,34 @@ public sealed class ConstructionSimulation
     /// <summary>Removes a pending intent after cancellation or successful admission.</summary>
     internal bool TryRemovePendingLaneTransitionIntent(ulong agentId) =>
         _pendingLaneTransitionIntents.Remove(agentId);
+
+    /// <summary>
+    /// Admits a pending intent and activates its optional autonomous path. A newly admitted
+    /// path is not advanced until a later Step, so admission can never cause two moves in one tick.
+    /// </summary>
+    internal bool TryAdmitLaneTransitionIntent(ulong agentId)
+    {
+        if (!_pendingLaneTransitionIntents.TryGetValue(agentId, out var intent))
+            return false;
+
+        if (intent.TransitionPath is { } path)
+        {
+            if (!_slipstreamLifecycles.TryGetValue(intent.TransitionEntry.SpaceId, out var lifecycle)
+                || path.Any(cell => !lifecycle.TransitionCells.Contains(cell)))
+                return false;
+        }
+
+        if (!TryEnterSlipstream(agentId, intent.Source, intent.TransitionEntry,
+                intent.Destination, intent.Lookahead))
+            return false;
+
+        _pendingLaneTransitionIntents.Remove(agentId);
+        if (intent.TransitionPath is { } transitionPath)
+            _activeLaneTransitions.Add(agentId, new ActiveLaneTransition(intent, 1));
+        return true;
+    }
+
+    private sealed record ActiveLaneTransition(LaneTransitionIntent Intent, int NextPathIndex);
 
     /// <summary>Gets the current space-qualified location of a registered agent.</summary>
     public QualifiedGridLocation GetAgentLocation(ulong agentId)
@@ -368,16 +397,36 @@ public sealed class ConstructionSimulation
                     $"Agent {agent.AgentId} position {agent.Position} does not match committed location {committedLocation}.");
         }
 
-        // Admit pending transitions in stable agent-ID order. Failed admission leaves the
-        // intent pending and the source occupancy unchanged, so the next tick retries safely.
+        // Advance previously admitted explicit paths once per tick, in stable agent-ID order.
+        // A blocked intermediate cell or exit preserves the active path and reservation for retry.
         foreach (var agent in _agents)
         {
-            if (!_pendingLaneTransitionIntents.TryGetValue(agent.AgentId, out var intent))
+            if (!_activeLaneTransitions.TryGetValue(agent.AgentId, out var active))
                 continue;
 
-            if (TryEnterSlipstream(agent.AgentId, intent.Source, intent.TransitionEntry,
-                    intent.Destination, intent.Lookahead))
-                _pendingLaneTransitionIntents.Remove(agent.AgentId);
+            var intent = active.Intent;
+            var path = intent.TransitionPath!;
+            if (active.NextPathIndex < path.Count)
+            {
+                if (TryAdvanceSlipstream(agent.AgentId, intent.TransitionEntry.SpaceId,
+                        path[active.NextPathIndex]))
+                    _activeLaneTransitions[agent.AgentId] = active with
+                    {
+                        NextPathIndex = active.NextPathIndex + 1
+                    };
+                continue;
+            }
+
+            if (TryExitSlipstream(agent.AgentId, intent.TransitionEntry.SpaceId, intent.Destination))
+                _activeLaneTransitions.Remove(agent.AgentId);
+        }
+
+        // Admission follows active-path advancement. A just-admitted agent cannot move again
+        // during this tick; failed admission leaves source occupancy and intent unchanged.
+        foreach (var agent in _agents)
+        {
+            if (_pendingLaneTransitionIntents.ContainsKey(agent.AgentId))
+                TryAdmitLaneTransitionIntent(agent.AgentId);
         }
 
         foreach (var agent in _agents)
