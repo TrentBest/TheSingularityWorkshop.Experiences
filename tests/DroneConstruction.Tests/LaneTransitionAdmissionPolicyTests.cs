@@ -123,6 +123,34 @@ public sealed class LaneTransitionAdmissionPolicyTests
     }
 
     [Fact]
+    public void Step_ChainsExplicitTransitionExitIntoDownstreamSkylaneTargetOnFollowingTick()
+    {
+        var (simulation, agent, baseIntent, _, _) = CreateReadyScenario(registerLifecycle: true);
+        var intent = new LaneTransitionIntent(
+            baseIntent.Source,
+            baseIntent.TransitionEntry,
+            baseIntent.Destination,
+            baseIntent.Lookahead,
+            [new GridCell(0, 0), new GridCell(1, 0), new GridCell(2, 0)],
+            downstreamLaneTarget: new GridCell(11, 0));
+        var policy = new LaneTransitionAdmissionPolicy(simulation);
+        Assert.True(policy.TrySubmit(agent.AgentId, intent));
+
+        simulation.Step(); // Admit at transition entry.
+        simulation.Step(); // Transition cell 1.
+        simulation.Step(); // Transition cell 2.
+        simulation.Step(); // Exit to the exact destination; do not also move along the lane.
+        Assert.Equal(intent.Destination, simulation.GetAgentLocation(agent.AgentId));
+        Assert.True(simulation.TryGetSkylaneDestination(agent.AgentId, out var target));
+        Assert.Equal(new GridCell(11, 0), target);
+
+        simulation.Step(); // Downstream lane leg starts on the next tick.
+        Assert.Equal(
+            new QualifiedGridLocation(ConstructionSpaceKind.Skylane, "east-lane", new GridCell(9, 0)),
+            simulation.GetAgentLocation(agent.AgentId));
+    }
+
+    [Fact]
     public void Constructor_RejectsMalformedExplicitTransitionPaths()
     {
         var (_, _, intent, _, _) = CreateReadyScenario(registerLifecycle: true);
@@ -144,10 +172,11 @@ public sealed class LaneTransitionAdmissionPolicyTests
         Assert.True(agent.TryTransition(ConstructionAgentState.AwaitingTransition));
 
         var transitionGrid = new TrafficCellGrid(3, 1);
-        var destinationGrid = new TrafficCellGrid(12, 1);
+        var lane = new Skylane("east-lane", 12, 1, LaneDirection.East, elevation: 1);
+        var destinationGrid = lane.Cells;
         var lifecycle = new SlipstreamLifecycle(new Slipstream("east-resource", 3, 5), transitionGrid);
         Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.Slipstream, "east-transition", transitionGrid));
-        Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.Skylane, "east-lane", destinationGrid));
+        Assert.True(simulation.TryRegisterSkylane(lane));
         if (registerLifecycle)
             Assert.True(simulation.TryRegisterSlipstreamLifecycle("east-transition", lifecycle));
 
