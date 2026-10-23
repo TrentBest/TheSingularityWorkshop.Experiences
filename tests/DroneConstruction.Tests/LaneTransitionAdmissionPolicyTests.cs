@@ -113,7 +113,7 @@ public sealed class LaneTransitionAdmissionPolicyTests
             autoSimulation.GetAgentLocation(autoAgent.AgentId));
 
         // A blocked exit is also retried automatically on a later tick.
-        Assert.True(autoDestinationGrid.TryOccupy(new GridCell(8, 0), 78));
+        Assert.True(autoDestinationGrid!.TryOccupy(new GridCell(8, 0), 78));
         autoSimulation.Step();
         Assert.Equal(new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "east-transition", new GridCell(2, 0)),
             autoSimulation.GetAgentLocation(autoAgent.AgentId));
@@ -125,7 +125,7 @@ public sealed class LaneTransitionAdmissionPolicyTests
     [Fact]
     public void Constructor_RejectsMalformedExplicitTransitionPaths()
     {
-        var (_, _, intent, _) = CreateReadyScenario(registerLifecycle: true);
+        var (_, _, intent, _, _) = CreateReadyScenario(registerLifecycle: true);
         Assert.Throws<ArgumentException>(() => new LaneTransitionIntent(
             intent.Source, intent.TransitionEntry, intent.Destination, intent.Lookahead,
             [new GridCell(1, 0), new GridCell(2, 0)]));
