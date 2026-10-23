@@ -16,4 +16,7 @@
     <RepositoryUrl>https://github.com/TrentBest/TheSingularityWorkshop.Experiences</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+  <ItemGroup Condition="'$(WorkshopUseRepositorySources)' == 'true'">
+    <ProjectReference Include="../../../TheSingularityWorkshop.Physics/TheSingularityWorkshop.Physics.csproj" />
+  </ItemGroup>
 </Project>
