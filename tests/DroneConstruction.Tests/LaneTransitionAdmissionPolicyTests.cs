@@ -199,7 +199,8 @@ public sealed class LaneTransitionAdmissionPolicyTests
             new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "east-transition", new GridCell(0, 0)),
             new QualifiedGridLocation(ConstructionSpaceKind.Skylane, "east-lane", new GridCell(8, 0)),
             [new GridCell(2, 0), new GridCell(3, 0), new GridCell(4, 0), new GridCell(5, 0), new GridCell(6, 0)],
-            [new GridCell(0, 0), new GridCell(1, 0), new GridCell(2, 0)]);
+            [new GridCell(0, 0), new GridCell(1, 0), new GridCell(2, 0)],
+            downstreamLaneTarget: new GridCell(11, 0));
 
         Assert.True(policy.TrySubmit(second.AgentId, IntentFor(second)));
         Assert.True(policy.TrySubmit(first.AgentId, IntentFor(first)));
@@ -240,7 +241,16 @@ public sealed class LaneTransitionAdmissionPolicyTests
             simulation.GetAgentLocation(first.AgentId));
         Assert.Equal(1, policy.PendingCount);
 
-        simulation.Step(); // The second agent's retained intent is admitted.
+        simulation.Step(); // First agent advances off the shared exit cell; the request remains blocked this tick.
+        Assert.Equal(
+            new QualifiedGridLocation(ConstructionSpaceKind.Skylane, "east-lane", new GridCell(9, 0)),
+            simulation.GetAgentLocation(first.AgentId));
+        Assert.Equal(
+            new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(1, 0)),
+            simulation.GetAgentLocation(second.AgentId));
+        Assert.Equal(1, policy.PendingCount);
+
+        simulation.Step(); // The exit cell is now clear, so the retained request is admitted.
         Assert.Equal(
             new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "east-transition", new GridCell(0, 0)),
             simulation.GetAgentLocation(second.AgentId));
