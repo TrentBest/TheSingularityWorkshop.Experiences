@@ -48,6 +48,7 @@ public sealed class QuadrotorDynamics
     private readonly double _motorTimeConstantSeconds;
     private readonly double _thrustCoefficient;
     private readonly double _reactionTorqueCoefficient;
+    private readonly double[] _motorEfficiency = new double[4];
 
     /// <summary>Creates a validated, symmetric quadrotor model.</summary>
     public QuadrotorDynamics(
@@ -57,7 +58,10 @@ public sealed class QuadrotorDynamics
         double maximumRotorSpeedRadiansPerSecond = 900d,
         double maximumRotorThrustNewtons = 8d,
         double maximumReactionTorqueNewtonMetres = 0.12d,
-        double motorTimeConstantSeconds = 0.04d)
+        double motorTimeConstantSeconds = 0.04d,
+        uint worldSeed = 0x51A7E123u,
+        uint stableDroneNumericId = 1u,
+        double motorEfficiencyVariationFraction = 0.02d)
     {
         var inertia = diagonalInertiaKgMetresSquared ?? new Vector3d(0.018d, 0.018d, 0.032d);
         if (!double.IsFinite(massKg) || massKg <= 0d)
@@ -83,7 +87,17 @@ public sealed class QuadrotorDynamics
         _maximumReactionTorqueNewtonMetres = maximumReactionTorqueNewtonMetres;
         _motorTimeConstantSeconds = motorTimeConstantSeconds;
         _thrustCoefficient = maximumRotorThrustNewtons / (maximumRotorSpeedRadiansPerSecond * maximumRotorSpeedRadiansPerSecond);
+        if (!double.IsFinite(motorEfficiencyVariationFraction) || motorEfficiencyVariationFraction < 0d || motorEfficiencyVariationFraction >= 1d)
+            throw new ArgumentOutOfRangeException(nameof(motorEfficiencyVariationFraction));
+
         _reactionTorqueCoefficient = maximumReactionTorqueNewtonMetres / (maximumRotorSpeedRadiansPerSecond * maximumRotorSpeedRadiansPerSecond);
+        // Stable per-motor manufacturing variation comes from Workshop Physics' keyed
+        // RNG. It is independent of call order and thread scheduling.
+        for (uint rotor = 0; rotor < 4; rotor++)
+        {
+            var sample = Squirrel3Keyed.UnitDouble(worldSeed, stableDroneNumericId, 0u, 0x44524F00u + rotor);
+            _motorEfficiency[rotor] = 1d + (((sample * 2d) - 1d) * motorEfficiencyVariationFraction);
+        }
     }
 
     /// <summary>Creates a stationary state with all four motors stopped.</summary>
@@ -122,7 +136,7 @@ public sealed class QuadrotorDynamics
             var targetSpeed = command * _maximumRotorSpeedRadiansPerSecond;
             var blend = 1d - Math.Exp(-deltaTimeSeconds / _motorTimeConstantSeconds);
             rotorSpeeds[i] = state.RotorSpeed(i) + ((targetSpeed - state.RotorSpeed(i)) * blend);
-            thrusts[i] = _thrustCoefficient * rotorSpeeds[i] * rotorSpeeds[i];
+            thrusts[i] = _thrustCoefficient * _motorEfficiency[i] * rotorSpeeds[i] * rotorSpeeds[i];
         }
 
         // Body-local +Z is the thrust axis. The four force application points create
