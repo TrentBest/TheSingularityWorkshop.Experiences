@@ -6,7 +6,6 @@ namespace TheSingularityWorkshop.Experiences.DroneConstruction.Physics;
 
 /// <summary>Immutable achieved body state and the four propeller angular speeds.</summary>
 /// <remarks>Rotor speeds are radians per second; the body state uses the Physics library's world-frame metres and seconds.</remarks>
-/// <summary>Immutable achieved body state and the four propeller angular speeds.</summary>
 /// <param name="Body">Achieved rigid-body state.</param>
 /// <param name="Rotor0RadiansPerSecond">Rotor zero angular speed.</param>
 /// <param name="Rotor1RadiansPerSecond">Rotor one angular speed.</param>
