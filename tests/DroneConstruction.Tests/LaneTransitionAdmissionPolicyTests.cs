@@ -8,7 +8,7 @@ public sealed class LaneTransitionAdmissionPolicyTests
     [Fact]
     public void Submit_RequiresWaitingAgentAtQualifiedSource_AndDoesNotReplaceIntent()
     {
-        var (simulation, agent, intent, _) = CreateReadyScenario(registerLifecycle: true);
+        var (simulation, agent, intent, _, _) = CreateReadyScenario(registerLifecycle: true);
         var policy = new LaneTransitionAdmissionPolicy(simulation);
 
         Assert.False(policy.TrySubmit(99, intent));
@@ -30,7 +30,7 @@ public sealed class LaneTransitionAdmissionPolicyTests
     [Fact]
     public void Admit_FailedAdmissionRetainsIntent_AndSuccessfulRetryConsumesIt()
     {
-        var (simulation, agent, intent, destinationGrid) = CreateReadyScenario(registerLifecycle: true);
+        var (simulation, agent, intent, destinationGrid, _) = CreateReadyScenario(registerLifecycle: true);
         var policy = new LaneTransitionAdmissionPolicy(simulation);
         Assert.True(policy.TrySubmit(agent.AgentId, intent));
 
@@ -50,7 +50,7 @@ public sealed class LaneTransitionAdmissionPolicyTests
     [Fact]
     public void Cancel_RemovesIntentWithoutMovingAgent()
     {
-        var (simulation, agent, intent, _) = CreateReadyScenario(registerLifecycle: true);
+        var (simulation, agent, intent, _, _) = CreateReadyScenario(registerLifecycle: true);
         var policy = new LaneTransitionAdmissionPolicy(simulation);
         Assert.True(policy.TrySubmit(agent.AgentId, intent));
 
@@ -63,7 +63,7 @@ public sealed class LaneTransitionAdmissionPolicyTests
     [Fact]
     public void Step_RetriesBlockedTransitionAdmissionAndConsumesIntentOnSuccess()
     {
-        var (simulation, agent, intent, destinationGrid) = CreateReadyScenario(registerLifecycle: true);
+        var (simulation, agent, intent, destinationGrid, _) = CreateReadyScenario(registerLifecycle: true);
         var policy = new LaneTransitionAdmissionPolicy(simulation);
         Assert.True(policy.TrySubmit(agent.AgentId, intent));
 
@@ -85,7 +85,7 @@ public sealed class LaneTransitionAdmissionPolicyTests
     [Fact]
     public void Step_AutonomouslyTraversesPathAndRetriesBlockedIntermediateCellAndExit()
     {
-        var (autoSimulation, autoAgent, baseIntent, autoDestinationGrid) = CreateReadyScenario(registerLifecycle: true);
+        var (autoSimulation, autoAgent, baseIntent, autoDestinationGrid, autoTransitionGrid) = CreateReadyScenario(registerLifecycle: true);
         var autoIntent = new LaneTransitionIntent(
             baseIntent.Source,
             baseIntent.TransitionEntry,
@@ -101,10 +101,10 @@ public sealed class LaneTransitionAdmissionPolicyTests
         Assert.Equal(0, policy.PendingCount);
 
         // A blocked intermediate cell is retried without losing transition occupancy or reservation.
-        Assert.True(autoDestinationGrid!.TryOccupy(new GridCell(1, 0), 77));
+        Assert.True(autoTransitionGrid.TryOccupy(new GridCell(1, 0), 77));
         autoSimulation.Step();
         Assert.Equal(autoIntent.TransitionEntry, autoSimulation.GetAgentLocation(autoAgent.AgentId));
-        Assert.True(autoDestinationGrid.Release(new GridCell(1, 0), 77));
+        Assert.True(autoTransitionGrid.Release(new GridCell(1, 0), 77));
         autoSimulation.Step();
         Assert.Equal(new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "east-transition", new GridCell(1, 0)),
             autoSimulation.GetAgentLocation(autoAgent.AgentId));
@@ -134,7 +134,7 @@ public sealed class LaneTransitionAdmissionPolicyTests
             [new GridCell(0, 0), new GridCell(2, 0)]));
     }
 
-    private static (ConstructionSimulation Simulation, ConstructionAgent Agent, LaneTransitionIntent Intent, TrafficCellGrid? DestinationGrid)
+    private static (ConstructionSimulation Simulation, ConstructionAgent Agent, LaneTransitionIntent Intent, TrafficCellGrid? DestinationGrid, TrafficCellGrid TransitionGrid)
         CreateReadyScenario(bool registerLifecycle)
     {
         var agent = new ConstructionAgent(1, new GridCell(0, 0));
@@ -156,6 +156,6 @@ public sealed class LaneTransitionAdmissionPolicyTests
             new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "east-transition", new GridCell(0, 0)),
             new QualifiedGridLocation(ConstructionSpaceKind.Skylane, "east-lane", new GridCell(8, 0)),
             [new GridCell(2, 0), new GridCell(3, 0), new GridCell(4, 0), new GridCell(5, 0), new GridCell(6, 0)]);
-        return (simulation, agent, intent, destinationGrid);
+        return (simulation, agent, intent, destinationGrid, transitionGrid);
     }
 }
