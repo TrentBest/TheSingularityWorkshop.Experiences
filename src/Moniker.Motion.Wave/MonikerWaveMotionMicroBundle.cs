@@ -12,7 +12,11 @@ namespace TheSingularityWorkshop.Experiences.Moniker.Motion.Wave;
 /// The bundle contains presentation behavior only. It does not own the Moniker's content,
 /// does not depend on a host renderer, and never mutates the source GUI tree.
 /// </remarks>
+#if WORKSHOP_USE_REPOSITORY_SOURCES
 public sealed class MonikerWaveMotionMicroBundle : IMicroBundle, IMicroBundleResolvedConfiguration, IMonikerMotion
+#else
+public sealed class MonikerWaveMotionMicroBundle : IMicroBundle, IMonikerMotion
+#endif
 {
     /// <summary>Stable identity of the wave motion MicroBundle.</summary>
     public const ulong BundleId = 3102;
@@ -46,10 +50,12 @@ public sealed class MonikerWaveMotionMicroBundle : IMicroBundle, IMicroBundleRes
     }
 
     /// <summary>Participates in arbitration without changing the bundle definition.</summary>
+#if WORKSHOP_USE_REPOSITORY_SOURCES
     /// <summary>
     /// This motion definition has no configuration overrides; its resolved defaults are empty.
     /// </summary>
     public ReadOnlyMemory<byte> ExportResolvedConfiguration() => ReadOnlyMemory<byte>.Empty;
+#endif
 
     public bool Arbitrate(IMicroBundleArbitrationContext context, int roundIndex)
     {
