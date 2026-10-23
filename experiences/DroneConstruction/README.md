@@ -23,7 +23,7 @@ The original Unity implementation was lost with its former machine. This folder 
 3. **Emitters → resource supply.** Ten block emitters expose available inventory and pickup capacity.
 4. **Traffic → predictable movement.** Skylanes are 2D cellular grids with one-way movement. Hover lanes are 2D cellular grids for waiting and admission. Slipstreams are compact transition volumes where conflict checks are required.
 5. **Agents → observable state.** Each simulated agent has a stable identity, current task, location, movement mode, and lifecycle state.
-6. **Renderer + living diagrams.** Renderer presents the world; GUI.SVG documents and visualizes contracts, state transitions, and measured telemetry from actual snapshots.
+6. **Observer-relative presentation.** The simulation owns authoritative state; Renderer chooses the representation and computational detail appropriate to an observer, and Visualize executes the selected frame through a presentation backend. The goal is not to draw every drone at full detail every frame: distant or irrelevant agents can use coarser representations, lower update cadence, aggregation, or omission when policy allows. GUI.SVG remains the living-documentation/2D manifestation path for focused proofs and telemetry.
 
 ## Lane execution concept
 
@@ -44,6 +44,19 @@ if (view.TryRefresh(out var svg))
 ```
 
 This is a maintained pull-based standalone SVG view with focused tests; the host owns refresh cadence and snapshot publication. It is **not yet** a GUI.SVG-hosted application/manifest or telemetry feed, and no autonomous lane routing or scale claim follows from it. See [renderer contract](../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md), [view source](../../src/DroneConstruction/ConstructionSnapshotSvgView.cs), and [UML/use cases](../../src/DroneConstruction/ConstructionSnapshotSvgRendererUML.md).
+
+## Renderer and Visualize: observer-relative scale
+
+The 1k/10k/100k benchmark is a physics-kernel measurement, not a requirement to render every simulated drone. The presentation architecture follows the Workshop boundaries:
+
+- **Simulation/physics** owns authoritative state and advances it from inputs.
+- **Renderer** selects observer-relative representations and computational detail through its Event Horizon/representation policies.
+- **Visualize** executes the selected platform-neutral frame through a backend; GPU resources are disposable projections, never world authority.
+- **GUI.SVG** is useful for living documentation, focused 2D manifestations, and inspectable test evidence—not a requirement to materialize every drone as a separate SVG node.
+
+A full-scale presentation test should measure the observer-facing workload (visible/selected representations, submitted commands, update cadence, memory, and frame time) separately from simulation throughput. Use representative observer views and policy-driven detail reduction; do not turn “100,000 simulated agents” into “100,000 fully detailed draw submissions.” The existing Renderer → Visualize integration is a capability to consume, not proof that this Experience's full drone scene is already wired end-to-end.
+
+See [Renderer](https://github.com/TrentBest/TheSingularityWorkshop.Renderer/tree/development) and [Visualize](https://github.com/TrentBest/TheSingularityWorkshop.Visualize/tree/development) for the owning contracts and current integration evidence.
 
 ## Rotor-driven quadrotor physics benchmark
 
