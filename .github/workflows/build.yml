@@ -362,3 +362,29 @@ jobs:
 
               print(f"Validated {len(rooms)} {name} rooms and all navigation links.")
           PY
+
+  # Reproducible population benchmark; development only, never part of packaging/publication.
+  benchmark-quadrotor-populations:
+    if: github.ref == 'refs/heads/development' && github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Experiences
+        uses: actions/checkout@v7
+        with:
+          path: Experiences
+
+      - name: Checkout Workshop Physics source
+        uses: actions/checkout@v7
+        with:
+          repository: TrentBest/TheSingularityWorkshop.Physics
+          ref: development
+          path: TheSingularityWorkshop.Physics
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Run quadrotor population benchmark
+        working-directory: Experiences
+        run: dotnet run --project benchmarks/DroneConstruction.Physics/TheSingularityWorkshop.Experiences.DroneConstruction.Physics.Benchmarks.csproj --configuration Release -p:WorkshopUseRepositorySources=true
