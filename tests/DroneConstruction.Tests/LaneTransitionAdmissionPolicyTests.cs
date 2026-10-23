@@ -230,6 +230,21 @@ public sealed class LaneTransitionAdmissionPolicyTests
             new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(1, 0)),
             simulation.GetAgentLocation(second.AgentId));
         Assert.Equal(1, policy.PendingCount);
+
+        // Once the first agent clears the transition, the retained request can be admitted.
+        simulation.Step(); // Transition cell 1.
+        simulation.Step(); // Transition cell 2.
+        simulation.Step(); // First agent exits to the lane; no same-tick lane movement.
+        Assert.Equal(
+            new QualifiedGridLocation(ConstructionSpaceKind.Skylane, "east-lane", new GridCell(8, 0)),
+            simulation.GetAgentLocation(first.AgentId));
+        Assert.Equal(1, policy.PendingCount);
+
+        simulation.Step(); // The second agent's retained intent is admitted.
+        Assert.Equal(
+            new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "east-transition", new GridCell(0, 0)),
+            simulation.GetAgentLocation(second.AgentId));
+        Assert.Equal(0, policy.PendingCount);
     }
 
     [Fact]
