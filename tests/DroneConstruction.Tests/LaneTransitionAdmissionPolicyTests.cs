@@ -232,25 +232,17 @@ public sealed class LaneTransitionAdmissionPolicyTests
             simulation.GetAgentLocation(second.AgentId));
         Assert.Equal(1, policy.PendingCount);
 
-        // Once the first agent clears the transition, the retained request can be admitted.
+        // The first agent clears the shared exit cell as it exits; admission is evaluated
+        // before this tick's movement, so the retained request is admitted on the following tick.
         simulation.Step(); // Transition cell 1.
         simulation.Step(); // Transition cell 2.
-        simulation.Step(); // First agent exits to the lane; no same-tick lane movement.
-        Assert.Equal(
-            new QualifiedGridLocation(ConstructionSpaceKind.Skylane, "east-lane", new GridCell(8, 0)),
-            simulation.GetAgentLocation(first.AgentId));
-        Assert.Equal(1, policy.PendingCount);
-
-        simulation.Step(); // First agent advances off the shared exit cell; the request remains blocked this tick.
+        simulation.Step(); // Exit and advance to lane cell 9.
         Assert.Equal(
             new QualifiedGridLocation(ConstructionSpaceKind.Skylane, "east-lane", new GridCell(9, 0)),
             simulation.GetAgentLocation(first.AgentId));
-        Assert.Equal(
-            new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(1, 0)),
-            simulation.GetAgentLocation(second.AgentId));
         Assert.Equal(1, policy.PendingCount);
 
-        simulation.Step(); // The exit cell is now clear, so the retained request is admitted.
+        simulation.Step(); // Cell 8 is clear at admission time; the retained request proceeds.
         Assert.Equal(
             new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "east-transition", new GridCell(0, 0)),
             simulation.GetAgentLocation(second.AgentId));
