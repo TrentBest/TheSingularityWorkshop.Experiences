@@ -6,7 +6,7 @@
 
 ## Readiness
 
-**Current engineering readiness estimate: 60%.** This is a scoped audit estimate for the stated 100,000-agent showcase, not a test pass rate or release approval. The discrete construction slice, standalone SVG output, source-graph GUI.SVG integration test, immutable snapshot contract tests, monotonic observer, and maintained pull-based snapshot-to-SVG view are implemented. The view coalesces to the latest accepted sequence, renders each sequence once, exposes run/tick identity, and does not consume a snapshot when rendering fails. Focused tests have been added for this view; their new commit still requires CI. Autonomous skylane destination assignment and tick-driven movement are implemented with blocked-move retry tests. Pending transition admission/retry is now also driven by `Step()` with a focused blocked-admission test; slipstream traversal/exit orchestration, a hosted GUI.SVG application/telemetry, and measured scale remain outstanding.
+**Current engineering readiness estimate: 60%.** This is a scoped audit estimate for the stated 100,000-agent showcase, not a test pass rate or release approval. The discrete construction slice, standalone SVG output, source-graph GUI.SVG integration test, immutable snapshot contract tests, monotonic observer, and maintained pull-based snapshot-to-SVG view are implemented. The view coalesces to the latest accepted sequence, renders each sequence once, exposes run/tick identity, and does not consume a snapshot when rendering fails. Focused view tests, autonomous skylane destination assignment/movement, and tick-driven transition admission/retry have CI coverage. The blocked slipstream-exit regression test also passes CI: a failed exit preserves transition occupancy and the exact destination reservation, then succeeds after the destination clears. Slipstream traversal/exit orchestration, a hosted GUI.SVG application/telemetry, and measured scale remain outstanding.
 
 | Workstream | Status | Evidence / exit condition |
 |---|---|---|
@@ -18,7 +18,7 @@
 | Velocity-aware gravity-sort braking | Pure decision policy and focused tests added; latest CI verified | Current vertical velocity, net braking acceleration, stopping-distance threshold, altitude/speed capture tolerances; integrate with authoritative cohort state |
 | Hover/slipstream lifecycle primitives | Implemented/tested as separate contracts | Admission, ownership, blocked-exit retry, reservation invariants |
 | Skylane destination movement inside Step() | Implemented; CI pending | Registered lane spaces accept a direction-valid destination; Step advances in stable agent order, preserves target on blockage, and clears it on arrival. Focused route and retry tests added. [Operational contract](AUTONOMOUS_LANE_EXECUTION.md) |
-| Tick-driven transition admission and end-to-end itinerary | **Partial** | `Step()` retries pending admission in stable agent-ID order and retains blocked intents; slipstream traversal/exit, chained lane routing, and conflict tests remain open |
+| Tick-driven transition admission and end-to-end itinerary | **Partial** | `Step()` retries pending admission in stable agent-ID order and retains blocked intents. Blocked-exit occupancy/reservation retry is covered by `SlipstreamLifecycleTests`; autonomous traversal, tick-driven exit retry, chained lane routing, and contention/starvation tests remain open |
 | Persistent lookahead/conflict model | **Open** | Configurable five-cell initial policy and tests for moving occupancy/reservation lifetime |
 | Deterministic replay digest | **Open** | Same inputs/revision reproduce digest; mismatch diagnostics |
 | Snapshot-to-standalone-SVG rendering | Implemented; focused tests and CI artifact verified | [Renderer source](../../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.cs), [tests](../../../tests/DroneConstruction.Tests/ConstructionSnapshotSvgRendererTests.cs), and [contract](../../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md); renders committed tick/progress/agents/emitters and respects qualified grid identity |
@@ -32,6 +32,8 @@
 
 ## Latest verified CI checkpoints
 
+[Blocked slipstream-exit reservation retry run 39883180497](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39883180497) succeeded on commit [74984df](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/commit/74984dfaed452cfc3e4e31bca1bdba5bf998960b). The `test-drone-construction` job passed, verifying that a blocked exit retains transition occupancy and reservation, and that a later retry succeeds once the destination clears. This verifies the lifecycle API’s retry contract; it does not establish that `Step()` autonomously traverses or retries slipstream exits.
+
 [Snapshot contract test run 39854040177](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39854040177) succeeded on commit [d31b61d6](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/commit/d31b61d69e44433baa1490be6cc25f0d10f23d85). The DroneConstruction tests and the optional source-integration test job both passed. The new tests verify that an observed tick-0 snapshot retains its original agent, emitter, cell counts, completion state, and tick after subsequent simulation steps; collection views report read-only and throw on mutation attempts.
 
 [GUI.SVG source-graph integration run 39853079623](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39853079623) succeeded on commit [db795fec](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/commit/db795fecc043e40496665c898a3a2909064569f5). All 25 applicable workflow jobs passed; one job was intentionally skipped. The `test-drone-construction` and `source-integration-tests` jobs both passed. The optional source-graph test renders initial and completed committed simulation snapshots through `GuiBuilder` / `SvgGuiRenderer` and checks tick/progress labels, agent identity, placed-block identity, and stale-tick exclusion. GUI.SVG remains an optional test-side boundary; the core simulation does not take a GUI dependency.
@@ -43,8 +45,8 @@ These checkpoints verify snapshot immutability, standalone SVG output, and an op
 ## Work sequence
 
 1. **Visual boundary proof:** standalone snapshot-to-SVG output, the optional GUI.SVG source-graph integration test, and renderer-neutral observer are CI-verified. A maintained pull-based SVG view is now implemented; validate its new tests in CI, then host it in GUI.SVG with run/tick identity.
-2. **Prove safety boundaries:** version lookahead and transition configuration; test blocked paths, waiting, retry, competing agents, and starvation.
-3. **Close the loop:** continue the state machine in [AUTONOMOUS_LANE_EXECUTION.md](AUTONOMOUS_LANE_EXECUTION.md): add tick-driven slipstream traversal, blocked-exit retry, and route chaining. Preserve occupancy and retry safety.
+2. **Close the autonomous transition loop:** add explicit transition-path metadata to the intent and simulation-owned active-transition state; make `Step()` advance only declared orthogonal paths, retry blocked intermediate/exit moves without releasing reservations, and chain to the destination skylane only after exit commits. Do not infer a path from grid dimensions or lookahead cells.
+3. **Prove safety boundaries:** test malformed paths, blocked intermediate cells, blocked exits across ticks, deterministic contention, no double movement on admission ticks, route chaining, and starvation. Preserve occupancy and reservation invariants.
 4. **Add observability:** expose coherent committed snapshots to a renderer-neutral adapter, then create a maintained GUI.SVG view and telemetry.
 5. **Establish baseline:** create a repeatable small-run harness and invariant report before optimizing.
 6. **Scale honestly:** run the population ramp in [100K_SCALE_VALIDATION.md](100K_SCALE_VALIDATION.md); preserve raw evidence and optimize measured hot paths.
@@ -53,7 +55,7 @@ These checkpoints verify snapshot immutability, standalone SVG output, and an op
 ## Explicit non-claims
 
 - 100,000 agents have **not** yet been demonstrated by a measured, reproducible run.
-- Skylane/hover/slipstream components exist, but autonomous lane traversal is **not yet integrated into** ConstructionSimulation.Step().
+- Skylane/hover/slipstream components exist, but autonomous slipstream traversal and exit retry are **not yet integrated into** ConstructionSimulation.Step().
 - The authored storyboard is a concept illustration, not live GUI.SVG output.
 - The GUI.SVG source-graph test is a verified integration test, not proof of a hosted GUI.SVG application. `ConstructionSnapshotSvgView` is a maintained pull-based standalone SVG component, not a simulation-owned event stream, telemetry feed, or hosted GUI.SVG application.
 - Passing unit tests is not evidence of a particular throughput or frame rate.
