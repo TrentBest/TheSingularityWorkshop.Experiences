@@ -209,6 +209,7 @@ jobs:
           - src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj
           - src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj
           - src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
+          - src/DroneConstruction.Physics/TheSingularityWorkshop.Experiences.DroneConstruction.Physics.csproj
           - src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj
     steps:
       - name: Checkout Experiences
@@ -291,6 +292,10 @@ jobs:
       - name: Test Drone Construction MicroBundles against source graph
         working-directory: Experiences
         run: dotnet test tests/DroneConstruction.Tests/TheSingularityWorkshop.Experiences.DroneConstruction.Tests.csproj --configuration Release -p:WorkshopUseRepositorySources=true
+
+      - name: Test propeller-driven quadrotor physics against Workshop Physics source
+        working-directory: Experiences
+        run: dotnet test tests/DroneConstruction.Physics.Tests/TheSingularityWorkshop.Experiences.DroneConstruction.Physics.Tests.csproj --configuration Release -p:WorkshopUseRepositorySources=true
 
       - name: Test Castle Siege against source graph
         working-directory: Experiences
