@@ -6,6 +6,7 @@ namespace TheSingularityWorkshop.Experiences.DroneConstruction.Physics;
 
 /// <summary>Achieved quadrotor rigid-body state plus each propeller's angular speed.</summary>
 /// <remarks>Rotor speeds are radians per second; the body state uses the Physics library's world-frame metres and seconds.</remarks>
+/// <summary>Immutable achieved body state and the four propeller angular speeds.</summary>
 public readonly record struct QuadrotorState(
     RigidBodyState Body,
     double Rotor0RadiansPerSecond,
@@ -13,6 +14,7 @@ public readonly record struct QuadrotorState(
     double Rotor2RadiansPerSecond,
     double Rotor3RadiansPerSecond)
 {
+    /// <summary>Returns the angular speed of a rotor by its stable zero-based index.</summary>
     public double RotorSpeed(int index) => index switch
     {
         0 => Rotor0RadiansPerSecond,
