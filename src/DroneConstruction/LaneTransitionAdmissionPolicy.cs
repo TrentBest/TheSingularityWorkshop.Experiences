@@ -57,16 +57,7 @@ public sealed class LaneTransitionAdmissionPolicy
         if (!_simulation.TryGetPendingLaneTransitionIntent(agentId, out var intent) || intent is null)
             return false;
 
-        if (!_simulation.TryEnterSlipstream(
-                agentId,
-                intent.Source,
-                intent.TransitionEntry,
-                intent.Destination,
-                intent.Lookahead))
-            return false;
-
-        _simulation.TryRemovePendingLaneTransitionIntent(agentId);
-        return true;
+        return _simulation.TryAdmitLaneTransitionIntent(agentId);
     }
 
     /// <summary>Cancels an unadmitted intent without changing agent location or occupancy.</summary>
