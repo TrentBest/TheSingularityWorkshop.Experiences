@@ -1,6 +1,6 @@
 # Drone Construction — Autonomous Lane Execution Contract
 
-**Status:** partial operational implementation. Registered skylane routes advance from `ConstructionSimulation.Step()`; pending transition intents are admitted/retried there in stable agent-ID order. Intents may now declare an explicit orthogonal transition path, which the simulation advances one cell per tick and retries across blocked intermediate cells or exits. CI verification passed on commit `eb12dcd` in [run 39893746201](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39893746201); automatic downstream target selection and end-to-end itinerary execution remain incomplete.
+**Status:** partial operational implementation. Registered skylane routes advance from `ConstructionSimulation.Step()`; pending transition intents are admitted/retried there in stable agent-ID order. Intents may declare an explicit orthogonal transition path and an optional downstream skylane target. CI verification for explicit-path traversal passed on commit `eb12dcd` in [run 39893746201](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39893746201); downstream target chaining and one-tick exit isolation passed on commit `47ad235a` in [run 39986481492](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39986481492). Full itinerary planning and scale validation remain incomplete.
 
 ## Goal
 
