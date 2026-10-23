@@ -16,7 +16,8 @@ public sealed record LaneTransitionIntent
         QualifiedGridLocation transitionEntry,
         QualifiedGridLocation destination,
         IEnumerable<GridCell> lookahead,
-        IEnumerable<GridCell>? transitionPath = null)
+        IEnumerable<GridCell>? transitionPath = null,
+        GridCell? downstreamLaneTarget = null)
     {
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(transitionEntry);
@@ -54,9 +55,14 @@ public sealed record LaneTransitionIntent
             }
         }
 
+        if (downstreamLaneTarget is not null
+            && (destination.SpaceKind != ConstructionSpaceKind.Skylane || downstreamLaneTarget.Value == destination.Cell))
+            throw new ArgumentException("A downstream lane target requires a distinct destination on a skylane.", nameof(downstreamLaneTarget));
+
         Source = source;
         TransitionEntry = transitionEntry;
         Destination = destination;
+        DownstreamLaneTarget = downstreamLaneTarget;
     }
 
     /// <summary>Gets the exact qualified source location.</summary>
@@ -67,6 +73,9 @@ public sealed record LaneTransitionIntent
 
     /// <summary>Gets the exact qualified destination location.</summary>
     public QualifiedGridLocation Destination { get; }
+
+    /// <summary>Gets an optional next target on the destination skylane for automatic itinerary chaining.</summary>
+    public GridCell? DownstreamLaneTarget { get; }
 
     /// <summary>Gets a read-only view of the requested lookahead cells.</summary>
     public IReadOnlyList<GridCell> Lookahead => Array.AsReadOnly(_lookahead);
