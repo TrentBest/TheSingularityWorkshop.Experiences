@@ -4,7 +4,7 @@ using TheSingularityWorkshop.Physics.Spatial;
 
 namespace TheSingularityWorkshop.Experiences.DroneConstruction.Physics;
 
-/// <summary>Achieved quadrotor rigid-body state plus each propeller's angular speed.</summary>
+/// <summary>Immutable achieved body state and the four propeller angular speeds.</summary>
 /// <remarks>Rotor speeds are radians per second; the body state uses the Physics library's world-frame metres and seconds.</remarks>
 /// <summary>Immutable achieved body state and the four propeller angular speeds.</summary>
 /// <param name="Body">Achieved rigid-body state.</param>
@@ -73,7 +73,8 @@ public sealed class QuadrotorDynamics
         var inertia = diagonalInertiaKgMetresSquared ?? new Vector3d(0.018d, 0.018d, 0.032d);
         if (!double.IsFinite(massKg) || massKg <= 0d)
             throw new ArgumentOutOfRangeException(nameof(massKg));
-        if (inertia.X <= 0d || inertia.Y <= 0d || inertia.Z <= 0d)
+        if (!double.IsFinite(inertia.X) || !double.IsFinite(inertia.Y) || !double.IsFinite(inertia.Z) ||
+            inertia.X <= 0d || inertia.Y <= 0d || inertia.Z <= 0d)
             throw new ArgumentOutOfRangeException(nameof(diagonalInertiaKgMetresSquared));
         if (!double.IsFinite(armLengthMetres) || armLengthMetres <= 0d)
             throw new ArgumentOutOfRangeException(nameof(armLengthMetres));
@@ -139,6 +140,10 @@ public sealed class QuadrotorDynamics
             var command = motorCommands[i];
             if (!double.IsFinite(command) || command < 0d || command > 1d)
                 throw new ArgumentOutOfRangeException(nameof(motorCommands), "Motor commands must be finite values in [0,1].");
+
+            var previousSpeed = state.RotorSpeed(i);
+            if (!double.IsFinite(previousSpeed) || previousSpeed < 0d || previousSpeed > _maximumRotorSpeedRadiansPerSecond)
+                throw new ArgumentException($"State rotor {i} speed must be finite and within the configured motor range.", nameof(state));
 
             var targetSpeed = command * _maximumRotorSpeedRadiansPerSecond;
             var blend = 1d - Math.Exp(-deltaTimeSeconds / _motorTimeConstantSeconds);
