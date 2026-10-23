@@ -142,7 +142,7 @@ public sealed class ConstructionSimulation
             return false;
 
         _pendingLaneTransitionIntents.Remove(agentId);
-        if (intent.TransitionPath is { } transitionPath)
+        if (intent.TransitionPath is not null)
             _activeLaneTransitions.Add(agentId, new ActiveLaneTransition(intent, 1));
         return true;
     }
