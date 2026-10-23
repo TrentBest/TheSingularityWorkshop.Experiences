@@ -83,3 +83,16 @@ A practical research prototype should compare fixed optical anchors, UWB range m
 4. Add observation loss, occlusion, timing drift, noisy measurements, and peer-error propagation tests.
 5. Add the coordinator FSM, then subsystem FSMs only alongside tested independent behaviors.
 6. Run population-ramp benchmarks and report localization error as well as throughput before making any 100k claim.
+
+
+## Physics and deterministic math integration contract
+
+The current `src/DroneConstruction` project does **not** reference `TheSingularityWorkshop.Physics`; the discrete construction model therefore must not be described as using flight physics or Physics math. The physical-drone layer must consume the Workshop's own numerical APIs rather than reimplementing vector operations or introducing a second RNG.
+
+- **3D vectors:** use `TheSingularityWorkshop.Physics.Spatial.Vector3d` for physical position, velocity, acceleration, and measurement geometry, with units and coordinate frames documented by the owning model.
+- **Per-drone deterministic variation:** prefer `TheSingularityWorkshop.Physics.Numerics.Squirrel3Keyed` with stable world seed, stable drone ID, logical tick, and named purpose ID. This avoids random-stream drift when entity update order changes.
+- **Ordered stochastic processes:** use `TheSingularityWorkshop.Physics.Numerics.Squirrel3Random` only where sequential consumption is explicitly part of the algorithm; record seed and call-order assumptions.
+- **Provenance:** record RNG algorithm/version, seed, purpose IDs, frame identity, tick, and configuration in replay/benchmark inputs. Do not use random values as entity IDs or uniqueness guarantees.
+- **Dependency gate:** do not add an unverified package version or copy Physics source into Experiences. First establish the supported package/integration delivery path for `TheSingularityWorkshop.Physics`, then add the reference to the separate physical-model boundary and CI coverage. Keep the existing grid-construction core independent until it has a real physics consumer.
+
+Acceptance tests for the physical layer must prove keyed samples are invariant to agent iteration order, identical seeds/configuration reproduce the same run digest, different purpose IDs separate decisions, vector/frame/unit contracts are enforced, and any noise model is explicitly parameterized. This integration is **not implemented yet**; the bullets above are binding implementation requirements, not a claim that the current simulation uses Physics.
