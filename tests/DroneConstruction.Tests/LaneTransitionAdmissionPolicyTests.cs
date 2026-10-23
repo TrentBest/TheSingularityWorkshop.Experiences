@@ -174,6 +174,58 @@ public sealed class LaneTransitionAdmissionPolicyTests
     }
 
     [Fact]
+    public void Step_CompetingTransitionRequestsUseStableAgentIdOrderAndRetainLoserIntent()
+    {
+        var first = new ConstructionAgent(1, new GridCell(0, 0));
+        var second = new ConstructionAgent(2, new GridCell(1, 0));
+        var simulation = new ConstructionSimulation(12, 1, (_, _) => 0, [second, first], [], "yard");
+        foreach (var agent in new[] { first, second })
+        {
+            Assert.True(agent.TryAssign(new PlacementTask(agent.AgentId, agent.Position.X, 0, 1)));
+            Assert.True(agent.TryTransition(ConstructionAgentState.CarryingBlock));
+            Assert.True(agent.TryTransition(ConstructionAgentState.AwaitingTransition));
+        }
+
+        var transitionGrid = new TrafficCellGrid(3, 1);
+        var lane = new Skylane("east-lane", 12, 1, LaneDirection.East, elevation: 1);
+        var lifecycle = new SlipstreamLifecycle(new Slipstream("east-resource", 3, 5), transitionGrid);
+        Assert.True(simulation.TryRegisterTrafficSpace(ConstructionSpaceKind.Slipstream, "east-transition", transitionGrid));
+        Assert.True(simulation.TryRegisterSkylane(lane));
+        Assert.True(simulation.TryRegisterSlipstreamLifecycle("east-transition", lifecycle));
+
+        var policy = new LaneTransitionAdmissionPolicy(simulation);
+        LaneTransitionIntent IntentFor(ConstructionAgent agent) => new(
+            new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", agent.Position),
+            new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "east-transition", new GridCell(0, 0)),
+            new QualifiedGridLocation(ConstructionSpaceKind.Skylane, "east-lane", new GridCell(8, 0)),
+            [new GridCell(2, 0), new GridCell(3, 0), new GridCell(4, 0), new GridCell(5, 0), new GridCell(6, 0)],
+            [new GridCell(0, 0), new GridCell(1, 0), new GridCell(2, 0)]);
+
+        Assert.True(policy.TrySubmit(second.AgentId, IntentFor(second)));
+        Assert.True(policy.TrySubmit(first.AgentId, IntentFor(first)));
+
+        simulation.Step();
+
+        // The simulation sorts agents by ID, so the lower ID wins even though input order was reversed.
+        Assert.Equal(
+            new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "east-transition", new GridCell(0, 0)),
+            simulation.GetAgentLocation(first.AgentId));
+        Assert.Equal(
+            new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(1, 0)),
+            simulation.GetAgentLocation(second.AgentId));
+        Assert.Equal(1, policy.PendingCount);
+        Assert.True(policy.TryGetPending(second.AgentId, out var retained));
+        Assert.Equal(IntentFor(second), retained);
+
+        // The waiting request remains pending while the first agent owns the shared transition.
+        simulation.Step();
+        Assert.Equal(
+            new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(1, 0)),
+            simulation.GetAgentLocation(second.AgentId));
+        Assert.Equal(1, policy.PendingCount);
+    }
+
+    [Fact]
     public void Constructor_RejectsMalformedExplicitTransitionPaths()
     {
         var (_, _, intent, _, _) = CreateReadyScenario(registerLifecycle: true);
