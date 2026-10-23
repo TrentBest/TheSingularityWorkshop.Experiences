@@ -215,7 +215,14 @@ public sealed class LaneTransitionAdmissionPolicyTests
             simulation.GetAgentLocation(second.AgentId));
         Assert.Equal(1, policy.PendingCount);
         Assert.True(policy.TryGetPending(second.AgentId, out var retained));
-        Assert.Equal(IntentFor(second), retained);
+        Assert.NotNull(retained);
+        var expectedRetained = IntentFor(second);
+        Assert.Equal(expectedRetained.Source, retained!.Source);
+        Assert.Equal(expectedRetained.TransitionEntry, retained.TransitionEntry);
+        Assert.Equal(expectedRetained.Destination, retained.Destination);
+        Assert.Equal(expectedRetained.Lookahead, retained.Lookahead);
+        Assert.Equal(expectedRetained.TransitionPath, retained.TransitionPath);
+        Assert.Equal(expectedRetained.DownstreamLaneTarget, retained.DownstreamLaneTarget);
 
         // The waiting request remains pending while the first agent owns the shared transition.
         simulation.Step();
