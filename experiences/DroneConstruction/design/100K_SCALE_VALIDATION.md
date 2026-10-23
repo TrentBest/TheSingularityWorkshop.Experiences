@@ -59,7 +59,7 @@ Five cells is the initial remembered prototype parameter, not a universal safety
 
 ## Current evidence boundary
 
-The repository has tests for the discrete construction loop, qualified locations, occupancy-index consistency, skylane direction/speed policy, and separate slipstream lifecycle/admission contracts. The latest observed development workflow run, [39725809829](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39725809829), completed successfully, including the Drone Construction test job. This validates tests on that commit; it does **not** establish a 100,000-agent benchmark, live GUI.SVG observation, or fully integrated autonomous lane routing.
+The repository has tests for the discrete construction loop, qualified locations, occupancy-index consistency, skylane direction/speed policy, and slipstream lifecycle/admission contracts. The latest observed development workflow run, [39893746201](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39893746201), completed successfully on commit [eb12dcd](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/commit/eb12dcd94486855e1e8b60d3653f4d71aa8f6d14), including the Drone Construction test job, Drone Construction and MicroBundles builds, and source-integration tests. This validates the tested code on that commit; it does **not** establish a 100,000-agent benchmark, live GUI.SVG application/telemetry, or fully integrated autonomous itinerary routing.
 
 ## Release gate for a scale claim
 
