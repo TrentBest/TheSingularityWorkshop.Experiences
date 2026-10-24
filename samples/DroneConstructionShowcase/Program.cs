@@ -65,11 +65,8 @@ footer{margin-top:24px;color:#7890a5;font-size:.85rem}
 <header><div><div class="kicker">The Singularity Workshop · Living Proof</div><h1>Drone Construction</h1><p>Watch a deterministic multi-agent construction run advance from committed simulation snapshots. This is real simulation output, not a storyboard.</p></div></header>
 <div class="stage" aria-label="Animated sequence of committed construction simulation snapshots">
 """);
-    var duration = Math.Max(4, frames.Count * 0.16);
     for (var i = 0; i < frames.Count; i++)
     {
-        var start = i * 100.0 / frames.Count;
-        var end = (i + 1) * 100.0 / frames.Count;
         var svg = frames[i].Svg.Replace("<svg ", "<svg preserveAspectRatio=\"xMidYMid meet\" ", StringComparison.Ordinal);
         html.Append("<div class=\"frame\" style=\"animation-delay:-")
             .Append((duration - i * duration / frames.Count).ToString("0.000", System.Globalization.CultureInfo.InvariantCulture))
