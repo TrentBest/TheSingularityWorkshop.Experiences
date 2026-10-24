@@ -95,9 +95,9 @@ The separate slipstream lifecycle coordinator reserves downstream capacity befor
 
 - **M0 — authored contract:** vocabulary, bundle boundaries, architecture diagrams.
 - **M1 — deterministic discrete model:** height mapping, target cells, stable agent IDs, finite emitter inventory, exclusive occupancy, one-cell movement, placement, and immutable snapshots.
-- **M2 — lane transition proof:** admission and conflict invariants tested as separate primitives; full autonomous integration remains open.
-- **M3 — live rendered vertical slice:** actual snapshots consumed by Renderer/GUI.SVG. Not complete.
-- **M4 — scale evidence:** population sweeps, correctness, throughput, memory, allocations, and tick-time reports. Not complete.
+- **M2 — lane transition proof:** explicit-path traversal, blocked-exit retry, downstream target chaining, invalid-target rejection, and a deterministic contention regression are implemented and CI-verified. Persistent lookahead/conflict modeling, full itinerary planning, and starvation-freedom remain open.
+- **M3 — rendered vertical slice:** committed snapshots feed standalone/isometric SVG renderers; the small three-agent browser showcase is CI-verified, and optional GUI.SVG source-graph tests are verified. The observer-relative Drone Construction → Renderer → Visualize integration and hosted live telemetry application remain open.
+- **M4 — scale evidence:** a separate rotor-driven physics-kernel benchmark covers 1k/10k/100k physics instances; full construction-agent population sweeps, correctness, throughput, memory, allocations, and tick-time reports remain open.
 - **M5 — optional physical model:** add a tested physics provider only when API, units, stepping, and collision evidence are explicit.
 
 **North star:** show that many simple agents can build a shared target through explicit, testable rules—and make the actual rules visible.
