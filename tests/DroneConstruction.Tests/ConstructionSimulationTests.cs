@@ -773,4 +773,37 @@ public sealed class ConstructionSimulationTests
         Assert.Null(lifecycle.AgentId);
     }
 
+    [Fact]
+    public void Simulation_SerializesEmitterApproachAndCompletesMultipleAgents()
+    {
+        var agents = new[]
+        {
+            new ConstructionAgent(1, new GridCell(0, 0)),
+            new ConstructionAgent(2, new GridCell(0, 1)),
+            new ConstructionAgent(3, new GridCell(0, 2))
+        };
+        var simulation = new ConstructionSimulation(
+            width: 10,
+            height: 3,
+            requiredHeight: (x, y) => (x == 9 && y == 0) || (x == 8 && y == 1) || (x == 7 && y == 2) ? 1 : 0,
+            agents: agents,
+            emitters: [new PositionedBlockEmitter(new GridCell(0, 0), new BlockEmitter("emitter", 3))]);
+
+        var snapshot = simulation.Snapshot();
+        for (var i = 0; i < 200 && !snapshot.IsComplete; i++)
+            snapshot = simulation.Step();
+
+        Assert.True(snapshot.IsComplete);
+        Assert.Equal(3, snapshot.RequiredBlocks);
+        Assert.Equal(3, snapshot.PlacedBlocks);
+        Assert.Equal(3, snapshot.Agents.Count);
+        Assert.All(snapshot.Agents, agent =>
+        {
+            Assert.Equal(ConstructionAgentState.Idle, agent.State);
+            Assert.Null(agent.AssignedTaskId);
+            Assert.False(agent.IsCarryingBlock);
+        });
+        Assert.Equal(0, Assert.Single(snapshot.Emitters).Inventory);
+    }
+
 }
