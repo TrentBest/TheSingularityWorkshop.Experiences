@@ -42,8 +42,8 @@ public sealed class EmitterQueueLivenessTests
     {
         // Three agents share one narrow approach. The highest-ID agent starts nearest the
         // emitter; stable ID iteration must not force it to wait for agents physically behind it.
-        // All three blocks stack at one target so this test isolates emitter-queue liveness from
-        // unrelated route crossings between multiple target rows.
+        // Targets are distinct and offset beyond the emitter so completed agents do not occupy
+        // a shared target cell or block the queue's approach lane.
         var agents = new[]
         {
             new ConstructionAgent(1, new GridCell(1, 2)),
@@ -51,9 +51,10 @@ public sealed class EmitterQueueLivenessTests
             new ConstructionAgent(3, new GridCell(3, 2))
         };
         var simulation = new ConstructionSimulation(
-            width: 6,
+            width: 8,
             height: 5,
-            requiredHeight: (x, y) => x == 5 && y == 2 ? 3 : 0,
+            requiredHeight: (x, y) =>
+                (x == 5 && y == 0) || (x == 7 && y == 1) || (x == 6 && y == 4) ? 1 : 0,
             agents: agents,
             emitters: [new PositionedBlockEmitter(new GridCell(4, 2), new BlockEmitter("shared-emitter", 3))]);
 
