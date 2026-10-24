@@ -67,6 +67,7 @@ A separate source-only physics harness now measures the propeller-driven rigid-b
 - **[Gallery — what is real vs. concept](GALLERY.md)**
 - **[Readiness ledger and next gates](design/READINESS.md)**
 - **[100,000-agent validation protocol](design/100K_SCALE_VALIDATION.md)**
+- **[Web rendering and 3D projection roadmap](design/WEB_RENDERING_AND_3D_ROADMAP.md)**
 - **[Snapshot and living-view contract](design/SIMULATION_OBSERVABILITY.md)**
 - **[Gravity sort, five-cell offsets, and route choreography](design/GRAVITY_SORT_AND_ROUTING.md)**
 - [MicroBundle boundaries](design/MICROBUNDLE_BOUNDARIES.md)
