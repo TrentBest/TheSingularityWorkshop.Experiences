@@ -48,15 +48,19 @@ Historical lifecycle-primitive checkpoint: [run 39883180497](https://github.com/
 
 These checkpoints verify snapshot immutability, standalone SVG output, and an optional snapshot-to-GUI.SVG source-graph test. They do not verify a continuously updated live view, a 100k population, or the proposed coordinate-only hot path.
 
-## Work sequence
+## Next implementation sequence
 
-1. **Connect the observer boundary:** standalone snapshot-to-SVG output, the optional GUI.SVG source-graph integration test, the renderer-neutral observer, and the maintained pull-based SVG view are implemented and CI-verified. Next, connect committed snapshots to the existing Renderer → Visualize CPU/SVG proof, preserving run/tick/sequence provenance and keeping the adapter outside the simulation core.
-2. **Close and protect the autonomous transition loop:** explicit transition-path traversal, blocked intermediate/exit retry, downstream skylane-target chaining, and pre-admission rejection of invalid downstream targets are implemented and CI-verified. Deterministic contention has a passing regression test; starvation-freedom and broader conflict/fairness evidence remain open. Never infer a path from grid dimensions or lookahead cells.
-3. **Prove safety boundaries:** test malformed paths, blocked intermediate cells, blocked exits across ticks, deterministic contention, no double movement on admission ticks, route chaining, and starvation. Preserve occupancy and reservation invariants.
-4. **Add observability:** expose coherent committed snapshots to a renderer-neutral adapter, then create a maintained GUI.SVG view and telemetry.
-5. **Establish baseline:** create a repeatable small-run harness and invariant report before optimizing.
-6. **Scale honestly:** run the population ramp in [100K_SCALE_VALIDATION.md](100K_SCALE_VALIDATION.md); preserve raw evidence and optimize measured hot paths.
-7. **Release audit:** verify bundle IDs against shared registry, provider dependencies against actual runtime composition, documentation and CI, and obtain explicit approval for publication.
+1. **Integrate the observer boundary (current priority; Issue #20):** connect a real committed `ConstructionSimulationSnapshot` to the existing Renderer → Visualize CPU/GUI.SVG path in an optional integration/proof project. Preserve run/tick/sequence provenance, explicit observer configuration, stable source identity, deterministic bounded selection, and truthful aggregate membership. Keep all presentation dependencies outside the simulation core.
+2. **Measure presentation independently:** report snapshot population, selected individuals, aggregate representations, omitted agents, draw commands, resources, frame duration, allocations, and snapshot age. Add deterministic tests for same-input/same-output, observer/LOD changes without simulation mutation, empty/stale snapshots, missing resources, and render failures.
+3. **Close fairness and replay gaps:** deterministic contention has a passing regression test, but starvation-freedom, the persistent lookahead/conflict model, and a deterministic replay digest remain open. Preserve occupancy/reservation invariants and never infer a path from grid dimensions or lookahead cells.
+4. **Establish a construction baseline:** create a repeatable small-run harness and invariant report before optimizing; physics-kernel throughput is not a substitute for construction-agent throughput.
+5. **Scale honestly:** run the population ramp in [100K_SCALE_VALIDATION.md](100K_SCALE_VALIDATION.md); preserve raw evidence and correctness gates at each stage.
+6. **Finish the living showcase:** host a maintained GUI.SVG view with telemetry only after the optional end-to-end adapter proof is real and observable. Keep the view read-only and make refresh/backpressure/failure semantics explicit.
+7. **Release audit:** verify bundle IDs against the shared registry, provider dependencies against actual runtime composition, documentation and CI, and obtain explicit approval for publication.
+
+## Current focus
+
+Issue [#20 — Integrate Drone Construction snapshots with Renderer → Visualize](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/issues/20) is the next vertical slice. The snapshot, renderer-neutral observer, standalone SVG renderer/view, and optional GUI.SVG source-graph test are already implemented; the missing link is the actual Drone Construction snapshot → bounded observer selection → Renderer frame → Visualize submission path. Do not mark Issue #20 complete based only on Visualize's separate downstream proof.
 
 ## Explicit non-claims
 
