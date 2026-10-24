@@ -136,3 +136,30 @@ The simulation architecture should also avoid a Unity-style requirement for one 
 - [ ] A selected drone can be expanded without changing its simulation state.
 - [ ] The same snapshot and LOD configuration produce deterministic semantic output.
 - [ ] Observer backpressure and dropped/coalesced frames are visible in diagnostics.
+
+
+## First executable Renderer handoff — implementation contract
+
+The next vertical slice belongs in an optional integration/proof project, not in `src/DroneConstruction`. Keep the Experiences core free of Renderer, Visualize, GUI.SVG, GPU, and Unity references.
+
+### Input and provenance
+
+- Poll `ConstructionSnapshotObserver.TryGetLatest` once per frame attempt. Treat the returned snapshot and sequence as one observation; never combine agent data from different ticks.
+- Carry `RunId`, `snapshot.Tick`, and observer `sequence` in a sidecar frame-provenance record until the renderer frame contract has a first-class metadata slot. Do not encode provenance only in SVG labels.
+- Use `ConstructionAgentSnapshot.AgentId` as source identity and `QualifiedGridLocation` as the space-qualified location. Grid coordinates alone are not globally unique.
+- Reject/skip a stale sequence before building the frame; an empty selected set is a valid frame and must not be confused with a missing snapshot.
+
+### First slice mapping
+
+1. Introduce an explicit observer input (pose/space, intent, selection budget, and LOD policy); make defaults deterministic and bounded.
+2. Select a bounded set of individual agents and deterministic cohorts from the one committed snapshot. Sort by stable agent ID before applying any budget or emitting output.
+3. For individual representations, preserve the agent ID in a semantic/source map associated with each draw command. For aggregates, preserve the snapshot tick, cohort key, member count, and recoverable member IDs or a stable membership reference.
+4. Convert selected representation decisions to existing Renderer contracts and pass the resulting `RenderFrame` through Visualize's existing `RendererFrameAdapter` and GUI.SVG backend.
+5. Emit independent counters for snapshot population, individual selections, aggregate count, omitted/off-screen count, draw commands, resources, frame duration, allocations, and snapshot age. Do not treat draw-command count as simulation population.
+6. Add deterministic tests for same-input/same-output, observer change without simulation mutation, aggregate count reconciliation, bounded selection, stale sequence handling, and empty frames.
+
+### Integration boundary and proof label
+
+Visualize already has a CPU-side Renderer-to-GUI.SVG proof using distance selection, FSM-backed representation state, `RenderFrameAdapter`, resource validation, and SVG submission. That proof is a reusable downstream boundary, not evidence that Drone Construction is connected to it. The new proof is complete only when a real `ConstructionSimulationSnapshot` is the upstream source and CI runs the entire snapshot → observer selection → Renderer frame → Visualize → GUI.SVG path.
+
+Do not claim a hosted live app, GPU execution, production Event Horizon/bucket coordination, starvation-freedom, or 100,000-agent construction scale from this slice. Measure presentation cost separately from simulation throughput.
