@@ -50,8 +50,8 @@ These checkpoints verify snapshot immutability, standalone SVG output, and an op
 
 ## Work sequence
 
-1. **Visual boundary proof:** standalone snapshot-to-SVG output, the optional GUI.SVG source-graph integration test, and renderer-neutral observer are CI-verified. A maintained pull-based SVG view is now implemented; validate its new tests in CI, then host it in GUI.SVG with run/tick identity.
-2. **Close the autonomous transition loop:** explicit transition-path metadata and simulation-owned active-transition state are implemented on `development`; `Step()` advances only declared orthogonal paths and retries blocked intermediate/exit moves without releasing reservations. Await green CI, then add downstream skylane-target chaining and conflict/fairness tests. Never infer a path from grid dimensions or lookahead cells.
+1. **Connect the observer boundary:** standalone snapshot-to-SVG output, the optional GUI.SVG source-graph integration test, the renderer-neutral observer, and the maintained pull-based SVG view are implemented and CI-verified. Next, connect committed snapshots to the existing Renderer → Visualize CPU/SVG proof, preserving run/tick/sequence provenance and keeping the adapter outside the simulation core.
+2. **Close and protect the autonomous transition loop:** explicit transition-path traversal, blocked intermediate/exit retry, downstream skylane-target chaining, and pre-admission rejection of invalid downstream targets are implemented and CI-verified. Deterministic contention has a passing regression test; starvation-freedom and broader conflict/fairness evidence remain open. Never infer a path from grid dimensions or lookahead cells.
 3. **Prove safety boundaries:** test malformed paths, blocked intermediate cells, blocked exits across ticks, deterministic contention, no double movement on admission ticks, route chaining, and starvation. Preserve occupancy and reservation invariants.
 4. **Add observability:** expose coherent committed snapshots to a renderer-neutral adapter, then create a maintained GUI.SVG view and telemetry.
 5. **Establish baseline:** create a repeatable small-run harness and invariant report before optimizing.
@@ -61,7 +61,7 @@ These checkpoints verify snapshot immutability, standalone SVG output, and an op
 ## Explicit non-claims
 
 - 100,000 agents have **not** yet been demonstrated by a measured, reproducible run.
-- Explicit-path slipstream traversal and exit retry in `ConstructionSimulation.Step()` are **CI-verified** by run 39893746201. Automatic downstream lane-target chaining is still incomplete.
+- Explicit-path slipstream traversal and blocked-exit retry in `ConstructionSimulation.Step()` are **CI-verified** by run 39893746201; downstream lane-target chaining is **CI-verified** by run 39986481492; invalid downstream targets are rejected before admission in run 40027762499. Deterministic contention has a passing regression in run 40035047695. Starvation-freedom remains unproven.
 - The authored storyboard is a concept illustration, not live GUI.SVG output.
 - The GUI.SVG source-graph test is a verified integration test, not proof of a hosted GUI.SVG application. `ConstructionSnapshotSvgView` is a maintained pull-based standalone SVG component, not a simulation-owned event stream, telemetry feed, or hosted GUI.SVG application.
 - Passing unit tests is not evidence of a particular throughput or frame rate.
