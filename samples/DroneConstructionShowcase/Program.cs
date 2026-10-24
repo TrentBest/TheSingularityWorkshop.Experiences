@@ -19,13 +19,13 @@ var simulation = new ConstructionSimulation(
     spaceId: "web-showcase");
 var frames = new List<(long Tick, int Placed, string Svg)>();
 var snapshot = simulation.Snapshot();
-frames.Add((snapshot.Tick, snapshot.PlacedBlocks, ConstructionSnapshotSvgRenderer.Render(snapshot, width, height, "web-showcase", 40)));
+frames.Add((snapshot.Tick, snapshot.PlacedBlocks, ConstructionSnapshotIsometricSvgRenderer.Render(snapshot, width, height, "web-showcase", 32, 12)));
 var captureEvery = 3;
 while (!snapshot.IsComplete && snapshot.Tick < maxTicks)
 {
     snapshot = simulation.Step();
     if (snapshot.Tick % captureEvery == 0 || snapshot.IsComplete)
-        frames.Add((snapshot.Tick, snapshot.PlacedBlocks, ConstructionSnapshotSvgRenderer.Render(snapshot, width, height, "web-showcase", 40)));
+        frames.Add((snapshot.Tick, snapshot.PlacedBlocks, ConstructionSnapshotIsometricSvgRenderer.Render(snapshot, width, height, "web-showcase", 32, 12)));
 }
 
 var outputPath = Path.GetFullPath(args.Length > 0 ? args[0] : "artifacts/drone-construction-showcase.html");
@@ -53,7 +53,7 @@ static string BuildPage(
 header{display:flex;gap:24px;align-items:end;justify-content:space-between;flex-wrap:wrap}
 h1{font-size:clamp(2rem,5vw,4rem);line-height:1.02;letter-spacing:-.04em;margin:0}
 .kicker{color:#55d9ff;text-transform:uppercase;letter-spacing:.16em;font-size:.78rem;font-weight:800}
-p{color:#a9bacb;max-width:70ch}.stage{position:relative;margin-top:28px;aspect-ratio:1.65;border:1px solid #263a4c;border-radius:18px;overflow:hidden;background:#101923;box-shadow:0 24px 90px #0008}
+p{color:#a9bacb;max-width:70ch}.stage{position:relative;margin-top:28px;aspect-ratio:1.35;border:1px solid #263a4c;border-radius:18px;overflow:hidden;background:#101923;box-shadow:0 24px 90px #0008}
 .frame{position:absolute;inset:0;display:grid;place-items:center;opacity:0;animation:replay __DURATION__s steps(1,end) infinite}
 .frame svg{width:100%;height:100%;max-height:76vh}
 @keyframes replay{0%{opacity:1}__KEYFRAMES__100%{opacity:0}}
@@ -63,7 +63,7 @@ p{color:#a9bacb;max-width:70ch}.stage{position:relative;margin-top:28px;aspect-r
 footer{margin-top:24px;color:#7890a5;font-size:.85rem}
 @media(prefers-reduced-motion:reduce){.frame{animation:none}.frame:first-child{opacity:1}}
 </style></head><body>
-<header><div><div class="kicker">The Singularity Workshop · Living Proof</div><h1>Drone Construction</h1><p>Watch a deterministic multi-agent construction run advance from committed simulation snapshots. This is real simulation output, not a storyboard.</p></div></header>
+<header><div><div class="kicker">The Singularity Workshop · Living Proof</div><h1>Drone Construction</h1><p>Watch a deterministic multi-agent construction run in an isometric browser view. The 3D-like scene is projected from committed simulation snapshots, not a storyboard or flight-physics claim.</p></div></header>
 <div class="stage" aria-label="Animated sequence of committed construction simulation snapshots">
 """);
     for (var i = 0; i < frames.Count; i++)
@@ -79,7 +79,7 @@ footer{margin-top:24px;color:#7890a5;font-size:.85rem}
     Metric(html, finalSnapshot.Tick.ToString(), "simulation ticks");
     Metric(html, frames.Count.ToString(), "captured snapshots");
     html.AppendLine("</section>");
-    html.AppendLine($"<footer>Run: web-showcase · grid: {width} × {height} · deterministic CPU simulation · completion: {(finalSnapshot.IsComplete ? "verified" : "incomplete")}. The presentation intentionally samples committed ticks rather than drawing every simulation step.</footer>");
+    html.AppendLine($"<footer>Run: web-showcase · grid: {width} × {height} · deterministic CPU simulation · isometric SVG projection · completion: {(finalSnapshot.IsComplete ? "verified" : "incomplete")}. The presentation intentionally samples committed ticks rather than drawing every simulation step.</footer>");
     html.AppendLine("</body></html>");
     var page = html.ToString();
     var keyframes = new StringBuilder();
