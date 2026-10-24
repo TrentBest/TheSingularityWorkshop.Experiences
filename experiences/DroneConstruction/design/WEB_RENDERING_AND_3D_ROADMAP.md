@@ -18,12 +18,12 @@ This first projection intentionally uses SVG to make the spatial mapping inspect
 
 ## Image-derived construction targets
 
-The next model step is a source-image import contract: decode an image, choose a bounded target resolution, and convert pixels to height values. A 4K source image is an input-resolution goal, not a requirement to create 16 million independent physical blocks or draw calls. Keep source dimensions, target grid dimensions, height quantization, and maximum build height separate. Resampling and a configurable channel-to-height mapping should be explicit and deterministic.
+The first bounded resampling primitive is now implemented as `ImageHeightField.FromRgbResampled(...)`: source dimensions are independent of target dimensions, target allocation is limited by a configurable cell cap (default 1,000,000), and channel-to-height mapping is deterministic. This accepts decoded RGB bytes; image-file decoding, aspect-ratio policy, import metadata, and authoritative legal placement bounds remain follow-up work. A 4K source image is an input-resolution goal, not a requirement to create 16 million independent physical blocks or draw calls. Keep source dimensions, target grid dimensions, height quantization, and maximum build height separate.
 
 For a first usable importer:
-- preserve aspect ratio unless the user explicitly requests stretching;
-- cap target grid dimensions and total cells before allocation;
-- map source luminance or a selected channel into integer heights;
+- preserve aspect ratio unless the user explicitly requests stretching (not yet implemented in the primitive);
+- cap target grid dimensions and total cells before allocation (the RGB resampling primitive enforces a configurable total-cell limit);
+- map source luminance or a selected channel into integer heights (channel selection is implemented; luminance and file decoding remain open);
 - clamp height to the configured build limit (currently five for the showcase);
 - record source dimensions, target dimensions, mapping mode, and clamp count in import metadata;
 - test empty, one-pixel, non-square, transparent, very large, and malformed images.
