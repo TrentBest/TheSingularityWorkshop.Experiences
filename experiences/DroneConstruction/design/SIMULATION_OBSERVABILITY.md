@@ -71,6 +71,34 @@ Keep the domain snapshot as stable input. A renderer adapter may transform it in
 
 `ConstructionSnapshotSvgView` is the first maintained polling component. The host publishes each committed snapshot to `ConstructionSnapshotObserver` and calls `TryRefresh` on its own cadence. The view renders only a new accepted sequence and exposes the corresponding run ID/tick; because the observer retains only the latest value, intermediate snapshots can be coalesced. A failed render leaves the cursor unchanged for retry. The component does not schedule ticks, run a timer, host a GUI.SVG manifest, or collect telemetry. An event stream can follow only if ordering, replay, and recovery semantics are specified. Do not add a second source of truth.
 
+## Observer-relative Renderer → Visualize integration target
+
+The existing cross-repository proof in [Visualize's RendererAdapter guide](https://github.com/TrentBest/TheSingularityWorkshop.Visualize/blob/development/integrations/RendererAdapter/Proof/README.md) establishes the downstream contract: a Renderer `RenderFrame` is adapted by `RendererFrameAdapter` into a Visualize frame, then `Visualizer.RenderAsync` submits it to a backend. That is a CPU-side integration proof, not a GPU backend or a complete observer/bucket/scheduling pipeline.
+
+Drone Construction does **not** yet have a production adapter that maps its committed snapshot into that pipeline. Implement this as a separate optional presentation layer; keep the construction domain and physics projects independent of Renderer, Visualize, GUI.SVG, and graphics APIs.
+
+### Required data flow
+
+1. Read one immutable `ConstructionSimulationSnapshot` and retain its run ID, committed tick, and acceptance sequence as frame provenance.
+2. Build a bounded observer input from that snapshot. Supply an explicit observer pose/intent and policy configuration; do not infer observer state from the drone population.
+3. Select presentation candidates and representations before constructing expensive geometry or draw commands. Use Renderer policy contracts where the actual API supports the required observer and representation inputs; do not assume that the current proof's illustrative distance rules are a complete production policy.
+4. Map selected representations into stable semantic/resource identities and a platform-neutral `RenderFrame`; adapt through Visualize's `RendererFrameAdapter`.
+5. Submit through the existing Visualize API. Keep GPU/backend resource state disposable and downstream of authoritative simulation state.
+6. Preserve a separate focused GUI.SVG path for inspectable living documentation and deterministic CI artifacts. SVG node count is not a proxy for the future GPU workload.
+
+### Acceptance gates before calling it integrated
+
+- The same committed snapshot and observer/configuration produce deterministic selected identities and representation decisions.
+- Every emitted representation traces to a stable source identity and the snapshot tick/run; aggregation records the identities/count it summarizes.
+- Changing observer pose or representation policy changes selection only; it never mutates simulation state or changes physics results.
+- Tests distinguish total simulated population from selected representation count, submitted draw-command count, and resource count.
+- A crowd/aggregation case demonstrates fewer presentation commands than individual-agent presentation without losing authoritative agent counts or identity recoverability.
+- A near/interactive case promotes selected agents to richer representations while distant agents remain coarser or omitted according to policy.
+- Frame failures, missing resources, stale snapshots, and empty selections are explicit and bounded; rendering cannot stall simulation ticks.
+- CI proves the actual Drone Construction snapshot → adapter → Renderer frame → Visualize submission path. A CPU/SVG proof must be labelled as such; production GPU output and performance remain separate gates.
+
+**Scale reporting:** report simulation throughput and observer-facing presentation workload independently. At minimum record total population, selected individual representations, aggregate representations, submitted commands, resource count, frame build/submit duration, allocations, and snapshot tick age. Do not publish a “100k rendered drones” claim from a 100k physics-kernel benchmark.
+
 ## Review checklist
 
 - [x] Can a consumer render a snapshot without a reference to the simulation object? The standalone SVG renderer takes only a snapshot, dimensions, and space identity.
