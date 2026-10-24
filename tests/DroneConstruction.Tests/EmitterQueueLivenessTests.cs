@@ -18,7 +18,7 @@ public sealed class EmitterQueueLivenessTests
         var simulation = new ConstructionSimulation(
             width: 5,
             height: 3,
-            requiredHeight: (x, y) => x == 0 && y != 1 ? 1 : 0,
+            requiredHeight: (x, y) => x == 4 && y != 1 ? 1 : 0,
             agents: agents,
             emitters: [new PositionedBlockEmitter(new GridCell(4, 1), new BlockEmitter("shared-emitter", 2))]);
 
