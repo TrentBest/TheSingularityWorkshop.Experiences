@@ -42,6 +42,7 @@ static string BuildPage(
     int height)
 {
     var html = new StringBuilder();
+    var duration = Math.Max(1.0, frames.Count * 0.12);
     html.AppendLine("<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\">");
     html.AppendLine("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
     html.AppendLine("<title>Drone Construction · Living Proof</title>");
