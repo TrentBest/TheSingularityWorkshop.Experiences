@@ -500,12 +500,9 @@ public sealed class ConstructionSimulation
                         _agentTasks.Remove(agent.AgentId);
                         break;
                     }
-                    // Serialize approach to the shared emitter in stable agent-ID order. Without
-                    // this queue discipline, agents behind the lead agent can advance into the
-                    // emitter's approach cells and deadlock the entire pickup queue.
-                    if (_agents.Any(other => other.AgentId < agent.AgentId
-                        && other.State == ConstructionAgentState.QueuedAtEmitter))
-                        break;
+                    // Approach in stable agent-ID iteration order, but let occupancy decide whether
+                    // the next cell is available. A global lower-ID wait can deadlock when a lower-ID
+                    // agent is physically behind a higher-ID agent on a narrow approach lane.
                     if (agent.Position != stocked.Position)
                     {
                         MoveOneCell(agent, stocked.Position);
