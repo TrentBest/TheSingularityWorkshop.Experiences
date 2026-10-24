@@ -39,6 +39,10 @@ For a first usable importer:
 
 The renderer must never become the source of truth. GPU resources are disposable projections of authoritative simulation state.
 
+## Executable showcase scope
+
+The deterministic browser showcase currently exercises one agent placing one block on the 10×10 grid. This intentionally matches the present one-task-per-agent lifecycle and avoids a known multi-agent traffic deadlock around the shared emitter. It proves snapshot-to-isometric-SVG rendering and successful completion, **not** multi-agent coordination, task reuse, congestion handling, or population scale. Restore a multi-agent workload only after those behaviors have explicit simulation contracts and regression tests.
+
 ## Current limitation
 
 The current snapshot has placed-block counts and discrete grid positions; it does not yet expose a complete continuous 3D transform, per-cell required-height field, camera state, or physical drone pose. This milestone creates the browser-visible projection seam without pretending those data already exist.
