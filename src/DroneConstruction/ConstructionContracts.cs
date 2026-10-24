@@ -91,6 +91,68 @@ public sealed class ImageHeightField
         return new ImageHeightField(width, height, maximumHeight, mapping, heights, sourceDigest);
     }
 
+    /// <summary>
+    /// Builds a bounded target height field from a larger RGB source image using deterministic
+    /// center-sampled nearest-neighbor resampling. Source dimensions and target dimensions are
+    /// independent, so a 4K image need not become a 4K-by-4K simulation grid.
+    /// </summary>
+    public static ImageHeightField FromRgbResampled(
+        int sourceWidth,
+        int sourceHeight,
+        ReadOnlySpan<byte> rgb,
+        int targetWidth,
+        int targetHeight,
+        int maximumHeight,
+        ChannelHeightMapping mapping,
+        string sourceDigest,
+        int maximumTargetCells = 1_000_000)
+    {
+        if (sourceWidth <= 0) throw new ArgumentOutOfRangeException(nameof(sourceWidth));
+        if (sourceHeight <= 0) throw new ArgumentOutOfRangeException(nameof(sourceHeight));
+        if (targetWidth <= 0) throw new ArgumentOutOfRangeException(nameof(targetWidth));
+        if (targetHeight <= 0) throw new ArgumentOutOfRangeException(nameof(targetHeight));
+        if (maximumTargetCells <= 0) throw new ArgumentOutOfRangeException(nameof(maximumTargetCells));
+        if (maximumHeight <= 0) throw new ArgumentOutOfRangeException(nameof(maximumHeight));
+        if (string.IsNullOrWhiteSpace(sourceDigest)) throw new ArgumentException("A source digest is required.", nameof(sourceDigest));
+        if (!Enum.IsDefined(mapping)) throw new ArgumentOutOfRangeException(nameof(mapping));
+
+        var sourcePixels = checked(sourceWidth * sourceHeight);
+        if (rgb.Length != checked(sourcePixels * 3))
+            throw new ArgumentException("RGB data must contain exactly three bytes per source pixel.", nameof(rgb));
+
+        var targetPixels = checked(targetWidth * targetHeight);
+        if (targetPixels > maximumTargetCells)
+            throw new ArgumentOutOfRangeException(nameof(targetWidth),
+                $"Target grid contains {targetPixels} cells; the configured limit is {maximumTargetCells}.");
+
+        var heights = new int[targetPixels];
+        for (var y = 0; y < targetHeight; y++)
+        {
+            var sourceY = Math.Min(sourceHeight - 1, (int)(((long)(2 * y + 1) * sourceHeight) / (2L * targetHeight)));
+            for (var x = 0; x < targetWidth; x++)
+            {
+                var sourceX = Math.Min(sourceWidth - 1, (int)(((long)(2 * x + 1) * sourceWidth) / (2L * targetWidth)));
+                var pixel = checked(sourceY * sourceWidth + sourceX);
+                var r = rgb[pixel * 3];
+                var g = rgb[(pixel * 3) + 1];
+                var b = rgb[(pixel * 3) + 2];
+                var channel = mapping switch
+                {
+                    ChannelHeightMapping.Red => r,
+                    ChannelHeightMapping.Green => g,
+                    ChannelHeightMapping.Blue => b,
+                    ChannelHeightMapping.Maximum => Math.Max(r, Math.Max(g, b)),
+                    ChannelHeightMapping.Average => (r + g + b) / 3,
+                    _ => throw new ArgumentOutOfRangeException(nameof(mapping))
+                };
+                heights[(y * targetWidth) + x] =
+                    (int)Math.Round(channel * (maximumHeight / 255d), MidpointRounding.AwayFromZero);
+            }
+        }
+
+        return new ImageHeightField(targetWidth, targetHeight, maximumHeight, mapping, heights, sourceDigest);
+    }
+
     private void ValidateCoordinate(int x, int y)
     {
         if ((uint)x >= (uint)Width) throw new ArgumentOutOfRangeException(nameof(x));
