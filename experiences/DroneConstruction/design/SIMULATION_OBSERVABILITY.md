@@ -36,7 +36,7 @@ Each snapshot represents one committed tick and must be internally coherent:
 - Collections are immutable to consumers; mutable backing collections must not leak.
 - Location is qualified by space kind, stable space ID, and local cell; local coordinates alone are ambiguous across simulation, hover, skylane, and transition grids.
 
-The current snapshot surface is a useful foundation. Because lane transitions are not yet wired into Step(), do not imply every agent autonomously traverses the hover → slipstream → skylane path.
+The current snapshot surface is a useful foundation. Explicit-path slipstream traversal, blocked intermediate/exit retry, downstream skylane-target chaining, and rejection of invalid downstream targets are now wired into `ConstructionSimulation.Step()` and covered by focused CI regressions (see [READINESS.md](READINESS.md)). This does not establish general itinerary planning, starvation-freedom, or population-scale behavior; keep those claims explicitly open.
 
 ## Observer rules
 
