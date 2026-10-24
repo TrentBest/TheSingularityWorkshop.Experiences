@@ -36,7 +36,6 @@ public sealed class EmitterQueueLivenessTests
             Assert.Null(agent.AssignedTaskId);
         });
     }
-}
 
     [Fact]
     public void Simulation_ThreeAgentsQueuedOnNarrowApproach_AllCompleteWithoutPriorityDeadlock()
