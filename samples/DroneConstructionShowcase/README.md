@@ -10,6 +10,16 @@ dotnet run --project samples/DroneConstructionShowcase/DroneConstructionShowcase
 
 The process exits unsuccessfully if the simulation does not complete its required build. The generated page contains the captured simulation frames and run summary; no Unity runtime or external browser library is required.
 
+## Open in Visual Studio
+
+1. Open `TheSingularityWorkshop.Experiences.sln` (not just the repository folder).
+2. In Solution Explorer, right-click **DroneConstructionShowcase** and choose **Set as Startup Project**.
+3. Select the **Debug** or **Release** configuration and use **Build > Build Solution**.
+4. Press **F5** to run with the debugger, or **Ctrl+F5** to run without it.
+5. The generated HTML is written to `artifacts/drone-construction-showcase.html` relative to the process working directory. Open that file in a browser to view the showcase.
+
+Install the **.NET 8 SDK** and the Visual Studio **.NET desktop development** workload if Visual Studio reports that the target framework or SDK is unavailable. This is a local .NET executable; it does not require choosing a GitHub Actions runner to build or run it.
+
 ## CI proof
 
 The `drone-construction-showcase` job in the repository build workflow executes the scenario and uploads `drone-construction-browser-showcase` as a downloadable workflow artifact.
