@@ -36,6 +36,8 @@ public static class ConstructionSnapshotSvgRenderer
         output.AppendLine("""<rect width="100%" height="100%" rx="12" fill="#101923"/>""");
         output.AppendLine($"""<text x="{margin}" y="29" fill="#f4f7fb" font-family="sans-serif" font-size="17" font-weight="700">DRONE CONSTRUCTION · TICK {snapshot.Tick}</text>""");
         output.AppendLine($"""<text x="{margin}" y="49" fill="#a9bacb" font-family="sans-serif" font-size="11">{snapshot.PlacedBlocks}/{snapshot.RequiredBlocks} blocks placed · {snapshot.Agents.Count} agents · {(snapshot.IsComplete ? "COMPLETE" : "IN PROGRESS")}</text>""");
+        output.AppendLine($"""<text x="{margin + 310}" y="29" fill="#f2b84b" font-family="sans-serif" font-size="11" font-weight="700">LANE ELEVATIONS: 10 / 9 / 8 / 7</text>""");
+        output.AppendLine($"""<text x="{margin + 310}" y="49" fill="#a9bacb" font-family="sans-serif" font-size="10">Array indices: 9 / 8 / 7 / 6 · max build height: 5</text>""");
 
         var originY = header;
         for (var y = 0; y < height; y++)
@@ -74,6 +76,10 @@ public static class ConstructionSnapshotSvgRenderer
             var color = agent.IsCarryingBlock ? "#ff8c69" : "#75b9ff";
             output.AppendLine($"""<circle cx="{cx}" cy="{cy}" r="{Math.Max(4, cellSize / 6)}" fill="{color}" stroke="#f4f7fb" stroke-width="2"/>""");
             output.AppendLine($"""<text x="{cx}" y="{cy + 3}" text-anchor="middle" fill="#101923" font-family="sans-serif" font-size="9" font-weight="700">{agent.AgentId}</text>""");
+            // This is the assigned lane elevation; the current discrete-grid simulator does not model instantaneous flight altitude.
+            var laneElevations = new[] { 10, 9, 8, 7 };
+            var laneElevation = laneElevations[(int)((agent.AgentId - 1) % (ulong)laneElevations.Length)];
+            output.AppendLine($"""<text x="{cx}" y="{cy - cellSize / 4}" text-anchor="middle" fill="#f2b84b" stroke="#101923" stroke-width="2" paint-order="stroke" font-family="sans-serif" font-size="10" font-weight="800">E{laneElevation}</text>""");
         }
 
         var legendY = originY + drawingHeight + 23;
