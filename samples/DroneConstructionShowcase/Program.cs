@@ -8,15 +8,19 @@ using TheSingularityWorkshop.Experiences.DroneConstruction;
 const int width = 10;
 const int height = 10;
 const int maxTicks = 900;
-// Agents currently complete after one placement task; keep this showcase workload within that contract.
-// A single agent also avoids the known traffic-grid deadlock caused by agents queued through one emitter.
-var agents = new[] { new ConstructionAgent(1, new GridCell(0, 0)) };
+// Three agents share a single emitter; simulation queue discipline serializes their pickup approach.
+var agents = new[]
+{
+    new ConstructionAgent(1, new GridCell(0, 0)),
+    new ConstructionAgent(2, new GridCell(0, 1)),
+    new ConstructionAgent(3, new GridCell(0, 2))
+};
 var simulation = new ConstructionSimulation(
     width,
-    height,
-    requiredHeight: (x, y) => x == 9 && y == 9 ? 1 : 0,
+    height: 3,
+    requiredHeight: (x, y) => (x == 9 && y == 0) || (x == 8 && y == 1) || (x == 7 && y == 2) ? 1 : 0,
     agents: agents,
-    emitters: [new PositionedBlockEmitter(new GridCell(0, 0), new BlockEmitter("showcase-supply", 1))],
+    emitters: [new PositionedBlockEmitter(new GridCell(0, 0), new BlockEmitter("showcase-supply", 3))],
     spaceId: "web-showcase");
 var frames = new List<(long Tick, int Placed, string Svg)>();
 var snapshot = simulation.Snapshot();
