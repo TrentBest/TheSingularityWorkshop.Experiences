@@ -6,7 +6,7 @@ using TheSingularityWorkshop.Experiences.DroneConstruction;
 // This is an approachable show-and-tell path while the Renderer -> Visualize adapter is
 // being connected to committed construction snapshots.
 const int width = 10;
-const int height = 10;
+const int height = 3;
 const int maxTicks = 900;
 // Three agents share a single emitter; simulation queue discipline serializes their pickup approach.
 var agents = new[]
