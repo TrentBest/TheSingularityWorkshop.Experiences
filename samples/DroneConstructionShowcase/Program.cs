@@ -5,15 +5,15 @@ using TheSingularityWorkshop.Experiences.DroneConstruction;
 // A real, deterministic simulation run rendered as a browser-openable animated artifact.
 // This is an approachable show-and-tell path while the Renderer -> Visualize adapter is
 // being connected to committed construction snapshots.
-const int width = 12;
-const int height = 8;
+const int width = 10;
+const int height = 10;
 const int maxTicks = 900;
 var agents = Enumerable.Range(1, 6)
     .Select(id => new ConstructionAgent((ulong)id, new GridCell((id - 1) % 4, (id - 1) / 4)));
 var simulation = new ConstructionSimulation(
     width,
     height,
-    requiredHeight: (x, _) => x == 10 ? 1 : 0,
+    requiredHeight: (x, y) => x >= 5 && (x + y) % 3 == 0 ? Math.Min(5, ((x + y) % 5) + 1) : 0,
     agents: agents,
     emitters: [new PositionedBlockEmitter(new GridCell(0, 0), new BlockEmitter("showcase-supply", 64))],
     spaceId: "web-showcase");
