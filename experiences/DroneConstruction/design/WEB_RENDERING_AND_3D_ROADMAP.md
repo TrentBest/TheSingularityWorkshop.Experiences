@@ -41,7 +41,9 @@ The renderer must never become the source of truth. GPU resources are disposable
 
 ## Executable showcase scope
 
-The deterministic browser showcase currently exercises one agent placing one block on the 10×10 grid. This intentionally matches the present one-task-per-agent lifecycle and avoids a known multi-agent traffic deadlock around the shared emitter. It proves snapshot-to-isometric-SVG rendering and successful completion, **not** multi-agent coordination, task reuse, congestion handling, or population scale. Restore a multi-agent workload only after those behaviors have explicit simulation contracts and regression tests.
+The deterministic browser showcase now exercises three agents placing three blocks on a 10×3 grid. CI run [#783](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/40059932560) verified **3/3 blocks placed**, completion at tick 22, and nine captured frames; the Drone Construction test suite passed 120/120 tests. The regression test also verifies that all three agents return to `Idle`, release their task assignments, carry no block, and leave the shared emitter empty.
+
+The current deadlock mitigation serializes approach to a shared emitter in stable agent-ID order. This is deterministic admission control for the tested scenario, **not** a general route planner, congestion resolver, or population-scale proof. The showcase proves snapshot-to-isometric-SVG rendering and a small multi-agent completion path; it does not establish 1k/10k/100k-agent performance or physical flight behavior.
 
 ## Current limitation
 
