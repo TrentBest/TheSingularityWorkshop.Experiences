@@ -45,6 +45,22 @@ jobs:
           mkdir -p "./artifacts/assemblies/${{ matrix.project }}"
           cp "$(dirname "${project}")/bin/Release/net8.0/${assembly}" "./artifacts/assemblies/${{ matrix.project }}/${assembly}"
 
+
+  drone-construction-showcase:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Run the deterministic browser showcase
+        run: dotnet run --project samples/DroneConstructionShowcase/DroneConstructionShowcase.csproj --configuration Release -- ./artifacts/drone-construction-showcase.html
+      - name: Upload generated browser showcase
+        uses: actions/upload-artifact@v4
+        with:
+          name: drone-construction-browser-showcase
+          path: artifacts/drone-construction-showcase.html
+
   test-chemistry:
     runs-on: ubuntu-24.04
     steps:
