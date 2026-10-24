@@ -26,6 +26,44 @@ public sealed class ConstructionContractsTests
         Assert.Throws<ArgumentOutOfRangeException>(() => _ = field[1, 0]);
     }
 
+
+    [Fact]
+    public void HeightField_ResamplesLargeSourceIntoBoundedTargetGrid()
+    {
+        // Four source pixels become two target cells. Center sampling selects source pixels 1 and 3.
+        var sourceRgb = new byte[]
+        {
+            0, 0, 0, 64, 0, 0, 128, 0, 0, 255, 0, 0
+        };
+
+        var field = ImageHeightField.FromRgbResampled(
+            4, 1, sourceRgb, 2, 1, 10, ChannelHeightMapping.Red, "sha256:source");
+
+        Assert.Equal(2, field.Width);
+        Assert.Equal(1, field.Height);
+        Assert.Equal(3, field[0, 0]);
+        Assert.Equal(10, field[1, 0]);
+        Assert.Equal("sha256:source", field.SourceDigest);
+    }
+
+    [Fact]
+    public void HeightField_ResamplingRejectsTargetGridOverConfiguredCellLimit()
+    {
+        var rgb = new byte[4 * 3];
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            ImageHeightField.FromRgbResampled(
+                2, 2, rgb, 2, 2, 5, ChannelHeightMapping.Red, "digest", maximumTargetCells: 3));
+    }
+
+    [Fact]
+    public void HeightField_ResamplingRejectsIncorrectSourceBufferLength()
+    {
+        Assert.Throws<ArgumentException>(() =>
+            ImageHeightField.FromRgbResampled(
+                2, 2, [1, 2, 3], 1, 1, 5, ChannelHeightMapping.Red, "digest"));
+    }
+
     [Fact]
     public void TrafficGrid_EnforcesExclusiveOccupancyAndOwnerRelease()
     {
