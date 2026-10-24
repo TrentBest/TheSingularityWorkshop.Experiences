@@ -2,7 +2,7 @@
 
 # Drone Construction
 
-**Status:** a deterministic discrete construction loop and tested traffic/lifecycle primitives are present on development. A separate rotor-driven quadrotor physics microbenchmark now measures 1,000, 10,000, and 100,000 physics instances, but autonomous lane routing inside the construction simulation, hosted live GUI.SVG observation, and full construction-agent scale evidence remain open. **100,000 construction agents is the target, not a demonstrated result.**
+**Status:** the deterministic construction loop now includes tested skylane destination movement and tick-driven explicit slipstream traversal/retry with downstream target chaining. A browser-facing isometric SVG showcase is also verified for a small scenario. A separate rotor-driven quadrotor physics microbenchmark measures 1,000, 10,000, and 100,000 physics instances. The observer-relative Drone Construction → Renderer → Visualize integration, hosted live GUI.SVG application/telemetry, and full construction-agent scale evidence remain open. **100,000 construction agents is the target, not a demonstrated result.**
 
 Drone Construction is a benign large-scale multi-agent construction experience. A source image is converted into a discrete target structure; simulated quadcopters collect blocks from ten emitters and place them in the target. The showcase goal is to demonstrate how a large population can coordinate through explicit state, resource, and traffic contracts.
 
@@ -43,7 +43,7 @@ if (view.TryRefresh(out var svg))
     File.WriteAllText("construction-live.svg", svg!);
 ```
 
-This is a maintained pull-based standalone SVG view with focused tests; the host owns refresh cadence and snapshot publication. It is **not yet** a GUI.SVG-hosted application/manifest or telemetry feed, and no autonomous lane routing or scale claim follows from it. See [renderer contract](../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md), [view source](../../src/DroneConstruction/ConstructionSnapshotSvgView.cs), and [UML/use cases](../../src/DroneConstruction/ConstructionSnapshotSvgRendererUML.md).
+This is a maintained pull-based standalone SVG view with focused tests; the host owns refresh cadence and snapshot publication. It is **not yet** a GUI.SVG-hosted application/manifest or telemetry feed. Autonomous lane movement and explicit slipstream traversal are separately covered by focused CI tests, but this view does not prove full itinerary planning or population scale. See [renderer contract](../../src/DroneConstruction/ConstructionSnapshotSvgRenderer.md), [view source](../../src/DroneConstruction/ConstructionSnapshotSvgView.cs), and [UML/use cases](../../src/DroneConstruction/ConstructionSnapshotSvgRendererUML.md).
 
 ## Renderer and Visualize: observer-relative scale
 
@@ -54,7 +54,7 @@ The 1k/10k/100k benchmark is a physics-kernel measurement, not a requirement to 
 - **Visualize** executes the selected platform-neutral frame through a backend; GPU resources are disposable projections, never world authority.
 - **GUI.SVG** is useful for living documentation, focused 2D manifestations, and inspectable test evidence—not a requirement to materialize every drone as a separate SVG node.
 
-A full-scale presentation test should measure the observer-facing workload (visible/selected representations, submitted commands, update cadence, memory, and frame time) separately from simulation throughput. Use representative observer views and policy-driven detail reduction; do not turn “100,000 simulated agents” into “100,000 fully detailed draw submissions.” The existing Renderer → Visualize integration is a capability to consume, not proof that this Experience's full drone scene is already wired end-to-end.
+A full-scale presentation test should measure the observer-facing workload (visible/selected representations, submitted commands, update cadence, memory, and frame time) separately from simulation throughput. Use representative observer views and policy-driven detail reduction; do not turn “100,000 simulated agents” into “100,000 fully detailed draw submissions.” The existing Renderer → Visualize integration is a capability to consume, not proof that this Experience's snapshot-to-observer-selection-to-Renderer-frame path is already wired end-to-end. See [integration target and acceptance gates](design/SIMULATION_OBSERVABILITY.md#observer-relative-renderer--visualize-integration-target).
 
 See [Renderer](https://github.com/TrentBest/TheSingularityWorkshop.Renderer/tree/development) and [Visualize](https://github.com/TrentBest/TheSingularityWorkshop.Visualize/tree/development) for the owning contracts and current integration evidence.
 
@@ -89,7 +89,7 @@ The initial catalog is defined in [MICROBUNDLE_BOUNDARIES.md](design/MICROBUNDLE
 
 The initial single-threaded loop assigns tasks, picks up finite-inventory blocks, moves agents one cell at a time under exclusive occupancy, places blocks, and emits immutable snapshots. Agent IDs use a dictionary for average constant-time lookup. Snapshot locations are qualified by space identity, and traffic occupancy has a reverse index for invariant checks.
 
-The separate slipstream lifecycle coordinator reserves downstream capacity before entry, transfers source occupancy into the transition grid, advances orthogonally, retains occupancy/reservation when exit is blocked, and releases transition capacity only after successful exit. Simulation-level tests cover owner registration and blocked-exit retry. **These lane lifecycle primitives are not yet wired into autonomous execution in ConstructionSimulation.Step().** The five-cell lookahead is currently an admission-time check, not a persistent reservation of every lookahead cell.
+The separate slipstream lifecycle coordinator reserves downstream capacity before entry, transfers source occupancy into the transition grid, advances orthogonally, retains occupancy/reservation when exit is blocked, and releases transition capacity only after successful exit. `ConstructionSimulation.Step()` now advances validated explicit transition paths tick by tick, preserves active state/reservations when blocked, and installs an optional downstream skylane target after successful exit. CI covers traversal/retry and downstream target chaining (run [39986481492](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/39986481492)); invalid downstream targets are rejected before admission (run [40027762499](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/40027762499)). The five-cell lookahead remains an admission-time check, not a persistent reservation of every lookahead cell; full itinerary planning and starvation-freedom remain open.
 
 ## Truthful milestones
 
