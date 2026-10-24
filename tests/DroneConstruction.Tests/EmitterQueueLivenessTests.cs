@@ -37,3 +37,37 @@ public sealed class EmitterQueueLivenessTests
         });
     }
 }
+
+    [Fact]
+    public void Simulation_ThreeAgentsQueuedOnNarrowApproach_AllCompleteWithoutPriorityDeadlock()
+    {
+        // Three agents share one narrow approach. The highest-ID agent starts nearest the
+        // emitter; stable ID iteration must not force it to wait for agents physically behind it.
+        var agents = new[]
+        {
+            new ConstructionAgent(1, new GridCell(1, 2)),
+            new ConstructionAgent(2, new GridCell(2, 2)),
+            new ConstructionAgent(3, new GridCell(3, 2))
+        };
+        var simulation = new ConstructionSimulation(
+            width: 6,
+            height: 5,
+            requiredHeight: (x, y) => x == 5 && (y == 0 || y == 2 || y == 4) ? 1 : 0,
+            agents: agents,
+            emitters: [new PositionedBlockEmitter(new GridCell(4, 2), new BlockEmitter("shared-emitter", 3))]);
+
+        var snapshot = simulation.Snapshot();
+        for (var i = 0; i < 160 && !snapshot.IsComplete; i++)
+            snapshot = simulation.Step();
+
+        Assert.True(snapshot.IsComplete);
+        Assert.Equal(3, snapshot.PlacedBlocks);
+        Assert.Equal(0, Assert.Single(snapshot.Emitters).Inventory);
+        Assert.All(snapshot.Agents, agent =>
+        {
+            Assert.Equal(ConstructionAgentState.Idle, agent.State);
+            Assert.False(agent.IsCarryingBlock);
+            Assert.Null(agent.AssignedTaskId);
+        });
+    }
+}
