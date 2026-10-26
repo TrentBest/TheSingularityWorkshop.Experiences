@@ -638,7 +638,7 @@ public sealed class ConstructionSimulationTests
         var firstAgent = new ConstructionAgent(1, new GridCell(0, 0));
         var secondAgent = new ConstructionAgent(2, new GridCell(1, 0));
         var simulation = new ConstructionSimulation(
-            width: 12,
+            width: 20,
             height: 1,
             requiredHeight: (_, _) => 0,
             agents: [firstAgent, secondAgent],
@@ -663,9 +663,9 @@ public sealed class ConstructionSimulationTests
         var firstEntry = new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "transition-east", new GridCell(0, 0));
         var secondEntry = new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "transition-west", new GridCell(0, 0));
         var firstDestination = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(10, 0));
-        var secondDestination = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(11, 0));
+        var secondDestination = new QualifiedGridLocation(ConstructionSpaceKind.SimulationGrid, "yard", new GridCell(18, 0));
         GridCell[] firstLookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
-        GridCell[] secondLookahead = [new(3, 0), new(4, 0), new(5, 0), new(6, 0), new(7, 0)];
+        GridCell[] secondLookahead = [new(12, 0), new(13, 0), new(14, 0), new(15, 0), new(16, 0)];
 
         Assert.True(simulation.TryEnterSlipstream(1, firstSource, firstEntry, firstDestination, firstLookahead));
         Assert.True(simulation.TryEnterSlipstream(2, secondSource, secondEntry, secondDestination, secondLookahead));
