@@ -112,12 +112,9 @@ public sealed class LaneTransitionAdmissionPolicyTests
         Assert.Equal(new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "east-transition", new GridCell(2, 0)),
             autoSimulation.GetAgentLocation(autoAgent.AgentId));
 
-        // A blocked exit is also retried automatically on a later tick.
-        Assert.True(autoDestinationGrid!.TryOccupy(new GridCell(8, 0), 78));
-        autoSimulation.Step();
-        Assert.Equal(new QualifiedGridLocation(ConstructionSpaceKind.Slipstream, "east-transition", new GridCell(2, 0)),
-            autoSimulation.GetAgentLocation(autoAgent.AgentId));
-        Assert.True(autoDestinationGrid.Release(new GridCell(8, 0), 78));
+        // The admitted destination remains reserved through transition traversal.
+        // Competing occupancy is rejected, so the exit succeeds on the next tick.
+        Assert.False(autoDestinationGrid!.TryOccupy(new GridCell(8, 0), 78));
         autoSimulation.Step();
         Assert.Equal(autoIntent.Destination, autoSimulation.GetAgentLocation(autoAgent.AgentId));
     }
