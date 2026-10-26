@@ -183,6 +183,8 @@ public sealed class TrafficCellGrid
 {
     private readonly Dictionary<GridCell, ulong> _occupants = [];
     private readonly Dictionary<ulong, GridCell> _agentCells = [];
+    private readonly Dictionary<GridCell, ulong> _reservations = [];
+    private readonly Dictionary<ulong, HashSet<GridCell>> _reservedCellsByAgent = [];
 
     /// <summary>Creates an exclusive-occupancy grid with the specified dimensions.: TrafficCellGrid.</summary>
     public TrafficCellGrid(int width, int height)
@@ -227,11 +229,63 @@ public sealed class TrafficCellGrid
     {
         EnsureInBounds(cell);
         if (agentId == 0) throw new ArgumentOutOfRangeException(nameof(agentId), "Agent ID zero is reserved.");
-        if (_occupants.ContainsKey(cell) || _agentCells.ContainsKey(agentId)) return false;
+        if (_occupants.ContainsKey(cell) || IsReservedByOther(cell, agentId) || _agentCells.ContainsKey(agentId)) return false;
         _occupants.Add(cell, agentId);
         _agentCells.Add(agentId, cell);
         return true;
     }
+
+    /// <summary>
+    /// Atomically reserves a set of currently unoccupied cells for one agent. No reservation is
+    /// added if any cell is out of bounds, occupied, or reserved by another agent.
+    /// </summary>
+    public bool TryReserveCells(ulong agentId, IEnumerable<GridCell> cells)
+    {
+        if (agentId == 0) throw new ArgumentOutOfRangeException(nameof(agentId), "Agent ID zero is reserved.");
+        ArgumentNullException.ThrowIfNull(cells);
+        var requested = new HashSet<GridCell>();
+        foreach (var cell in cells)
+        {
+            if (!Contains(cell) || !requested.Add(cell)) return false;
+            if (_occupants.ContainsKey(cell) || IsReservedByOther(cell, agentId)) return false;
+        }
+
+        if (!_reservedCellsByAgent.TryGetValue(agentId, out var owned))
+        {
+            owned = [];
+            _reservedCellsByAgent.Add(agentId, owned);
+        }
+
+        foreach (var cell in requested)
+        {
+            _reservations[cell] = agentId;
+            owned.Add(cell);
+        }
+        return true;
+    }
+
+    /// <summary>Releases every cell reservation held by the specified agent.</summary>
+    public bool ReleaseReservations(ulong agentId)
+    {
+        if (agentId == 0) throw new ArgumentOutOfRangeException(nameof(agentId), "Agent ID zero is reserved.");
+        if (!_reservedCellsByAgent.Remove(agentId, out var cells)) return false;
+        foreach (var cell in cells)
+        {
+            if (_reservations.TryGetValue(cell, out var owner) && owner == agentId)
+                _reservations.Remove(cell);
+        }
+        return true;
+    }
+
+    /// <summary>Gets the owner of a cell reservation, if one exists.</summary>
+    public bool TryGetReservationOwner(GridCell cell, out ulong agentId)
+    {
+        EnsureInBounds(cell);
+        return _reservations.TryGetValue(cell, out agentId);
+    }
+
+    private bool IsReservedByOther(GridCell cell, ulong agentId) =>
+        _reservations.TryGetValue(cell, out var owner) && owner != agentId;
 
     /// <summary>Releases a cell only when the supplied agent owns it.: Release.</summary>
     public bool Release(GridCell cell, ulong agentId)
@@ -255,7 +309,7 @@ public sealed class TrafficCellGrid
 
         if (!_occupants.TryGetValue(current, out var owner) || owner != agentId) return false;
         if (!_agentCells.TryGetValue(agentId, out var indexedCell) || indexedCell != current) return false;
-        if (_occupants.ContainsKey(destination)) return false;
+        if (_occupants.ContainsKey(destination) || IsReservedByOther(destination, agentId)) return false;
 
         _occupants.Remove(current);
         _occupants.Add(destination, agentId);
@@ -276,7 +330,9 @@ public sealed class TrafficCellGrid
         if (!destinationGrid.Contains(destination)) throw new ArgumentOutOfRangeException(nameof(destination));
         if (!_occupants.TryGetValue(current, out var owner) || owner != agentId) return false;
         if (!_agentCells.TryGetValue(agentId, out var indexedCell) || indexedCell != current) return false;
-        if (destinationGrid._occupants.ContainsKey(destination) || destinationGrid._agentCells.ContainsKey(agentId)) return false;
+        if (destinationGrid._occupants.ContainsKey(destination)
+            || destinationGrid.IsReservedByOther(destination, agentId)
+            || destinationGrid._agentCells.ContainsKey(agentId)) return false;
 
         _occupants.Remove(current);
         _agentCells.Remove(agentId);
@@ -291,7 +347,7 @@ public sealed class TrafficCellGrid
         ArgumentNullException.ThrowIfNull(cells);
         foreach (var cell in cells)
         {
-            if (!Contains(cell) || _occupants.ContainsKey(cell)) return false;
+            if (!Contains(cell) || _occupants.ContainsKey(cell) || _reservations.ContainsKey(cell)) return false;
         }
         return true;
     }
@@ -429,16 +485,20 @@ public sealed class Slipstream
         // A live reservation is immutable until its owner releases it; even the same agent
         // cannot silently replace its destination/lookahead with a different route.
         if (_reservedBy is not null) return false;
-        if (!destinationLane.Contains(destination) || destinationLane.IsOccupied(destination)) return false;
+        if (!destinationLane.Contains(destination)) return false;
 
         // Lookahead represents distinct future cells beyond the transition destination.
-        // Reject malformed routes rather than letting duplicates inflate the apparent clearance.
+        // Reserve the complete admission window atomically so later occupancy cannot invalidate
+        // the clearance decision while the agent is traversing the transition.
         var seen = new HashSet<GridCell>();
         foreach (var cell in lookahead)
         {
             if (!destinationLane.Contains(cell) || cell == destination || !seen.Add(cell)) return false;
         }
-        if (!destinationLane.IsClear(lookahead)) return false;
+        var reservationCells = new GridCell[lookahead.Count + 1];
+        reservationCells[0] = destination;
+        for (var i = 0; i < lookahead.Count; i++) reservationCells[i + 1] = lookahead[i];
+        if (!destinationLane.TryReserveCells(agentId, reservationCells)) return false;
         _reservedBy = agentId;
         _reservedDestinationLane = destinationLane;
         _reservedDestinationCell = destination;
@@ -491,6 +551,8 @@ public sealed class Slipstream
     {
         if (agentId == 0) throw new ArgumentOutOfRangeException(nameof(agentId));
         if (_reservedBy != agentId) return false;
+        // Release the whole admission window only after the transition owner exits or rolls back.
+        _reservedDestinationLane?.ReleaseReservations(agentId);
         _reservedBy = null;
         _reservedDestinationLane = null;
         _reservedDestinationCell = null;
