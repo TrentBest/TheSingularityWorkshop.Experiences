@@ -170,7 +170,39 @@ Current committed lane → predict destination, traffic, and maneuver envelope �
 
 The exact implementation may evolve, but occupancy, reservation, and route ownership must have one authoritative commit point. A render frame is only an observation of this state.
 
-## 11. Visualization requirements
+
+
+## 12. Lane-scoped communications and channel economy
+
+A lane is not only a movement corridor; it is also a natural **logical communications scope**. When an aircraft is admitted into a region/layer and assigned to a lane, it should subscribe to that lane's coordination channel. Routine lane-local messages should be delivered to participants that need them, rather than broadcast indiscriminately to every aircraft in the region.
+
+This follows the useful remote-controller analogy—controllers can select channels to reduce interference and keep unrelated traffic separate—but the model must distinguish a **logical channel** from a **physical radio frequency/channel**. The simulation can give each lane a stable logical channel identity without assuming every lane receives a unique physical frequency. Real spectrum is finite; radios, regulations, interference, range, and network topology constrain physical allocation. A communication planner may map multiple logical channels onto shared physical resources using addressed messages, scheduled time slots, frequency reuse where safe, or another explicitly modeled multiplexing strategy.
+
+### Scope and membership
+
+- Define a channel key from the stable region, layer, lane identity, and relevant configuration/version. Do not use a transient object reference or grid-cell coordinate as the identity.
+- Lane admission establishes membership; lane exit releases it. A lane change is a handoff: the aircraft receives the target lane's required coordination messages before committing, then leaves the source scope when the transition lifecycle says it is safe.
+- Region/layer changes update the set of subscriptions. Cross-lane merges, crossings, protected volumes, emergency coordination, and handoffs use narrowly scoped coordination channels or addressed messages spanning only the affected participants.
+- Keep a region/layer control and emergency path available even when a lane channel is congested or a drone has not yet joined a lane. A lane channel must not become a single point of failure for safety-critical notices.
+- Channel membership is not airspace admission. Hearing a channel, announcing intent, or receiving a message never grants permission to enter a lane or conflict region; authoritative reservations and admission rules still decide movement.
+
+### Message budget: publish what matters
+
+Prefer event-driven, bounded messages over full-state broadcasts every simulation tick. Examples include lane entry/exit, intent and admission, changed route or closure, reservation/handoff state, relevant hazard, and a position/health update when it is needed for separation or prediction. Stable lane participants can use configured update rates and thresholds; higher urgency or uncertainty can increase reporting frequency, while unchanged state need not generate repeated chatter.
+
+Every message class should define its audience, priority, maximum rate or coalescing policy, freshness/expiry, and behavior under congestion. Coalesce superseded state updates; do not coalesce away distinct safety events or acknowledgements needed to complete a protocol. Bound queues and record drops, latency, stale-message use, retries, and channel utilization. Deterministic simulation should define ordering and delivery assumptions so results are reproducible.
+
+### Allocation and failure behavior
+
+1. Assign logical lane channels from the authoritative region/layer/lane configuration.
+2. Let a channel planner map logical scopes to available physical resources according to radio capability, interference, range, capacity, and policy; reuse a physical channel only where the interference plan permits it.
+3. Keep control, emergency, and cross-lane coordination traffic available through an explicit shared or redundant mechanism.
+4. On channel loss, congestion, or stale state, do not silently proceed as if coordination succeeded. Apply a documented safe fallback, bounded retry/rejoin policy, or route/mission contingency appropriate to the aircraft model.
+5. Measure messages and bytes per drone and per lane, broadcast fan-out, channel utilization, latency percentiles, drops/retries, handoff duration, and safety-relevant stale-message counts. Compare lane-scoped delivery with region-wide broadcast at increasing population sizes.
+
+The first implementation should model **logical channel identities, subscriptions, routing scopes, and message budgets** independently of physical RF simulation. Physical frequency assignment, modulation, radio range, interference, and regulatory compliance are separate capabilities requiring their own contracts and evidence. This doctrine does not claim that a real radio channel has been allocated or that wireless safety has been validated.
+
+## 14. Visualization requirements
 
 The first useful visualization should show the **traffic system**, not just drone icons:
 
@@ -185,7 +217,7 @@ The first useful visualization should show the **traffic system**, not just dron
 
 Provide observer controls to switch between overview, lane-following, and local conflict views. Detail can be reduced with distance, but traffic metrics must remain available independently of the number of drawn aircraft. A visualization must never make an unsafe or blocked maneuver look successful merely to keep the animation fluid.
 
-## 12. Implementation sequence
+## 15. Implementation sequence
 
 1. **Doctrine and terminology:** agree on corridor, lane segment, lane family, conflict region, protected volume, redirect, reservation, and queue metrics.
 2. **Discrete traffic contract:** add tests for lane-change intent, admission, reservation ownership, deterministic arbitration, and blocked retry without claiming continuous flight.
