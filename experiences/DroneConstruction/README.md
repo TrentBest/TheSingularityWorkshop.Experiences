@@ -69,7 +69,8 @@ A separate source-only physics harness now measures the propeller-driven rigid-b
 - **[100,000-agent validation protocol](design/100K_SCALE_VALIDATION.md)**
 - **[Web rendering and 3D projection roadmap](design/WEB_RENDERING_AND_3D_ROADMAP.md)**
 - **[Snapshot and living-view contract](design/SIMULATION_OBSERVABILITY.md)**
-- **[Gravity sort, five-cell offsets, and route choreography](design/GRAVITY_SORT_AND_ROUTING.md)**
+- **[Gravity sort, five-cell offsets, and route choreography](design/GRAVITY_SORT_AND_ROUTING.md)
+- **[Skylane airspace doctrine: sloped lanes, aircraft classes, redirects, crossings, and traffic stability](design/SKYLANE_AIRSPACE_DOCTRINE.md)**
 - [MicroBundle boundaries](design/MICROBUNDLE_BOUNDARIES.md)
 - [Lane transition lifecycle](design/LANE_TRANSITION_LIFECYCLE.md)
 
