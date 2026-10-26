@@ -463,15 +463,9 @@ public sealed class ConstructionSimulationTests
         GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
 
         Assert.True(simulation.TryEnterSlipstream(1, source, entry, lifecycle, destination, lookahead));
-        Assert.True(laneGrid.TryOccupy(destination.Cell, 99));
+        // Admission reserves the exit and lookahead; a competing agent cannot invalidate clearance.
+        Assert.False(laneGrid.TryOccupy(destination.Cell, 99));
 
-        Assert.False(simulation.TryExitSlipstream(1, "transition", lifecycle, destination));
-        Assert.Equal(1UL, lifecycle.AgentId);
-        Assert.Equal(entry, simulation.GetAgentLocation(1));
-        Assert.Equal(entry, Assert.Single(simulation.Snapshot().Agents).Location);
-        Assert.Equal(entry.Cell, agent.Position);
-
-        Assert.True(laneGrid.Release(destination.Cell, 99));
         Assert.True(simulation.TryExitSlipstream(1, "transition", lifecycle, destination));
         Assert.Equal(destination, simulation.GetAgentLocation(1));
         Assert.Null(lifecycle.AgentId);
@@ -736,7 +730,7 @@ public sealed class ConstructionSimulationTests
     }
 
     [Fact]
-    public void Simulation_FailedSlipstreamExitRetainsOwnershipAndCanRetry()
+    public void Simulation_SlipstreamReservationPreventsDestinationConflictUntilExit()
     {
         var agent = new ConstructionAgent(1, new GridCell(0, 0));
         var simulation = new ConstructionSimulation(
@@ -761,13 +755,8 @@ public sealed class ConstructionSimulationTests
         GridCell[] lookahead = [new(1, 0), new(2, 0), new(3, 0), new(4, 0), new(5, 0)];
 
         Assert.True(simulation.TryEnterSlipstream(1, source, entry, destination, lookahead));
-        Assert.True(destinationGrid.TryOccupy(destination.Cell, 99));
+        Assert.False(destinationGrid.TryOccupy(destination.Cell, 99));
 
-        Assert.False(simulation.TryExitSlipstream(1, "transition-retry", destination));
-        Assert.Equal(entry, simulation.GetAgentLocation(1));
-        Assert.Equal(1UL, lifecycle.AgentId);
-
-        Assert.True(destinationGrid.Release(destination.Cell, 99));
         Assert.True(simulation.TryExitSlipstream(1, "transition-retry", destination));
         Assert.Equal(destination, simulation.GetAgentLocation(1));
         Assert.Null(lifecycle.AgentId);
