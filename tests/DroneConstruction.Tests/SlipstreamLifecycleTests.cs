@@ -6,7 +6,7 @@ namespace TheSingularityWorkshop.Experiences.DroneConstruction.Tests;
 public sealed class SlipstreamLifecycleTests
 {
     [Fact]
-    public void Exit_WhenDestinationIsBlocked_PreservesTransitionOccupancyAndReservationForRetry()
+    public void Exit_ReservationPreventsDestinationConflictAndPreservesTransitionOccupancy()
     {
         var agent = new ConstructionAgent(1, new GridCell(0, 0));
         var simulation = new ConstructionSimulation(12, 1, (_, _) => 0, [agent], [], "yard");
@@ -42,10 +42,8 @@ public sealed class SlipstreamLifecycleTests
         Assert.True(simulation.TryAdvanceSlipstream(agent.AgentId, "east-transition", new GridCell(2, 0)));
         Assert.Equal(1UL, slipstream.ReservedBy);
 
-        // Occupy the reserved destination after admission to simulate a conflict or violated
-        // external reservation discipline; exit must still fail without losing the agent.
-        Assert.True(destinationGrid.TryOccupy(destination.Cell, 77));
-        Assert.False(simulation.TryExitSlipstream(agent.AgentId, "east-transition", destination));
+        // Persistent reservation prevents a competing agent from taking the exit cell.
+        Assert.False(destinationGrid.TryOccupy(destination.Cell, 77));
         Assert.Equal(new QualifiedGridLocation(
             ConstructionSpaceKind.Slipstream, "east-transition", new GridCell(2, 0)),
             simulation.GetAgentLocation(agent.AgentId));
@@ -53,7 +51,6 @@ public sealed class SlipstreamLifecycleTests
         Assert.Equal(agent.AgentId, occupant);
         Assert.Equal(1UL, slipstream.ReservedBy);
 
-        Assert.True(destinationGrid.Release(destination.Cell, 77));
         Assert.True(simulation.TryExitSlipstream(agent.AgentId, "east-transition", destination));
         Assert.Equal(destination, simulation.GetAgentLocation(agent.AgentId));
         Assert.Null(slipstream.ReservedBy);
