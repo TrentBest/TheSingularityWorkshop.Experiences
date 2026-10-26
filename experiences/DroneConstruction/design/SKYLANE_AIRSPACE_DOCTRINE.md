@@ -170,7 +170,20 @@ Current committed lane â†’ predict destination, traffic, and maneuver envelope â
 
 The exact implementation may evolve, but occupancy, reservation, and route ownership must have one authoritative commit point. A render frame is only an observation of this state.
 
+## 11. Visualization requirements
 
+The first useful visualization should show the **traffic system**, not just drone icons:
+
+- sloped and curved lane centerlines with direction arrows;
+- lane envelopes and aircraft-class eligibility;
+- lane elevation/altitude profile and the observer's view;
+- protected VTOL footprints, approach/departure volumes, and redirect perimeters;
+- conflict regions, reservations, merge windows, and rejected intents;
+- aircraft class, current lane, intended lane, and lane-change state;
+- queue depth, oldest wait, throughput, redirects, and blocked/stalled states;
+- committed simulation tick and snapshot age.
+
+Provide observer controls to switch between overview, lane-following, and local conflict views. Detail can be reduced with distance, but traffic metrics must remain available independently of the number of drawn aircraft. A visualization must never make an unsafe or blocked maneuver look successful merely to keep the animation fluid.
 
 ## 12. Lane-scoped communications and channel economy
 
@@ -202,22 +215,7 @@ Every message class should define its audience, priority, maximum rate or coales
 
 The first implementation should model **logical channel identities, subscriptions, routing scopes, and message budgets** independently of physical RF simulation. Physical frequency assignment, modulation, radio range, interference, and regulatory compliance are separate capabilities requiring their own contracts and evidence. This doctrine does not claim that a real radio channel has been allocated or that wireless safety has been validated.
 
-## 14. Visualization requirements
-
-The first useful visualization should show the **traffic system**, not just drone icons:
-
-- sloped and curved lane centerlines with direction arrows;
-- lane envelopes and aircraft-class eligibility;
-- lane elevation/altitude profile and the observer's view;
-- protected VTOL footprints, approach/departure volumes, and redirect perimeters;
-- conflict regions, reservations, merge windows, and rejected intents;
-- aircraft class, current lane, intended lane, and lane-change state;
-- queue depth, oldest wait, throughput, redirects, and blocked/stalled states;
-- committed simulation tick and snapshot age.
-
-Provide observer controls to switch between overview, lane-following, and local conflict views. Detail can be reduced with distance, but traffic metrics must remain available independently of the number of drawn aircraft. A visualization must never make an unsafe or blocked maneuver look successful merely to keep the animation fluid.
-
-## 15. Implementation sequence
+## 13. Implementation sequence
 
 1. **Doctrine and terminology:** agree on corridor, lane segment, lane family, conflict region, protected volume, redirect, reservation, and queue metrics.
 2. **Discrete traffic contract:** add tests for lane-change intent, admission, reservation ownership, deterministic arbitration, and blocked retry without claiming continuous flight.
@@ -232,3 +230,4 @@ Provide observer controls to switch between overview, lane-following, and local 
 The existing Drone Construction implementation has deterministic discrete construction state, committed snapshots, skylane destination movement, and tested explicit transition traversal/retry/chaining. Those primitives do not yet demonstrate the continuous sloped-lane network described here, aircraft-class altitude assignment, broadcast lane-change negotiation, VTOL perimeter rerouting, wake-aware separation, queue stability, or a live observer-relative visualization. Keep each as an explicit design/implementation gate until tests and reproducible artifacts prove it.
 
 **Design principle:** route around conflicts before they become emergencies; reserve space before entering it; never trade authoritative truth for a prettier frame.
+
