@@ -506,7 +506,8 @@ public sealed class ConstructionContractsTests
         Assert.False(grid.TryMove(reserved, lookahead, 8));
 
         Assert.True(grid.ReleaseReservations(7));
-        Assert.True(grid.TryOccupy(lookahead, 8));
+        // Agent 8 already occupies cell (0, 0); move it into the newly released cell.
+        Assert.True(grid.TryMove(new GridCell(0, 0), lookahead, 8));
     }
 
     [Fact]
