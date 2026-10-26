@@ -78,7 +78,33 @@ At the redirect boundary, the through-lane ends for that route. An aircraft that
 
 A redirect is a **network detour**, not a holding loop that may accumulate aircraft indefinitely. Before an aircraft commits to the detour, the planner must establish that the perimeter path has capacity, has a safe rejoin point, and does not feed into a blocked merge. If no safe detour is available, the aircraft needs a bounded alternate destination or operational contingency.
 
-## 6. Crossings, merges, and right-of-way
+
+## 6. Permanent airspace reservations before dynamic rerouting
+
+The simplest safe baseline may be to **make important penetrations permanent features of the airspace map**, rather than allowing ordinary traffic through them until an event forces everyone to evacuate. For example, a runway's approach and departure volumes can be modeled as persistent protected regions, with ordinary skylanes routed around them from the outset. This removes the specific failure mode in which a temporary corridor closure releases a sudden surge of displaced aircraft into neighboring lanes.
+
+This is a design default, not a claim that every protected region must be immutable. Planned maintenance, emergencies, and unusual operations can still change availability, but the network should treat those as explicit state changes with controlled admission—not as an unexpected collapse of a route everyone was relying on.
+
+For a protected region, the map should record:
+
+- the protected volume and its approach/departure extensions, not just a 2D footprint;
+- which aircraft classes and operations are excluded, permitted, or conditionally authorized;
+- the permanent bypass corridors and their actual capacity;
+- any authorized crossing points, altitude/trajectory constraints, and separation rules;
+- how temporary restrictions are announced, versioned, and propagated to route planners;
+- how existing reservations are handled without dumping traffic into an already saturated bypass.
+
+**Permanent exclusion is not the same as unlimited bypass capacity.** The bypass network still needs load checks and admission metering. The design should avoid sudden reroute waves, but also measure whether the steady-state traffic that remains is supportable.
+
+### Airport operations and legal boundaries
+
+An airport should be represented as an operational airspace system, not merely a runway polygon. Runway approaches, departures, nearby traffic patterns, obstacle constraints, and the relevant protected airspace all matter. The system can model a future in which authorized non-civilian or autonomous aircraft use carefully engineered routes near or over airport property, but software policy alone cannot grant that authorization or make such a route safe.
+
+Actual operations must comply with the airspace rules and clearances in force at the location and time, including restrictions that apply to airports and controlled airspace. Any future ecosystem-specific operating model that differs from current rules would require lawful authorization and coordination with the relevant aviation authorities, plus validated separation procedures. Until then, treat overflight as a scenario that may be modeled for research—not as permission to operate.
+
+This distinction helps keep the architecture ambitious without confusing a proposed traffic model with an approved real-world operating procedure.
+
+## 7. Crossings, merges, and right-of-way
 
 A crossing is a conflict region shared by two or more otherwise compatible corridors. It must be represented explicitly, even when the lanes are not drawn on a common grid.
 
@@ -95,7 +121,7 @@ Required rules:
 
 For a first deterministic prototype, use reservation-based crossing windows and a single authoritative admission point per conflict region. More distributed negotiation can be evaluated later, once the baseline is measurable.
 
-## 7. Close-following separation: climb, descend, or re-time
+## 8. Close-following separation: climb, descend, or re-time
 
 When aircraft on compatible headings approach too closely, the system can choose a small vertical offset, a controlled speed change, or a time shift. A small climb by one aircraft and a small descent by another may be preferable to forcing both into a full lane change, but only if their performance and lane envelopes allow it.
 
@@ -110,7 +136,7 @@ The separation controller must account for more than point-to-point distance:
 
 A maneuver should be chosen only when the predicted trajectory clears both aircraft and surrounding traffic. “Climb one, descend one” is a candidate resolution, not a universal rule. If vertical room is unavailable, use speed/spacing changes or an alternate route.
 
-## 8. Turbulence, queues, and traffic waves
+## 9. Turbulence, queues, and traffic waves
 
 The likely system-level failure is not only collision. A redirect or merge can create a **queue that propagates upstream**, reducing throughput across otherwise independent lanes. Safe individual maneuvers can still create a bad traffic system.
 
@@ -138,13 +164,13 @@ Initial stability rules:
 
 A finite redirect route cannot solve sustained overload. If the average arrival rate into a constrained resource exceeds its service rate, the queue will grow unless demand is metered, diverted to a genuinely independent route, or reduced. The model must make this visible.
 
-## 9. Proposed route and transition lifecycle
+## 10. Proposed route and transition lifecycle
 
 Current committed lane → predict destination, traffic, and maneuver envelope → choose compatible lane/sloped transition/perimeter redirect → announce intent and request target/conflict reservations → if denied, retain a safe route and retry or replan → if admitted, fly the bounded transition → confirm target lane and conflict-volume clearance → commit target lane, release source claims, and publish snapshot/event.
 
 The exact implementation may evolve, but occupancy, reservation, and route ownership must have one authoritative commit point. A render frame is only an observation of this state.
 
-## 10. Visualization requirements
+## 11. Visualization requirements
 
 The first useful visualization should show the **traffic system**, not just drone icons:
 
@@ -159,7 +185,7 @@ The first useful visualization should show the **traffic system**, not just dron
 
 Provide observer controls to switch between overview, lane-following, and local conflict views. Detail can be reduced with distance, but traffic metrics must remain available independently of the number of drawn aircraft. A visualization must never make an unsafe or blocked maneuver look successful merely to keep the animation fluid.
 
-## 11. Implementation sequence
+## 12. Implementation sequence
 
 1. **Doctrine and terminology:** agree on corridor, lane segment, lane family, conflict region, protected volume, redirect, reservation, and queue metrics.
 2. **Discrete traffic contract:** add tests for lane-change intent, admission, reservation ownership, deterministic arbitration, and blocked retry without claiming continuous flight.
