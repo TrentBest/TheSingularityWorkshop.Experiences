@@ -353,7 +353,7 @@ public sealed class ConstructionContractsTests
     }
 
     [Fact]
-    public void SlipstreamLifecycle_BlockedExitRetainsTransitionOccupancyAndReservation()
+    public void SlipstreamLifecycle_ReservationPreventsConflictAtExit()
     {
         var source = new TrafficCellGrid(2, 1);
         var transition = new TrafficCellGrid(2, 1);
@@ -366,15 +366,14 @@ public sealed class ConstructionContractsTests
         GridCell[] lookahead = [new(2, 0), new(3, 0), new(4, 0), new(5, 0), new(6, 0)];
         Assert.True(source.TryOccupy(origin, 7));
         Assert.True(lifecycle.TryEnter(7, source, origin, entry, destination, destinationCell, lookahead));
-        Assert.True(destination.TryOccupy(destinationCell, 99));
+        Assert.False(destination.TryOccupy(destinationCell, 99));
 
-        Assert.False(lifecycle.TryExit(7, destination, destinationCell));
+        Assert.True(lifecycle.TryExit(7, destination, destinationCell));
 
-        Assert.True(transition.TryGetAgentCell(7, out var transitionCell));
-        Assert.Equal(entry, transitionCell);
-        Assert.Equal(7UL, lifecycle.AgentId);
+        Assert.False(transition.TryGetAgentCell(7, out _));
         Assert.True(destination.TryGetOccupant(destinationCell, out var occupant));
-        Assert.Equal(99UL, occupant);
+        Assert.Equal(7UL, occupant);
+        Assert.Null(lifecycle.AgentId);
     }
 
     [Fact]
