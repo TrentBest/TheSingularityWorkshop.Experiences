@@ -502,6 +502,8 @@ public sealed class ConstructionContractsTests
 
         Assert.True(grid.TryOccupy(new GridCell(1, 0), 7));
         Assert.True(grid.TryMove(new GridCell(1, 0), reserved, 7));
+        Assert.True(grid.TryOccupy(new GridCell(0, 0), 8));
+        Assert.False(grid.TryMove(new GridCell(0, 0), lookahead, 8));
         Assert.False(grid.TryMove(reserved, lookahead, 8));
 
         Assert.True(grid.ReleaseReservations(7));
