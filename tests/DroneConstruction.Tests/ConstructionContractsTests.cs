@@ -487,4 +487,79 @@ public sealed class ConstructionContractsTests
         Assert.False(source.IsOccupied(new GridCell(0, 0)));
     }
 
+    [Fact]
+    public void TrafficGrid_ReservationsBlockOtherAgentsButPermitOwnerEntry()
+    {
+        var grid = new TrafficCellGrid(5, 1);
+        var reserved = new GridCell(2, 0);
+        var lookahead = new GridCell(3, 0);
+
+        Assert.True(grid.TryReserveCells(7, [reserved, lookahead]));
+        Assert.True(grid.TryGetReservationOwner(reserved, out var reservationOwner));
+        Assert.Equal(7UL, reservationOwner);
+        Assert.False(grid.TryOccupy(reserved, 8));
+        Assert.False(grid.TryOccupy(lookahead, 8));
+
+        Assert.True(grid.TryOccupy(new GridCell(1, 0), 7));
+        Assert.True(grid.TryMove(new GridCell(1, 0), reserved, 7));
+        Assert.False(grid.TryMove(reserved, lookahead, 8));
+
+        Assert.True(grid.ReleaseReservations(7));
+        Assert.True(grid.TryOccupy(lookahead, 8));
+    }
+
+    [Fact]
+    public void TrafficGrid_ReservationAcquisitionIsAtomicWhenAnyCellIsBlocked()
+    {
+        var grid = new TrafficCellGrid(5, 1);
+        Assert.True(grid.TryOccupy(new GridCell(3, 0), 99));
+
+        Assert.False(grid.TryReserveCells(7, [new GridCell(1, 0), new GridCell(3, 0), new GridCell(4, 0)]));
+        Assert.False(grid.TryGetReservationOwner(new GridCell(1, 0), out _));
+        Assert.False(grid.TryGetReservationOwner(new GridCell(4, 0), out _));
+    }
+
+    [Fact]
+    public void Slipstream_ReservesDestinationAndLookaheadUntilExitOrRelease()
+    {
+        var lane = new TrafficCellGrid(10, 1);
+        var slipstream = new Slipstream("persistent-window", transitionCellCount: 2, lookaheadCells: 3);
+        var destination = new GridCell(8, 0);
+        GridCell[] lookahead = [new(5, 0), new(6, 0), new(7, 0)];
+
+        Assert.True(slipstream.TryReserve(7, destination, lookahead, lane));
+        Assert.False(lane.TryOccupy(new GridCell(6, 0), 8));
+        Assert.False(lane.TryOccupy(destination, 8));
+        Assert.True(lane.TryGetReservationOwner(destination, out var owner));
+        Assert.Equal(7UL, owner);
+
+        Assert.True(slipstream.Release(7));
+        Assert.True(lane.TryOccupy(new GridCell(6, 0), 8));
+        Assert.True(lane.TryOccupy(destination, 9));
+    }
+
+    [Fact]
+    public void SlipstreamLifecycle_ExitAllowsOwnerIntoReservedDestinationAndReleasesLookahead()
+    {
+        var source = new TrafficCellGrid(2, 1);
+        var transition = new TrafficCellGrid(2, 1);
+        var destination = new TrafficCellGrid(10, 1);
+        var slipstream = new Slipstream("owner-exit", transitionCellCount: 2, lookaheadCells: 3);
+        var lifecycle = new SlipstreamLifecycle(slipstream, transition);
+        var origin = new GridCell(0, 0);
+        var entry = new GridCell(0, 0);
+        var destinationCell = new GridCell(8, 0);
+        GridCell[] lookahead = [new(5, 0), new(6, 0), new(7, 0)];
+
+        Assert.True(source.TryOccupy(origin, 7));
+        Assert.True(lifecycle.TryEnter(7, source, origin, entry, destination, destinationCell, lookahead));
+        Assert.False(destination.TryOccupy(new GridCell(6, 0), 8));
+        Assert.True(lifecycle.TryExit(7, destination, destinationCell));
+
+        Assert.True(destination.TryGetOccupant(destinationCell, out var owner));
+        Assert.Equal(7UL, owner);
+        Assert.False(destination.TryGetReservationOwner(destinationCell, out _));
+        Assert.True(destination.TryOccupy(new GridCell(6, 0), 8));
+    }
+
 }
