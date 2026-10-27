@@ -141,4 +141,8 @@ public sealed class CapsuleReplay
 }
 
 /// <summary>The final game state and per-input results produced by replay playback.</summary>
-public sealed record CapsuleReplayResult(CapsuleGame Game, IReadOnlyList<GameStepResult> StepResults);
+public sealed record CapsuleReplayResult(CapsuleGame Game, IReadOnlyList<GameStepResult> StepResults) : IDisposable
+{
+    /// <summary>Releases the FSM_API game instance created for playback.</summary>
+    public void Dispose() => Game.Dispose();
+}
