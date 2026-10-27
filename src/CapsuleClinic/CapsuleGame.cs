@@ -42,7 +42,6 @@ public sealed class CapsuleGame : IStateContext, IDisposable
 {
     private const string FsmDefinitionName = "CapsuleClinicGameFSM";
     private const string ProcessingGroup = "CapsuleClinic";
-    private static readonly object DefinitionGate = new();
     private static long _nextGameId;
 
     private readonly SeededColorGenerator _generator;
@@ -61,7 +60,7 @@ public sealed class CapsuleGame : IStateContext, IDisposable
         IsValid = true;
         SpawnNext();
         EnsureFsmDefinition();
-        _fsmHandle = FsmRuntime.Create.CreateInstance(FsmDefinitionName, this, ProcessingGroup);
+        _fsmHandle = CapsuleClinicFsmRuntime.CreateInstance(FsmDefinitionName, this);
     }
 
     /// <summary>Gets the diagnostic identity of this game context.</summary>
@@ -106,19 +105,13 @@ public sealed class CapsuleGame : IStateContext, IDisposable
 
     private static void EnsureFsmDefinition()
     {
-        lock (DefinitionGate)
-        {
-            if (FsmRuntime.Interaction.Exists(FsmDefinitionName, ProcessingGroup))
-                return;
-
-            FsmRuntime.Create.CreateProcessingGroup(ProcessingGroup);
+        CapsuleClinicFsmRuntime.EnsureDefinition(FsmDefinitionName, () =>
             FsmRuntime.Create.CreateFiniteStateMachine(FsmDefinitionName, -1, ProcessingGroup)
                 .State("Falling", null, ProcessFallingState, null)
                 .State("GameOver", null, null, null)
                 .WithInitialState("Falling")
                 .Transition("Falling", "GameOver", context => context is CapsuleGame game && game.GameOver)
-                .BuildDefinition();
-        }
+                .BuildDefinition());
     }
 
     private static void ProcessFallingState(IStateContext context)
@@ -234,7 +227,7 @@ public sealed class CapsuleGame : IStateContext, IDisposable
         if (_disposed) return;
         _disposed = true;
         IsValid = false;
-        FsmRuntime.Interaction.DestroyInstance(_fsmHandle);
+        CapsuleClinicFsmRuntime.DestroyInstance(_fsmHandle);
     }
 
     private sealed class SeededColorGenerator
