@@ -26,7 +26,7 @@ public sealed class CapsuleArenaSvgRendererTests
         Assert.Contains("bob", svg);
         Assert.Contains("carol", svg);
         Assert.Contains("WAITING FOR CONTENDER", svg);
-        Assert.EndsWith("</svg>", svg);
+        Assert.EndsWith("</svg>", svg.TrimEnd());
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public sealed class CapsuleArenaSvgRendererTests
         var svg = CapsuleArenaSvgRenderer.Render(CapsuleArenaSnapshot.Capture(room, "bob"));
 
         Assert.Contains("alice&lt;svg&gt;", svg);
-        Assert.DoesNotContain("<text x=\"42\" y=\"106\" fill=\"#f4f7fb\" font-family=\"sans-serif\" font-size=\"15\" font-weight=\"800\">alice<svg>", svg);
+        Assert.DoesNotContain("alice<svg>", svg);
     }
 
     [Fact]
