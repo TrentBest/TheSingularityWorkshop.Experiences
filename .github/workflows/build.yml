@@ -21,6 +21,7 @@ jobs:
           - src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
           - src/Chemistry/TheSingularityWorkshop.Experiences.Chemistry.csproj
           - src/Games.Cards/TheSingularityWorkshop.Games.Cards.csproj
+          - src/CapsuleClinic/TheSingularityWorkshop.Experiences.CapsuleClinic.csproj
           - src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj
           - src/DominoStudio/TheSingularityWorkshop.Experiences.DominoStudio.csproj
           - src/MarbleRun/TheSingularityWorkshop.Experiences.MarbleRun.csproj
@@ -89,6 +90,7 @@ jobs:
           dotnet restore src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj
           dotnet restore src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
           dotnet restore src/Games.Cards/TheSingularityWorkshop.Games.Cards.csproj
+          dotnet restore src/CapsuleClinic/TheSingularityWorkshop.Experiences.CapsuleClinic.csproj
           dotnet restore src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj
           dotnet restore src/DominoStudio/TheSingularityWorkshop.Experiences.DominoStudio.csproj
           dotnet restore src/MarbleRun/TheSingularityWorkshop.Experiences.MarbleRun.csproj
@@ -99,6 +101,7 @@ jobs:
           dotnet pack src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj --configuration Release --output ./artifacts
           dotnet pack src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj --configuration Release --output ./artifacts
           dotnet pack src/Games.Cards/TheSingularityWorkshop.Games.Cards.csproj --configuration Release --output ./artifacts
+          dotnet pack src/CapsuleClinic/TheSingularityWorkshop.Experiences.CapsuleClinic.csproj --configuration Release --output ./artifacts
           dotnet pack src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj --configuration Release --output ./artifacts
           dotnet pack src/DominoStudio/TheSingularityWorkshop.Experiences.DominoStudio.csproj --configuration Release --output ./artifacts
           dotnet pack src/MarbleRun/TheSingularityWorkshop.Experiences.MarbleRun.csproj --configuration Release --output ./artifacts
@@ -123,6 +126,19 @@ jobs:
         run: dotnet test tests/Games.Cards.Tests/TheSingularityWorkshop.Games.Cards.Tests.csproj --configuration Release --no-restore
 
   # Castle Siege's initial semantic entry surface must state its current capability boundary honestly.
+  # Capsule Clinic puzzle rules are deterministic and host-independent.
+  test-capsule-clinic:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore Capsule Clinic tests
+        run: dotnet restore tests/CapsuleClinic.Tests/TheSingularityWorkshop.Experiences.CapsuleClinic.Tests.csproj
+      - name: Run Capsule Clinic rules and deterministic-loop tests
+        run: dotnet test tests/CapsuleClinic.Tests/TheSingularityWorkshop.Experiences.CapsuleClinic.Tests.csproj --configuration Release --no-restore
+
   test-castle-siege:
     runs-on: ubuntu-24.04
     steps:
