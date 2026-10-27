@@ -3,9 +3,13 @@ namespace TheSingularityWorkshop.Experiences.CapsuleClinic;
 /// <summary>The lifecycle of a best-of series managed by the authoritative host.</summary>
 public enum CapsuleMatchState
 {
+    /// <summary>The roster is open and the match has not started.</summary>
     WaitingForPlayers,
+    /// <summary>A round is accepting authoritative game actions.</summary>
     InRound,
+    /// <summary>A round ended and another may begin.</summary>
     RoundComplete,
+    /// <summary>A participant has reached the configured series win total.</summary>
     MatchComplete
 }
 
@@ -32,10 +36,19 @@ public sealed class CapsuleMatchSeries
         RoundsToWin = roundsToWin;
     }
 
+    /// <summary>Gets the number of round wins required to take the series.</summary>
     public int RoundsToWin { get; }
+
+    /// <summary>Gets the current lifecycle state.</summary>
     public CapsuleMatchState State { get; private set; } = CapsuleMatchState.WaitingForPlayers;
+
+    /// <summary>Gets the one-based current round number, or zero before the match starts.</summary>
     public int RoundNumber { get; private set; }
+
+    /// <summary>Gets the match winner after the series completes, otherwise null.</summary>
     public string? MatchWinnerPlayerId { get; private set; }
+
+    /// <summary>Gets the immutable sequence of completed round results.</summary>
     public IReadOnlyList<CapsuleRoundResult> RoundResults => _roundResults.AsReadOnly();
 
     /// <summary>Registers a unique participant before the series begins.</summary>
