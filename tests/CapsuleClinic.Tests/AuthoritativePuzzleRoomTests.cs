@@ -102,4 +102,84 @@ public sealed class AuthoritativePuzzleRoomTests
         Assert.Equal(0, snapshot.Count(cell => cell.HasValue));
         Assert.Equal(2, room.GetPlayerView("alice").Board.Count(cell => cell.HasValue));
     }
+
+    [Fact]
+    public void MatchLifecycleUsesAuthoritativeSurvivorsAndPreservesSequenceAcrossRounds()
+    {
+        var room = new AuthoritativePuzzleRoom("match-room", width: 2, height: 3);
+        Assert.True(room.JoinPlayer("alice", 101));
+        Assert.True(room.JoinPlayer("bob", 202));
+        Assert.True(room.StartMatch(roundsToWin: 2));
+        Assert.Equal(CapsuleMatchState.InRound, room.MatchState);
+        Assert.False(room.JoinPlayer("carol", 303));
+
+        var aliceDrop = room.ApplyCommand("alice",
+            new GameCommandEnvelope(1, "match-room", "alice", 1, CapsuleAction.HardDrop));
+        Assert.True(aliceDrop.Accepted);
+        Assert.True(aliceDrop.Step.GameOver);
+        Assert.Null(room.EvaluateRoundAtHostBoundary());
+
+        var bobDrop = room.ApplyCommand("bob",
+            new GameCommandEnvelope(1, "match-room", "bob", 1, CapsuleAction.HardDrop));
+        Assert.True(bobDrop.Accepted);
+        Assert.True(bobDrop.Step.GameOver);
+        var draw = room.EvaluateRoundAtHostBoundary();
+
+        Assert.NotNull(draw);
+        Assert.True(draw.IsDraw);
+        Assert.Null(draw.WinnerPlayerId);
+        Assert.Equal(CapsuleMatchState.RoundComplete, room.MatchState);
+        Assert.Equal(CommandRejection.MatchNotInRound,
+            room.ApplyCommand("alice", new GameCommandEnvelope(1, "match-room", "alice", 2, CapsuleAction.Tick)).Rejection);
+
+        Assert.True(room.StartNextRound());
+        Assert.Equal(CapsuleMatchState.InRound, room.MatchState);
+        Assert.False(room.GetPlayerView("alice").GameOver);
+        Assert.Equal(1UL, room.GetPlayerView("alice").LastAcceptedSequence);
+        Assert.Null(room.EvaluateRoundAtHostBoundary());
+    }
+
+    [Fact]
+    public void RoundEvaluationWaitsForHostBoundaryAndRecordsSingleSurvivor()
+    {
+        var room = new AuthoritativePuzzleRoom("winner-room", width: 2, height: 3);
+        Assert.True(room.JoinPlayer("alice", 101));
+        Assert.True(room.JoinPlayer("bob", 202));
+        Assert.True(room.StartMatch(roundsToWin: 1));
+
+        var decision = room.ApplyCommand("alice",
+            new GameCommandEnvelope(1, "winner-room", "alice", 1, CapsuleAction.HardDrop));
+        Assert.True(decision.Accepted);
+        Assert.True(decision.Step.GameOver);
+
+        var result = room.EvaluateRoundAtHostBoundary();
+
+        Assert.NotNull(result);
+        Assert.Equal("bob", result.WinnerPlayerId);
+        Assert.False(result.IsDraw);
+        Assert.Equal(CapsuleMatchState.MatchComplete, room.MatchState);
+        Assert.Equal("bob", room.MatchWinnerPlayerId);
+        Assert.Equal(CommandRejection.MatchNotInRound,
+            room.ApplyCommand("bob", new GameCommandEnvelope(1, "winner-room", "bob", 1, CapsuleAction.Tick)).Rejection);
+        Assert.False(room.StartNextRound());
+    }
+
+    [Fact]
+    public void MatchStandingsReflectRoundWinsAndAuthoritativeAliveState()
+    {
+        var room = new AuthoritativePuzzleRoom("standings-room", width: 2, height: 3);
+        Assert.True(room.JoinPlayer("alice", 101));
+        Assert.True(room.JoinPlayer("bob", 202));
+        Assert.True(room.StartMatch(roundsToWin: 2));
+
+        Assert.All(room.GetStandings(), standing => Assert.True(standing.IsActive));
+
+        room.ApplyCommand("alice",
+            new GameCommandEnvelope(1, "standings-room", "alice", 1, CapsuleAction.HardDrop));
+        var standings = room.GetStandings();
+
+        Assert.False(Assert.Single(standings, standing => standing.PlayerId == "alice").IsActive);
+        Assert.True(Assert.Single(standings, standing => standing.PlayerId == "bob").IsActive);
+    }
+
 }
