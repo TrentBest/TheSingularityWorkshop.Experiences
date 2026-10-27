@@ -129,11 +129,11 @@ Report workload, runtime/build settings, operations, allocations, throughput or 
 
 ### Two presentation modes, one player roster
 
-The match model must not impose a four-player cap. The four-pane layout is a **local viewing budget**, not a limit on how many players can join a room. Keep the authoritative player roster, match standings, and round-win totals separate from the four visible board panes.
+The match model must not impose a four-player cap—or another arbitrary fixed product limit. The four-pane layout is a **local viewing budget**, not a limit on how many players can join a room. Keep the authoritative player roster, match standings, and round-win totals separate from the four visible board panes. Player capacity is intended to scale with the host's actual hardware and measured resource envelope, so better hardware can support more participants without a product redesign.
 
 - **Small room (1–4 players):** use a four-pane 2×2 arena and show every participant at once. The local player's board occupies the upper-left pane; other joined players fill the remaining panes in a stable order. Empty panes are reserved/visually quiet rather than filled with invented opponents.
 - **Large room (5+ players):** keep the same four-pane 2×2 composition, with the local player's board fixed in the upper-left pane. The other three panes are selected from the live standings as the most relevant rank-neighbors/contenders, not by allocating one pane to every remote player. Selection updates at a defined standings boundary (preferably round end, or a deliberate low-frequency refresh) so panes do not thrash as rankings change. Every player remains in the authoritative roster and central standings even when not currently visible.
-- **Unlimited means roster-scale, not unlimited rendering:** room capacity is an explicit host/deployment policy. The UI and match model must not encode an arbitrary four-player ceiling; hosting, bandwidth, tick cost, and abuse limits still need measured capacity policies. Do not claim internet-scale capacity before load tests.
+- **Unlimited means hardware-scaled capacity:** do not choose an arbitrary product-level maximum player count. The target is as many concurrent players as the available host hardware and operating conditions can sustain. Capacity should rise naturally when hardware improves, without changing game rules or the four-pane UI. Use runtime resource measurements, load tests, and graceful admission/backpressure to discover and protect the practical operating envelope; any emergency safety ceiling must be an operational safeguard, not a hardcoded gameplay limit. Never advertise a capacity number that has not been measured.
 
 ### Large-room pane selection
 
