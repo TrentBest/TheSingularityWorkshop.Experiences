@@ -33,9 +33,16 @@ public sealed record LogicalCommunicationChannelKey
 /// <summary>Classifies delivery priority independently of any physical transport.</summary>
 public enum CommunicationPriority
 {
+    /// <summary>Best-effort traffic that may be delayed or coalesced.</summary>
     Routine = 0,
+
+    /// <summary>Traffic coordinating nearby participants or lane transitions.</summary>
     Coordination = 1,
+
+    /// <summary>Operational control traffic that must be handled ahead of routine traffic.</summary>
     Control = 2,
+
+    /// <summary>Safety-critical traffic that must remain distinguishable during congestion.</summary>
     Emergency = 3
 }
 
