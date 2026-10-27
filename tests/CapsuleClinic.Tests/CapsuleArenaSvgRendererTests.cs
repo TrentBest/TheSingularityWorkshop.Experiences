@@ -1,5 +1,6 @@
 using TheSingularityWorkshop.Experiences.CapsuleClinic;
 using Xunit;
+using System.Xml.Linq;
 
 namespace TheSingularityWorkshop.Experiences.CapsuleClinic.Tests;
 
@@ -17,6 +18,7 @@ public sealed class CapsuleArenaSvgRendererTests
         var svg = CapsuleArenaSvgRenderer.Render(CapsuleArenaSnapshot.Capture(room, "bob"));
 
         Assert.Contains("<svg xmlns=\"http://www.w3.org/2000/svg\"", svg);
+        Assert.Equal("svg", XDocument.Parse(svg).Root?.Name.LocalName);
         Assert.Contains("<title id=\"arena-title\">Capsule Clinic arena</title>", svg);
         Assert.Contains("STANDINGS", svg);
         Assert.Contains("width=\"52\"", svg);
