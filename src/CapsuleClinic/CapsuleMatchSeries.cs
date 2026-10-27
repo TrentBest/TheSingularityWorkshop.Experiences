@@ -30,7 +30,6 @@ public sealed class CapsuleMatchSeries : IStateContext, IDisposable
 {
     private const string FsmDefinitionName = "CapsuleClinicMatchSeriesFSM";
     private const string ProcessingGroup = "CapsuleClinic";
-    private static readonly object DefinitionGate = new();
     private static long _nextSeriesId;
 
     private readonly Dictionary<string, PlayerStandingState> _players = new(StringComparer.Ordinal);
@@ -51,7 +50,7 @@ public sealed class CapsuleMatchSeries : IStateContext, IDisposable
         Name = $"CapsuleMatchSeries_{Interlocked.Increment(ref _nextSeriesId)}";
         IsValid = true;
         EnsureFsmDefinition();
-        _fsmHandle = FsmRuntime.Create.CreateInstance(FsmDefinitionName, this, ProcessingGroup);
+        _fsmHandle = CapsuleClinicFsmRuntime.CreateInstance(FsmDefinitionName, this);
     }
 
     /// <summary>Gets the diagnostic identity of this series context.</summary>
@@ -172,17 +171,12 @@ public sealed class CapsuleMatchSeries : IStateContext, IDisposable
         if (_disposed) return;
         _disposed = true;
         IsValid = false;
-        FsmRuntime.Interaction.DestroyInstance(_fsmHandle);
+        CapsuleClinicFsmRuntime.DestroyInstance(_fsmHandle);
     }
 
     private static void EnsureFsmDefinition()
     {
-        lock (DefinitionGate)
-        {
-            if (FsmRuntime.Interaction.Exists(FsmDefinitionName, ProcessingGroup))
-                return;
-
-            FsmRuntime.Create.CreateProcessingGroup(ProcessingGroup);
+        CapsuleClinicFsmRuntime.EnsureDefinition(FsmDefinitionName, () =>
             FsmRuntime.Create.CreateFiniteStateMachine(FsmDefinitionName, -1, ProcessingGroup)
                 .State("WaitingForPlayers", null, null, null)
                 .State("InRound", null, null, null)
@@ -193,8 +187,7 @@ public sealed class CapsuleMatchSeries : IStateContext, IDisposable
                 .Transition("InRound", "MatchComplete", context => context is CapsuleMatchSeries series && series._roundCompleted && series.MatchWinnerPlayerId is not null)
                 .Transition("InRound", "RoundComplete", context => context is CapsuleMatchSeries series && series._roundCompleted && series.MatchWinnerPlayerId is null)
                 .Transition("RoundComplete", "InRound", context => context is CapsuleMatchSeries series && series._startNextRoundRequested)
-                .BuildDefinition();
-        }
+                .BuildDefinition());
     }
 
     private sealed class PlayerStandingState(int joinOrder)
