@@ -59,7 +59,6 @@ public sealed record CommunicationMessageEnvelope
     {
         ArgumentNullException.ThrowIfNull(channel);
         if (senderId == 0) throw new ArgumentOutOfRangeException(nameof(senderId));
-        if (sequence < 0) throw new ArgumentOutOfRangeException(nameof(sequence));
         if (createdTick < 0) throw new ArgumentOutOfRangeException(nameof(createdTick));
         if (expiresAtTick < createdTick) throw new ArgumentOutOfRangeException(nameof(expiresAtTick));
         if (string.IsNullOrWhiteSpace(messageKind))
