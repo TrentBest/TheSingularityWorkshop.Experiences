@@ -8,7 +8,7 @@ public sealed class CapsuleMatchSeriesTests
     [Fact]
     public void SeriesRequiresTwoPlayersAndStartsAtRoundOne()
     {
-        var series = new CapsuleMatchSeries(roundsToWin: 2);
+        using var series = new CapsuleMatchSeries(roundsToWin: 2);
         Assert.False(series.StartMatch());
         Assert.True(series.JoinPlayer("alice"));
         Assert.False(series.StartMatch());
@@ -21,7 +21,7 @@ public sealed class CapsuleMatchSeriesTests
     [Fact]
     public void HostRecordedWinnerGetsRoundWinAndCanWinMatch()
     {
-        var series = new CapsuleMatchSeries(roundsToWin: 2);
+        using var series = new CapsuleMatchSeries(roundsToWin: 2);
         series.JoinPlayer("alice");
         series.JoinPlayer("bob");
         Assert.True(series.StartMatch());
@@ -45,7 +45,7 @@ public sealed class CapsuleMatchSeriesTests
     [MemberData(nameof(DrawSurvivorSets))]
     public void ZeroOrMultipleSurvivorsProduceDraw(IEnumerable<string> survivors)
     {
-        var series = CreateStartedSeries();
+        using var series = CreateStartedSeries();
 
         var result = series.CompleteRound(survivors);
 
@@ -57,7 +57,7 @@ public sealed class CapsuleMatchSeriesTests
     [Fact]
     public void RematchAdvancesRoundAndPreservesCumulativeWins()
     {
-        var series = CreateStartedSeries();
+        using var series = CreateStartedSeries();
         series.CompleteRound(["alice"]);
         Assert.True(series.StartNextRound());
 
@@ -69,7 +69,7 @@ public sealed class CapsuleMatchSeriesTests
     [Fact]
     public void SeriesLocksRosterAfterStartAndRejectsUnknownRoundParticipants()
     {
-        var series = CreateStartedSeries();
+        using var series = CreateStartedSeries();
         Assert.False(series.JoinPlayer("carol"));
         Assert.Throws<ArgumentException>(() => series.CompleteRound(["not-a-player"]));
         Assert.Equal(CapsuleMatchState.InRound, series.State);
