@@ -18,6 +18,18 @@ public sealed class AuthoritativePuzzleRoomTests
     }
 
     [Fact]
+    public void DefaultRoomDoesNotImposeAnArbitraryPlayerCap()
+    {
+        var room = new AuthoritativePuzzleRoom("room-unbounded");
+
+        for (var i = 0; i < 12; i++)
+            Assert.True(room.JoinPlayer($"player-{i}", i + 1));
+
+        Assert.Null(room.MaxPlayers);
+        Assert.Equal(12, room.PlayerCount);
+    }
+
+    [Fact]
     public void ValidCommandConsumesSequenceAndReturnsAuthoritativeState()
     {
         var room = new AuthoritativePuzzleRoom("room-1");
