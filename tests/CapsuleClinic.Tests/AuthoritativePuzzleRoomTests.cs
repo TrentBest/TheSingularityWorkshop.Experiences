@@ -8,7 +8,7 @@ public sealed class AuthoritativePuzzleRoomTests
     [Fact]
     public void RoomAdmitsOnlyUniquePlayersUpToConfiguredCapacity()
     {
-        var room = new AuthoritativePuzzleRoom("room-1", maxPlayers: 2);
+        using var room = new AuthoritativePuzzleRoom("room-1", maxPlayers: 2);
 
         Assert.True(room.JoinPlayer("alice", 1));
         Assert.True(room.JoinPlayer("bob", 2));
@@ -20,7 +20,7 @@ public sealed class AuthoritativePuzzleRoomTests
     [Fact]
     public void DefaultRoomDoesNotImposeAnArbitraryPlayerCap()
     {
-        var room = new AuthoritativePuzzleRoom("room-unbounded");
+        using var room = new AuthoritativePuzzleRoom("room-unbounded");
 
         for (var i = 0; i < 12; i++)
             Assert.True(room.JoinPlayer($"player-{i}", i + 1));
@@ -32,7 +32,7 @@ public sealed class AuthoritativePuzzleRoomTests
     [Fact]
     public void ValidCommandConsumesSequenceAndReturnsAuthoritativeState()
     {
-        var room = new AuthoritativePuzzleRoom("room-1");
+        using var room = new AuthoritativePuzzleRoom("room-1");
         Assert.True(room.JoinPlayer("alice", 123));
 
         var decision = room.ApplyCommand("alice",
@@ -51,7 +51,7 @@ public sealed class AuthoritativePuzzleRoomTests
     public void InvalidProtocolRoomOrIdentityDoesNotConsumeSequence(
         int version, string roomId, string playerId, CommandRejection expected)
     {
-        var room = new AuthoritativePuzzleRoom("room-1");
+        using var room = new AuthoritativePuzzleRoom("room-1");
         Assert.True(room.JoinPlayer("alice", 123));
 
         var decision = room.ApplyCommand("alice",
@@ -65,7 +65,7 @@ public sealed class AuthoritativePuzzleRoomTests
     [Fact]
     public void DuplicateAndOutOfOrderCommandsAreRejected()
     {
-        var room = new AuthoritativePuzzleRoom("room-1");
+        using var room = new AuthoritativePuzzleRoom("room-1");
         Assert.True(room.JoinPlayer("alice", 123));
         var first = new GameCommandEnvelope(1, "room-1", "alice", 1, CapsuleAction.MoveLeft);
 
@@ -79,7 +79,7 @@ public sealed class AuthoritativePuzzleRoomTests
     [Fact]
     public void InvalidActionIsRejectedBeforeSequenceIsConsumed()
     {
-        var room = new AuthoritativePuzzleRoom("room-1");
+        using var room = new AuthoritativePuzzleRoom("room-1");
         Assert.True(room.JoinPlayer("alice", 123));
 
         var decision = room.ApplyCommand("alice",
@@ -93,7 +93,7 @@ public sealed class AuthoritativePuzzleRoomTests
     [Fact]
     public void PlayerCannotReadAnotherUnjoinedPlayerAndSnapshotsAreIndependent()
     {
-        var room = new AuthoritativePuzzleRoom("room-1");
+        using var room = new AuthoritativePuzzleRoom("room-1");
         Assert.True(room.JoinPlayer("alice", 123));
         var snapshot = room.GetPlayerView("alice").Board;
 
@@ -106,7 +106,7 @@ public sealed class AuthoritativePuzzleRoomTests
     [Fact]
     public void MatchLifecycleUsesAuthoritativeSurvivorsAndPreservesSequenceAcrossRounds()
     {
-        var room = new AuthoritativePuzzleRoom("match-room", width: 2, height: 3);
+        using var room = new AuthoritativePuzzleRoom("match-room", width: 2, height: 3);
         Assert.True(room.JoinPlayer("alice", 101));
         Assert.True(room.JoinPlayer("bob", 202));
         Assert.True(room.StartMatch(roundsToWin: 2));
@@ -143,7 +143,7 @@ public sealed class AuthoritativePuzzleRoomTests
     [Fact]
     public void RoundEvaluationWaitsForHostBoundaryAndRecordsSingleSurvivor()
     {
-        var room = new AuthoritativePuzzleRoom("winner-room", width: 2, height: 3);
+        using var room = new AuthoritativePuzzleRoom("winner-room", width: 2, height: 3);
         Assert.True(room.JoinPlayer("alice", 101));
         Assert.True(room.JoinPlayer("bob", 202));
         Assert.True(room.StartMatch(roundsToWin: 1));
@@ -168,7 +168,7 @@ public sealed class AuthoritativePuzzleRoomTests
     [Fact]
     public void MatchStandingsReflectRoundWinsAndAuthoritativeAliveState()
     {
-        var room = new AuthoritativePuzzleRoom("standings-room", width: 2, height: 3);
+        using var room = new AuthoritativePuzzleRoom("standings-room", width: 2, height: 3);
         Assert.True(room.JoinPlayer("alice", 101));
         Assert.True(room.JoinPlayer("bob", 202));
         Assert.True(room.StartMatch(roundsToWin: 2));
