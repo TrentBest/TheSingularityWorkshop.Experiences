@@ -125,6 +125,35 @@ At minimum, benchmark:
 
 Report workload, runtime/build settings, operations, allocations, throughput or latency distribution, and participant count. Do not publish a single latency number without describing the measurement boundary. Do not claim scalability from an in-process benchmark.
 
+## Multiplayer scale and four-pane arena
+
+### Two presentation modes, one player roster
+
+The match model must not impose a four-player cap. The four-pane layout is a **local viewing budget**, not a limit on how many players can join a room. Keep the authoritative player roster, match standings, and round-win totals separate from the four visible board panes.
+
+- **Small room (1–4 players):** use a four-pane 2×2 arena and show every participant at once. The local player's board occupies the upper-left pane; other joined players fill the remaining panes in a stable order. Empty panes are reserved/visually quiet rather than filled with invented opponents.
+- **Large room (5+ players):** keep the same four-pane 2×2 composition, with the local player's board fixed in the upper-left pane. The other three panes are selected from the live standings as the most relevant rank-neighbors/contenders, not by allocating one pane to every remote player. Selection updates at a defined standings boundary (preferably round end, or a deliberate low-frequency refresh) so panes do not thrash as rankings change. Every player remains in the authoritative roster and central standings even when not currently visible.
+- **Unlimited means roster-scale, not unlimited rendering:** room capacity is an explicit host/deployment policy. The UI and match model must not encode an arbitrary four-player ceiling; hosting, bandwidth, tick cost, and abuse limits still need measured capacity policies. Do not claim internet-scale capacity before load tests.
+
+### Large-room pane selection
+
+For a local player ranked first, the three comparison panes show ranks #2, #3, and #4. For a local player lower in the standings, keep the local player in the upper-left and choose the other panes from the leaders and the local player's nearest rank-neighbors, avoiding duplicate identities. The selector must define deterministic tie-breaking (for example, stable join sequence then player ID), handle fewer than four active players, and preserve the selected set for the duration of a round unless the match explicitly requests a refresh. This makes each player's local view useful without pretending every client renders the entire room.
+
+The exact rank-neighbor policy should be a pure, unit-tested selection function, independent of UI and network transport. A spectator/standings view can expose the complete roster without changing the four-pane budget.
+
+### Central standings bar and double score
+
+Reserve a deliberately wider central divider/bar between the four board panes. The puzzle jars can be narrower than a traditional full-screen solo board, so the surrounding pane geometry must preserve a readable playfield while giving the standings enough horizontal room. Treat the center bar as a real layout region, not a thin decorative line.
+
+List every joined competitor in the center standings, with a **double score** per player:
+
+1. **Round rank** — current placement in this round (rank 1, rank 2, and so on; ties follow a documented deterministic ranking policy).
+2. **Rounds won** — the number of rounds that player has won in the current match/series.
+
+Show these as two distinct values (for example, `#2  ·  4 wins`), never as one ambiguous combined score. Round rank is recomputed from the current round's authoritative result/progress; rounds won increments only when a round is officially awarded. Do not infer a round win from a momentary lead. Define tie-breaks and what happens when a player disconnects before implementing the scoreboard.
+
+The standings are authoritative match data rendered locally. A client must not be allowed to submit its own rank, score, or round-win total. The central bar must remain navigable/readable for keyboard and assistive technology; narrow boards must not become the only place color or status is conveyed.
+
 ## Presentation and accessibility
 
 The presentation should have readable color/shape distinctions, clear focus and control hints, adjustable speed where sensible, reduced-motion consideration, keyboard-first play, and responsive layout. Color should not be the only way to distinguish pieces. Animations communicate events but do not own the game rules.
