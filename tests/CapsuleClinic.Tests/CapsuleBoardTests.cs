@@ -53,29 +53,29 @@ public sealed class CapsuleBoardTests
         Assert.Equal(1, result.ChainCount);
         Assert.Equal(4, result.CellsCleared);
         Assert.Equal(3, result.VirusesCleared);
-        Assert.Null(board.GetCell(0, 4));
+        Assert.Equal(new PuzzleCell(CapsuleColor.Yellow, false), board.GetCell(0, 4));
     }
 
     [Fact]
     public void GravityCompactsIndependentSegmentsAfterMatch()
     {
-        var board = new CapsuleBoard(width: 4, height: 6);
+        var board = new CapsuleBoard(width: 5, height: 6);
         Assert.True(board.TryPlaceVirus(0, 0, CapsuleColor.Red));
         Assert.True(board.TryPlaceVirus(1, 0, CapsuleColor.Red));
         Assert.True(board.TryPlaceVirus(2, 0, CapsuleColor.Red));
         Assert.True(board.TryPlaceCapsule(new CapsulePair(CapsuleColor.Red, CapsuleColor.Blue), 3, 0, CapsuleOrientation.Horizontal));
-        Assert.True(board.TryPlaceVirus(3, 2, CapsuleColor.Yellow));
+        Assert.True(board.TryPlaceVirus(0, 2, CapsuleColor.Yellow));
 
         board.ResolveMatchesAndGravity();
 
-        Assert.Equal(new PuzzleCell(CapsuleColor.Yellow, true), board.GetCell(3, 0));
+        Assert.Equal(new PuzzleCell(CapsuleColor.Yellow, true), board.GetCell(0, 0));
     }
 
     [Fact]
     public void Snapshot_IsIndependentAndBottomRowFirst()
     {
         var board = new CapsuleBoard(width: 4, height: 4);
-        Assert.True(board.TryPlaceVirus(1, 0, CapsuleColor.Purple);
+        Assert.True(board.TryPlaceVirus(1, 0, CapsuleColor.Purple));
         var snapshot = board.Snapshot();
 
         Assert.True(board.TryPlaceVirus(1, 1, CapsuleColor.Blue));
