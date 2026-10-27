@@ -237,6 +237,7 @@ public sealed class AuthoritativePuzzleRoom : IDisposable
     {
         foreach (var player in _players.Values)
             player.Game.Dispose();
+        _series?.Dispose();
     }
 
     private static int DeriveRoundSeed(int originalSeed, int roundNumber)
