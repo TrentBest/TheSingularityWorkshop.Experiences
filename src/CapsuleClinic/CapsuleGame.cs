@@ -21,7 +21,7 @@ public enum CapsuleAction
 public readonly record struct ActiveCapsule(CapsulePair Pair, int PivotX, int PivotY, CapsuleOrientation Orientation);
 
 /// <summary>The result of applying one action to a Capsule Clinic game.</summary>
-public readonly record struct GameStepResult(bool ActionAccepted, bool CapsuleLocked, ResolutionResult Resolution, bool GameOver);
+public readonly record struct GameStepResult(bool ActionAccepted, bool CapsuleLocked, ResolutionResult Resolution, bool GameOver, int ScoreAwarded = 0);
 
 /// <summary>
 /// A deterministic single-player game loop around the renderer-independent puzzle board.
@@ -124,9 +124,11 @@ public sealed class CapsuleGame
         }
 
         var resolution = Board.ResolveMatchesAndGravity();
+        var scoreAwarded = CapsuleScoringRules.Calculate(resolution);
+        Score = checked(Score + scoreAwarded);
         _activeCapsule = null;
         SpawnNext();
-        return new GameStepResult(true, true, resolution, GameOver);
+        return new GameStepResult(true, true, resolution, GameOver, scoreAwarded);
     }
 
     private void SpawnNext()
