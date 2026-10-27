@@ -62,7 +62,7 @@ public sealed class CapsuleMatchSeriesTests
         Assert.True(series.StartNextRound());
 
         Assert.Equal(2, series.RoundNumber);
-        Assert.Equal(1, Assert.Single(series.GetStandings().Where(p => p.PlayerId == "alice")).RoundsWon);
+        Assert.Equal(1, Assert.Single(series.GetStandings(), p => p.PlayerId == "alice").RoundsWon);
         Assert.Equal(CapsuleMatchState.InRound, series.State);
     }
 
