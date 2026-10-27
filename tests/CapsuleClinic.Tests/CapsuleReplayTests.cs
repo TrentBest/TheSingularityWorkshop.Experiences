@@ -17,8 +17,8 @@ public sealed class CapsuleReplayTests
             .Append(CapsuleAction.Tick);
 
         var restored = CapsuleReplay.FromJson(replay.ToJson());
-        var first = replay.Play();
-        var second = restored.Play();
+        using var first = replay.Play();
+        using var second = restored.Play();
 
         Assert.Equal(CapsuleReplay.CurrentFormatVersion, restored.FormatVersion);
         Assert.Equal(replay.Seed, restored.Seed);
