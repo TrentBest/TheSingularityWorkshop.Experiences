@@ -66,7 +66,7 @@ public sealed record PuzzlePlayerView(
 /// boundary. The hosting transport must bind <c>authenticatedPlayerId</c> to a real connection/session.
 /// Clients submit intent only; the room owns game instances and exposes read-only snapshots.
 /// </remarks>
-public sealed class AuthoritativePuzzleRoom
+public sealed class AuthoritativePuzzleRoom : IDisposable
 {
     private readonly Dictionary<string, PlayerState> _players = new(StringComparer.Ordinal);
     private CapsuleMatchSeries? _series;
@@ -173,6 +173,7 @@ public sealed class AuthoritativePuzzleRoom
         foreach (var player in _players)
         {
             var roundSeed = DeriveRoundSeed(player.Value.OriginalSeed, _series.RoundNumber);
+            player.Value.Game.Dispose();
             player.Value.Game = new CapsuleGame(roundSeed, Width, Height);
         }
         return true;
@@ -229,6 +230,13 @@ public sealed class AuthoritativePuzzleRoom
             player.Game.Active,
             player.Game.GameOver,
             player.LastAcceptedSequence);
+    }
+
+    /// <summary>Unregisters every player game's FSM instance owned by this room.</summary>
+    public void Dispose()
+    {
+        foreach (var player in _players.Values)
+            player.Game.Dispose();
     }
 
     private static int DeriveRoundSeed(int originalSeed, int roundNumber)
