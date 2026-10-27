@@ -19,6 +19,36 @@ public sealed class LogicalCommunicationContractsTests
     }
 
     [Fact]
+    public void CoordinationScopesHaveExplicitAndDistinctIdentity()
+    {
+        var lane = new LogicalCommunicationChannelKey("region-a", "layer-a", "lane-a");
+        var layer = new LogicalCommunicationChannelKey(
+            LogicalCommunicationScopeKind.LayerCoordination, "region-a", "layer-a");
+        var control = new LogicalCommunicationChannelKey(
+            LogicalCommunicationScopeKind.RegionControl, "region-a");
+        var emergency = new LogicalCommunicationChannelKey(
+            LogicalCommunicationScopeKind.Emergency, "region-a");
+
+        Assert.Equal("lane-a", lane.LaneId);
+        Assert.Null(layer.LaneId);
+        Assert.Equal("layer-a", layer.LayerId);
+        Assert.Null(control.LayerId);
+        Assert.NotEqual(control, emergency);
+        Assert.NotEqual(lane, layer);
+    }
+
+    [Fact]
+    public void ScopeIdentityRejectsMissingOrExtraneousComponents()
+    {
+        Assert.Throws<ArgumentException>(() =>
+            new LogicalCommunicationChannelKey(LogicalCommunicationScopeKind.Lane, "region-a"));
+        Assert.Throws<ArgumentException>(() =>
+            new LogicalCommunicationChannelKey(LogicalCommunicationScopeKind.LayerCoordination, "region-a", laneId: "lane-a"));
+        Assert.Throws<ArgumentException>(() =>
+            new LogicalCommunicationChannelKey(LogicalCommunicationScopeKind.RegionControl, "region-a", "layer-a"));
+    }
+
+    [Fact]
     public void MessageFreshnessIncludesCreationAndExpiryTicks()
     {
         var message = new CommunicationMessageEnvelope(
