@@ -117,6 +117,8 @@ public sealed class CapsuleReplay
 
     private sealed class ReplayDocument
     {
+        public ReplayDocument() { }
+
         public int FormatVersion { get; init; }
         public int Seed { get; init; }
         public int Width { get; init; }
