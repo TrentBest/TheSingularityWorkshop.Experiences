@@ -32,10 +32,11 @@ public sealed class CapsuleBoardTests
         var board = new CapsuleBoard(width: 4, height: 4);
         Assert.True(board.TryPlaceVirus(0, 0, CapsuleColor.Red));
         Assert.True(board.TryPlaceCapsule(new CapsulePair(CapsuleColor.Red, CapsuleColor.Red), 1, 0, CapsuleOrientation.Horizontal));
+        Assert.True(board.TryPlaceVirus(3, 0, CapsuleColor.Red));
 
         var result = board.ResolveMatchesAndGravity();
 
-        Assert.Equal(new ResolutionResult(1, 3, 1), result);
+        Assert.Equal(new ResolutionResult(1, 4, 2), result);
         Assert.Equal(0, board.OccupiedCount);
     }
 
@@ -53,7 +54,7 @@ public sealed class CapsuleBoardTests
         Assert.Equal(1, result.ChainCount);
         Assert.Equal(4, result.CellsCleared);
         Assert.Equal(3, result.VirusesCleared);
-        Assert.Equal(new PuzzleCell(CapsuleColor.Yellow, false), board.GetCell(0, 4));
+        Assert.Equal(new PuzzleCell(CapsuleColor.Yellow, false), board.GetCell(0, 0));
     }
 
     [Fact]
