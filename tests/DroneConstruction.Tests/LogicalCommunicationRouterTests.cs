@@ -54,6 +54,48 @@ public sealed class LogicalCommunicationRouterTests
         Assert.Empty(router.GetRecipients(Message(channel, 1, 0, 5), currentTick: 1));
     }
 
+    [Fact]
+    public void HandoffEstablishesDestinationBeforeRemovingSourceMembership()
+    {
+        var router = new LogicalCommunicationRouter();
+        var oldLane = new LogicalCommunicationChannelKey("region", "layer", "lane-old");
+        var newLane = new LogicalCommunicationChannelKey("region", "layer", "lane-new");
+        router.TrySubscribe(oldLane, 7);
+        router.TrySubscribe(oldLane, 9);
+
+        Assert.True(router.TryHandoff(oldLane, newLane, 7));
+
+        Assert.Equal(new ulong[] { 9 }, router.GetSubscribers(oldLane));
+        Assert.Equal(new ulong[] { 7 }, router.GetSubscribers(newLane));
+        Assert.Equal(2, router.SubscriptionCount);
+    }
+
+    [Fact]
+    public void HandoffFailsWithoutChangingMembershipWhenSourceSubscriptionIsMissing()
+    {
+        var router = new LogicalCommunicationRouter();
+        var oldLane = new LogicalCommunicationChannelKey("region", "layer", "lane-old");
+        var newLane = new LogicalCommunicationChannelKey("region", "layer", "lane-new");
+        router.TrySubscribe(newLane, 7);
+
+        Assert.False(router.TryHandoff(oldLane, newLane, 7));
+        Assert.Equal(new ulong[] { 7 }, router.GetSubscribers(newLane));
+        Assert.Empty(router.GetSubscribers(oldLane));
+    }
+
+    [Fact]
+    public void HandoffToSameChannelIsIdempotentAndInvalidIdentityIsRejected()
+    {
+        var router = new LogicalCommunicationRouter();
+        var lane = new LogicalCommunicationChannelKey("region", "layer", "lane");
+        router.TrySubscribe(lane, 7);
+
+        Assert.True(router.TryHandoff(lane, lane, 7));
+        Assert.False(router.TryHandoff(lane, lane, 0));
+        Assert.Equal(new ulong[] { 7 }, router.GetSubscribers(lane));
+        Assert.Equal(1, router.SubscriptionCount);
+    }
+
     private static CommunicationMessageEnvelope Message(
         LogicalCommunicationChannelKey channel, ulong senderId, long createdTick, long expiresAtTick) =>
         new(channel, senderId, sequence: 0, createdTick, expiresAtTick,
