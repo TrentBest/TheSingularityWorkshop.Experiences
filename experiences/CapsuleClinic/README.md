@@ -6,7 +6,7 @@
 
 Capsule Clinic is an original Workshop project in the falling-capsule puzzle genre. The aim is to combine a quick-to-understand game with an architecture visitors can explore: one rules engine, explicit match rules, replaceable presentation, and a small, inspectable multiplayer boundary.
 
-This page describes the intended Experience. It is **not yet a claim that a playable game or networked match exists**.
+The deterministic board and initial game-loop core now exist with focused tests. A complete playable presentation and networked match do not yet exist.
 
 ## 01 — What
 
@@ -57,7 +57,7 @@ Each stage should remain useful and testable. Real sockets should come after the
 
 ### Current status
 
-**Stage: definition and architecture.** The Experience has an identity, ownership boundaries, and a staged acceptance plan. The playable engine, UI, multiplayer transport, replay, and benchmarks are not yet implemented by this definition alone.
+**Stage: deterministic core in progress.** Board placement, four-in-a-row resolution, gravity, seeded piece generation, and a basic falling-capsule loop have been added with tests. A finished UI, scoring/progression, versus rules, network transport, replay, and benchmarks remain outstanding. CI validation is pending.
 
 ---
 
