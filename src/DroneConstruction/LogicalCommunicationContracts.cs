@@ -1,33 +1,80 @@
 namespace TheSingularityWorkshop.Experiences.DroneConstruction;
 
+/// <summary>Defines the audience represented by a logical communication channel key.</summary>
+public enum LogicalCommunicationScopeKind
+{
+    /// <summary>Participants admitted to one specific lane.</summary>
+    Lane = 0,
+    /// <summary>Participants coordinating within one region and layer, across lanes.</summary>
+    LayerCoordination = 1,
+    /// <summary>Region-level operational control audience.</summary>
+    RegionControl = 2,
+    /// <summary>Region-level emergency audience that is independent of lane membership.</summary>
+    Emergency = 3
+}
+
 /// <summary>
-/// Stable logical routing identity for a region, layer, and lane. This is not a physical radio frequency.
+/// Stable logical routing identity for a lane or an explicitly broader coordination audience.
+/// This identity is not a physical radio frequency or an airspace admission grant.
 /// </summary>
 public sealed record LogicalCommunicationChannelKey
 {
-    /// <summary>Creates a channel identity scoped to one region, layer, and lane.</summary>
+    /// <summary>Creates a lane channel scoped to one region, layer, and lane.</summary>
     public LogicalCommunicationChannelKey(string regionId, string layerId, string laneId)
+        : this(LogicalCommunicationScopeKind.Lane, regionId, layerId, laneId)
     {
+    }
+
+    /// <summary>
+    /// Creates a channel key with scope-specific identity. Lane requires region, layer, and lane;
+    /// layer coordination requires region and layer; region control and emergency require region only.
+    /// </summary>
+    public LogicalCommunicationChannelKey(
+        LogicalCommunicationScopeKind scopeKind,
+        string regionId,
+        string? layerId = null,
+        string? laneId = null)
+    {
+        if (!Enum.IsDefined(scopeKind))
+            throw new ArgumentOutOfRangeException(nameof(scopeKind));
         if (string.IsNullOrWhiteSpace(regionId))
             throw new ArgumentException("A stable region identity is required.", nameof(regionId));
-        if (string.IsNullOrWhiteSpace(layerId))
-            throw new ArgumentException("A stable layer identity is required.", nameof(layerId));
-        if (string.IsNullOrWhiteSpace(laneId))
-            throw new ArgumentException("A stable lane identity is required.", nameof(laneId));
 
+        switch (scopeKind)
+        {
+            case LogicalCommunicationScopeKind.Lane:
+                if (string.IsNullOrWhiteSpace(layerId))
+                    throw new ArgumentException("A stable layer identity is required for a lane channel.", nameof(layerId));
+                if (string.IsNullOrWhiteSpace(laneId))
+                    throw new ArgumentException("A stable lane identity is required for a lane channel.", nameof(laneId));
+                break;
+            case LogicalCommunicationScopeKind.LayerCoordination:
+                if (string.IsNullOrWhiteSpace(layerId))
+                    throw new ArgumentException("A stable layer identity is required for layer coordination.", nameof(layerId));
+                if (laneId is not null)
+                    throw new ArgumentException("Layer coordination is not lane-specific.", nameof(laneId));
+                break;
+            case LogicalCommunicationScopeKind.RegionControl:
+            case LogicalCommunicationScopeKind.Emergency:
+                if (layerId is not null || laneId is not null)
+                    throw new ArgumentException("Region-level scopes must not specify a layer or lane.");
+                break;
+        }
+
+        ScopeKind = scopeKind;
         RegionId = regionId;
         LayerId = layerId;
         LaneId = laneId;
     }
 
+    /// <summary>Gets the audience scope represented by this key.</summary>
+    public LogicalCommunicationScopeKind ScopeKind { get; }
     /// <summary>Gets the stable region identity.</summary>
     public string RegionId { get; }
-
-    /// <summary>Gets the stable layer identity.</summary>
-    public string LayerId { get; }
-
-    /// <summary>Gets the stable lane identity.</summary>
-    public string LaneId { get; }
+    /// <summary>Gets the stable layer identity, or null for region-level scopes.</summary>
+    public string? LayerId { get; }
+    /// <summary>Gets the stable lane identity, or null when the scope spans lanes.</summary>
+    public string? LaneId { get; }
 }
 
 /// <summary>Classifies delivery priority independently of any physical transport.</summary>
