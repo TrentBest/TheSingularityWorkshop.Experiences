@@ -8,7 +8,7 @@ public sealed class CapsuleArenaSnapshotTests
     [Fact]
     public void CaptureCombinesAuthoritativeStandingsAndBoardSnapshotsInFixedPaneOrder()
     {
-        var room = new AuthoritativePuzzleRoom("arena");
+        using var room = new AuthoritativePuzzleRoom("arena");
         Assert.True(room.JoinPlayer("alice", 101));
         Assert.True(room.JoinPlayer("bob", 202));
         Assert.True(room.JoinPlayer("carol", 303));
@@ -39,7 +39,7 @@ public sealed class CapsuleArenaSnapshotTests
     [Fact]
     public void CaptureRejectsLocalPlayerWhoHasNotJoinedTheActiveMatchRoster()
     {
-        var room = new AuthoritativePuzzleRoom("arena");
+        using var room = new AuthoritativePuzzleRoom("arena");
         Assert.True(room.JoinPlayer("alice", 101));
         Assert.True(room.JoinPlayer("bob", 202));
         Assert.True(room.StartMatch());
@@ -50,7 +50,7 @@ public sealed class CapsuleArenaSnapshotTests
     [Fact]
     public void CaptureDoesNotExposeBoardsForPlayersOutsideSelectedPanes()
     {
-        var room = new AuthoritativePuzzleRoom("arena");
+        using var room = new AuthoritativePuzzleRoom("arena");
         for (var index = 1; index <= 8; index++)
             Assert.True(room.JoinPlayer($"p{index}", index));
         Assert.True(room.StartMatch());
