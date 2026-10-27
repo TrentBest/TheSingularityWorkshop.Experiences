@@ -70,7 +70,7 @@ The WebApp is the intended distribution and discovery surface; the Experiences r
 
 **Why visit:** a familiar puzzle becomes a hands-on lesson in deterministic simulation, authoritative multiplayer, replay, and reusable game rules.
 
-**Current truth:** the Experience definition and acceptance plan exist, and an initial deterministic board/game-loop core with focused tests has been added. A complete playable presentation, versus rules, real network transport, and replay are not yet implemented.
+**Current truth:** the deterministic board/game-loop core and an in-process authoritative command-validation contract have been added with focused tests. A complete playable presentation, versus rules, real network transport, and replay are not yet implemented.
 
 - [Experience home](CapsuleClinic/README.md)
 - [Game and networking contract](CapsuleClinic/design/EXPERIENCE.md)
