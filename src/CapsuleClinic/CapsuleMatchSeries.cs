@@ -100,10 +100,6 @@ public sealed class CapsuleMatchSeries
     /// <summary>Returns a standings snapshot with current round rank and cumulative round wins.</summary>
     public IReadOnlyList<ArenaPlayerStanding> GetStandings()
     {
-        var active = State == CapsuleMatchState.InRound
-            ? new HashSet<string>(StringComparer.Ordinal)
-            : new HashSet<string>(StringComparer.Ordinal);
-
         var ordered = _players
             .OrderByDescending(pair => pair.Value.RoundsWon)
             .ThenBy(pair => pair.Value.JoinOrder)
@@ -112,7 +108,7 @@ public sealed class CapsuleMatchSeries
 
         return Array.AsReadOnly(ordered.Select((pair, index) =>
             new ArenaPlayerStanding(pair.Key, index + 1, pair.Value.RoundsWon, pair.Value.JoinOrder,
-                State == CapsuleMatchState.InRound ? active.Contains(pair.Key) : true)).ToArray());
+                true)).ToArray());
     }
 
     private sealed class PlayerStandingState(int joinOrder)
