@@ -1,5 +1,6 @@
 using System.Threading;
 using TheSingularityWorkshop.FSM_API;
+using FsmRuntime = TheSingularityWorkshop.FSM_API.FSM_API;
 
 namespace TheSingularityWorkshop.Experiences.CapsuleClinic;
 
@@ -60,7 +61,7 @@ public sealed class CapsuleGame : IStateContext, IDisposable
         IsValid = true;
         SpawnNext();
         EnsureFsmDefinition();
-        _fsmHandle = FSM_API.Create.CreateInstance(FsmDefinitionName, this, ProcessingGroup);
+        _fsmHandle = FsmRuntime.Create.CreateInstance(FsmDefinitionName, this, ProcessingGroup);
     }
 
     /// <summary>Gets the diagnostic identity of this game context.</summary>
@@ -107,11 +108,11 @@ public sealed class CapsuleGame : IStateContext, IDisposable
     {
         lock (DefinitionGate)
         {
-            if (FSM_API.Interaction.Exists(FsmDefinitionName, ProcessingGroup))
+            if (FsmRuntime.Interaction.Exists(FsmDefinitionName, ProcessingGroup))
                 return;
 
-            FSM_API.Create.CreateProcessingGroup(ProcessingGroup);
-            FSM_API.Create.CreateFiniteStateMachine(FsmDefinitionName, -1, ProcessingGroup)
+            FsmRuntime.Create.CreateProcessingGroup(ProcessingGroup);
+            FsmRuntime.Create.CreateFiniteStateMachine(FsmDefinitionName, -1, ProcessingGroup)
                 .State("Falling", null, ProcessFallingState, null)
                 .State("GameOver", null, null, null)
                 .WithInitialState("Falling")
@@ -233,7 +234,7 @@ public sealed class CapsuleGame : IStateContext, IDisposable
         if (_disposed) return;
         _disposed = true;
         IsValid = false;
-        FSM_API.Interaction.DestroyInstance(_fsmHandle);
+        FsmRuntime.Interaction.DestroyInstance(_fsmHandle);
     }
 
     private sealed class SeededColorGenerator
