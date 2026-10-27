@@ -112,10 +112,12 @@ public sealed class AuthoritativePuzzleRoom : IDisposable
         if (string.IsNullOrWhiteSpace(playerId)) throw new ArgumentException("Player ID must not be blank.", nameof(playerId));
         if ((_series is not null && _series.State != CapsuleMatchState.WaitingForPlayers) ||
             (MaxPlayers is int capacity && _players.Count >= capacity) || _players.ContainsKey(playerId)) return false;
-        _players.Add(playerId, new PlayerState(seed, new CapsuleGame(seed, Width, Height)));
+        var game = new CapsuleGame(seed, Width, Height);
+        _players.Add(playerId, new PlayerState(seed, game));
         if (_series is not null && !_series.JoinPlayer(playerId))
         {
             _players.Remove(playerId);
+            game.Dispose();
             return false;
         }
         return true;
