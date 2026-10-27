@@ -12,7 +12,10 @@ namespace TheSingularityWorkshop.Experiences.CapsuleClinic;
 /// </remarks>
 public sealed class CapsuleReplay
 {
+    /// <summary>Gets the current serialized replay format version.</summary>
     public const int CurrentFormatVersion = 1;
+
+    /// <summary>Maximum number of actions accepted in one replay.</summary>
     public const int MaximumActions = 100_000;
 
     private static readonly JsonSerializerOptions SerializerOptions = new()
@@ -23,6 +26,11 @@ public sealed class CapsuleReplay
 
     private readonly CapsuleAction[] _actions;
 
+    /// <summary>Creates a replay with the supplied deterministic initial conditions and optional actions.</summary>
+    /// <param name="seed">Seed used to generate capsule colors.</param>
+    /// <param name="width">Board width in cells.</param>
+    /// <param name="height">Board height in cells.</param>
+    /// <param name="actions">Optional ordered action stream.</param>
     public CapsuleReplay(int seed, int width = 8, int height = 16, IEnumerable<CapsuleAction>? actions = null)
     {
         if (width < 1) throw new ArgumentOutOfRangeException(nameof(width));
@@ -38,8 +46,13 @@ public sealed class CapsuleReplay
     /// <summary>Gets the replay format version, independent of the game rules version.</summary>
     public int FormatVersion => CurrentFormatVersion;
 
+    /// <summary>Gets the deterministic capsule-color seed.</summary>
     public int Seed { get; }
+
+    /// <summary>Gets the initial board width in cells.</summary>
     public int Width { get; }
+
+    /// <summary>Gets the initial board height in cells.</summary>
     public int Height { get; }
 
     /// <summary>Gets a read-only copy of the ordered action stream.</summary>
