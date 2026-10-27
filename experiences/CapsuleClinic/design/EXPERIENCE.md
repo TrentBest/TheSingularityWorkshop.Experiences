@@ -156,7 +156,7 @@ Each example must identify the files changed and the tests that verify the behav
 
 The canonical acceptance checklist is [issue #22](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/issues/22). Keep it open until there is evidence for the required behaviors.
 
-Current state: **deterministic core in progress**. `CapsuleBoard` and `CapsuleGame` now implement atomic placement, four-in-a-row resolution, gravity, seeded piece generation, and a basic falling-capsule action loop with focused tests. A complete UI, scoring/progression, versus rules, real network transport, replay, and benchmarks are not yet implemented. CI validation is pending.
+Current state: **deterministic core and in-process authority contract in progress**. `CapsuleBoard` and `CapsuleGame` implement atomic placement, four-in-a-row resolution, gravity, seeded piece generation, and a basic falling-capsule action loop with focused tests. `AuthoritativePuzzleRoom` adds a versioned command envelope, bounded room membership, host-supplied authenticated-player identity matching, and monotonic per-player command sequencing. It is an in-process contract—not a socket server, authentication provider, or production security boundary. A complete UI, scoring/progression, versus rules, real network transport, replay, and benchmarks are not yet implemented. CI validation is pending.
 
 ---
 
