@@ -64,6 +64,18 @@ The WebApp is the intended distribution and discovery surface; the Experiences r
 - [Implementation and tests](../src/MarbleRun/)
 - [Physics/MicroBundle boundary and milestones](../docs/MARBLE_RUN_AND_DOMINO_MICROBUNDLE_BOUNDARY.md)
 
+### Capsule Clinic — arcade puzzles and multiplayer networking
+
+**Try:** clear viruses with falling two-color capsules, then challenge another player in a versus match.
+
+**Why visit:** a familiar puzzle becomes a hands-on lesson in deterministic simulation, authoritative multiplayer, replay, and reusable game rules.
+
+**Current truth:** the Experience definition and acceptance plan exist; the playable engine, presentation, real network transport, and replay are not yet implemented.
+
+- [Experience home](CapsuleClinic/README.md)
+- [Game and networking contract](CapsuleClinic/design/EXPERIENCE.md)
+- [Implementation milestones](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/issues/22)
+
 ## The exhibit pattern
 
 Give every exhibit the same approachable loop:
