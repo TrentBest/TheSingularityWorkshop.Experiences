@@ -76,21 +76,22 @@ public static class ArenaPaneSelector
         }
         else
         {
-            var active = ranked.Where(p => p.IsActive && !string.Equals(p.PlayerId, localPlayerId, StringComparison.Ordinal)).ToArray();
-            var localIndex = Array.FindIndex(ranked, p => string.Equals(p.PlayerId, localPlayerId, StringComparison.Ordinal));
-            var topFour = ranked.Take(4).ToArray();
+            var activeRanked = ranked.Where(p => p.IsActive).ToArray();
+            var active = activeRanked.Where(p => !string.Equals(p.PlayerId, localPlayerId, StringComparison.Ordinal)).ToArray();
+            var localActiveIndex = Array.FindIndex(activeRanked, p => string.Equals(p.PlayerId, localPlayerId, StringComparison.Ordinal));
 
             IEnumerable<ArenaPlayerStanding> candidates;
-            if (localIndex < 4)
+            if (localActiveIndex >= 0 && localActiveIndex < 4)
             {
-                candidates = topFour.Where(p => !string.Equals(p.PlayerId, localPlayerId, StringComparison.Ordinal));
+                candidates = activeRanked.Take(4).Where(p => !string.Equals(p.PlayerId, localPlayerId, StringComparison.Ordinal));
             }
             else
             {
                 var neighbors = new List<ArenaPlayerStanding>();
-                var previous = ranked.Take(localIndex).LastOrDefault(p => p.IsActive);
-                var next = ranked.Skip(localIndex + 1).FirstOrDefault(p => p.IsActive);
-                var leader = ranked.FirstOrDefault(p => p.IsActive && !string.Equals(p.PlayerId, localPlayerId, StringComparison.Ordinal));
+                var localRankIndex = Array.FindIndex(ranked, p => string.Equals(p.PlayerId, localPlayerId, StringComparison.Ordinal));
+                var previous = ranked.Take(localRankIndex).LastOrDefault(p => p.IsActive);
+                var next = ranked.Skip(localRankIndex + 1).FirstOrDefault(p => p.IsActive);
+                var leader = activeRanked.FirstOrDefault(p => !string.Equals(p.PlayerId, localPlayerId, StringComparison.Ordinal));
                 if (leader is not null) neighbors.Add(leader);
                 if (previous is not null) neighbors.Add(previous);
                 if (next is not null) neighbors.Add(next);
