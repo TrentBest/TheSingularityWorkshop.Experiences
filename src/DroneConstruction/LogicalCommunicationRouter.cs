@@ -30,6 +30,59 @@ public sealed class LogicalCommunicationRouter
         return subscribers.Add(subscriberId);
     }
 
+    /// <summary>
+    /// Moves a subscriber from one logical channel to another without removing the old subscription
+    /// before the new subscription is established. This is a single logical operation in this
+    /// in-memory registry, not a thread-safety or physical-delivery guarantee.
+    /// </summary>
+    /// <returns>
+    /// True when the subscriber was already on the same channel or the handoff completed; false
+    /// when the subscriber identity is invalid or the old subscription does not exist.
+    /// </returns>
+    public bool TryHandoff(
+        LogicalCommunicationChannelKey currentChannel,
+        LogicalCommunicationChannelKey nextChannel,
+        ulong subscriberId)
+    {
+        ArgumentNullException.ThrowIfNull(currentChannel);
+        ArgumentNullException.ThrowIfNull(nextChannel);
+        if (subscriberId == 0)
+            return false;
+
+        if (!_subscribers.TryGetValue(currentChannel, out var currentSubscribers)
+            || !currentSubscribers.Contains(subscriberId))
+            return false;
+
+        if (currentChannel == nextChannel)
+            return true;
+
+        // Establish the destination first so there is no logical subscription gap.
+        var addedDestinationBucket = false;
+        if (!_subscribers.TryGetValue(nextChannel, out var nextSubscribers))
+        {
+            nextSubscribers = new SortedSet<ulong>();
+            _subscribers.Add(nextChannel, nextSubscribers);
+            addedDestinationBucket = true;
+        }
+
+        var addedDestinationSubscription = nextSubscribers.Add(subscriberId);
+
+        // The current membership was verified above; remove it only after destination membership exists.
+        if (!currentSubscribers.Remove(subscriberId))
+        {
+            if (addedDestinationSubscription)
+                nextSubscribers.Remove(subscriberId);
+            if (addedDestinationBucket && nextSubscribers.Count == 0)
+                _subscribers.Remove(nextChannel);
+            return false;
+        }
+
+        if (currentSubscribers.Count == 0)
+            _subscribers.Remove(currentChannel);
+
+        return true;
+    }
+
     /// <summary>Removes one subscription and removes an empty channel bucket.</summary>
     public bool TryUnsubscribe(LogicalCommunicationChannelKey channel, ulong subscriberId)
     {
