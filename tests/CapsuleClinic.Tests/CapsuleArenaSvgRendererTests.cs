@@ -56,7 +56,7 @@ public sealed class CapsuleArenaSvgRendererTests
 
         Assert.Equal(10, snapshot.BoardWidth);
         Assert.Equal(20, snapshot.BoardHeight);
-        Assert.Equal(200, CountOccurrences(svg, "stroke=\"#273949\""));
+        Assert.Equal(400, CountOccurrences(svg, "stroke=\"#273949\""));
     }
 
     private static int CountOccurrences(string value, string fragment)
