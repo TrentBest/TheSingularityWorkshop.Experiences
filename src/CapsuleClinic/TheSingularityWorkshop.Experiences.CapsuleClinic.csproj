@@ -18,6 +18,7 @@
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="TheSingularityWorkshop.FSM_API" Version="1.0.13" />
     <None Include="../../experiences/CapsuleClinic/README.md" Pack="true" PackagePath="README.md" Link="README.md" />
   </ItemGroup>
 </Project>
