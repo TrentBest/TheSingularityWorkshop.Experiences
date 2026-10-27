@@ -29,7 +29,9 @@ public enum CommandRejection
     /// <summary>The command sequence is duplicate, out of order, or exhausted.</summary>
     InvalidSequence,
     /// <summary>The action value is not defined by this protocol version.</summary>
-    InvalidAction
+    InvalidAction,
+    /// <summary>The match is not currently accepting commands for an active round.</summary>
+    MatchNotInRound
 }
 
 /// <summary>The authoritative decision for a received command.</summary>
@@ -67,6 +69,7 @@ public sealed record PuzzlePlayerView(
 public sealed class AuthoritativePuzzleRoom
 {
     private readonly Dictionary<string, PlayerState> _players = new(StringComparer.Ordinal);
+    private CapsuleMatchSeries? _series;
 
     /// <summary>Creates a room. An optional capacity is an operational admission safeguard, not a gameplay limit.</summary>
     /// <remarks>When <paramref name="maxPlayers"/> is omitted, the room imposes no product-level player cap.</remarks>
@@ -107,9 +110,83 @@ public sealed class AuthoritativePuzzleRoom
     public bool JoinPlayer(string playerId, int seed)
     {
         if (string.IsNullOrWhiteSpace(playerId)) throw new ArgumentException("Player ID must not be blank.", nameof(playerId));
-        if ((MaxPlayers is int capacity && _players.Count >= capacity) || _players.ContainsKey(playerId)) return false;
-        _players.Add(playerId, new PlayerState(new CapsuleGame(seed, Width, Height)));
+        if ((_series is not null && _series.State != CapsuleMatchState.WaitingForPlayers) ||
+            (MaxPlayers is int capacity && _players.Count >= capacity) || _players.ContainsKey(playerId)) return false;
+        _players.Add(playerId, new PlayerState(seed, new CapsuleGame(seed, Width, Height)));
+        if (_series is not null && !_series.JoinPlayer(playerId))
+        {
+            _players.Remove(playerId);
+            return false;
+        }
         return true;
+    }
+
+    /// <summary>Gets the match-series lifecycle, or null until the host starts a match.</summary>
+    public CapsuleMatchState? MatchState => _series?.State;
+
+    /// <summary>Gets the authoritative match winner after the configured series is complete.</summary>
+    public string? MatchWinnerPlayerId => _series?.MatchWinnerPlayerId;
+
+    /// <summary>Starts a best-of series using the players already joined to this room.</summary>
+    /// <param name="roundsToWin">Number of round wins required to win the match.</param>
+    /// <returns>True when at least two players are present and the series starts.</returns>
+    public bool StartMatch(int roundsToWin = 3)
+    {
+        if (_series is not null || _players.Count < 2) return false;
+        if (roundsToWin < 1) throw new ArgumentOutOfRangeException(nameof(roundsToWin));
+
+        var series = new CapsuleMatchSeries(roundsToWin);
+        foreach (var playerId in _players.Keys)
+        {
+            if (!series.JoinPlayer(playerId))
+                throw new InvalidOperationException("The room roster could not be registered with the match series.");
+        }
+
+        if (!series.StartMatch()) return false;
+        _series = series;
+        return true;
+    }
+
+    /// <summary>
+    /// Evaluates the round once at the host's simulation boundary, after all commands for that tick
+    /// have been applied. The round completes only when zero or one players remain alive.
+    /// </summary>
+    /// <returns>The recorded round result when the round ends; otherwise null.</returns>
+    public CapsuleRoundResult? EvaluateRoundAtHostBoundary()
+    {
+        if (_series is null || _series.State != CapsuleMatchState.InRound) return null;
+
+        var activePlayerIds = _players
+            .Where(pair => !pair.Value.Game.GameOver)
+            .Select(pair => pair.Key)
+            .ToArray();
+        if (activePlayerIds.Length > 1) return null;
+
+        return _series.CompleteRound(activePlayerIds);
+    }
+
+    /// <summary>Starts the next round, rebuilding each board while preserving scores and command sequences.</summary>
+    public bool StartNextRound()
+    {
+        if (_series is null || !_series.StartNextRound()) return false;
+
+        foreach (var player in _players)
+        {
+            var roundSeed = DeriveRoundSeed(player.Value.OriginalSeed, _series.RoundNumber);
+            player.Value.Game = new CapsuleGame(roundSeed, Width, Height);
+        }
+        return true;
+    }
+
+    /// <summary>Returns current round ranks and cumulative round wins with alive state from authoritative games.</summary>
+    public IReadOnlyList<ArenaPlayerStanding> GetStandings()
+    {
+        if (_series is null) return Array.Empty<ArenaPlayerStanding>();
+
+        var aliveById = _players.ToDictionary(pair => pair.Key, pair => !pair.Value.Game.GameOver, StringComparer.Ordinal);
+        return Array.AsReadOnly(_series.GetStandings()
+            .Select(standing => standing with { IsActive = aliveById[standing.PlayerId] })
+            .ToArray());
     }
 
     /// <summary>
@@ -128,6 +205,8 @@ public sealed class AuthoritativePuzzleRoom
             return Reject(CommandRejection.IdentityMismatch, command.Sequence);
         if (!_players.TryGetValue(authenticatedPlayerId, out var player))
             return Reject(CommandRejection.PlayerNotJoined, command.Sequence);
+        if (_series is not null && _series.State != CapsuleMatchState.InRound)
+            return Reject(CommandRejection.MatchNotInRound, command.Sequence);
         if (!Enum.IsDefined(command.Action))
             return Reject(CommandRejection.InvalidAction, command.Sequence);
         if (player.LastAcceptedSequence == ulong.MaxValue || command.Sequence != player.LastAcceptedSequence + 1)
@@ -152,12 +231,27 @@ public sealed class AuthoritativePuzzleRoom
             player.LastAcceptedSequence);
     }
 
+    private static int DeriveRoundSeed(int originalSeed, int roundNumber)
+    {
+        unchecked
+        {
+            uint value = (uint)originalSeed ^ ((uint)roundNumber * 0x9E3779B9u);
+            value ^= value >> 16;
+            value *= 0x7FEB352Du;
+            value ^= value >> 15;
+            value *= 0x846CA68Bu;
+            value ^= value >> 16;
+            return (int)value;
+        }
+    }
+
     private static GameCommandDecision Reject(CommandRejection reason, ulong sequence) =>
         new(false, reason, sequence, default);
 
-    private sealed class PlayerState(CapsuleGame game)
+    private sealed class PlayerState(int originalSeed, CapsuleGame game)
     {
-        public CapsuleGame Game { get; } = game;
+        public int OriginalSeed { get; } = originalSeed;
+        public CapsuleGame Game { get; set; } = game;
         public ulong LastAcceptedSequence { get; set; }
     }
 }
