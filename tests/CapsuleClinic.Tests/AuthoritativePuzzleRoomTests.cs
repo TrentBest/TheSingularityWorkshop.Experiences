@@ -117,8 +117,9 @@ public sealed class AuthoritativePuzzleRoomTests
             new GameCommandEnvelope(1, "match-room", "alice", 1, CapsuleAction.HardDrop));
         Assert.True(aliceDrop.Accepted);
         Assert.True(aliceDrop.Step.GameOver);
-        Assert.Null(room.EvaluateRoundAtHostBoundary());
 
+        // The host evaluates only after all commands for this tick, so simultaneous
+        // eliminations are scored as a draw rather than awarding a command-order win.
         var bobDrop = room.ApplyCommand("bob",
             new GameCommandEnvelope(1, "match-room", "bob", 1, CapsuleAction.HardDrop));
         Assert.True(bobDrop.Accepted);
