@@ -24,6 +24,29 @@ public sealed class LogicalCommunicationRouterTests
     }
 
     [Fact]
+    public void BroadCoordinationRequiresExplicitMembershipAndDoesNotLeakLaneTraffic()
+    {
+        var router = new LogicalCommunicationRouter();
+        var laneA = new LogicalCommunicationChannelKey("region", "layer", "lane-a");
+        var laneB = new LogicalCommunicationChannelKey("region", "layer", "lane-b");
+        var layerCoordination = new LogicalCommunicationChannelKey(
+            LogicalCommunicationScopeKind.LayerCoordination, "region", "layer");
+
+        router.TrySubscribe(laneA, 1);
+        router.TrySubscribe(laneA, 2);
+        router.TrySubscribe(laneB, 3);
+        router.TrySubscribe(layerCoordination, 3);
+        router.TrySubscribe(layerCoordination, 4);
+
+        var laneMessage = Message(laneA, senderId: 1, createdTick: 0, expiresAtTick: 5);
+        var coordinationMessage = Message(layerCoordination, senderId: 4, createdTick: 0, expiresAtTick: 5);
+
+        Assert.Equal(new ulong[] { 2 }, router.GetRecipients(laneMessage, currentTick: 1));
+        Assert.Equal(new ulong[] { 3 }, router.GetRecipients(coordinationMessage, currentTick: 1));
+        Assert.DoesNotContain((ulong)2, router.GetRecipients(coordinationMessage, currentTick: 1));
+    }
+
+    [Fact]
     public void SubscriptionChangesAreExplicitAndRemoveEmptyChannels()
     {
         var router = new LogicalCommunicationRouter();
