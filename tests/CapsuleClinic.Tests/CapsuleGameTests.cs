@@ -6,10 +6,35 @@ namespace TheSingularityWorkshop.Experiences.CapsuleClinic.Tests;
 public sealed class CapsuleGameTests
 {
     [Fact]
+    public void GameLifecycleIsOwnedByFsmApi()
+    {
+        using var game = new CapsuleGame(seed: 91);
+
+        Assert.Equal("Falling", game.FsmState);
+        var result = game.Step(CapsuleAction.MoveLeft);
+
+        Assert.True(result.ActionAccepted);
+        Assert.Equal("Falling", game.FsmState);
+        Assert.True(game.IsValid);
+    }
+
+    [Fact]
+    public void InitiallyToppedOutGameTransitionsToGameOverState()
+    {
+        using var game = new CapsuleGame(seed: 91, width: 4, height: 1);
+
+        Assert.True(game.GameOver);
+        Assert.Equal("Falling", game.FsmState);
+
+        game.Step(CapsuleAction.Tick);
+
+        Assert.Equal("GameOver", game.FsmState);
+    }
+    [Fact]
     public void SameSeedAndActionsProduceSameActiveStateAndBoard()
     {
-        var first = new CapsuleGame(seed: 1234);
-        var second = new CapsuleGame(seed: 1234);
+        using var first = new CapsuleGame(seed: 1234);
+        using var second = new CapsuleGame(seed: 1234);
         var actions = new[] { CapsuleAction.MoveLeft, CapsuleAction.Rotate, CapsuleAction.HardDrop, CapsuleAction.MoveRight, CapsuleAction.Tick };
 
         foreach (var action in actions)
@@ -25,7 +50,7 @@ public sealed class CapsuleGameTests
     [Fact]
     public void HardDropLocksCapsuleAndSpawnsNextPiece()
     {
-        var game = new CapsuleGame(seed: 7);
+        using var game = new CapsuleGame(seed: 7);
 
         var result = game.Step(CapsuleAction.HardDrop);
 
@@ -39,7 +64,7 @@ public sealed class CapsuleGameTests
     [Fact]
     public void MovementRejectsWallCollisionWithoutChangingActivePiece()
     {
-        var game = new CapsuleGame(seed: 42, width: 4, height: 8);
+        using var game = new CapsuleGame(seed: 42, width: 4, height: 8);
         Assert.True(game.Step(CapsuleAction.MoveLeft).ActionAccepted);
         Assert.True(game.Step(CapsuleAction.MoveLeft).ActionAccepted);
         var atWall = game.Active;
@@ -53,7 +78,7 @@ public sealed class CapsuleGameTests
     [Fact]
     public void TooShortBoardStartsGameOverRatherThanSpawningInvalidPiece()
     {
-        var game = new CapsuleGame(seed: 1, width: 4, height: 1);
+        using var game = new CapsuleGame(seed: 1, width: 4, height: 1);
 
         Assert.True(game.GameOver);
         Assert.Null(game.Active);
@@ -63,7 +88,7 @@ public sealed class CapsuleGameTests
     [Fact]
     public void InvalidActionIsRejectedExplicitly()
     {
-        var game = new CapsuleGame(seed: 1);
+        using var game = new CapsuleGame(seed: 1);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => game.Step((CapsuleAction)99));
     }
