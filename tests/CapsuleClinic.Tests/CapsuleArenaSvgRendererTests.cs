@@ -44,6 +44,34 @@ public sealed class CapsuleArenaSvgRendererTests
     }
 
     [Fact]
+    public void RenderSupportsCustomBoardDimensions()
+    {
+        var room = new AuthoritativePuzzleRoom("custom-board", width: 10, height: 20);
+        Assert.True(room.JoinPlayer("alice", 101));
+        Assert.True(room.JoinPlayer("bob", 202));
+        Assert.True(room.StartMatch());
+
+        var snapshot = CapsuleArenaSnapshot.Capture(room, "alice");
+        var svg = CapsuleArenaSvgRenderer.Render(snapshot);
+
+        Assert.Equal(10, snapshot.BoardWidth);
+        Assert.Equal(20, snapshot.BoardHeight);
+        Assert.Equal(200, CountOccurrences(svg, "stroke=\"#273949\""));
+    }
+
+    private static int CountOccurrences(string value, string fragment)
+    {
+        var count = 0;
+        var offset = 0;
+        while ((offset = value.IndexOf(fragment, offset, StringComparison.Ordinal)) >= 0)
+        {
+            count++;
+            offset += fragment.Length;
+        }
+        return count;
+    }
+
+    [Fact]
     public void RenderRejectsSnapshotsThatDoNotDescribeFourPanes()
     {
         var snapshot = new CapsuleArenaSnapshot("alice", Array.Empty<CapsuleArenaPaneView>());
