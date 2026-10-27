@@ -27,6 +27,7 @@ public sealed class CapsuleReplayTests
         Assert.Equal(replay.Actions, restored.Actions);
         Assert.Equal(first.Game.Active, second.Game.Active);
         Assert.Equal(first.Game.GameOver, second.Game.GameOver);
+        Assert.Equal(first.Game.Score, second.Game.Score);
         Assert.Equal(first.Game.Board.Snapshot(), second.Game.Board.Snapshot());
         Assert.Equal(first.StepResults, second.StepResults);
     }
