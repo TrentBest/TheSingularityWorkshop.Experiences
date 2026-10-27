@@ -16,7 +16,9 @@ public sealed record CapsuleArenaPaneView(
 /// </remarks>
 public sealed record CapsuleArenaSnapshot(
     string LocalPlayerId,
-    IReadOnlyList<CapsuleArenaPaneView> Panes)
+    IReadOnlyList<CapsuleArenaPaneView> Panes,
+    int BoardWidth = 8,
+    int BoardHeight = 16)
 {
     /// <summary>
     /// Captures the selected arena panes from authoritative room standings and board snapshots.
@@ -43,6 +45,6 @@ public sealed record CapsuleArenaSnapshot(
                 room.GetPlayerView(assignment.PlayerId));
         }).ToArray();
 
-        return new CapsuleArenaSnapshot(localPlayerId, Array.AsReadOnly(panes));
+        return new CapsuleArenaSnapshot(localPlayerId, Array.AsReadOnly(panes), room.Width, room.Height);
     }
 }
