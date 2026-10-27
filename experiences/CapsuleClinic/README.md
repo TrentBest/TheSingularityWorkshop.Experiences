@@ -52,7 +52,7 @@ The room can contain more players than the local screen can show. The local view
 - With **1–4 players**, show every participant at once and leave unused panes empty.
 - With **5+ players**, keep the local player upper-left. If the local player is in the top four, show the other top-four contenders; otherwise show the leader and the local player's nearest active rank-neighbors. A full roster remains in the central standings.
 - Every standings row has two separate values: **current round rank** and **rounds won in the match series**. Example: #2 · 4 wins. The host owns these values; clients cannot submit their own score or rank.
-- “Unlimited players” means the four-pane UI and game model do not impose a four-player ceiling. The actual room limit must be a measured host/deployment policy, not an untested promise of infinite capacity.
+- **“Unlimited” means hardware-scaled, not mathematically infinite:** we do not impose an arbitrary product-level player cap. The room should support as many concurrent players as the host can sustain; stronger hardware can raise that capacity without changing the game or its four-pane layout. Load tests and runtime resource controls discover the practical envelope, and any emergency safety ceiling is operational protection—not a gameplay limit.
 
 The pure ArenaPaneSelector and its tests define the first selection policy. The rendered arena, central bar, standings lifecycle, and authoritative round scoring are still to be implemented.
 
