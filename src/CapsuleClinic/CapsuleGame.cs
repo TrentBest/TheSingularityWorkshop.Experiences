@@ -28,8 +28,8 @@ public readonly record struct GameStepResult(bool ActionAccepted, bool CapsuleLo
 /// </summary>
 /// <remarks>
 /// Piece generation uses a small specified PRNG rather than framework <see cref="Random"/> so a seed
-/// and action sequence are reproducible across supported runtimes. Wall kicks, scoring, and versus
-/// pressure are intentionally not part of this first loop.
+/// and action sequence are reproducible across supported runtimes. Scoring is deterministic and
+/// calculated from resolved cells; versus pressure remains a separate match-level concern.
 /// </remarks>
 public sealed class CapsuleGame
 {
@@ -49,6 +49,9 @@ public sealed class CapsuleGame
 
     /// <summary>Gets the active falling capsule, or null when the game is over.</summary>
     public ActiveCapsule? Active => _activeCapsule;
+
+    /// <summary>Gets the cumulative score for this game.</summary>
+    public int Score { get; private set; }
 
     /// <summary>Gets whether no further capsule can be spawned.</summary>
     public bool GameOver { get; private set; }
