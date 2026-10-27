@@ -58,6 +58,18 @@ public sealed class ArenaPaneSelectorTests
     }
 
     [Fact]
+    public void InactivePlayersAreNotSelectedAsLargeRoomComparisonBoards()
+    {
+        var standings = CreateStandings(6)
+            .Select(p => p.PlayerId == "p2" ? p with { IsActive = false } : p)
+            .ToArray();
+
+        var panes = ArenaPaneSelector.Select("p1", standings);
+
+        Assert.Equal(new[] { "p1", "p3", "p4", "p5" }, panes.Select(p => p.PlayerId));
+    }
+
+    [Fact]
     public void TiesUseJoinOrderThenOrdinalIdForStableSelection()
     {
         var standings = new[]
