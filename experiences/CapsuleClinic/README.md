@@ -6,7 +6,7 @@
 
 Capsule Clinic is an original Workshop project in the falling-capsule puzzle genre. The aim is to combine a quick-to-understand game with an architecture visitors can explore: one rules engine, explicit match rules, replaceable presentation, and a small, inspectable multiplayer boundary.
 
-The deterministic board and initial game-loop core now exist with focused tests. A complete playable presentation and networked match do not yet exist.
+The deterministic board and initial game-loop core now exist with focused tests, along with an in-process authority contract and a pure four-pane player-selection policy. The arena design supports all participants in rooms of up to four and rank-neighbor comparison panes for larger rooms; the actual visual layout and real networked match do not yet exist.
 
 ## 01 — What
 
@@ -57,7 +57,7 @@ Each stage should remain useful and testable. Real sockets should come after the
 
 ### Current status
 
-**Stage: deterministic core and in-process authority contract.** Board placement, four-in-a-row resolution, gravity, seeded piece generation, and a basic falling-capsule loop have been added with tests. An in-process room now validates protocol version, room/player identity, player capacity, and monotonically increasing command sequences before applying player intent. This is not a socket transport or authentication system. A finished UI, scoring/progression, versus rules, real transport, replay, and benchmarks remain outstanding. CI validation is pending.
+**Stage: deterministic core, authority contract, and arena-selection policy.** Board placement, four-in-a-row resolution, gravity, seeded piece generation, and a basic falling-capsule loop have been added with tests. An in-process room validates protocol version, room/player identity, player capacity, and monotonically increasing command sequences. A pure arena selector now specifies a fixed local upper-left pane, complete visibility for rooms of up to four, and leader/neighbor panes for larger rooms. The rendered 2×2 arena, wider central standings bar, authoritative round ranking/round-win scoring, finished solo loop, versus rules, real transport, replay, and benchmarks remain outstanding. CI validation is pending.
 
 ---
 
