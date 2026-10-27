@@ -57,7 +57,7 @@ Each stage should remain useful and testable. Real sockets should come after the
 
 ### Current status
 
-**Stage: deterministic core in progress.** Board placement, four-in-a-row resolution, gravity, seeded piece generation, and a basic falling-capsule loop have been added with tests. A finished UI, scoring/progression, versus rules, network transport, replay, and benchmarks remain outstanding. CI validation is pending.
+**Stage: deterministic core and in-process authority contract.** Board placement, four-in-a-row resolution, gravity, seeded piece generation, and a basic falling-capsule loop have been added with tests. An in-process room now validates protocol version, room/player identity, player capacity, and monotonically increasing command sequences before applying player intent. This is not a socket transport or authentication system. A finished UI, scoring/progression, versus rules, real transport, replay, and benchmarks remain outstanding. CI validation is pending.
 
 ---
 
