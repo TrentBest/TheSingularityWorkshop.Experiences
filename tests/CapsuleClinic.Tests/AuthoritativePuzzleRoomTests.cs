@@ -87,6 +87,7 @@ public sealed class AuthoritativePuzzleRoomTests
 
         Assert.Throws<KeyNotFoundException>(() => room.GetPlayerView("bob"));
         room.ApplyCommand("alice", new GameCommandEnvelope(1, "room-1", "alice", 1, CapsuleAction.HardDrop));
-        Assert.NotEqual(snapshot, room.GetPlayerView("alice").Board);
+        Assert.Equal(0, snapshot.Count(cell => cell.HasValue));
+        Assert.Equal(2, room.GetPlayerView("alice").Board.Count(cell => cell.HasValue));
     }
 }
