@@ -1,3 +1,6 @@
+using System.Threading;
+using TheSingularityWorkshop.FSM_API;
+
 namespace TheSingularityWorkshop.Experiences.CapsuleClinic;
 
 /// <summary>Player or simulation actions accepted by the deterministic puzzle loop.</summary>
@@ -24,25 +27,50 @@ public readonly record struct ActiveCapsule(CapsulePair Pair, int PivotX, int Pi
 public readonly record struct GameStepResult(bool ActionAccepted, bool CapsuleLocked, ResolutionResult Resolution, bool GameOver, int ScoreAwarded = 0);
 
 /// <summary>
-/// A deterministic single-player game loop around the renderer-independent puzzle board.
+/// A deterministic puzzle game whose lifecycle is driven by a named FSM_API definition.
+/// The board remains a domain model; FSM_API owns the Falling/GameOver behavior lifecycle.
 /// </summary>
 /// <remarks>
-/// Piece generation uses a small specified PRNG rather than framework <see cref="Random"/> so a seed
-/// and action sequence are reproducible across supported runtimes. Scoring is deterministic and
-/// calculated from resolved cells; versus pressure remains a separate match-level concern.
+/// Piece generation uses a specified PRNG rather than framework <see cref="Random"/> so a seed
+/// and action sequence are reproducible across supported runtimes. Each game is an
+/// <see cref="IStateContext"/> instance attached to the shared CapsuleClinicGameFSM definition.
+/// Actions are processed through that instance's manual FSM update, never by ticking every
+/// game's processing group as a side effect of one player's input.
 /// </remarks>
-public sealed class CapsuleGame
+public sealed class CapsuleGame : IStateContext, IDisposable
 {
+    private const string FsmDefinitionName = "CapsuleClinicGameFSM";
+    private const string ProcessingGroup = "CapsuleClinic";
+    private static readonly object DefinitionGate = new();
+    private static long _nextGameId;
+
     private readonly SeededColorGenerator _generator;
+    private readonly FSMHandle _fsmHandle;
     private ActiveCapsule? _activeCapsule;
+    private CapsuleAction? _pendingAction;
+    private GameStepResult _lastStepResult;
+    private bool _disposed;
 
     /// <summary>Creates a game with an empty board and deterministic piece stream.</summary>
     public CapsuleGame(int seed, int width = 8, int height = 16)
     {
         Board = new CapsuleBoard(width, height);
         _generator = new SeededColorGenerator(unchecked((uint)seed));
+        Name = $"CapsuleGame_{Interlocked.Increment(ref _nextGameId)}";
+        IsValid = true;
         SpawnNext();
+        EnsureFsmDefinition();
+        _fsmHandle = FSM_API.Create.CreateInstance(FsmDefinitionName, this, ProcessingGroup);
     }
+
+    /// <summary>Gets the diagnostic identity of this game context.</summary>
+    public string Name { get; set; }
+
+    /// <summary>Gets or sets whether this context is active in FSM_API.</summary>
+    public bool IsValid { get; set; }
+
+    /// <summary>Gets the current FSM_API lifecycle state for this game.</summary>
+    public string FsmState => _fsmHandle.CurrentState;
 
     /// <summary>Gets the authoritative local puzzle board.</summary>
     public CapsuleBoard Board { get; }
@@ -56,29 +84,74 @@ public sealed class CapsuleGame
     /// <summary>Gets whether no further capsule can be spawned.</summary>
     public bool GameOver { get; private set; }
 
-    /// <summary>Applies one input or simulation action.</summary>
+    /// <summary>Applies one input or simulation action through this game's FSM_API instance.</summary>
     public GameStepResult Step(CapsuleAction action)
     {
+        ObjectDisposedException.ThrowIf(_disposed, this);
         if (!Enum.IsDefined(action)) throw new ArgumentOutOfRangeException(nameof(action));
+
+        _lastStepResult = new GameStepResult(false, false, default, GameOver);
         if (GameOver || _activeCapsule is null)
-            return new GameStepResult(false, false, default, GameOver);
+        {
+            _fsmHandle.Update(ProcessingGroup);
+            return _lastStepResult;
+        }
+
+        _pendingAction = action;
+        _fsmHandle.Update(ProcessingGroup);
+        _pendingAction = null;
+        return _lastStepResult;
+    }
+
+    private static void EnsureFsmDefinition()
+    {
+        lock (DefinitionGate)
+        {
+            if (FSM_API.Interaction.Exists(FsmDefinitionName, ProcessingGroup))
+                return;
+
+            FSM_API.Create.CreateProcessingGroup(ProcessingGroup);
+            FSM_API.Create.CreateFiniteStateMachine(FsmDefinitionName, -1, ProcessingGroup)
+                .State("Falling", null, ProcessFallingState, null)
+                .State("GameOver", null, null, null)
+                .WithInitialState("Falling")
+                .Transition("Falling", "GameOver", context => context is CapsuleGame game && game.GameOver)
+                .BuildDefinition();
+        }
+    }
+
+    private static void ProcessFallingState(IStateContext context)
+    {
+        if (context is CapsuleGame game)
+            game.ProcessPendingAction();
+    }
+
+    private void ProcessPendingAction()
+    {
+        if (_pendingAction is not { } action || GameOver || _activeCapsule is null)
+            return;
 
         switch (action)
         {
             case CapsuleAction.MoveLeft:
-                return new GameStepResult(TryShift(-1, 0), false, default, GameOver);
+                _lastStepResult = new GameStepResult(TryShift(-1, 0), false, default, GameOver);
+                break;
             case CapsuleAction.MoveRight:
-                return new GameStepResult(TryShift(1, 0), false, default, GameOver);
+                _lastStepResult = new GameStepResult(TryShift(1, 0), false, default, GameOver);
+                break;
             case CapsuleAction.Rotate:
-                return new GameStepResult(TryRotate(), false, default, GameOver);
+                _lastStepResult = new GameStepResult(TryRotate(), false, default, GameOver);
+                break;
             case CapsuleAction.SoftDrop:
             case CapsuleAction.Tick:
-                if (TryShift(0, -1))
-                    return new GameStepResult(true, false, default, GameOver);
-                return LockAndSpawn();
+                _lastStepResult = TryShift(0, -1)
+                    ? new GameStepResult(true, false, default, GameOver)
+                    : LockAndSpawn();
+                break;
             case CapsuleAction.HardDrop:
                 while (TryShift(0, -1)) { }
-                return LockAndSpawn();
+                _lastStepResult = LockAndSpawn();
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(action));
         }
@@ -152,6 +225,15 @@ public sealed class CapsuleGame
         }
 
         _activeCapsule = spawn;
+    }
+
+    /// <summary>Unregisters this game's FSM instance.</summary>
+    public void Dispose()
+    {
+        if (_disposed) return;
+        _disposed = true;
+        IsValid = false;
+        FSM_API.Interaction.DestroyInstance(_fsmHandle);
     }
 
     private sealed class SeededColorGenerator
