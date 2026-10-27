@@ -1,5 +1,6 @@
 using System.Threading;
 using TheSingularityWorkshop.FSM_API;
+using FsmRuntime = TheSingularityWorkshop.FSM_API.FSM_API;
 
 namespace TheSingularityWorkshop.Experiences.CapsuleClinic;
 
@@ -50,7 +51,7 @@ public sealed class CapsuleMatchSeries : IStateContext, IDisposable
         Name = $"CapsuleMatchSeries_{Interlocked.Increment(ref _nextSeriesId)}";
         IsValid = true;
         EnsureFsmDefinition();
-        _fsmHandle = FSM_API.Create.CreateInstance(FsmDefinitionName, this, ProcessingGroup);
+        _fsmHandle = FsmRuntime.Create.CreateInstance(FsmDefinitionName, this, ProcessingGroup);
     }
 
     /// <summary>Gets the diagnostic identity of this series context.</summary>
@@ -171,18 +172,18 @@ public sealed class CapsuleMatchSeries : IStateContext, IDisposable
         if (_disposed) return;
         _disposed = true;
         IsValid = false;
-        FSM_API.Interaction.DestroyInstance(_fsmHandle);
+        FsmRuntime.Interaction.DestroyInstance(_fsmHandle);
     }
 
     private static void EnsureFsmDefinition()
     {
         lock (DefinitionGate)
         {
-            if (FSM_API.Interaction.Exists(FsmDefinitionName, ProcessingGroup))
+            if (FsmRuntime.Interaction.Exists(FsmDefinitionName, ProcessingGroup))
                 return;
 
-            FSM_API.Create.CreateProcessingGroup(ProcessingGroup);
-            FSM_API.Create.CreateFiniteStateMachine(FsmDefinitionName, -1, ProcessingGroup)
+            FsmRuntime.Create.CreateProcessingGroup(ProcessingGroup);
+            FsmRuntime.Create.CreateFiniteStateMachine(FsmDefinitionName, -1, ProcessingGroup)
                 .State("WaitingForPlayers", null, null, null)
                 .State("InRound", null, null, null)
                 .State("RoundComplete", null, null, null)
