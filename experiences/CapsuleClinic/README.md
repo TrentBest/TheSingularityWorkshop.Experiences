@@ -39,6 +39,23 @@ The intended ownership boundaries are:
 
 CreatorNetwork already exists for creator-owned publishing and distribution. It is not presumed to be a real-time game transport. Capsule Clinic will use an explicit networking seam and help determine whether a separate reusable networking package is warranted.
 
+## Multiplayer arena concept
+
+The room can contain more players than the local screen can show. The local view uses four narrow jars in a 2×2 arena, with a **wider central standings bar** so the score/rank information stays readable.
+
+| Upper left | Upper right |
+|---|---|
+| **You** — always pinned here | Selected contender |
+| **Lower left** | **Lower right** |
+| Selected contender | Selected contender |
+
+- With **1–4 players**, show every participant at once and leave unused panes empty.
+- With **5+ players**, keep the local player upper-left. If the local player is in the top four, show the other top-four contenders; otherwise show the leader and the local player's nearest active rank-neighbors. A full roster remains in the central standings.
+- Every standings row has two separate values: **current round rank** and **rounds won in the match series**. Example: #2 · 4 wins. The host owns these values; clients cannot submit their own score or rank.
+- “Unlimited players” means the four-pane UI and game model do not impose a four-player ceiling. The actual room limit must be a measured host/deployment policy, not an untested promise of infinite capacity.
+
+The pure ArenaPaneSelector and its tests define the first selection policy. The rendered arena, central bar, standings lifecycle, and authoritative round scoring are still to be implemented.
+
 ## 04 — See the intended path
 
 1. Build and test the deterministic rules without a renderer.
