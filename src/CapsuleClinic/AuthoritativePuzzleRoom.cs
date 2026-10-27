@@ -68,8 +68,9 @@ public sealed class AuthoritativePuzzleRoom
 {
     private readonly Dictionary<string, PlayerState> _players = new(StringComparer.Ordinal);
 
-    /// <summary>Creates a room with a fixed protocol version and bounded player capacity.</summary>
-    public AuthoritativePuzzleRoom(string roomId, int width = 8, int height = 16, int maxPlayers = 2, int protocolVersion = 1)
+    /// <summary>Creates a room. An optional capacity is an operational admission safeguard, not a gameplay limit.</summary>
+    /// <remarks>When <paramref name="maxPlayers"/> is omitted, the room imposes no product-level player cap.</remarks>
+    public AuthoritativePuzzleRoom(string roomId, int width = 8, int height = 16, int? maxPlayers = null, int protocolVersion = 1)
     {
         if (string.IsNullOrWhiteSpace(roomId)) throw new ArgumentException("Room ID must not be blank.", nameof(roomId));
         if (maxPlayers < 1) throw new ArgumentOutOfRangeException(nameof(maxPlayers));
@@ -93,8 +94,8 @@ public sealed class AuthoritativePuzzleRoom
     /// <summary>Gets the configured board height.</summary>
     public int Height { get; }
 
-    /// <summary>Gets the maximum number of players admitted to this room.</summary>
-    public int MaxPlayers { get; }
+    /// <summary>Gets the optional operational player-admission ceiling; null means no room-imposed cap.</summary>
+    public int? MaxPlayers { get; }
 
     /// <summary>Gets the protocol version required by this room.</summary>
     public int ProtocolVersion { get; }
@@ -102,11 +103,11 @@ public sealed class AuthoritativePuzzleRoom
     /// <summary>Gets the current number of joined players.</summary>
     public int PlayerCount => _players.Count;
 
-    /// <summary>Adds a player with an explicit deterministic seed; duplicate IDs and full rooms are rejected.</summary>
+    /// <summary>Adds a player with an explicit deterministic seed; duplicate IDs and configured capacity ceilings are rejected.</summary>
     public bool JoinPlayer(string playerId, int seed)
     {
         if (string.IsNullOrWhiteSpace(playerId)) throw new ArgumentException("Player ID must not be blank.", nameof(playerId));
-        if (_players.Count >= MaxPlayers || _players.ContainsKey(playerId)) return false;
+        if ((MaxPlayers is int capacity && _players.Count >= capacity) || _players.ContainsKey(playerId)) return false;
         _players.Add(playerId, new PlayerState(new CapsuleGame(seed, Width, Height)));
         return true;
     }
