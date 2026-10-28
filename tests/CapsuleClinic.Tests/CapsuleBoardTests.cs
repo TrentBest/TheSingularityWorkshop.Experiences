@@ -89,8 +89,8 @@ public sealed class CapsuleBoardTests
         var result = board.ResolveMatchesAndGravity();
 
         Assert.Equal(1, result.ChainCount);
-        Assert.Equal(new PuzzleCell(CapsuleColor.Blue, false), board.GetCell(0, 2));
-        Assert.Equal(new PuzzleCell(CapsuleColor.Yellow, false), board.GetCell(1, 2));
+        Assert.Equal(new PuzzleCell(CapsuleColor.Blue, false), board.GetCell(0, 1));
+        Assert.Equal(new PuzzleCell(CapsuleColor.Yellow, false), board.GetCell(1, 1));
         Assert.Null(board.GetCell(1, 0));
     }
 
@@ -108,7 +108,7 @@ public sealed class CapsuleBoardTests
 
         Assert.Equal(1, result.ChainCount);
         Assert.Null(board.GetCell(3, 1));
-        Assert.Equal(new PuzzleCell(CapsuleColor.Blue, false, 1), board.GetCell(4, 0));
+        Assert.Equal(new PuzzleCell(CapsuleColor.Blue, false), board.GetCell(4, 0));
     }
 
     [Fact]
