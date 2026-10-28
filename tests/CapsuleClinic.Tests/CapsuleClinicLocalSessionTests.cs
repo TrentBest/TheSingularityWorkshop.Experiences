@@ -90,4 +90,43 @@ public sealed class CapsuleClinicLocalSessionTests
             Assert.Equal(expectedPane.Player?.LastAcceptedSequence, actualPane.Player?.LastAcceptedSequence);
         }
     }
+
+    [Theory]
+    [InlineData(CapsuleClinicIntents.MoveLeft)]
+    [InlineData(CapsuleClinicIntents.MoveRight)]
+    [InlineData(CapsuleClinicIntents.Rotate)]
+    [InlineData(CapsuleClinicIntents.SoftDrop)]
+    [InlineData(CapsuleClinicIntents.HardDrop)]
+    public void EveryPublishedIntentIdentifierUsesTheAuthoritativeCommandPath(string intentId)
+    {
+        using var session = new CapsuleClinicLocalSession(
+            "intent-matrix-room", "alice", 301, "bot", 402);
+
+        var result = session.SubmitIntent(intentId);
+
+        Assert.True(result.IntentRecognized);
+        Assert.True(result.Decision.Accepted);
+        Assert.Equal(CommandRejection.None, result.Decision.Rejection);
+        Assert.Equal(1UL, result.Decision.Sequence);
+        Assert.Equal(1UL, Assert.IsType<PuzzlePlayerView>(result.Snapshot.Panes[0].Player).LastAcceptedSequence);
+    }
+
+    [Theory]
+    [InlineData("Capsule.move-left")]
+    [InlineData("capsule.Move-left")]
+    [InlineData(" capsule.move-left")]
+    [InlineData("capsule.move-left ")]
+    public void SemanticIntentIdentifiersAreExactAndCaseSensitive(string intentId)
+    {
+        using var session = new CapsuleClinicLocalSession(
+            "intent-exact-room", "alice", 501, "bot", 602);
+        var before = session.CaptureSnapshot();
+
+        var result = session.SubmitIntent(intentId);
+
+        Assert.False(result.IntentRecognized);
+        Assert.False(result.Decision.Accepted);
+        Assert.Equal(CommandRejection.InvalidAction, result.Decision.Rejection);
+        AssertSnapshotsEquivalent(before, result.Snapshot);
+    }
 }
