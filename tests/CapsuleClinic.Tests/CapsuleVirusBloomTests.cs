@@ -90,4 +90,18 @@ public sealed class CapsuleVirusBloomTests
         Assert.True(board.TryPlaceCapsule(new CapsulePair(CapsuleColor.Red, CapsuleColor.Blue), 2, 1, CapsuleOrientation.Horizontal));
         return board;
     }
-}
+}    [Fact]
+    public void BloomStopsWhenTheBoardBecomesFull()
+    {
+        var board = new CapsuleBoard(width: 2, height: 2);
+        Assert.True(board.TryPlaceVirus(0, 0, CapsuleColor.Yellow));
+        Assert.True(board.TryPlaceCapsule(new CapsulePair(CapsuleColor.Red, CapsuleColor.Blue), 1, 0, CapsuleOrientation.Vertical));
+
+        var result = board.ApplyVirusBloom();
+
+        Assert.Equal(new VirusBloomResult(1, 1), result);
+        Assert.Equal(4, board.OccupiedCount);
+        Assert.True(board.GetCell(0, 1) is { IsVirus: true });
+    }
+
+
