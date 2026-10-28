@@ -28,6 +28,36 @@ public sealed class CapsuleArenaGuiAdapterTests
     }
 
     [Fact]
+    public void GuiCommandIdentifiersRoundTripThroughAuthoritativeSession()
+    {
+        using var session = new CapsuleClinicLocalSession("gui-command-roundtrip", "local", 731, "opponent", 732);
+        var tree = CapsuleArenaGuiAdapter.Build(session.CaptureSnapshot());
+        var controls = new[]
+        {
+            "capsule-move-left",
+            "capsule-move-right",
+            "capsule-rotate",
+            "capsule-soft-drop",
+            "capsule-hard-drop"
+        };
+
+        ulong expectedSequence = 1;
+        foreach (var controlId in controls)
+        {
+            var intentId = tree.Find(controlId).Properties["onClickCommand"];
+            var result = session.SubmitIntent(intentId);
+
+            Assert.True(result.IntentRecognized, $"GUI control '{controlId}' emitted an unrecognized intent.");
+            Assert.True(result.Decision.Accepted, $"GUI control '{controlId}' was rejected by the authority.");
+            Assert.Equal(CommandRejection.None, result.Decision.Rejection);
+            Assert.Equal(expectedSequence, result.Decision.Sequence);
+            Assert.Equal(expectedSequence,
+                Assert.IsType<PuzzlePlayerView>(result.Snapshot.Panes[0].Player).LastAcceptedSequence);
+            expectedSequence++;
+        }
+    }
+
+    [Fact]
     public void BuildReflectsOnlyTheSelectedPanesFromTheSuppliedSnapshot()
     {
         using var room = new AuthoritativePuzzleRoom("gui-adapter");
