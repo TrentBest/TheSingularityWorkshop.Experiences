@@ -47,6 +47,7 @@ public readonly record struct ConstructionSnapshotProvenance(string RunId, long 
 /// <summary>Immutable presentation selection derived from one committed snapshot.</summary>
 public sealed record ConstructionSnapshotPresentationSelection(
     ConstructionSnapshotProvenance Provenance,
+    int TotalAgentsInSnapshot,
     int TotalAgentsInSpace,
     IReadOnlyList<ConstructionAgentSnapshot> IndividualAgents,
     IReadOnlyList<ConstructionAgentAggregate> Aggregates)
@@ -111,6 +112,7 @@ public static class ConstructionSnapshotPresentationSelector
 
         return new ConstructionSnapshotPresentationSelection(
             new ConstructionSnapshotProvenance(runId, snapshot.Tick, sequence),
+            snapshot.Agents.Count,
             candidates.Length,
             Array.AsReadOnly(selected),
             Array.AsReadOnly(aggregates));
