@@ -197,6 +197,12 @@ public static class SemanticRequirementResolver
 
         foreach (var descriptor in descriptors)
         {
+            if (descriptor is null)
+            {
+                issues.Add(new("artifact.invalid-descriptor", "Catalog contains a null artifact descriptor."));
+                continue;
+            }
+
             if (descriptor.Identity is null || !descriptor.Identity.IsValid)
             {
                 issues.Add(new("artifact.invalid-identity", "Catalog contains an artifact with an invalid immutable identity."));
@@ -232,6 +238,13 @@ public static class SemanticRequirementResolver
                 return false;
             }
 
+            if (descriptor.Dependencies is null)
+            {
+                issues.Add(new("artifact.invalid-dependencies",
+                    $"Artifact '{identity.BundleId}@{identity.Version}' has a null dependency list."));
+                return false;
+            }
+
             if (!visiting.Add(key))
             {
                 issues.Add(new("artifact.dependency-cycle",
@@ -240,8 +253,16 @@ public static class SemanticRequirementResolver
             }
 
             foreach (var dependency in descriptor.Dependencies
-                         .OrderBy(item => item.Artifact?.StableKey ?? string.Empty, StringComparer.Ordinal))
+                         .OrderBy(item => item?.Artifact?.StableKey ?? string.Empty, StringComparer.Ordinal))
             {
+                if (dependency is null)
+                {
+                    issues.Add(new("artifact.invalid-dependency", 
+                        $"Artifact '{identity.BundleId}@{identity.Version}' contains a null dependency entry."));
+                    visiting.Remove(key);
+                    return false;
+                }
+
                 if (!Visit(dependency.Artifact))
                 {
                     visiting.Remove(key);
