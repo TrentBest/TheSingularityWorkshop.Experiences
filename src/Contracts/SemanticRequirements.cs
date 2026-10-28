@@ -44,13 +44,20 @@ public sealed record SemanticInteractionRequirement(
 public sealed record ArtifactIdentity(string BundleId, string Version, string Sha256)
 {
     public bool IsValid =>
-        !string.IsNullOrWhiteSpace(BundleId) &&
-        !string.IsNullOrWhiteSpace(Version) &&
+        IsValidIdentityPart(BundleId) &&
+        IsValidIdentityPart(Version) &&
         !string.IsNullOrWhiteSpace(Sha256) &&
         Sha256.Length == 64 &&
         Sha256.All(Uri.IsHexDigit);
 
-    public string StableKey => $"{BundleId}\n{Version}\n{Sha256.ToLowerInvariant()}";
+    // Length-prefix identity components so delimiters inside input cannot alias another identity.
+    public string StableKey =>
+        $"{BundleId.Length}:{BundleId}{Version.Length}:{Version}{Sha256.ToLowerInvariant()}";
+
+    private static bool IsValidIdentityPart(string value) =>
+        !string.IsNullOrWhiteSpace(value) &&
+        string.Equals(value, value.Trim(), StringComparison.Ordinal) &&
+        !value.Any(char.IsControl);
 }
 
 /// <summary>A provider's declared semantic contract support and the immutable artifact implementing it.</summary>
