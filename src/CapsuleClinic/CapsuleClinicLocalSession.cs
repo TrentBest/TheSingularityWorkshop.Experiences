@@ -8,10 +8,19 @@ namespace TheSingularityWorkshop.Experiences.CapsuleClinic;
 /// </remarks>
 public static class CapsuleClinicIntents
 {
+    /// <summary>Moves the active capsule one column to the left.</summary>
     public const string MoveLeft = "capsule.move-left";
+
+    /// <summary>Moves the active capsule one column to the right.</summary>
     public const string MoveRight = "capsule.move-right";
+
+    /// <summary>Rotates the active capsule.</summary>
     public const string Rotate = "capsule.rotate";
+
+    /// <summary>Advances the active capsule downward by one step.</summary>
     public const string SoftDrop = "capsule.soft-drop";
+
+    /// <summary>Drops the active capsule immediately.</summary>
     public const string HardDrop = "capsule.hard-drop";
 
     internal static bool TryResolve(string intentId, out CapsuleAction action)
