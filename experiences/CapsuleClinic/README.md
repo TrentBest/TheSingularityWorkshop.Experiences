@@ -6,7 +6,7 @@
 
 Capsule Clinic is an original Workshop project in the falling-capsule puzzle genre. The aim is to combine a quick-to-understand game with an architecture visitors can explore: one rules engine, explicit match rules, replaceable presentation, and a small, inspectable multiplayer boundary.
 
-The deterministic board and initial game-loop core now exist with focused tests, along with an in-process authority contract and a pure four-pane player-selection policy. The arena design supports all participants in rooms of up to four and rank-neighbor comparison panes for larger rooms; the actual visual layout and real networked match do not yet exist.
+The deterministic board and game loop now have focused tests; game and match-series lifecycles use FSM_API runtime instances. The project also includes an in-process authority contract, replay serialization/playback, and a pure four-pane player-selection policy. The arena design supports all participants in rooms of up to four and rank-neighbor comparison panes for larger rooms; the actual visual layout and real networked match do not yet exist.
 
 ## 01 — What
 
@@ -54,7 +54,7 @@ The room can contain more players than the local screen can show. The local view
 - Every standings row has two separate values: **current round rank** and **rounds won in the match series**. Example: #2 · 4 wins. The host owns these values; clients cannot submit their own score or rank.
 - **“Unlimited” means hardware-scaled, not mathematically infinite:** we do not impose an arbitrary product-level player cap. The room should support as many concurrent players as the host can sustain; stronger hardware can raise that capacity without changing the game or its four-pane layout. Load tests and runtime resource controls discover the practical envelope, and any emergency safety ceiling is operational protection—not a gameplay limit.
 
-The pure ArenaPaneSelector and its tests define the first selection policy. The rendered arena, central bar, standings lifecycle, and authoritative round scoring are still to be implemented.
+The pure ArenaPaneSelector and its tests define the selection policy. The rendered arena, central bar, authoritative versus pressure rules, and real network transport remain to be implemented.
 
 ## 04 — See the intended path
 
@@ -74,7 +74,7 @@ Each stage should remain useful and testable. Real sockets should come after the
 
 ### Current status
 
-**Stage: deterministic core, authority contract, and arena-selection policy.** Board placement, four-in-a-row resolution, gravity, seeded piece generation, and a basic falling-capsule loop have been added with tests. An in-process room validates protocol version, room/player identity, player capacity, and monotonically increasing command sequences. A pure arena selector now specifies a fixed local upper-left pane, complete visibility for rooms of up to four, and leader/neighbor panes for larger rooms. The rendered 2×2 arena, wider central standings bar, authoritative round ranking/round-win scoring, finished solo loop, versus rules, real transport, replay, and benchmarks remain outstanding. CI validation is pending.
+**Stage: deterministic core, FSM_API-backed lifecycle, replay, authority contract, and arena-selection policy.** Board placement, four-in-a-row resolution, pair-aware gravity, seeded piece generation, and the falling-capsule loop have focused tests. FSM_API owns the game and match-series lifecycle; disposable room and replay objects release their runtime instances. An in-process room validates protocol version, room/player identity, and monotonically increasing command sequences. Versioned replay serialization and playback are implemented. A pure arena selector specifies a fixed local upper-left pane, complete visibility for rooms of up to four, and leader/neighbor panes for larger rooms. The rendered 2×2 arena, wider central standings bar, authoritative versus pressure rules, real transport, disconnect/reconnect behavior, and named benchmarks remain outstanding. CI validates the current core; the latest workflow run is linked from the repository Actions page.
 
 ---
 

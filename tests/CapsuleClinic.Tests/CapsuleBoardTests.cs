@@ -73,6 +73,45 @@ public sealed class CapsuleBoardTests
     }
 
     [Fact]
+    public void Gravity_DoesNotSplitAnIntactHorizontalCapsuleWhenOnlyOneHalfCanFall()
+    {
+        var board = new CapsuleBoard(width: 5, height: 5);
+
+        // The left capsule half is supported by a blocker. The right half has empty
+        // space beneath it that is cleared by a match. An intact pair must stay bonded.
+        Assert.True(board.TryPlaceVirus(0, 2, CapsuleColor.Purple));
+        Assert.True(board.TryPlaceCapsule(
+            new CapsulePair(CapsuleColor.Blue, CapsuleColor.Yellow),
+            0, 3, CapsuleOrientation.Horizontal));
+        for (var x = 1; x <= 4; x++)
+            Assert.True(board.TryPlaceVirus(x, 1, CapsuleColor.Red));
+
+        var result = board.ResolveMatchesAndGravity();
+
+        Assert.Equal(1, result.ChainCount);
+        Assert.Equal(new PuzzleCell(CapsuleColor.Blue, false, 1), board.GetCell(0, 3));
+        Assert.Equal(new PuzzleCell(CapsuleColor.Yellow, false, 1), board.GetCell(1, 3));
+        Assert.Null(board.GetCell(1, 0));
+    }
+
+    [Fact]
+    public void Gravity_LetsUnbondedCapsuleHalfFallAfterItsPartnerIsCleared()
+    {
+        var board = new CapsuleBoard(width: 5, height: 4);
+        for (var x = 0; x < 3; x++)
+            Assert.True(board.TryPlaceVirus(x, 1, CapsuleColor.Red));
+        Assert.True(board.TryPlaceCapsule(
+            new CapsulePair(CapsuleColor.Red, CapsuleColor.Blue),
+            3, 1, CapsuleOrientation.Horizontal));
+
+        var result = board.ResolveMatchesAndGravity();
+
+        Assert.Equal(1, result.ChainCount);
+        Assert.Null(board.GetCell(3, 1));
+        Assert.Equal(new PuzzleCell(CapsuleColor.Blue, false, 1), board.GetCell(4, 0));
+    }
+
+    [Fact]
     public void Snapshot_IsIndependentAndBottomRowFirst()
     {
         var board = new CapsuleBoard(width: 4, height: 4);

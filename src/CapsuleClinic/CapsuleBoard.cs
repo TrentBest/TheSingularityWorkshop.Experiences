@@ -34,7 +34,7 @@ public readonly record struct CapsulePair(CapsuleColor PivotColor, CapsuleColor 
 /// <summary>A settled puzzle cell. Virus cells are targets; capsule segments are movable puzzle pieces.</summary>
 /// <param name="Color">The cell color.</param>
 /// <param name="IsVirus">Whether this cell is a virus target.</param>
-public readonly record struct PuzzleCell(CapsuleColor Color, bool IsVirus);
+public readonly record struct PuzzleCell(CapsuleColor Color, bool IsVirus, long CapsulePairId = 0);
 
 /// <summary>The result of resolving all currently available matches and resulting gravity.</summary>
 /// <param name="ChainCount">Number of match waves resolved.</param>
@@ -53,6 +53,7 @@ public readonly record struct ResolutionResult(int ChainCount, int CellsCleared,
 public sealed class CapsuleBoard
 {
     private readonly PuzzleCell?[,] _cells;
+    private long _nextCapsulePairId;
 
     /// <summary>Creates an empty board.</summary>
     /// <param name="width">Board width in cells.</param>
@@ -125,8 +126,9 @@ public sealed class CapsuleBoard
         if (!IsInside(pivotX, pivotY) || !IsInside(partnerX, partnerY)) return false;
         if (_cells[pivotX, pivotY].HasValue || _cells[partnerX, partnerY].HasValue) return false;
 
-        _cells[pivotX, pivotY] = new PuzzleCell(pair.PivotColor, false);
-        _cells[partnerX, partnerY] = new PuzzleCell(pair.PartnerColor, false);
+        var pairId = checked(++_nextCapsulePairId);
+        _cells[pivotX, pivotY] = new PuzzleCell(pair.PivotColor, false, pairId);
+        _cells[partnerX, partnerY] = new PuzzleCell(pair.PartnerColor, false, pairId);
         return true;
     }
 
@@ -194,21 +196,98 @@ public sealed class CapsuleBoard
 
     private void ApplyGravity()
     {
-        for (var x = 0; x < Width; x++)
+        // Move one cell at a time. A surviving capsule pair behaves as one rigid group
+        // while both bonded segments remain; if one segment was cleared, its partner
+        // becomes a singleton and falls independently.
+        while (true)
         {
-            var writeY = 0;
-            for (var readY = 0; readY < Height; readY++)
+            var moves = new List<(int X, int Y, PuzzleCell Cell, int TargetX, int TargetY)>();
+            var visited = new HashSet<(int X, int Y)>();
+
+            for (var y = 0; y < Height; y++)
             {
-                if (_cells[x, readY] is not { } cell) continue;
-                if (writeY != readY)
+                for (var x = 0; x < Width; x++)
                 {
-                    _cells[x, writeY] = cell;
-                    _cells[x, readY] = null;
+                    if (_cells[x, y] is not { } cell || visited.Contains((x, y)))
+                        continue;
+
+                    if (cell.CapsulePairId != 0 &&
+                        TryFindBondedPartner(x, y, cell.CapsulePairId, out var partnerX, out var partnerY, out var partner))
+                    {
+                        visited.Add((x, y));
+                        visited.Add((partnerX, partnerY));
+
+                        var targetY = y - 1;
+                        var partnerTargetY = partnerY - 1;
+                        if (targetY < 0 || partnerTargetY < 0)
+                            continue;
+
+                        if (CanMoveGroupDown((x, y), (partnerX, partnerY), targetY, partnerTargetY))
+                        {
+                            moves.Add((x, y, cell, x, targetY));
+                            moves.Add((partnerX, partnerY, partner, partnerX, partnerTargetY));
+                        }
+
+                        continue;
+                    }
+
+                    visited.Add((x, y));
+                    if (y > 0 && !_cells[x, y - 1].HasValue)
+                        moves.Add((x, y, cell, x, y - 1));
                 }
-                writeY++;
             }
-            for (var y = writeY; y < Height; y++) _cells[x, y] = null;
+
+            if (moves.Count == 0)
+                return;
+
+            // Clear all sources first so vertical bonded pairs can move through their
+            // own previous cells without overwriting either segment.
+            foreach (var move in moves)
+                _cells[move.X, move.Y] = null;
+            foreach (var move in moves)
+                _cells[move.TargetX, move.TargetY] = move.Cell;
         }
+    }
+
+    private bool TryFindBondedPartner(
+        int x, int y, long pairId,
+        out int partnerX, out int partnerY, out PuzzleCell partner)
+    {
+        foreach (var (dx, dy) in new[] { (1, 0), (-1, 0), (0, 1), (0, -1) })
+        {
+            var candidateX = x + dx;
+            var candidateY = y + dy;
+            if (!IsInside(candidateX, candidateY) ||
+                _cells[candidateX, candidateY] is not { } candidate ||
+                candidate.CapsulePairId != pairId)
+                continue;
+
+            partnerX = candidateX;
+            partnerY = candidateY;
+            partner = candidate;
+            return true;
+        }
+
+        partnerX = partnerY = 0;
+        partner = default;
+        return false;
+    }
+
+    private bool CanMoveGroupDown(
+        (int X, int Y) first, (int X, int Y) second,
+        int firstTargetY, int secondTargetY)
+    {
+        return IsAvailableForGroup(first.X, firstTargetY, first, second) &&
+               IsAvailableForGroup(second.X, secondTargetY, first, second);
+    }
+
+    private bool IsAvailableForGroup(
+        int x, int y, (int X, int Y) first, (int X, int Y) second)
+    {
+        if (!IsInside(x, y)) return false;
+        if ((x == first.X && y == first.Y) || (x == second.X && y == second.Y))
+            return true;
+        return !_cells[x, y].HasValue;
     }
 
     private bool IsInside(int x, int y) => x >= 0 && x < Width && y >= 0 && y < Height;
