@@ -1,5 +1,3 @@
-using System.Security.Cryptography;
-
 namespace TheSingularityWorkshop.Experiences.Contracts;
 
 /// <summary>A semantic contract version. Versions are compared numerically, never lexically.</summary>
