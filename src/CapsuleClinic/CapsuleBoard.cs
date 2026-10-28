@@ -34,7 +34,7 @@ public readonly record struct CapsulePair(CapsuleColor PivotColor, CapsuleColor 
 /// <summary>A settled puzzle cell. Virus cells are targets; capsule segments are movable puzzle pieces.</summary>
 /// <param name="Color">The cell color.</param>
 /// <param name="IsVirus">Whether this cell is a virus target.</param>
-public readonly record struct PuzzleCell(CapsuleColor Color, bool IsVirus, long CapsulePairId = 0);
+public readonly record struct PuzzleCell(CapsuleColor Color, bool IsVirus);
 
 /// <summary>The result of resolving all currently available matches and resulting gravity.</summary>
 /// <param name="ChainCount">Number of match waves resolved.</param>
@@ -53,6 +53,7 @@ public readonly record struct ResolutionResult(int ChainCount, int CellsCleared,
 public sealed class CapsuleBoard
 {
     private readonly PuzzleCell?[,] _cells;
+    private readonly long[,] _capsulePairIds;
     private long _nextCapsulePairId;
 
     /// <summary>Creates an empty board.</summary>
@@ -65,6 +66,7 @@ public sealed class CapsuleBoard
         Width = width;
         Height = height;
         _cells = new PuzzleCell?[width, height];
+        _capsulePairIds = new long[width, height];
     }
 
     /// <summary>Gets the board width.</summary>
@@ -127,8 +129,10 @@ public sealed class CapsuleBoard
         if (_cells[pivotX, pivotY].HasValue || _cells[partnerX, partnerY].HasValue) return false;
 
         var pairId = checked(++_nextCapsulePairId);
-        _cells[pivotX, pivotY] = new PuzzleCell(pair.PivotColor, false, pairId);
-        _cells[partnerX, partnerY] = new PuzzleCell(pair.PartnerColor, false, pairId);
+        _cells[pivotX, pivotY] = new PuzzleCell(pair.PivotColor, false);
+        _cells[partnerX, partnerY] = new PuzzleCell(pair.PartnerColor, false);
+        _capsulePairIds[pivotX, pivotY] = pairId;
+        _capsulePairIds[partnerX, partnerY] = pairId;
         return true;
     }
 
@@ -152,6 +156,7 @@ public sealed class CapsuleBoard
             {
                 if (_cells[x, y] is { IsVirus: true }) viruses++;
                 _cells[x, y] = null;
+                _capsulePairIds[x, y] = 0;
             }
             cleared += matches.Count;
             ApplyGravity();
@@ -201,7 +206,7 @@ public sealed class CapsuleBoard
         // becomes a singleton and falls independently.
         while (true)
         {
-            var moves = new List<(int X, int Y, PuzzleCell Cell, int TargetX, int TargetY)>();
+            var moves = new List<(int X, int Y, PuzzleCell Cell, long PairId, int TargetX, int TargetY)>();
             var visited = new HashSet<(int X, int Y)>();
 
             for (var y = 0; y < Height; y++)
@@ -211,8 +216,9 @@ public sealed class CapsuleBoard
                     if (_cells[x, y] is not { } cell || visited.Contains((x, y)))
                         continue;
 
-                    if (cell.CapsulePairId != 0 &&
-                        TryFindBondedPartner(x, y, cell.CapsulePairId, out var partnerX, out var partnerY, out var partner))
+                    var pairId = _capsulePairIds[x, y];
+                    if (pairId != 0 &&
+                        TryFindBondedPartner(x, y, pairId, out var partnerX, out var partnerY, out var partner))
                     {
                         visited.Add((x, y));
                         visited.Add((partnerX, partnerY));
@@ -224,16 +230,18 @@ public sealed class CapsuleBoard
 
                         if (CanMoveGroupDown((x, y), (partnerX, partnerY), targetY, partnerTargetY))
                         {
-                            moves.Add((x, y, cell, x, targetY));
-                            moves.Add((partnerX, partnerY, partner, partnerX, partnerTargetY));
+                            moves.Add((x, y, cell, pairId, x, targetY));
+                            moves.Add((partnerX, partnerY, partner, pairId, partnerX, partnerTargetY));
                         }
 
                         continue;
                     }
 
+                    // A capsule segment whose partner was cleared is now an independent cell.
+                    _capsulePairIds[x, y] = 0;
                     visited.Add((x, y));
                     if (y > 0 && !_cells[x, y - 1].HasValue)
-                        moves.Add((x, y, cell, x, y - 1));
+                        moves.Add((x, y, cell, 0, x, y - 1));
                 }
             }
 
@@ -243,9 +251,15 @@ public sealed class CapsuleBoard
             // Clear all sources first so vertical bonded pairs can move through their
             // own previous cells without overwriting either segment.
             foreach (var move in moves)
+            {
                 _cells[move.X, move.Y] = null;
+                _capsulePairIds[move.X, move.Y] = 0;
+            }
             foreach (var move in moves)
+            {
                 _cells[move.TargetX, move.TargetY] = move.Cell;
+                _capsulePairIds[move.TargetX, move.TargetY] = move.PairId;
+            }
         }
     }
 
@@ -258,13 +272,13 @@ public sealed class CapsuleBoard
             var candidateX = x + dx;
             var candidateY = y + dy;
             if (!IsInside(candidateX, candidateY) ||
-                _cells[candidateX, candidateY] is not { } candidate ||
-                candidate.CapsulePairId != pairId)
+                !_cells[candidateX, candidateY].HasValue ||
+                _capsulePairIds[candidateX, candidateY] != pairId)
                 continue;
 
             partnerX = candidateX;
             partnerY = candidateY;
-            partner = candidate;
+            partner = _cells[candidateX, candidateY]!.Value;
             return true;
         }
 
