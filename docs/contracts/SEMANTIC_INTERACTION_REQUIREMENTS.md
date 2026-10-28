@@ -2,7 +2,7 @@
 
 ## Status
 
-This document defines the Experience-side contract for declaring semantic interaction requirements. It is a dependency-free contract proposal for implementation and tests in this repository; it does **not** claim that AnyApp, WebApp, FSM_UserIO, or FSM_COS already implements capability negotiation.
+The dependency-free `TheSingularityWorkshop.Experiences.Contracts` assembly now implements pure validation, deterministic provider matching, immutable artifact identity checks, and dependency-closure validation. Its executable tests live in `tests/Contracts.Tests`. This is the Experience-owned contract layer; it does **not** claim that AnyApp, WebApp, FSM_UserIO, or FSM_COS already implements capability negotiation or that host integration is complete.
 
 No package reference to FSM_UserIO is required to author or validate this declarative contract. Do not add that dependency until the exact candidate commit passes the dependency-policy gate in [CiAi issue #21](https://github.com/TrentBest/TheSingularityWorkshop.CiAi/issues/21).
 
@@ -106,7 +106,7 @@ The first proof should exercise target selection, gantry movement, capsule rotat
 | A semantic request is malformed or invalid for current domain state | Reject it without an authoritative state transition |
 | Equivalent valid requests arrive through Windows and browser adapters | Produce the same deterministic domain transition |
 
-Tests should separate pure requirement validation and deterministic matching from host/repository integration tests. The integration proof must exercise the real host provider catalog and repository/FSM_COS path when those host changes are allowed by the dependency-policy gate.
+Pure requirement validation and deterministic matching are implemented separately from host/repository integration tests in `TheSingularityWorkshop.Experiences.Contracts`. The current resolver intentionally fails closed on ambiguous compatible providers; it does not silently rank providers or choose by display/platform name. The integration proof must exercise the real host provider catalog and repository/FSM_COS path when those host changes are allowed by the dependency-policy gate.
 
 ## Scope and non-claims
 
