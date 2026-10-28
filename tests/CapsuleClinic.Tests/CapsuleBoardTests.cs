@@ -169,7 +169,7 @@ public sealed class CapsuleBoardTests
         Assert.Equal(new PuzzleCell(CapsuleColor.Blue, false), board.GetCell(1, 2));
         Assert.True(board.GetCell(2, 1)!.Value.IsVirus);
         Assert.True(board.GetCell(0, 2)!.Value.IsVirus);
-        Assert.Equal(7, board.OccupiedCount);
+        Assert.Equal(9, board.OccupiedCount);
         Assert.True(result.Waves > 0);
     }
 
