@@ -185,7 +185,19 @@ Each example must identify the files changed and the tests that verify the behav
 
 The canonical acceptance checklist is [issue #22](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/issues/22). Keep it open until there is evidence for the required behaviors.
 
-Current state: **deterministic core and in-process authority contract in progress**. `CapsuleBoard` and `CapsuleGame` implement atomic placement, four-in-a-row resolution, gravity, seeded piece generation, and a basic falling-capsule action loop with focused tests. `AuthoritativePuzzleRoom` adds a versioned command envelope, bounded room membership, host-supplied authenticated-player identity matching, and monotonic per-player command sequencing. It is an in-process contract—not a socket server, authentication provider, or production security boundary. A complete UI, scoring/progression, versus rules, real network transport, replay, and benchmarks are not yet implemented. CI validation is pending.
+Current state: **deterministic core and in-process authority contract implemented; presentation integration and multiplayer remain in progress**.
+
+Implemented and described in the current development README:
+- `CapsuleBoard` and `CapsuleGame` implement seeded piece generation, falling-capsule actions, placement, matching, gravity, and resolution, with focused tests.
+- FSM_API runtime instances own game and match-series lifecycle; disposable room and replay objects release their runtime instances.
+- `AuthoritativePuzzleRoom` validates the versioned command envelope, room/player identity, and monotonic per-player command sequences. This is an in-process authority contract—not a socket server, authentication provider, or production security boundary.
+- Versioned replay serialization and playback are implemented.
+- `ArenaPaneSelector` defines the four-pane selection policy, and `CapsuleArenaSnapshot` captures selected player views and standings from the authoritative room.
+- `CapsuleArenaSvgRenderer` can serialize that arena snapshot directly to standalone SVG, including puzzle panes and a central standings rail.
+
+The last item is a useful visual foothold, **not** proof of the desired shared presentation path: this renderer currently writes SVG directly from Experiences and bypasses the GUI semantic tree, Renderer observer/representation contracts, and Visualize integration. The first playable vertical slice must bridge those boundaries and demonstrate a legal semantic command changing authoritative state and updating the manifested view.
+
+Still outstanding: the integrated GUI → Renderer → Visualize path; complete interactive solo loop; authoritative versus pressure/scoring and match progression; real network transport and independent clients; disconnect/reconnect behavior; named benchmarks; and polished tutorial/presentation. CI status must be read from the current workflow run rather than inferred from this design document. Keep issue #22 open until its acceptance criteria have evidence.
 
 ---
 
