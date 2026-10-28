@@ -47,7 +47,7 @@ public readonly record struct ConstructionSnapshotProvenance(string RunId, long 
 /// <summary>Immutable presentation selection derived from one committed snapshot.</summary>
 public sealed record ConstructionSnapshotPresentationSelection(
     ConstructionSnapshotProvenance Provenance,
-    int TotalAgentsInSnapshot,
+    int TotalAgentsInSpace,
     IReadOnlyList<ConstructionAgentSnapshot> IndividualAgents,
     IReadOnlyList<ConstructionAgentAggregate> Aggregates)
 {
@@ -77,13 +77,13 @@ public static class ConstructionSnapshotPresentationSelector
             throw new ArgumentOutOfRangeException(nameof(sequence));
 
         var candidates = snapshot.Agents
-            .Where(agent => agent.Location.Kind == ConstructionSpaceKind.SimulationGrid
+            .Where(agent => agent.Location.SpaceKind == ConstructionSpaceKind.SimulationGrid
                 && StringComparer.Ordinal.Equals(agent.Location.SpaceId, spaceId))
             .Select(agent => new
             {
                 Agent = agent,
-                Distance = Math.Abs((long)agent.Position.X - observer.Position.X)
-                    + Math.Abs((long)agent.Position.Y - observer.Position.Y)
+                Distance = Math.Abs((long)agent.Location.Cell.X - observer.Position.X)
+                    + Math.Abs((long)agent.Location.Cell.Y - observer.Position.Y)
             })
             .OrderBy(candidate => candidate.Distance)
             .ThenBy(candidate => candidate.Agent.AgentId)
@@ -98,14 +98,14 @@ public static class ConstructionSnapshotPresentationSelector
 
         var aggregates = candidates
             .Where(candidate => !selectedIds.Contains(candidate.Agent.AgentId))
-            .GroupBy(candidate => (candidate.Agent.Location.SpaceId, candidate.Agent.Position))
+            .GroupBy(candidate => (candidate.Agent.Location.SpaceId, candidate.Agent.Location.Cell))
             .OrderBy(group => group.Key.SpaceId, StringComparer.Ordinal)
-            .ThenBy(group => group.Key.Position.Y)
-            .ThenBy(group => group.Key.Position.X)
+            .ThenBy(group => group.Key.Cell.Y)
+            .ThenBy(group => group.Key.Cell.X)
             .Select(group => new ConstructionAgentAggregate(
-                $"construction:{group.Key.SpaceId}:{group.Key.Position.X}:{group.Key.Position.Y}",
+                $"construction:{group.Key.SpaceId}:{group.Key.Cell.X}:{group.Key.Cell.Y",
                 group.Key.SpaceId,
-                group.Key.Position,
+                group.Key.Cell,
                 Array.AsReadOnly(group.Select(candidate => candidate.Agent.AgentId).Order().ToArray())))
             .ToArray();
 
