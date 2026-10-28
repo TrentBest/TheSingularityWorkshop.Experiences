@@ -70,7 +70,8 @@ Each stage should remain useful and testable. Real sockets should come after the
 ## 05 — Documentation and progress
 
 - [Experience and implementation contract](design/EXPERIENCE.md)
-- [Tracking issue and acceptance criteria](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/issues/22)
+- [Canonical product acceptance checklist](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/issues/22)
+- [First playable presentation integration: GUI → Renderer → Visualize](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/issues/29)
 
 ### Current status
 
