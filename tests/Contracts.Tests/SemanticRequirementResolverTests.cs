@@ -146,4 +146,35 @@ public sealed class SemanticRequirementResolverTests
         Assert.False(result.Success);
         Assert.Contains(result.Issues, issue => issue.Code == "artifact.duplicate-identity");
     }
+
+    [Fact]
+    public void NullRequirementEntryFailsWithDiagnosticInsteadOfThrowing()
+    {
+        var result = SemanticRequirementResolver.ResolveProviders(
+            new SemanticInteractionRequirement[] { null! }, []);
+
+        Assert.False(result.Success);
+        Assert.Contains(result.Issues, issue => issue.Code == "requirement.invalid");
+    }
+
+    [Fact]
+    public void NullCatalogAndDependencyEntriesFailWithDiagnosticsInsteadOfThrowing()
+    {
+        var root = Artifact("experience");
+        var nullCatalogEntry = SemanticRequirementResolver.ResolveArtifactClosure(
+            [root], new ArtifactDescriptor[] { null! });
+        var nullDependencyEntry = SemanticRequirementResolver.ResolveArtifactClosure(
+            [root],
+            [new ArtifactDescriptor(root, new ArtifactDependency[] { null! })]);
+        var nullDependencyList = SemanticRequirementResolver.ResolveArtifactClosure(
+            [root],
+            [new ArtifactDescriptor(root, null!)]);
+
+        Assert.False(nullCatalogEntry.Success);
+        Assert.Contains(nullCatalogEntry.Issues, issue => issue.Code == "artifact.invalid-descriptor");
+        Assert.False(nullDependencyEntry.Success);
+        Assert.Contains(nullDependencyEntry.Issues, issue => issue.Code == "artifact.invalid-dependency");
+        Assert.False(nullDependencyList.Success);
+        Assert.Contains(nullDependencyList.Issues, issue => issue.Code == "artifact.invalid-dependencies");
+    }
 }
