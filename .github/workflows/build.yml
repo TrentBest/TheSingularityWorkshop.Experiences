@@ -257,6 +257,7 @@ jobs:
           - src/Elements/TheSingularityWorkshop.Experiences.Elements.csproj
           - src/DroneConstruction.Physics/TheSingularityWorkshop.Experiences.DroneConstruction.Physics.csproj
           - src/CastleSiege/TheSingularityWorkshop.Experiences.CastleSiege.csproj
+          - src/CapsuleClinic/TheSingularityWorkshop.Experiences.CapsuleClinic.csproj
     steps:
       - name: Checkout Experiences
         uses: actions/checkout@v7
@@ -346,6 +347,10 @@ jobs:
       - name: Test Castle Siege against source graph
         working-directory: Experiences
         run: dotnet test tests/CastleSiege.Tests/TheSingularityWorkshop.Experiences.CastleSiege.Tests.csproj --configuration Release -p:WorkshopUseRepositorySources=true
+
+      - name: Test Capsule Clinic semantic GUI adapter against source graph
+        working-directory: Experiences
+        run: dotnet test tests/CapsuleClinic.Tests/TheSingularityWorkshop.Experiences.CapsuleClinic.Tests.csproj --configuration Release -p:WorkshopUseRepositorySources=true
 
 
   # Drone Construction contracts stay deterministic and independent of any renderer or Unity runtime.
