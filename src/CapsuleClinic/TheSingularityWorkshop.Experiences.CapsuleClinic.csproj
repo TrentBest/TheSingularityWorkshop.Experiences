@@ -19,6 +19,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="TheSingularityWorkshop.FSM_API" Version="1.0.13" />
+    <PackageReference Include="TheSingularityWorkshop.GUI.Core" Version="0.1.0" Condition="'$(WorkshopUseRepositorySources)' != 'true'" />
+    <ProjectReference Include="..\\..\\..\\TheSingularityWorkshop.GUI\\src\\Core\\TheSingularityWorkshop.GUI.Core.csproj" Condition="'$(WorkshopUseRepositorySources)' == 'true'" />
     <None Include="../../experiences/CapsuleClinic/README.md" Pack="true" PackagePath="README.md" Link="README.md" />
   </ItemGroup>
 </Project>
