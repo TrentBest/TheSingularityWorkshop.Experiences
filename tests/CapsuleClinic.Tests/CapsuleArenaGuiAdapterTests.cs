@@ -1,4 +1,5 @@
 using TheSingularityWorkshop.Experiences.CapsuleClinic;
+using TheSingularityWorkshop.Workshop.Gui;
 using Xunit;
 
 namespace TheSingularityWorkshop.Experiences.CapsuleClinic.Tests;
@@ -55,6 +56,40 @@ public sealed class CapsuleArenaGuiAdapterTests
                 Assert.IsType<PuzzlePlayerView>(result.Snapshot.Panes[0].Player).LastAcceptedSequence);
             expectedSequence++;
         }
+    }
+
+    [Fact]
+    public void GuiCommandDispatcherSubmitsButtonIntentAndReturnsUpdatedSnapshot()
+    {
+        using var session = new CapsuleClinicLocalSession("gui-dispatch", "local", 731, "opponent", 732);
+        var tree = CapsuleArenaGuiAdapter.Build(session.CaptureSnapshot());
+
+        Assert.True(CapsuleClinicGuiCommandDispatcher.TrySubmit(
+            session, tree.Find("capsule-move-left"), out var result));
+
+        Assert.NotNull(result);
+        Assert.True(result!.IntentRecognized);
+        Assert.True(result.Decision.Accepted);
+        Assert.Equal(1UL, result.Decision.Sequence);
+        Assert.Equal(1UL,
+            Assert.IsType<PuzzlePlayerView>(result.Snapshot.Panes[0].Player).LastAcceptedSequence);
+    }
+
+    [Fact]
+    public void GuiCommandDispatcherIgnoresNodesWithoutButtonCommandMetadata()
+    {
+        using var session = new CapsuleClinicLocalSession("gui-dispatch-ignore", "local", 731, "opponent", 732);
+        var before = session.CaptureSnapshot();
+        var panel = GuiBuilder.Create("Panel", "not-a-button").Build();
+        var buttonWithoutCommand = GuiBuilder.Create("Button", "no-command").Build();
+
+        Assert.False(CapsuleClinicGuiCommandDispatcher.TrySubmit(session, panel, out var panelResult));
+        Assert.Null(panelResult);
+        Assert.False(CapsuleClinicGuiCommandDispatcher.TrySubmit(session, buttonWithoutCommand, out var buttonResult));
+        Assert.Null(buttonResult);
+
+        var after = session.CaptureSnapshot();
+        Assert.Equal(before.Panes[0].Player!.LastAcceptedSequence, after.Panes[0].Player!.LastAcceptedSequence);
     }
 
     [Fact]
