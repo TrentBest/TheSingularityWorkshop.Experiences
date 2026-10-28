@@ -63,7 +63,7 @@ public sealed class CapsuleVirusBloomTests
 
         var result = board.ApplyVirusBloom();
 
-        Assert.True(result.CellsInfected > 0);
+        Assert.Equal(new VirusBloomResult(0, 0), result);
         Assert.Null(board.GetCell(1, 1));
         Assert.True(board.GetCell(1, 0) is { IsVirus: false });
         Assert.True(board.GetCell(0, 1) is { IsVirus: false });
