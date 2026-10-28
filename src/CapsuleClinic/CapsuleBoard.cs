@@ -42,6 +42,11 @@ public readonly record struct PuzzleCell(CapsuleColor Color, bool IsVirus);
 /// <param name="VirusesCleared">Number of virus targets removed.</param>
 public readonly record struct ResolutionResult(int ChainCount, int CellsCleared, int VirusesCleared);
 
+/// <summary>The deterministic result of a virus-bloom aftermath.</summary>
+/// <param name="Waves">Number of snapshot-based spread waves applied.</param>
+/// <param name="CellsInfected">Number of previously empty cells converted to virus cells.</param>
+public readonly record struct VirusBloomResult(int Waves, int CellsInfected);
+
 /// <summary>
 /// A small deterministic, renderer-independent puzzle board for Capsule Clinic.
 /// Coordinates use (0,0) at the bottom-left; gravity moves cells toward decreasing Y.
@@ -163,6 +168,65 @@ public sealed class CapsuleBoard
         }
 
         return new ResolutionResult(chains, cleared, viruses);
+    }
+
+    /// <summary>
+    /// Spreads virus cells through four-way-adjacent empty cells in deterministic snapshot waves.
+    /// Existing capsule cells are preserved and do not themselves spread infection. Each wave
+    /// reads the board as it existed at the start of that wave, so newly infected cells cannot
+    /// spread until the next wave. Returns when no additional cells can be infected.
+    /// </summary>
+    public VirusBloomResult ApplyVirusBloom()
+    {
+        var waves = 0;
+        var infectedCount = 0;
+
+        while (true)
+        {
+            var snapshot = new PuzzleCell?[Width, Height];
+            for (var y = 0; y < Height; y++)
+                for (var x = 0; x < Width; x++)
+                    snapshot[x, y] = _cells[x, y];
+
+            var additions = new List<(int X, int Y, CapsuleColor Color)>();
+            for (var y = 0; y < Height; y++)
+            {
+                for (var x = 0; x < Width; x++)
+                {
+                    if (snapshot[x, y].HasValue)
+                        continue;
+
+                    // Fixed neighbor order makes color selection deterministic when multiple
+                    // virus fronts reach the same empty cell during the same wave.
+                    if (TryGetAdjacentVirus(snapshot, x - 1, y, out var color) ||
+                        TryGetAdjacentVirus(snapshot, x + 1, y, out color) ||
+                        TryGetAdjacentVirus(snapshot, x, y - 1, out color) ||
+                        TryGetAdjacentVirus(snapshot, x, y + 1, out color))
+                        additions.Add((x, y, color));
+                }
+            }
+
+            if (additions.Count == 0)
+                return new VirusBloomResult(waves, infectedCount);
+
+            foreach (var addition in additions)
+                _cells[addition.X, addition.Y] = new PuzzleCell(addition.Color, true);
+
+            waves++;
+            infectedCount += additions.Count;
+        }
+    }
+
+    private bool TryGetAdjacentVirus(PuzzleCell?[,] snapshot, int x, int y, out CapsuleColor color)
+    {
+        if (IsInside(x, y) && snapshot[x, y] is { IsVirus: true } virus)
+        {
+            color = virus.Color;
+            return true;
+        }
+
+        color = default;
+        return false;
     }
 
     private HashSet<(int X, int Y)> FindMatches()
