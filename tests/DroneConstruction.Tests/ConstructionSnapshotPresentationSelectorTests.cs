@@ -23,12 +23,12 @@ public sealed class ConstructionSnapshotPresentationSelectorTests
         Assert.Equal(4, first.TotalAgentsInSpace);
         Assert.Equal(2, first.SelectedIndividualCount);
         Assert.Equal(2, first.AggregatedAgentCount);
-        Assert.Equal(new ulong[] { 20, 30 }, first.IndividualAgents.Select(agent => agent.AgentId));
+        Assert.Equal(new ulong[] { 20, 10 }, first.IndividualAgents.Select(agent => agent.AgentId));
         Assert.Equal(first.IndividualAgents.Select(agent => agent.AgentId),
             second.IndividualAgents.Select(agent => agent.AgentId));
         Assert.Equal(first.Aggregates.Select(aggregate => aggregate.AggregateId),
             second.Aggregates.Select(aggregate => aggregate.AggregateId));
-        Assert.Equal(new ulong[] { 10, 40 },
+        Assert.Equal(new ulong[] { 30, 40 },
             first.Aggregates.SelectMany(aggregate => aggregate.MemberAgentIds).Order());
     }
 
