@@ -21,9 +21,11 @@ public sealed class SemanticRequirementResolverTests
         var requirement = new SemanticInteractionRequirement("workshop.userio.target-selection", V1Range);
 
         var result = SemanticRequirementResolver.ResolveProviders([requirement], [first, second]);
+        var reversed = SemanticRequirementResolver.ResolveProviders([requirement], [second, first]);
 
         Assert.False(result.Success);
         Assert.Contains(result.Issues, issue => issue.Code == "provider.ambiguous");
+        Assert.Equal(result.Issues, reversed.Issues);
     }
 
     [Fact]
@@ -46,6 +48,9 @@ public sealed class SemanticRequirementResolverTests
         Assert.True(result.Success);
         Assert.Single(result.SelectedProviders);
         Assert.Equal(artifact.StableKey, result.SelectedProviders[0].Artifact.StableKey);
+        Assert.Equal(2, result.Selections.Count);
+        Assert.Contains(result.Selections, selection => selection.CapabilityId == "workshop.userio.target-selection");
+        Assert.Contains(result.Selections, selection => selection.CapabilityId == "workshop.userio.gantry-motion");
     }
 
     [Fact]
