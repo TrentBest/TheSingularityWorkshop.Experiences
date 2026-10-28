@@ -82,15 +82,7 @@ public sealed class CapsuleVirusBloomTests
         Assert.Equal(first.Snapshot(), second.Snapshot());
     }
 
-    private static CapsuleBoard CreateSeededBoard()
-    {
-        var board = new CapsuleBoard(width: 6, height: 5);
-        Assert.True(board.TryPlaceVirus(0, 0, CapsuleColor.Purple));
-        Assert.True(board.TryPlaceVirus(5, 4, CapsuleColor.Yellow));
-        Assert.True(board.TryPlaceCapsule(new CapsulePair(CapsuleColor.Red, CapsuleColor.Blue), 2, 1, CapsuleOrientation.Horizontal));
-        return board;
-    }
-}    [Fact]
+    [Fact]
     public void BloomStopsWhenTheBoardBecomesFull()
     {
         var board = new CapsuleBoard(width: 2, height: 2);
@@ -104,4 +96,12 @@ public sealed class CapsuleVirusBloomTests
         Assert.True(board.GetCell(0, 1) is { IsVirus: true });
     }
 
-
+    private static CapsuleBoard CreateSeededBoard()
+    {
+        var board = new CapsuleBoard(width: 6, height: 5);
+        Assert.True(board.TryPlaceVirus(0, 0, CapsuleColor.Purple));
+        Assert.True(board.TryPlaceVirus(5, 4, CapsuleColor.Yellow));
+        Assert.True(board.TryPlaceCapsule(new CapsulePair(CapsuleColor.Red, CapsuleColor.Blue), 2, 1, CapsuleOrientation.Horizontal));
+        return board;
+    }
+}
