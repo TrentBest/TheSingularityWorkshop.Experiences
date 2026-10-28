@@ -38,9 +38,11 @@ public sealed class CapsuleAgentPolicyTests
     public void LowColumnStylePrefersTheLowestAvailableColumn()
     {
         using var game = new CapsuleGame(seed: 77, width: 6, height: 10);
-        Assert.True(game.Board.TryPlaceVirus(0, 0, CapsuleColor.Red));
-        Assert.True(game.Board.TryPlaceVirus(0, 1, CapsuleColor.Red));
         Assert.True(game.Board.TryPlaceVirus(1, 0, CapsuleColor.Blue));
+        Assert.True(game.Board.TryPlaceVirus(2, 0, CapsuleColor.Yellow));
+        Assert.True(game.Board.TryPlaceVirus(3, 0, CapsuleColor.Purple));
+        Assert.True(game.Board.TryPlaceVirus(4, 0, CapsuleColor.Red));
+        Assert.True(game.Board.TryPlaceVirus(5, 0, CapsuleColor.Blue));
         var policy = new CapsuleAgentPolicy(CapsuleAgentStyle.LowColumn);
         var observation = CapsuleAgentObservation.Capture(game);
 
