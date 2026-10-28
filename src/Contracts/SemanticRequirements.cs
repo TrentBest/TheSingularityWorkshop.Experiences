@@ -110,6 +110,12 @@ public static class SemanticRequirementResolver
 
         foreach (var requirement in requirementList)
         {
+            if (requirement is null)
+            {
+                issues.Add(new("requirement.invalid", "The requirement list contains a null entry."));
+                continue;
+            }
+
             if (string.IsNullOrWhiteSpace(requirement.CapabilityId))
             {
                 issues.Add(new("requirement.invalid-id", "A semantic requirement has an empty capability ID."));
