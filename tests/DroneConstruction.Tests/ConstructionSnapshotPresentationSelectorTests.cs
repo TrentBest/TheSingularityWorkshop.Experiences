@@ -20,6 +20,7 @@ public sealed class ConstructionSnapshotPresentationSelectorTests
             new ConstructionObserverPose(new GridCell(1, 0)), policy);
 
         Assert.Equal(new ConstructionSnapshotProvenance("run-a", snapshot.Tick, 7), first.Provenance);
+        Assert.Equal(4, first.TotalAgentsInSnapshot);
         Assert.Equal(4, first.TotalAgentsInSpace);
         Assert.Equal(0, simulation.TickCount);
         Assert.Equal(0, simulation.Snapshot().Tick);
