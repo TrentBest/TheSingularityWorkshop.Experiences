@@ -125,6 +125,72 @@ public sealed class CapsuleBoardTests
     }
 
     [Fact]
+    public void VirusBloom_UsesSnapshotWavesAndFillsReachableEmptyCells()
+    {
+        var board = new CapsuleBoard(width: 3, height: 3);
+        Assert.True(board.TryPlaceVirus(1, 1, CapsuleColor.Purple));
+
+        var result = board.ApplyVirusBloom();
+
+        Assert.Equal(new VirusBloomResult(2, 8), result);
+        Assert.Equal(9, board.OccupiedCount);
+        for (var y = 0; y < board.Height; y++)
+        for (var x = 0; x < board.Width; x++)
+            Assert.True(board.GetCell(x, y)!.Value.IsVirus);
+    }
+
+    [Fact]
+    public void VirusBloom_DoesNothingWhenThereAreNoViruses()
+    {
+        var board = new CapsuleBoard(width: 3, height: 3);
+        Assert.True(board.TryPlaceCapsule(
+            new CapsulePair(CapsuleColor.Red, CapsuleColor.Blue),
+            0, 0, CapsuleOrientation.Horizontal));
+        var before = board.Snapshot();
+
+        var result = board.ApplyVirusBloom();
+
+        Assert.Equal(new VirusBloomResult(0, 0), result);
+        Assert.Equal(before, board.Snapshot());
+    }
+
+    [Fact]
+    public void VirusBloom_PreservesCapsuleCellsAndDoesNotSpreadThroughThem()
+    {
+        var board = new CapsuleBoard(width: 3, height: 3);
+        Assert.True(board.TryPlaceVirus(0, 1, CapsuleColor.Yellow));
+        Assert.True(board.TryPlaceCapsule(
+            new CapsulePair(CapsuleColor.Red, CapsuleColor.Blue),
+            1, 1, CapsuleOrientation.Vertical));
+
+        var result = board.ApplyVirusBloom();
+
+        Assert.Equal(new PuzzleCell(CapsuleColor.Red, false), board.GetCell(1, 1));
+        Assert.Equal(new PuzzleCell(CapsuleColor.Blue, false), board.GetCell(1, 2));
+        Assert.True(board.GetCell(2, 1)!.Value.IsVirus);
+        Assert.True(board.GetCell(0, 2)!.Value.IsVirus);
+        Assert.Equal(7, board.OccupiedCount);
+        Assert.True(result.Waves > 0);
+    }
+
+    [Fact]
+    public void VirusBloom_IsDeterministicForEquivalentBoards()
+    {
+        var first = new CapsuleBoard(width: 4, height: 4);
+        var second = new CapsuleBoard(width: 4, height: 4);
+        Assert.True(first.TryPlaceVirus(0, 0, CapsuleColor.Red));
+        Assert.True(first.TryPlaceVirus(3, 3, CapsuleColor.Blue));
+        Assert.True(second.TryPlaceVirus(0, 0, CapsuleColor.Red));
+        Assert.True(second.TryPlaceVirus(3, 3, CapsuleColor.Blue));
+
+        var firstResult = first.ApplyVirusBloom();
+        var secondResult = second.ApplyVirusBloom();
+
+        Assert.Equal(firstResult, secondResult);
+        Assert.Equal(first.Snapshot(), second.Snapshot());
+    }
+
+    [Fact]
     public void ConstructorAndCoordinatesRejectInvalidValues()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => new CapsuleBoard(0, 4));
