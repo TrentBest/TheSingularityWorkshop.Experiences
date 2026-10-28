@@ -21,6 +21,8 @@ public sealed class ConstructionSnapshotPresentationSelectorTests
 
         Assert.Equal(new ConstructionSnapshotProvenance("run-a", snapshot.Tick, 7), first.Provenance);
         Assert.Equal(4, first.TotalAgentsInSpace);
+        Assert.Equal(0, simulation.TickCount);
+        Assert.Equal(0, simulation.Snapshot().Tick);
         Assert.Equal(2, first.SelectedIndividualCount);
         Assert.Equal(2, first.AggregatedAgentCount);
         Assert.Equal(new ulong[] { 20, 10 }, first.IndividualAgents.Select(agent => agent.AgentId));
