@@ -51,15 +51,15 @@ public static class CapsuleArenaGuiAdapter
 
         var controls = GuiBuilder.Create("Panel", "capsule-clinic-local-controls")
             .Child("Button", "capsule-move-left", child =>
-                child.Text("Move left").WithOnClick(CapsuleClinicIntents.MoveLeft))
+                child.Text("Move left").Property("onClickCommand", CapsuleClinicIntents.MoveLeft))
             .Child("Button", "capsule-move-right", child =>
-                child.Text("Move right").WithOnClick(CapsuleClinicIntents.MoveRight))
+                child.Text("Move right").Property("onClickCommand", CapsuleClinicIntents.MoveRight))
             .Child("Button", "capsule-rotate", child =>
-                child.Text("Rotate").WithOnClick(CapsuleClinicIntents.Rotate))
+                child.Text("Rotate").Property("onClickCommand", CapsuleClinicIntents.Rotate))
             .Child("Button", "capsule-soft-drop", child =>
-                child.Text("Soft drop").WithOnClick(CapsuleClinicIntents.SoftDrop))
+                child.Text("Soft drop").Property("onClickCommand", CapsuleClinicIntents.SoftDrop))
             .Child("Button", "capsule-hard-drop", child =>
-                child.Text("Hard drop").WithOnClick(CapsuleClinicIntents.HardDrop));
+                child.Text("Hard drop").Property("onClickCommand", CapsuleClinicIntents.HardDrop));
 
         root.Child(controls);
         return root.Build();
