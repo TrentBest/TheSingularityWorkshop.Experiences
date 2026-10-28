@@ -2,7 +2,7 @@
 
 ## Status
 
-The dependency-free `TheSingularityWorkshop.Experiences.Contracts` assembly now implements pure validation, deterministic provider matching, immutable artifact identity checks, and dependency-closure validation. Its executable tests live in `tests/Contracts.Tests`. This is the Experience-owned contract layer; it does **not** claim that AnyApp, WebApp, FSM_UserIO, or FSM_COS already implements capability negotiation or that host integration is complete.
+The dependency-free `TheSingularityWorkshop.Experiences.Contracts` assembly now implements pure validation, deterministic provider matching with explicit capability-to-provider selections, immutable artifact identity checks, and dependency-closure validation. Its executable tests live in `tests/Contracts.Tests`. This is the Experience-owned contract layer; it does **not** claim that AnyApp, WebApp, FSM_UserIO, or FSM_COS already implements capability negotiation or that host integration is complete.
 
 No package reference to FSM_UserIO is required to author or validate this declarative contract. Do not add that dependency until the exact candidate commit passes the dependency-policy gate in [CiAi issue #21](https://github.com/TrentBest/TheSingularityWorkshop.CiAi/issues/21).
 
