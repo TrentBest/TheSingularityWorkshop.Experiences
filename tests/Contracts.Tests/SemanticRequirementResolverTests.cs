@@ -148,6 +148,29 @@ public sealed class SemanticRequirementResolverTests
     }
 
     [Fact]
+    public void ArtifactIdentityRejectsControlCharactersAndWhitespacePadding()
+    {
+        var valid = Artifact("physics");
+        var newlineIdentity = new ArtifactIdentity("physics\nother", "1.0.0", new string('a', 64));
+        var paddedVersion = new ArtifactIdentity("physics", " 1.0.0", new string('a', 64));
+
+        Assert.True(valid.IsValid);
+        Assert.False(newlineIdentity.IsValid);
+        Assert.False(paddedVersion.IsValid);
+    }
+
+    [Fact]
+    public void StableArtifactKeysCannotCollideAcrossComponentBoundaries()
+    {
+        var first = new ArtifactIdentity("ab", "c", new string('a', 64));
+        var second = new ArtifactIdentity("a", "bc", new string('a', 64));
+
+        Assert.True(first.IsValid);
+        Assert.True(second.IsValid);
+        Assert.NotEqual(first.StableKey, second.StableKey);
+    }
+
+    [Fact]
     public void NullRequirementEntryFailsWithDiagnosticInsteadOfThrowing()
     {
         var result = SemanticRequirementResolver.ResolveProviders(
