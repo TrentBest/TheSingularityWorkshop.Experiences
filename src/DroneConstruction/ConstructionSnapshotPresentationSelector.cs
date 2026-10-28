@@ -9,6 +9,9 @@ public readonly record struct ConstructionObserverPose(GridCell Position);
 /// </summary>
 public sealed record ConstructionSnapshotPresentationPolicy
 {
+    /// <summary>Creates a bounded observer-relative presentation policy.</summary>
+    /// <param name="maximumIndividualAgents">Maximum individual agent representations.</param>
+    /// <param name="individualRadius">Maximum Manhattan distance eligible for individual representation.</param>
     public ConstructionSnapshotPresentationPolicy(int maximumIndividualAgents, int individualRadius)
     {
         if (maximumIndividualAgents < 0)
@@ -52,7 +55,9 @@ public sealed record ConstructionSnapshotPresentationSelection(
     IReadOnlyList<ConstructionAgentSnapshot> IndividualAgents,
     IReadOnlyList<ConstructionAgentAggregate> Aggregates)
 {
+    /// <summary>Gets the number of agents represented individually.</summary>
     public int SelectedIndividualCount => IndividualAgents.Count;
+    /// <summary>Gets the number of agents represented by aggregates.</summary>
     public int AggregatedAgentCount => Aggregates.Sum(aggregate => aggregate.Count);
 }
 
@@ -62,6 +67,14 @@ public sealed record ConstructionSnapshotPresentationSelection(
 /// </summary>
 public static class ConstructionSnapshotPresentationSelector
 {
+    /// <summary>Selects individual and aggregated representations from one immutable snapshot.</summary>
+    /// <param name="snapshot">Committed simulation snapshot to inspect.</param>
+    /// <param name="runId">Stable identity of the simulation run.</param>
+    /// <param name="sequence">Monotonic observer-output sequence for this run.</param>
+    /// <param name="spaceId">Qualified simulation-grid space to present.</param>
+    /// <param name="observer">Observer position in the same grid coordinate space.</param>
+    /// <param name="policy">Bounded individual-selection policy.</param>
+    /// <returns>A deterministic selection with snapshot provenance.</returns>
     public static ConstructionSnapshotPresentationSelection Select(
         ConstructionSimulationSnapshot snapshot,
         string runId,
