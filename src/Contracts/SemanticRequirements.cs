@@ -46,6 +46,7 @@ public sealed record ArtifactIdentity(string BundleId, string Version, string Sh
     public bool IsValid =>
         !string.IsNullOrWhiteSpace(BundleId) &&
         !string.IsNullOrWhiteSpace(Version) &&
+        !string.IsNullOrWhiteSpace(Sha256) &&
         Sha256.Length == 64 &&
         Sha256.All(Uri.IsHexDigit);
 
@@ -70,10 +71,23 @@ public sealed record ArtifactDescriptor(
 
 public sealed record ContractIssue(string Code, string Message);
 
+public sealed record CapabilityProviderSelection(
+    string CapabilityId,
+    ContractVersion ContractVersion,
+    SemanticCapabilityProvider Provider);
+
 public sealed record ProviderResolution(
     bool Success,
-    IReadOnlyList<SemanticCapabilityProvider> SelectedProviders,
-    IReadOnlyList<ContractIssue> Issues);
+    IReadOnlyList<CapabilityProviderSelection> Selections,
+    IReadOnlyList<ContractIssue> Issues)
+{
+    public IReadOnlyList<SemanticCapabilityProvider> SelectedProviders =>
+        Selections.Select(selection => selection.Provider)
+            .GroupBy(provider => provider.Artifact.StableKey, StringComparer.Ordinal)
+            .Select(group => group.First())
+            .OrderBy(provider => provider.Artifact.StableKey, StringComparer.Ordinal)
+            .ToArray();
+}
 
 public sealed record ArtifactClosureResolution(
     bool Success,
@@ -136,10 +150,12 @@ public static class SemanticRequirementResolver
         }
 
         if (issues.Count > 0)
-            return new(false, Array.Empty<SemanticCapabilityProvider>(), issues);
+            return new(false, Array.Empty<CapabilityProviderSelection>(), issues);
 
-        var selected = new Dictionary<string, SemanticCapabilityProvider>(StringComparer.Ordinal);
-        foreach (var requirement in requirementList)
+        var selections = new List<CapabilityProviderSelection>();
+        foreach (var requirement in requirementList
+                     .OrderBy(item => item.CapabilityId, StringComparer.Ordinal)
+                     .ThenBy(item => item.ContractVersions.MinimumInclusive))
         {
             if (string.IsNullOrWhiteSpace(requirement.CapabilityId) || requirement.ContractVersions is null)
                 continue;
@@ -154,12 +170,18 @@ public static class SemanticRequirementResolver
                 .ToArray();
 
             if (matches.Length == 1)
-                selected[matches[0].Artifact.StableKey] = matches[0];
+            {
+                var provided = matches[0].Capabilities
+                    .Where(capability =>
+                        string.Equals(capability.CapabilityId, requirement.CapabilityId, StringComparison.Ordinal) &&
+                        requirement.ContractVersions.Contains(capability.ContractVersion))
+                    .OrderBy(capability => capability.ContractVersion)
+                    .First();
+                selections.Add(new(requirement.CapabilityId, provided.ContractVersion, matches[0]));
+            }
         }
 
-        return new(true,
-            selected.Values.OrderBy(provider => provider.Artifact.StableKey, StringComparer.Ordinal).ToArray(),
-            Array.Empty<ContractIssue>());
+        return new(true, selections, Array.Empty<ContractIssue>());
     }
 
     public static ArtifactClosureResolution ResolveArtifactClosure(
