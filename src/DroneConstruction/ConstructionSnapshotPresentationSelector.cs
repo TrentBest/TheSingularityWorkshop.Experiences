@@ -103,7 +103,7 @@ public static class ConstructionSnapshotPresentationSelector
             .ThenBy(group => group.Key.Cell.Y)
             .ThenBy(group => group.Key.Cell.X)
             .Select(group => new ConstructionAgentAggregate(
-                $"construction:{group.Key.SpaceId}:{group.Key.Cell.X}:{group.Key.Cell.Y",
+                $"construction:{group.Key.SpaceId}:{group.Key.Cell.X}:{group.Key.Cell.Y}",
                 group.Key.SpaceId,
                 group.Key.Cell,
                 Array.AsReadOnly(group.Select(candidate => candidate.Agent.AgentId).Order().ToArray())))
