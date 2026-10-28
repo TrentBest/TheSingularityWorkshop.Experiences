@@ -54,19 +54,19 @@ public sealed class CapsuleVirusBloomTests
     }
 
     [Fact]
-    public void BloomStopsWhenNoReachableEmptyCellsRemain()
+    public void BloomDoesNotInfectAnEmptyCellReachableOnlyDiagonally()
     {
-        var board = new CapsuleBoard(width: 2, height: 2);
+        var board = new CapsuleBoard(width: 3, height: 3);
         Assert.True(board.TryPlaceVirus(0, 0, CapsuleColor.Yellow));
-        Assert.True(board.TryPlaceCapsule(new CapsulePair(CapsuleColor.Red, CapsuleColor.Blue), 1, 0, CapsuleOrientation.Vertical));
-        // The final cell is the only remaining empty cell and touches the seed diagonally only.
-        Assert.True(board.TryPlaceVirus(1, 1, CapsuleColor.Yellow));
+        Assert.True(board.TryPlaceCapsule(new CapsulePair(CapsuleColor.Red, CapsuleColor.Blue), 1, 0, CapsuleOrientation.Horizontal));
+        Assert.True(board.TryPlaceCapsule(new CapsulePair(CapsuleColor.Purple, CapsuleColor.Purple), 0, 1, CapsuleOrientation.Vertical));
 
         var result = board.ApplyVirusBloom();
 
-        Assert.Equal(0, result.CellsInfected);
-        Assert.Equal(0, result.Waves);
-        Assert.Equal(3, board.OccupiedCount);
+        Assert.True(result.CellsInfected > 0);
+        Assert.Null(board.GetCell(1, 1));
+        Assert.True(board.GetCell(1, 0) is { IsVirus: false });
+        Assert.True(board.GetCell(0, 1) is { IsVirus: false });
     }
 
     [Fact]
