@@ -18,6 +18,8 @@ public enum CapsuleAgentStyle
 /// </summary>
 public sealed class CapsuleAgentPolicy
 {
+    /// <summary>Creates a policy using the selected deterministic baseline style.</summary>
+    /// <param name="style">The heuristic used to choose a target column.</param>
     public CapsuleAgentPolicy(CapsuleAgentStyle style)
     {
         if (!Enum.IsDefined(style)) throw new ArgumentOutOfRangeException(nameof(style));
