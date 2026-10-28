@@ -15,6 +15,7 @@ jobs:
     strategy:
       matrix:
         project:
+          - src/Contracts/TheSingularityWorkshop.Experiences.Contracts.csproj
           - src/Forge/TheSingularityWorkshop.Experiences.Forge.csproj
           - src/Moniker/TheSingularityWorkshop.Experiences.Moniker.csproj
           - src/Moniker.Motion.Wave/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.csproj
@@ -61,6 +62,19 @@ jobs:
         with:
           name: drone-construction-browser-showcase
           path: artifacts/drone-construction-showcase.html
+
+  # Semantic requirement matching and immutable artifact-closure validation are host-neutral contracts.
+  test-semantic-contracts:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore semantic contract tests
+        run: dotnet restore tests/Contracts.Tests/TheSingularityWorkshop.Experiences.Contracts.Tests.csproj
+      - name: Run semantic contract tests
+        run: dotnet test tests/Contracts.Tests/TheSingularityWorkshop.Experiences.Contracts.Tests.csproj --configuration Release --no-restore
 
   test-chemistry:
     runs-on: ubuntu-24.04
