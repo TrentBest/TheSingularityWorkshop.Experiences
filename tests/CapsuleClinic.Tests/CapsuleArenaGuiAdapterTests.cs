@@ -8,8 +8,8 @@ public sealed class CapsuleArenaGuiAdapterTests
     [Fact]
     public void BuildProjectsAuthoritativeSnapshotAndDeclaresStableIntentIds()
     {
-        using var session = new CapsuleClinicLocalSession("gui-adapter", "local", "opponent", 731);
-        var snapshot = session.GetSnapshot();
+        using var session = new CapsuleClinicLocalSession("gui-adapter", "local", 731, "opponent", 732);
+        var snapshot = session.CaptureSnapshot();
         var tree = CapsuleArenaGuiAdapter.Build(snapshot);
 
         Assert.Equal("capsule-clinic-arena", tree.Id);
