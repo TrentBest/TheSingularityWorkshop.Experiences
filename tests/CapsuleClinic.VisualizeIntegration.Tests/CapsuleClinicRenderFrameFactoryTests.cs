@@ -54,14 +54,8 @@ public sealed class CapsuleClinicRenderFrameFactoryTests
         Assert.True(room.JoinPlayer("bob", 202));
         Assert.True(room.StartMatch());
         var snapshot = CapsuleArenaSnapshot.Capture(room, "alice");
-        Assert.True(snapshot.Panes[0].Player!.Active.HasValue);
-        var active = snapshot.Panes[0].Player!.Active!.Value;
 
         var presentation = CapsuleClinicRenderFrameFactory.Create(snapshot);
-
-        Assert.Equal(2, presentation.ActiveSegments);
-        var activeCommands = presentation.Frame.Commands.Skip(presentation.BaseCellCommands).ToArray();
-        Assert.Equal(2, activeCommands.Length);
 
         static ulong GeometryId(CapsuleColor color) => color switch
         {
@@ -72,7 +66,22 @@ public sealed class CapsuleClinicRenderFrameFactoryTests
             _ => throw new ArgumentOutOfRangeException(nameof(color))
         };
 
-        Assert.Equal(GeometryId(active.Pair.PivotColor), activeCommands[0].Geometry.Value);
-        Assert.Equal(GeometryId(active.Pair.PartnerColor), activeCommands[1].Geometry.Value);
+        var expectedGeometryIds = snapshot.Panes
+            .Where(pane => pane.Player?.Active is not null)
+            .SelectMany(pane =>
+            {
+                var active = pane.Player!.Active!.Value;
+                return new[]
+                {
+                    GeometryId(active.Pair.PivotColor),
+                    GeometryId(active.Pair.PartnerColor)
+                };
+            })
+            .ToArray();
+
+        Assert.Equal(expectedGeometryIds.Length, presentation.ActiveSegments);
+        var activeCommands = presentation.Frame.Commands.Skip(presentation.BaseCellCommands).ToArray();
+        Assert.Equal(expectedGeometryIds.Length, activeCommands.Length);
+        Assert.Equal(expectedGeometryIds, activeCommands.Select(command => command.Geometry.Value));
     }
 }
