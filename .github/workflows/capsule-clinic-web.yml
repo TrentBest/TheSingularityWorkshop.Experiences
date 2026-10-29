@@ -73,7 +73,8 @@ jobs:
           done
           test "$ready" = "true"
           grep -q '"localPlayerId":"player"' /tmp/capsule-clinic-state.json
-          curl --silent --show-error --fail http://127.0.0.1:5088/api/arena.svg > /tmp/capsule-clinic-arena.svg
+          svg_content_type=$(curl --silent --show-error --fail --output /tmp/capsule-clinic-arena.svg --write-out "%{content_type}" http://127.0.0.1:5088/api/arena.svg)
+          case "$svg_content_type" in image/svg+xml*) ;; *) echo "Expected image/svg+xml, got: $svg_content_type" >&2; exit 1 ;; esac
           grep -q '<svg' /tmp/capsule-clinic-arena.svg
           grep -q 'Capsule Clinic arena rendered through Renderer, Visualize, and GUI.SVG' /tmp/capsule-clinic-arena.svg
           curl --silent --show-error --fail -H 'content-type: application/json' -d '{"key":"ArrowLeft"}' http://127.0.0.1:5088/api/key > /tmp/capsule-clinic-command.json
