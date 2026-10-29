@@ -7,5 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/CapsuleClinic/TheSingularityWorkshop.Experiences.CapsuleClinic.csproj" />
+    <ProjectReference Include="../../integrations/CapsuleClinic.VisualizeIntegration/TheSingularityWorkshop.Experiences.CapsuleClinic.VisualizeIntegration.csproj" />
   </ItemGroup>
 </Project>
