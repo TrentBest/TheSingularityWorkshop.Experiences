@@ -16,6 +16,7 @@ on:
       - "src/CapsuleClinic/**"
       - "integrations/CapsuleClinic.VisualizeIntegration/**"
       - "tests/CapsuleClinic.Tests/**"
+      - "tests/CapsuleClinic.VisualizeIntegration.Tests/**"
       - ".github/workflows/capsule-clinic-web.yml"
   workflow_dispatch:
 
@@ -25,6 +26,8 @@ permissions:
 jobs:
   playable-browser-slice:
     runs-on: ubuntu-24.04
+    env:
+      WorkshopGuiSvgProjectPath: ${{ github.workspace }}/VisualizeSource/integrations/GuiSvg/GuiSource/src/SVG/TheSingularityWorkshop.GUI.SVG.csproj
     steps:
       - uses: actions/checkout@v7
       - name: Checkout Visualize integration source
@@ -57,12 +60,8 @@ jobs:
       - name: Run Capsule Clinic presentation integration tests
         run: dotnet test tests/CapsuleClinic.VisualizeIntegration.Tests/TheSingularityWorkshop.Experiences.CapsuleClinic.VisualizeIntegration.Tests.csproj --configuration Release --no-restore
       - name: Restore browser host and presentation pipeline
-        env:
-          WorkshopGuiSvgProjectPath: ${{ github.workspace }}/VisualizeSource/integrations/GuiSvg/GuiSource/src/SVG/TheSingularityWorkshop.GUI.SVG.csproj
         run: dotnet restore samples/CapsuleClinic.Web/CapsuleClinic.Web.csproj
       - name: Build browser host and presentation pipeline
-        env:
-          WorkshopGuiSvgProjectPath: ${{ github.workspace }}/VisualizeSource/integrations/GuiSvg/GuiSource/src/SVG/TheSingularityWorkshop.GUI.SVG.csproj
         run: dotnet build samples/CapsuleClinic.Web/CapsuleClinic.Web.csproj --configuration Release --no-restore
       - name: Smoke-test browser authority and Renderer to GUI.SVG endpoint
         shell: bash
