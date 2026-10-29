@@ -1,0 +1,59 @@
+name: Capsule Clinic browser slice
+
+on:
+  push:
+    branches: [master, development]
+    paths:
+      - "samples/CapsuleClinic.Web/**"
+      - "src/CapsuleClinic/**"
+      - "tests/CapsuleClinic.Tests/**"
+      - ".github/workflows/capsule-clinic-web.yml"
+  pull_request:
+    paths:
+      - "samples/CapsuleClinic.Web/**"
+      - "src/CapsuleClinic/**"
+      - "tests/CapsuleClinic.Tests/**"
+      - ".github/workflows/capsule-clinic-web.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  playable-browser-slice:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore Capsule Clinic tests
+        run: dotnet restore tests/CapsuleClinic.Tests/TheSingularityWorkshop.Experiences.CapsuleClinic.Tests.csproj
+      - name: Run Capsule Clinic tests
+        run: dotnet test tests/CapsuleClinic.Tests/TheSingularityWorkshop.Experiences.CapsuleClinic.Tests.csproj --configuration Release --no-restore
+      - name: Restore browser host
+        run: dotnet restore samples/CapsuleClinic.Web/CapsuleClinic.Web.csproj
+      - name: Build browser host
+        run: dotnet build samples/CapsuleClinic.Web/CapsuleClinic.Web.csproj --configuration Release --no-restore
+      - name: Smoke-test browser authority and SVG endpoints
+        shell: bash
+        run: |
+          set -euo pipefail
+          dotnet run --project samples/CapsuleClinic.Web/CapsuleClinic.Web.csproj --configuration Release --no-build --urls http://127.0.0.1:5088 > /tmp/capsule-clinic-web.log 2>&1 &
+          host_pid=$!
+          trap 'kill "$host_pid" 2>/dev/null || true' EXIT
+          ready=false
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail http://127.0.0.1:5088/api/state > /tmp/capsule-clinic-state.json; then ready=true; break; fi
+            sleep 1
+          done
+          test "$ready" = "true"
+          grep -q '"localPlayerId":"player"' /tmp/capsule-clinic-state.json
+          curl --silent --show-error --fail http://127.0.0.1:5088/api/arena.svg > /tmp/capsule-clinic-arena.svg
+          grep -q '<svg' /tmp/capsule-clinic-arena.svg
+          curl --silent --show-error --fail -H 'content-type: application/json' -d '{"key":"ArrowLeft"}' http://127.0.0.1:5088/api/key > /tmp/capsule-clinic-command.json
+          grep -q '"accepted":true' /tmp/capsule-clinic-command.json
+          curl --silent --show-error --fail http://127.0.0.1:5088/api/state > /tmp/capsule-clinic-state-after.json
+          grep -q '"lastAcceptedSequence":1' /tmp/capsule-clinic-state-after.json
+          status=$(curl --silent --show-error -H 'content-type: application/json' -d '{"key":"NotAKey"}' http://127.0.0.1:5088/api/key --output /dev/null --write-out "%{http_code}")
+          test "$status" = "400"
