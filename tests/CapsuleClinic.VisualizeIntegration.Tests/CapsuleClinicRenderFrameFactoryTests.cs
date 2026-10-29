@@ -54,7 +54,8 @@ public sealed class CapsuleClinicRenderFrameFactoryTests
         Assert.True(room.JoinPlayer("bob", 202));
         Assert.True(room.StartMatch());
         var snapshot = CapsuleArenaSnapshot.Capture(room, "alice");
-        var active = Assert.IsType<ActiveCapsuleSnapshot>(snapshot.Panes[0].Player!.Active);
+        Assert.True(snapshot.Panes[0].Player!.Active.HasValue);
+        var active = snapshot.Panes[0].Player!.Active!.Value;
 
         var presentation = CapsuleClinicRenderFrameFactory.Create(snapshot);
 
