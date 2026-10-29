@@ -32,9 +32,9 @@ app.MapGet("/api/state", () =>
             lastAcceptedSequence = local?.LastAcceptedSequence ?? 0,
             active = active is null ? null : new
             {
-                active.PivotX,
-                active.PivotY,
-                orientation = active.Orientation.ToString()
+                active.Value.PivotX,
+                active.Value.PivotY,
+                orientation = active.Value.Orientation.ToString()
             }
         });
     }
