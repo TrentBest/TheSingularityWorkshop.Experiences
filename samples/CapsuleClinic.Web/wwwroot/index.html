@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101923">
+  <title>Capsule Clinic · Playable Slice</title>
+  <style>
+    :root { color-scheme: dark; font-family: ui-sans-serif, system-ui, sans-serif; background: #0b121a; color: #f4f7fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: radial-gradient(ellipse at 20% 0%, #24394a, #0b121a 65%); }
+    main { width: min(1100px, calc(100% - 32px)); margin: auto; padding: 28px 0 44px; }
+    .eyebrow { color: #f2b84b; letter-spacing: .16em; font-size: .76rem; font-weight: 800; }
+    h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin: .4rem 0; letter-spacing: -.04em; }
+    .intro { color: #b8c8d6; line-height: 1.6; max-width: 72ch; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(260px, .6fr); gap: 18px; align-items: start; margin-top: 22px; }
+    .panel { min-width: 0; border: 1px solid #34485a; border-radius: 16px; padding: 18px; background: #14212deF; }
+    #arena { display: block; width: 100%; height: auto; border-radius: 10px; background: #101923; }
+    h2 { font-size: 1rem; margin: 0 0 12px; }
+    .controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    button { font: inherit; color: #f4f7fb; background: #263b4d; border: 1px solid #4a657c; border-radius: 9px; padding: 12px 8px; cursor: pointer; }
+    button:hover:enabled { background: #35556b; border-color: #8db7d1; }
+    button:focus-visible { outline: 3px solid #f2b84b; outline-offset: 3px; }
+    button:disabled { opacity: .5; cursor: wait; }
+    .wide { grid-column: span 3; }
+    .meta { color: #b8c8d6; font-size: .9rem; line-height: 1.6; }
+    #status { min-height: 3em; color: #b8d9ef; }
+    kbd { display: inline-block; min-width: 2em; text-align: center; border: 1px solid #62798c; border-bottom-width: 3px; border-radius: 5px; padding: 1px 5px; color: #fff; }
+    .boundary { border-left: 3px solid #f2b84b; padding: 10px 12px; background: #27271f; color: #f3dfb7; font-size: .88rem; line-height: 1.5; }
+    @media (max-width: 760px) { .layout { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">THE SINGULARITY WORKSHOP / EXPERIENCES</div>
+  <h1>Capsule Clinic</h1>
+  <p class="intro">A playable, seeded browser slice of the original falling-capsule puzzle. Every input is submitted as semantic intent to the existing authoritative session; the arena is refreshed from its returned state.</p>
+  <div class="layout">
+    <section class="panel" aria-label="Authoritative arena">
+      <img id="arena" src="/api/arena.svg" alt="Capsule Clinic arena showing the local board, practice opponent, and standings">
+    </section>
+    <aside class="panel">
+      <h2>Controls</h2>
+      <div class="controls">
+        <button data-key="ArrowLeft" aria-label="Move left">← Left</button>
+        <button data-key="ArrowUp" aria-label="Rotate capsule">↻ Rotate</button>
+        <button data-key="ArrowRight" aria-label="Move right">Right →</button>
+        <button class="wide" data-key="ArrowDown">↓ Soft drop</button>
+        <button class="wide" data-key=" " aria-label="Hard drop (Space)">Space · Hard drop</button>
+      </div>
+      <p class="meta">Keyboard: <kbd>←</kbd> <kbd>→</kbd> move, <kbd>↑</kbd> rotate, <kbd>↓</kbd> soft drop, <kbd>Space</kbd> hard drop. Inputs are ignored while a control is being processed.</p>
+      <p class="meta" id="state" aria-live="polite">Loading authoritative state…</p>
+      <p id="status" role="status" aria-live="polite"></p>
+      <div class="boundary">This host proves real browser input → semantic intent → authority → fresh snapshot → SVG presentation. It does not yet route the board through Renderer or Visualize, and it is a local in-process match—not network multiplayer.</div>
+    </aside>
+  </div>
+</main>
+<script>
+  let busy = false;
+  async function post(url, body) {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || "The command was rejected.");
+    return result;
+  }
+  async function refresh() {
+    const stateResponse = await fetch("/api/state", { cache: "no-store" });
+    if (!stateResponse.ok) throw new Error("Could not read authoritative state.");
+    const state = await stateResponse.json();
+    document.getElementById("state").textContent =
+      "Player: " + state.localPlayerId + " · Board: " + state.boardWidth + "×" + state.boardHeight +
+      " · Accepted sequence: " + state.lastAcceptedSequence +
+      (state.active ? " · Active capsule: (" + state.active.pivotX + ", " + state.active.pivotY + "), " + state.active.orientation : "") +
+      (state.gameOver ? " · Game over" : "");
+    document.getElementById("arena").src = "/api/arena.svg?v=" + Date.now();
+  }
+  async function submitKey(key) {
+    if (busy) return;
+    busy = true;
+    document.querySelectorAll("button[data-key]").forEach(button => button.disabled = true);
+    try {
+      const result = await post("/api/key", { key });
+      document.getElementById("status").textContent = result.accepted
+        ? "Accepted " + result.intentId + " · sequence " + result.sequence
+        : "Rejected " + result.intentId + " · " + result.rejection;
+      await refresh();
+    } catch (error) {
+      document.getElementById("status").textContent = error.message;
+    } finally {
+      busy = false;
+      document.querySelectorAll("button[data-key]").forEach(button => button.disabled = false);
+    }
+  }
+  document.querySelectorAll("button[data-key]").forEach(button =>
+    button.addEventListener("click", () => submitKey(button.dataset.key)));
+  window.addEventListener("keydown", event => {
+    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(event.key)) {
+      event.preventDefault();
+      void submitKey(event.key);
+    }
+  });
+  refresh().catch(error => document.getElementById("status").textContent = error.message);
+</script>
+</body>
+</html>
