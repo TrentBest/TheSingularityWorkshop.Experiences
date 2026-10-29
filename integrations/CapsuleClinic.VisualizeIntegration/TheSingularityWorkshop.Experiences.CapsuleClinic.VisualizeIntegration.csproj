@@ -11,7 +11,7 @@
     <WorkshopGuiSvgAdapterProject Condition="Exists('$(WorkshopVisualizeRoot)/integrations/GuiSvg/TheSingularityWorkshop.Visualize.GUI.SVG.csproj')">$(WorkshopVisualizeRoot)/integrations/GuiSvg/TheSingularityWorkshop.Visualize.GUI.SVG.csproj</WorkshopGuiSvgAdapterProject>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../CapsuleClinic/TheSingularityWorkshop.Experiences.CapsuleClinic.csproj" />
+    <ProjectReference Include="../../src/CapsuleClinic/TheSingularityWorkshop.Experiences.CapsuleClinic.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(WorkshopRendererAdapterProject)' != ''">
     <ProjectReference Include="$(WorkshopRendererAdapterProject)" />
