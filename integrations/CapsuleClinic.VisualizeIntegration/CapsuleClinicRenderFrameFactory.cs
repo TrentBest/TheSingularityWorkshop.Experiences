@@ -76,6 +76,7 @@ public static class CapsuleClinicRenderFrameFactory
         };
 
         var commands = new List<RenderDrawCommand>();
+        var activeCommands = new List<RenderDrawCommand>();
         var occupiedCells = 0;
         var activeSegments = 0;
         var entityId = 1UL;
@@ -132,13 +133,14 @@ public static class CapsuleClinicRenderFrameFactory
                         centerX + (segment.X - (snapshot.BoardWidth - 1) / 2f) * CellSize,
                         centerY + (segment.Y - (snapshot.BoardHeight - 1) / 2f) * CellSize,
                         0.001f);
-                commands.Add(new RenderDrawCommand(
+                activeCommands.Add(new RenderDrawCommand(
                     geometry.Geometry, MaterialFor(segment.Color), transform, geometry.IndexCount, 0, 0,
                     RendererRepresentation.Interactive, entity: new RenderEntityId(entityId++)));
                 activeSegments++;
             }
         }
 
+        commands.AddRange(activeCommands);
         var frame = new RenderFrame(
             new RenderView(Vector3.Zero, Matrix4x4.Identity, Matrix4x4.Identity),
             commands);
