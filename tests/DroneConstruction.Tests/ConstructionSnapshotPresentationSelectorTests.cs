@@ -68,6 +68,41 @@ public sealed class ConstructionSnapshotPresentationSelectorTests
             new ConstructionSnapshotPresentationPolicy(1, 1)));
     }
 
+
+    [Fact]
+    public void Select_ChangingObserverAndLodDoesNotChangeAuthoritativeOutcomes()
+    {
+        var observedSimulation = CreateSimulation();
+        var controlSimulation = CreateSimulation();
+
+        var observedSnapshot = observedSimulation.Snapshot();
+        var firstSelection = ConstructionSnapshotPresentationSelector.Select(
+            observedSnapshot, "run-a", 0, observedSimulation.SpaceId,
+            new ConstructionObserverPose(new GridCell(0, 0)),
+            new ConstructionSnapshotPresentationPolicy(maximumIndividualAgents: 1, individualRadius: 0));
+        var secondSelection = ConstructionSnapshotPresentationSelector.Select(
+            observedSnapshot, "run-a", 1, observedSimulation.SpaceId,
+            new ConstructionObserverPose(new GridCell(3, 0)),
+            new ConstructionSnapshotPresentationPolicy(maximumIndividualAgents: 3, individualRadius: 3));
+
+        Assert.NotEqual(firstSelection.IndividualAgents.Select(agent => agent.AgentId),
+            secondSelection.IndividualAgents.Select(agent => agent.AgentId));
+        Assert.NotEqual(firstSelection.AggregatedAgentCount, secondSelection.AggregatedAgentCount);
+
+        observedSimulation.Step();
+        controlSimulation.Step();
+
+        var observedOutcome = observedSimulation.Snapshot();
+        var controlOutcome = controlSimulation.Snapshot();
+        Assert.Equal(controlOutcome.Tick, observedOutcome.Tick);
+        Assert.Equal(controlOutcome.RequiredBlocks, observedOutcome.RequiredBlocks);
+        Assert.Equal(controlOutcome.PlacedBlocks, observedOutcome.PlacedBlocks);
+        Assert.Equal(controlOutcome.IsComplete, observedOutcome.IsComplete);
+        Assert.Equal(controlOutcome.Agents, observedOutcome.Agents);
+        Assert.Equal(controlOutcome.Emitters, observedOutcome.Emitters);
+        Assert.Equal(controlOutcome.CellPlacedBlocks, observedOutcome.CellPlacedBlocks);
+    }
+
     private static ConstructionSimulation CreateSimulation() => new(
         width: 4,
         height: 1,
