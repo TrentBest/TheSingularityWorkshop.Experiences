@@ -8,6 +8,7 @@ on:
       - "src/CapsuleClinic/**"
       - "integrations/CapsuleClinic.VisualizeIntegration/**"
       - "tests/CapsuleClinic.Tests/**"
+      - "tests/CapsuleClinic.VisualizeIntegration.Tests/**"
       - ".github/workflows/capsule-clinic-web.yml"
   pull_request:
     paths:
@@ -51,6 +52,10 @@ jobs:
         run: dotnet restore tests/CapsuleClinic.Tests/TheSingularityWorkshop.Experiences.CapsuleClinic.Tests.csproj
       - name: Run Capsule Clinic tests
         run: dotnet test tests/CapsuleClinic.Tests/TheSingularityWorkshop.Experiences.CapsuleClinic.Tests.csproj --configuration Release --no-restore
+      - name: Restore Capsule Clinic presentation integration tests
+        run: dotnet restore tests/CapsuleClinic.VisualizeIntegration.Tests/TheSingularityWorkshop.Experiences.CapsuleClinic.VisualizeIntegration.Tests.csproj
+      - name: Run Capsule Clinic presentation integration tests
+        run: dotnet test tests/CapsuleClinic.VisualizeIntegration.Tests/TheSingularityWorkshop.Experiences.CapsuleClinic.VisualizeIntegration.Tests.csproj --configuration Release --no-restore
       - name: Restore browser host and presentation pipeline
         env:
           WorkshopGuiSvgProjectPath: ${{ github.workspace }}/VisualizeSource/integrations/GuiSvg/GuiSource/src/SVG/TheSingularityWorkshop.GUI.SVG.csproj
