@@ -95,9 +95,9 @@ public static class CapsuleClinicRenderFrameFactory
             for (var x = 0; x < snapshot.BoardWidth; x++)
             {
                 var cell = pane.Player?.Board[y * snapshot.BoardWidth + x];
-                var geometry = cell is { } settled
+                (RenderResourceId Geometry, int IndexCount) geometry = cell is { } settled
                     ? GeometryFor(settled.Color)
-                    : (Geometry: emptyGeometryId, IndexCount: 6);
+                    : (emptyGeometryId, 6);
                 var materialId = cell is { } colored ? MaterialFor(colored.Color) : emptyMaterialId;
                 if (cell.HasValue) occupiedCells++;
                 var transform = Matrix4x4.CreateScale(CellSize)
@@ -162,12 +162,12 @@ public static class CapsuleClinicRenderFrameFactory
                 new Vector2(x + 0.5f, y + 0.5f), Vector4.One));
         }
 
-        var indices = new List<int>(sides * 3);
+        var indices = new List<uint>(sides * 3);
         for (var i = 0; i < sides; i++)
         {
             indices.Add(0);
-            indices.Add(i + 1);
-            indices.Add((i + 1) % sides + 1);
+            indices.Add((uint)(i + 1));
+            indices.Add((uint)((i + 1) % sides + 1));
         }
 
         catalog.SetGeometry(new VisualizerResourceId(id.Value),
