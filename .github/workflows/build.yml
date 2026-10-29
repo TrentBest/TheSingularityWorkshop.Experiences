@@ -174,7 +174,8 @@ jobs:
           grep -q '"accepted":true' /tmp/capsule-clinic-command.json
           curl --silent --show-error --fail http://127.0.0.1:5088/api/state > /tmp/capsule-clinic-state-after.json
           grep -q '"lastAcceptedSequence":1' /tmp/capsule-clinic-state-after.json
-          curl --silent --show-error --fail -H 'content-type: application/json' -d '{"key":"NotAKey"}' http://127.0.0.1:5088/api/key --output /dev/null --write-out '%{http_code}' | grep -q '^400
+          status=$(curl --silent --show-error -H 'content-type: application/json' -d '{"key":"NotAKey"}' http://127.0.0.1:5088/api/key --output /dev/null --write-out "%{http_code}")
+          test "$status" = "400"
   test-castle-siege:
     runs-on: ubuntu-24.04
     steps:
