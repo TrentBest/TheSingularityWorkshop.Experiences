@@ -45,4 +45,33 @@ public sealed class CapsuleClinicRenderFrameFactoryTests
         Assert.Equal(6, empty.Indices.Count);
         Assert.Equal(0, presentation.OccupiedCells);
     }
+
+    [Fact]
+    public void ActiveCapsuleDrawCommandsUseTheSilhouetteForEachSegmentColor()
+    {
+        using var room = new AuthoritativePuzzleRoom("active-shape-test");
+        Assert.True(room.JoinPlayer("alice", 101));
+        Assert.True(room.JoinPlayer("bob", 202));
+        Assert.True(room.StartMatch());
+        var snapshot = CapsuleArenaSnapshot.Capture(room, "alice");
+        var active = Assert.IsType<ActiveCapsuleSnapshot>(snapshot.Panes[0].Player!.Active);
+
+        var presentation = CapsuleClinicRenderFrameFactory.Create(snapshot);
+
+        Assert.Equal(2, presentation.ActiveSegments);
+        var activeCommands = presentation.Frame.Commands.Skip(presentation.BaseCellCommands).ToArray();
+        Assert.Equal(2, activeCommands.Length);
+
+        static ulong GeometryId(CapsuleColor color) => color switch
+        {
+            CapsuleColor.Red => 7,
+            CapsuleColor.Blue => 8,
+            CapsuleColor.Yellow => 9,
+            CapsuleColor.Purple => 10,
+            _ => throw new ArgumentOutOfRangeException(nameof(color))
+        };
+
+        Assert.Equal(GeometryId(active.Pair.PivotColor), activeCommands[0].Geometry.Value);
+        Assert.Equal(GeometryId(active.Pair.PartnerColor), activeCommands[1].Geometry.Value);
+    }
 }
