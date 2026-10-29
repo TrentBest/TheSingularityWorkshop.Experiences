@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IsPackable>false</IsPackable>
+    <WorkshopVisualizeRoot Condition="'$(WorkshopVisualizeRoot)' == ''">$(MSBuildThisFileDirectory)../../VisualizeSource</WorkshopVisualizeRoot>
+    <WorkshopRendererAdapterProject Condition="Exists('$(WorkshopVisualizeRoot)/integrations/RendererAdapter/TheSingularityWorkshop.Renderer.VisualizeAdapter.csproj')">$(WorkshopVisualizeRoot)/integrations/RendererAdapter/TheSingularityWorkshop.Renderer.VisualizeAdapter.csproj</WorkshopRendererAdapterProject>
+    <WorkshopGuiSvgAdapterProject Condition="Exists('$(WorkshopVisualizeRoot)/integrations/GuiSvg/TheSingularityWorkshop.Visualize.GUI.SVG.csproj')">$(WorkshopVisualizeRoot)/integrations/GuiSvg/TheSingularityWorkshop.Visualize.GUI.SVG.csproj</WorkshopGuiSvgAdapterProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../CapsuleClinic/TheSingularityWorkshop.Experiences.CapsuleClinic.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(WorkshopRendererAdapterProject)' != ''">
+    <ProjectReference Include="$(WorkshopRendererAdapterProject)" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(WorkshopGuiSvgAdapterProject)' != ''">
+    <ProjectReference Include="$(WorkshopGuiSvgAdapterProject)" />
+  </ItemGroup>
+  <Target Name="RequireVisualizeSource" BeforeTargets="ResolveReferences"
+          Condition="'$(WorkshopRendererAdapterProject)' == '' or '$(WorkshopGuiSvgAdapterProject)' == ''">
+    <Error Text="Capsule Clinic pipeline integration requires TheSingularityWorkshop.Visualize checked out at '$(WorkshopVisualizeRoot)'. Set WorkshopVisualizeRoot to that checkout." />
+  </Target>
+</Project>
