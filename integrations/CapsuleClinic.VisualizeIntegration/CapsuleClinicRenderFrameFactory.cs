@@ -17,22 +17,35 @@ public static class CapsuleClinicRenderFrameFactory
     public static CapsuleClinicRenderFrame Create(CapsuleArenaSnapshot snapshot)
     {
         ArgumentNullException.ThrowIfNull(snapshot);
-        var geometryId = new RenderResourceId(1);
+        var emptyGeometryId = new RenderResourceId(1);
         var emptyMaterialId = new RenderResourceId(2);
         var redMaterialId = new RenderResourceId(3);
         var blueMaterialId = new RenderResourceId(4);
         var yellowMaterialId = new RenderResourceId(5);
         var purpleMaterialId = new RenderResourceId(6);
+        var redGeometryId = new RenderResourceId(7);
+        var blueGeometryId = new RenderResourceId(8);
+        var yellowGeometryId = new RenderResourceId(9);
+        var purpleGeometryId = new RenderResourceId(10);
         var catalog = new VisualizerResourceCatalog();
-        var vertices = new[]
+
+        var squareVertices = new[]
         {
             new VisualizerVertex(new Vector3(-0.5f, -0.5f, 0), Vector3.UnitZ, Vector2.Zero, Vector4.One),
             new VisualizerVertex(new Vector3(0.5f, -0.5f, 0), Vector3.UnitZ, Vector2.UnitX, Vector4.One),
             new VisualizerVertex(new Vector3(0.5f, 0.5f, 0), Vector3.UnitZ, Vector2.One, Vector4.One),
             new VisualizerVertex(new Vector3(-0.5f, 0.5f, 0), Vector3.UnitZ, Vector2.UnitY, Vector4.One)
         };
-        catalog.SetGeometry(new VisualizerResourceId(geometryId.Value),
-            new VisualizerGeometry(1, vertices, [0, 1, 2, 0, 2, 3]));
+        catalog.SetGeometry(new VisualizerResourceId(emptyGeometryId.Value),
+            new VisualizerGeometry(1, squareVertices, [0, 1, 2, 0, 2, 3]));
+
+        // Capsule identity is encoded by silhouette as well as material color:
+        // red = circle, blue = triangle, yellow = diamond, purple = hexagon.
+        SetPolygon(catalog, redGeometryId, 12);
+        SetPolygon(catalog, blueGeometryId, 3);
+        SetPolygon(catalog, yellowGeometryId, 4);
+        SetPolygon(catalog, purpleGeometryId, 6);
+
         catalog.SetMaterial(new VisualizerResourceId(emptyMaterialId.Value),
             new VisualizerMaterial(1, new Vector4(0.08f, 0.13f, 0.18f, 1)));
         catalog.SetMaterial(new VisualizerResourceId(redMaterialId.Value),
@@ -43,6 +56,15 @@ public static class CapsuleClinicRenderFrameFactory
             new VisualizerMaterial(1, new Vector4(1f, 0.78f, 0.2f, 1)));
         catalog.SetMaterial(new VisualizerResourceId(purpleMaterialId.Value),
             new VisualizerMaterial(1, new Vector4(0.72f, 0.48f, 1f, 1)));
+
+        (RenderResourceId Geometry, int IndexCount) GeometryFor(CapsuleColor color) => color switch
+        {
+            CapsuleColor.Red => (redGeometryId, 36),
+            CapsuleColor.Blue => (blueGeometryId, 9),
+            CapsuleColor.Yellow => (yellowGeometryId, 12),
+            CapsuleColor.Purple => (purpleGeometryId, 18),
+            _ => throw new ArgumentOutOfRangeException(nameof(color))
+        };
 
         RenderResourceId MaterialFor(CapsuleColor color) => color switch
         {
@@ -73,7 +95,8 @@ public static class CapsuleClinicRenderFrameFactory
             for (var x = 0; x < snapshot.BoardWidth; x++)
             {
                 var cell = pane.Player?.Board[y * snapshot.BoardWidth + x];
-                var materialId = cell is { } settled ? MaterialFor(settled.Color) : emptyMaterialId;
+                var geometry = cell is { } settled ? GeometryFor(settled.Color) : (emptyGeometryId, 6);
+                var materialId = cell is { } colored ? MaterialFor(colored.Color) : emptyMaterialId;
                 if (cell.HasValue) occupiedCells++;
                 var transform = Matrix4x4.CreateScale(CellSize)
                     * Matrix4x4.CreateTranslation(
@@ -81,7 +104,7 @@ public static class CapsuleClinicRenderFrameFactory
                         centerY + (y - (snapshot.BoardHeight - 1) / 2f) * CellSize,
                         0);
                 commands.Add(new RenderDrawCommand(
-                    geometryId, materialId, transform, 6, 0, 0,
+                    geometry.Geometry, materialId, transform, geometry.IndexCount, 0, 0,
                     RendererRepresentation.Interactive, entity: new RenderEntityId(entityId++)));
             }
 
@@ -101,13 +124,14 @@ public static class CapsuleClinicRenderFrameFactory
                 if ((uint)segment.X >= (uint)snapshot.BoardWidth ||
                     (uint)segment.Y >= (uint)snapshot.BoardHeight)
                     continue;
+                var geometry = GeometryFor(segment.Color);
                 var transform = Matrix4x4.CreateScale(CellSize * 0.88f)
                     * Matrix4x4.CreateTranslation(
                         centerX + (segment.X - (snapshot.BoardWidth - 1) / 2f) * CellSize,
                         centerY + (segment.Y - (snapshot.BoardHeight - 1) / 2f) * CellSize,
                         0.001f);
                 commands.Add(new RenderDrawCommand(
-                    geometryId, MaterialFor(segment.Color), transform, 6, 0, 0,
+                    geometry.Geometry, MaterialFor(segment.Color), transform, geometry.IndexCount, 0, 0,
                     RendererRepresentation.Interactive, entity: new RenderEntityId(entityId++)));
                 activeSegments++;
             }
@@ -118,6 +142,34 @@ public static class CapsuleClinicRenderFrameFactory
             commands);
         return new CapsuleClinicRenderFrame(frame, catalog, snapshot.Panes.Count,
             snapshot.BoardWidth, snapshot.BoardHeight, occupiedCells, activeSegments);
+    }
+
+    private static void SetPolygon(VisualizerResourceCatalog catalog, RenderResourceId id, int sides)
+    {
+        const float radius = 0.46f;
+        var vertices = new List<VisualizerVertex>
+        {
+            new(new Vector3(0, 0, 0), Vector3.UnitZ, new Vector2(0.5f, 0.5f), Vector4.One)
+        };
+        for (var i = 0; i < sides; i++)
+        {
+            var angle = -MathF.PI / 2f + 2f * MathF.PI * i / sides;
+            var x = MathF.Cos(angle) * radius;
+            var y = MathF.Sin(angle) * radius;
+            vertices.Add(new VisualizerVertex(new Vector3(x, y, 0), Vector3.UnitZ,
+                new Vector2(x + 0.5f, y + 0.5f), Vector4.One));
+        }
+
+        var indices = new List<int>(sides * 3);
+        for (var i = 0; i < sides; i++)
+        {
+            indices.Add(0);
+            indices.Add(i + 1);
+            indices.Add((i + 1) % sides + 1);
+        }
+
+        catalog.SetGeometry(new VisualizerResourceId(id.Value),
+            new VisualizerGeometry(1, vertices, indices.ToArray()));
     }
 }
 
