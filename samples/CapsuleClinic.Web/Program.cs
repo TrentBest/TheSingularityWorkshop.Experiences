@@ -1,4 +1,5 @@
 using TheSingularityWorkshop.Experiences.CapsuleClinic;
+using TheSingularityWorkshop.Experiences.CapsuleClinic.VisualizeIntegration;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureHttpJsonOptions(options =>
@@ -40,10 +41,14 @@ app.MapGet("/api/state", () =>
     }
 });
 
-app.MapGet("/api/arena.svg", () =>
+app.MapGet("/api/arena.svg", async (CancellationToken cancellationToken) =>
 {
+    CapsuleArenaSnapshot snapshot;
     lock (sessionGate)
-        return Results.Text(CapsuleArenaSvgRenderer.Render(session.CaptureSnapshot()), "image/svg+xml");
+        snapshot = session.CaptureSnapshot();
+
+    var svg = await CapsuleClinicPipelineSvgRenderer.RenderAsync(snapshot, cancellationToken);
+    return Results.Text(svg, "image/svg+xml");
 });
 
 app.MapPost("/api/key", (KeyRequest request) =>
