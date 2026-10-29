@@ -95,7 +95,9 @@ public static class CapsuleClinicRenderFrameFactory
             for (var x = 0; x < snapshot.BoardWidth; x++)
             {
                 var cell = pane.Player?.Board[y * snapshot.BoardWidth + x];
-                var geometry = cell is { } settled ? GeometryFor(settled.Color) : (emptyGeometryId, 6);
+                var geometry = cell is { } settled
+                    ? GeometryFor(settled.Color)
+                    : (Geometry: emptyGeometryId, IndexCount: 6);
                 var materialId = cell is { } colored ? MaterialFor(colored.Color) : emptyMaterialId;
                 if (cell.HasValue) occupiedCells++;
                 var transform = Matrix4x4.CreateScale(CellSize)
