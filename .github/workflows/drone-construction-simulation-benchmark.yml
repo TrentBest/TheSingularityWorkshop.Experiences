@@ -1,0 +1,28 @@
+name: Drone Construction simulation benchmark
+
+on:
+  push:
+    branches: [development]
+    paths:
+      - "src/DroneConstruction/**"
+      - "benchmarks/DroneConstruction.Simulation/**"
+      - ".github/workflows/drone-construction-simulation-benchmark.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  simulation-benchmark:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore
+        run: dotnet restore benchmarks/DroneConstruction.Simulation/TheSingularityWorkshop.Experiences.DroneConstruction.Simulation.Benchmarks.csproj
+      - name: Build
+        run: dotnet build benchmarks/DroneConstruction.Simulation/TheSingularityWorkshop.Experiences.DroneConstruction.Simulation.Benchmarks.csproj --configuration Release --no-restore
+      - name: Run authoritative simulation benchmark
+        run: dotnet run --project benchmarks/DroneConstruction.Simulation/TheSingularityWorkshop.Experiences.DroneConstruction.Simulation.Benchmarks.csproj --configuration Release --no-build
