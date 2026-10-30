@@ -13,7 +13,7 @@ It is written against the `development` source revision inspected for this chapt
 | [01 — What Is an Experience?](01-what-is-an-experience.md) | What does this repository own? | An Experience is authored domain meaning, not a window or renderer |
 | [02 — Identity, Artifacts, and Composition](02-identity-artifacts-and-composition.md) | How does authored content become something a host can compose? | Keep Experience identity, MicroBundle identity, artifact bytes, and composition distinct |
 | [03 — One Experience, Multiple Manifestations](03-one-experience-multiple-manifestations.md) | How can the same Experience appear in different places? | Hosts provide different capabilities while preserving the Experience's identity and semantics |
-| [04 — Requirements, Providers, and Authority](04-requirements-providers-and-authority.md) | How are required capabilities described and matched? | Requirements express needs; provider matching is deterministic metadata validation, not authorization |
+| [04 — Requirements, Providers, and Authority](04-requirements-providers-and-authority.md) | How are required capabilities described and matched? | Requirements express needs; provider matching is deterministic metadata validation, not authorization |\n| [05 — Room Catalogs, Maturity, and Evidence](05-room-catalogs-maturity-and-evidence.md) | How is an authored visitor journey described and validated? | Room catalogs define meaning and evidence boundaries independently of presentation |
 
 Each chapter is standalone and can be taught, reordered, or extended independently. The sequence moves from domain meaning to immutable identity, manifestation, and capability resolution.
 
@@ -37,7 +37,7 @@ Story Forge belongs to StoryBuilder. General FSM theory belongs to FSM_API. Comp
 - **Verified** is reserved for behavior reproduced by a named test or workflow.
 - **Conceptual** identifies an intended model or example that is not evidence of a running integration.
 
-**Source revision inspected:** `7561942dc9eba035a7c82f964566e6c63c3d1bc6` (Experiences `development`). Re-check source and CI before treating these chapters as current implementation evidence.
+**Source revision inspected:** `e49cdca3ed4e5d0901949d882cb3587f3946646a` (Experiences `development`). Re-check source and CI before treating these chapters as current implementation evidence.
 
 ## Further reading
 
