@@ -3,7 +3,7 @@
 This measures the authoritative discrete `ConstructionSimulation.Step()` path, including its committed immutable snapshot creation. It is separate from the quadrotor physics-kernel benchmark and excludes presentation/rendering.
 
 - Fixed 256 × 256 grid, one required block per cell (65,536 tasks).
-- One finite-inventory emitter at the origin; stable agent IDs and deterministic starting positions in a 32 × 32 cluster around the emitter and the first scheduled tasks.
+- One finite-inventory emitter at the origin; stable agent IDs; the first agent starts at the emitter while remaining agents start in a separate 32 × 32 staging cluster beyond the first construction row, leaving the initial work corridor clear.
 - Populations: 10, 100, and 1,000 agents.
 - 10 warm-up ticks and 250 measured ticks per population.
 - Reports elapsed time, ns/agent-tick, agent-ticks/second, process-wide allocated bytes, final tick, and placed/required blocks.
