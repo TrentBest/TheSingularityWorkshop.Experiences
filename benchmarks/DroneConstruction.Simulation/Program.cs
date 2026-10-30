@@ -17,7 +17,9 @@ foreach (var population in new[] { 10, 100, 1_000 })
     // than measuring only the long initial approach to a distant emitter.
     var agents = Enumerable.Range(0, population).Select(index => new ConstructionAgent(
         checked((ulong)index + 1UL),
-        new GridCell(index % agentClusterWidth, index / agentClusterWidth))).ToArray();
+        index == 0
+            ? new GridCell(0, 0)
+            : new GridCell((index - 1) % agentClusterWidth, gridHeight / 8 + ((index - 1) / agentClusterWidth)))).ToArray();
     var simulation = new ConstructionSimulation(gridWidth, gridHeight, static (_, _) => 1, agents,
         [new PositionedBlockEmitter(new GridCell(0, 0),
             new BlockEmitter("benchmark-emitter", gridWidth * gridHeight))]);
