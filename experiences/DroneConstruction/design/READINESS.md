@@ -1,6 +1,6 @@
 # Drone Construction — Readiness and Review Ledger
 
-**Last audited:** 2026-10-29  
+**Last audited:** 2026-10-31  
 **Branch:** development  
 **Review status:** implementation in progress; no merge, release, or 100k claim implied.
 
@@ -50,17 +50,17 @@ These checkpoints verify snapshot immutability, standalone SVG output, and an op
 
 ## Next implementation sequence
 
-1. **Integrate the observer boundary (current priority; Issue #20):** connect a real committed `ConstructionSimulationSnapshot` to the existing Renderer → Visualize CPU/GUI.SVG path in an optional integration/proof project. Preserve run/tick/sequence provenance, explicit observer configuration, stable source identity, deterministic bounded selection, and truthful aggregate membership. Keep all presentation dependencies outside the simulation core.
-2. **Measure presentation independently:** report snapshot population, selected individuals, aggregate representations, omitted agents, draw commands, resources, frame duration, allocations, and snapshot age. Add deterministic tests for same-input/same-output, observer/LOD changes without simulation mutation, empty/stale snapshots, missing resources, and render failures.
-3. **Close fairness and replay gaps:** deterministic contention has a passing regression test; persistent admission-window reservations are implemented but the moving lookahead horizon and starvation-freedom remain open, as does a deterministic replay digest. Preserve occupancy/reservation invariants and never infer a path from grid dimensions or lookahead cells.
-4. **Establish a construction baseline:** create a repeatable small-run harness and invariant report before optimizing; physics-kernel throughput is not a substitute for construction-agent throughput.
-5. **Scale honestly:** run the population ramp in [100K_SCALE_VALIDATION.md](100K_SCALE_VALIDATION.md); preserve raw evidence and correctness gates at each stage.
-6. **Finish the living showcase:** host a maintained GUI.SVG view with telemetry only after the optional end-to-end adapter proof is real and observable. Keep the view read-only and make refresh/backpressure/failure semantics explicit.
+1. **Harden observer freshness/failure semantics (current Issue #20 focus):** define caller-owned stale-snapshot policy using explicit time input at the presentation boundary; add bounded missing-resource and render-failure outcomes. Keep descriptive wall-clock snapshot age distinct from policy and out of the authoritative simulation domain.
+2. **Expand observer-facing measurements:** replace the initial low-placement contention baseline with isolated scheduler assignment, emitter contention, traffic movement, placement, and snapshot-allocation scenarios. Use multiple topologies and repeated samples/percentiles; preserve raw results and correctness invariants. Do not infer throughput from idle-agent normalized timing.
+3. **Close fairness and replay gaps:** persistent admission-window reservations are implemented but the moving lookahead horizon and starvation-freedom remain open, as does a deterministic replay digest. Preserve occupancy/reservation invariants and never infer a path from grid dimensions or lookahead cells.
+4. **Expand the presentation proof:** add larger crowd/aggregation cases and explicit near/mid/far tiers; prove command reduction while preserving authoritative population and recoverable aggregate membership. Then define multi-frame freshness/backpressure semantics.
+5. **Establish and scale construction evidence:** retain the current benchmark as an initial step/snapshot/contention baseline, improve it into representative repeatable workloads, then follow [100K_SCALE_VALIDATION.md](100K_SCALE_VALIDATION.md) with correctness gates at 1k/10k/25k/50k/100k.
+6. **Finish the living showcase:** host a maintained GUI.SVG view with telemetry after failure/freshness/backpressure contracts are explicit. Keep the view read-only and report cadence and coalescing behavior.
 7. **Release audit:** verify bundle IDs against the shared registry, provider dependencies against actual runtime composition, documentation and CI, and obtain explicit approval for publication.
 
 ## Current focus
 
-Issue [#20 — Integrate Drone Construction snapshots with Renderer → Visualize](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/issues/20) tracks the active vertical slice. The tiny snapshot → bounded observer selection → Renderer frame → Visualize → GUI.SVG path is now implemented in the Visualize integration proof and CI-verified. Keep the issue open: the current proof does not yet establish stale-snapshot rejection, bounded missing-resource/render-failure behavior, multi-frame freshness/backpressure, or construction-agent scale. Do not interpret its three-agent fixture as a scale result.
+Issue [#20 — Integrate Drone Construction snapshots with Renderer → Visualize](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/issues/20) tracks the active vertical slice. The tiny snapshot → bounded observer selection → Renderer frame → Visualize → GUI.SVG CPU path is implemented in the Visualize integration proof and CI-verified (three-agent fixture). Keep the issue open: caller-owned stale-snapshot policy, bounded missing-resource/render-failure behavior, larger crowd/LOD cases, multi-frame freshness/backpressure, hosted live view, production GPU, and construction-agent scale remain open. Do not interpret its three-agent fixture as a scale result.
 
 ## Explicit non-claims
 
