@@ -87,7 +87,6 @@ The [Visualize Drone Construction proof](https://github.com/TrentBest/TheSingula
 ### Acceptance gates and remaining work
 
 - Every emitted representation traces to a stable source identity and the snapshot tick/run; aggregation records the identities/count it summarizes.
-- Every emitted representation traces to a stable source identity and the snapshot tick/run; aggregation records the identities/count it summarizes.
 - Changing observer pose or representation policy changes selection only; it never mutates simulation state or changes physics results.
 - Tests distinguish total simulated population from selected representation count, submitted draw-command count, and resource count.
 - A crowd/aggregation case demonstrates fewer presentation commands than individual-agent presentation without losing authoritative agent counts or identity recoverability.
@@ -152,7 +151,7 @@ The next vertical slice belongs in an optional integration/proof project, not in
 ### First slice mapping
 
 1. Introduce an explicit observer input (pose/space, intent, selection budget, and LOD policy); make defaults deterministic and bounded.
-2. Select a bounded set of individual agents and deterministic cohorts from the one committed snapshot. Sort by stable agent ID before applying any budget or emitting output.
+2. Select a bounded set of individual agents and deterministic cohorts from the one committed snapshot. Rank eligible individual agents by Manhattan distance from the explicit observer pose, breaking ties by stable agent ID; apply the individual budget to that order. Group remaining in-space agents by qualified space and cell, then emit aggregate groups in deterministic space-ID (ordinal), Y, X order with member IDs sorted by stable agent ID.
 3. For individual representations, preserve the agent ID in a semantic/source map associated with each draw command. For aggregates, preserve the snapshot tick, cohort key, member count, and recoverable member IDs or a stable membership reference.
 4. Convert selected representation decisions to existing Renderer contracts and pass the resulting `RenderFrame` through Visualize's existing `RendererFrameAdapter` and GUI.SVG backend.
 5. Emit independent counters for snapshot population, individual selections, aggregate count, omitted/off-screen count, draw commands, resources, frame duration, allocations, and snapshot age. Do not treat draw-command count as simulation population.
