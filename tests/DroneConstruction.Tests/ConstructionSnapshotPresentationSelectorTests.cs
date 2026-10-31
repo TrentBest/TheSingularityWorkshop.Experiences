@@ -181,6 +181,44 @@ public sealed class ConstructionSnapshotPresentationSelectorTests
         Assert.Equal(controlOutcome.Tick, observedSimulation.TickCount);
     }
 
+    [Fact]
+    public void Select_BudgetAndObserverMatrixAlwaysReconcilesPopulationWithoutDuplicateIdentity()
+    {
+        var snapshot = CreateSimulation().Snapshot();
+        var sourceIds = snapshot.Agents.Select(agent => agent.AgentId).Order().ToArray();
+        var sequence = 0L;
+
+        foreach (var observerX in Enumerable.Range(-1, 7))
+        foreach (var budget in Enumerable.Range(0, sourceIds.Length + 2))
+        foreach (var radius in new[] { 0, 1, 3, 10 })
+        {
+            var policy = new ConstructionSnapshotPresentationPolicy(budget, radius);
+            var observer = new ConstructionObserverPose(new GridCell(observerX, 0));
+
+            var first = ConstructionSnapshotPresentationSelector.Select(
+                snapshot, "matrix-run", sequence, "construction-main", observer, policy);
+            var repeated = ConstructionSnapshotPresentationSelector.Select(
+                snapshot, "matrix-run", sequence, "construction-main", observer, policy);
+            sequence++;
+
+            var representedIds = first.IndividualAgents.Select(agent => agent.AgentId)
+                .Concat(first.Aggregates.SelectMany(aggregate => aggregate.MemberAgentIds))
+                .Order()
+                .ToArray();
+
+            Assert.Equal(sourceIds, representedIds);
+            Assert.Equal(representedIds.Length, representedIds.Distinct().Count());
+            Assert.True(first.PopulationIsReconciled);
+            Assert.Equal(first.TotalAgentsInSnapshot, first.RepresentedAgentCount);
+            Assert.Equal(first.IndividualAgents.Select(agent => agent.AgentId),
+                repeated.IndividualAgents.Select(agent => agent.AgentId));
+            Assert.Equal(
+                first.Aggregates.Select(aggregate => (aggregate.AggregateId, Members: string.Join(",", aggregate.MemberAgentIds))),
+                repeated.Aggregates.Select(aggregate => (aggregate.AggregateId, Members: string.Join(",", aggregate.MemberAgentIds))));
+            Assert.True(first.SelectedIndividualCount <= budget);
+        }
+    }
+
     private static ConstructionSimulation CreateSimulation() => new(
         width: 4,
         height: 1,
