@@ -17,7 +17,7 @@ public sealed class MinesweeperGameTests
     public void FixedLayoutComputesNeighborCounts()
     {
         var game = new MinesweeperGame(3, 3, new[] { new CellId(0, 0), new CellId(2, 2) });
-        Assert.Equal(1, game.GetCell(new CellId(1, 1)).AdjacentMines);
+        Assert.Equal(2, game.GetCell(new CellId(1, 1)).AdjacentMines);
         Assert.Equal(1, game.GetCell(new CellId(0, 1)).AdjacentMines);
         Assert.Equal(0, game.GetCell(new CellId(0, 2)).AdjacentMines);
     }
@@ -57,9 +57,9 @@ public sealed class MinesweeperGameTests
     [Fact]
     public void RevealingMineLosesAndTerminalActionsAreRejected()
     {
-        var game = new MinesweeperGame(3, 1, new[] { new CellId(0, 2) });
+        var game = new MinesweeperGame(4, 1, new[] { new CellId(0, 3) });
         game.Reveal(new CellId(0, 0));
-        Assert.Equal(MinesweeperActionResult.Accepted, game.Reveal(new CellId(0, 2)));
+        Assert.Equal(MinesweeperActionResult.Accepted, game.Reveal(new CellId(0, 3)));
         Assert.Equal(MinesweeperStatus.Lost, game.Status);
         Assert.Equal(MinesweeperActionResult.RejectedTerminal, game.ToggleFlag(new CellId(0, 1)));
     }
@@ -69,6 +69,8 @@ public sealed class MinesweeperGameTests
     {
         var game = new MinesweeperGame(2, 2, new[] { new CellId(0, 0) });
         game.Reveal(new CellId(1, 1));
+        game.Reveal(new CellId(0, 1));
+        game.Reveal(new CellId(1, 0));
         Assert.Equal(MinesweeperStatus.Won, game.Status);
         Assert.Equal(0, game.RemainingSafeCount);
     }
@@ -89,11 +91,11 @@ public sealed class MinesweeperGameTests
     [Fact]
     public void ResetRestoresOriginalFixedMineLayoutAfterFirstRevealRelocation()
     {
-        var game = new MinesweeperGame(3, 1, new[] { new CellId(0, 0) });
+        var game = new MinesweeperGame(4, 1, new[] { new CellId(0, 0) });
         game.Reveal(new CellId(0, 0));
         game.Reset();
 
-        game.Reveal(new CellId(0, 2));
+        game.Reveal(new CellId(0, 3));
         Assert.Equal(MinesweeperActionResult.Accepted, game.Reveal(new CellId(0, 0)));
         Assert.Equal(MinesweeperStatus.Lost, game.Status);
     }
