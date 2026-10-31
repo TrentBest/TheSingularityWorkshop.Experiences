@@ -145,7 +145,9 @@ jobs:
         shell: bash
         env:
           REPOSITORY: ${{ github.repository }}
-          CANDIDATE_SHA: ${{ github.sha }}
+          CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          TESTED_SHA: ${{ github.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
           WORKFLOW_REF: ${{ github.workflow_ref }}
           WORKFLOW_SHA: ${{ github.workflow_sha }}
           EVENT_NAME: ${{ github.event_name }}
@@ -159,6 +161,8 @@ jobs:
             "schema": "workshop.test-artifact-provenance.v1",
             "repository": "$REPOSITORY",
             "candidateSha": "$CANDIDATE_SHA",
+            "testedSha": "$TESTED_SHA",
+            "baseSha": "$BASE_SHA",
             "workflowRef": "$WORKFLOW_REF",
             "workflowSha": "$WORKFLOW_SHA",
             "eventName": "$EVENT_NAME",
