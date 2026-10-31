@@ -1,6 +1,6 @@
 # Drone Construction — Snapshot and Living-View Contract
 
-**Status:** immutable snapshots, the standalone SVG renderer, a maintained pull-based SVG view, and an observer-relative Drone Construction → Renderer → Visualize → GUI.SVG CPU proof are implemented and CI-verified. The downstream proof uses a tiny three-agent fixture. A hosted live GUI.SVG application, production GPU path, stale-snapshot policy, bounded missing-resource/render-failure behavior, multi-frame freshness/backpressure, and construction-agent scale remain open.
+**Status:** immutable snapshots, the standalone SVG renderer, a maintained pull-based SVG view, and an observer-relative Drone Construction → Renderer → Visualize → GUI.SVG CPU proof are implemented and CI-verified. The downstream proof uses a tiny three-agent fixture. A hosted live GUI.SVG application, production GPU path, bounded missing-resource/render-failure behavior, multi-frame freshness/backpressure, and construction-agent scale remain open. Experiences now provides a caller-clock-owned freshness gate that classifies fresh, stale, and future-dated snapshots before selection; it does not provide scheduling, retry, or backend failure policy.
 
 ## Authority boundary
 
@@ -92,7 +92,9 @@ The [Visualize Drone Construction proof](https://github.com/TrentBest/TheSingula
 - Tests distinguish total simulated population from selected representation count, submitted draw-command count, and resource count.
 - A crowd/aggregation case demonstrates fewer presentation commands than individual-agent presentation without losing authoritative agent counts or identity recoverability.
 - A near/interactive case promotes selected agents to richer representations while distant agents remain coarser or omitted according to policy.
-- Frame failures, missing resources, stale snapshots, and empty selections are explicit and bounded; rendering cannot stall simulation ticks.
+- [x] Stale and future-dated snapshots are explicitly rejected before selection by `ConstructionSnapshotFreshnessPolicy` and `ConstructionSnapshotPresentationSelector.SelectIfFresh`; capture/evaluation timestamps are caller-owned and the simulation remains wall-clock independent.
+- [ ] Missing resources and backend render failures are explicit and bounded at the Visualize integration boundary; rendering cannot stall simulation ticks.
+- [x] Empty individual selection is valid and remaining in-space agents reconcile into deterministic aggregates.
 - CI proves the actual Drone Construction snapshot → adapter → Renderer frame → Visualize submission path. A CPU/SVG proof must be labelled as such; production GPU output and performance remain separate gates.
 
 **Scale reporting:** report simulation throughput and observer-facing presentation workload independently. At minimum record total population, selected individual representations, aggregate representations, submitted commands, resource count, frame build/submit duration, allocations, and snapshot tick age. Do not publish a “100k rendered drones” claim from a 100k physics-kernel benchmark.
