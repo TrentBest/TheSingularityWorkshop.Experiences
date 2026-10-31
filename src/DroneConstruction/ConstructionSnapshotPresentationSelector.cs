@@ -65,8 +65,46 @@ public sealed record ConstructionSnapshotPresentationSelection(
 /// Deterministically selects near-field agents up to a fixed budget and groups all remaining
 /// agents by qualified simulation-grid cell. It reads snapshots only and cannot mutate simulation state.
 /// </summary>
+/// <summary>Freshness-gated result from a presentation consumer evaluation.</summary>
+/// <param name="Freshness">Freshness classification using caller-owned timestamps.</param>
+/// <param name="Selection">Presentation selection when fresh; otherwise null.</param>
+public sealed record ConstructionSnapshotPresentationResult(
+    ConstructionSnapshotFreshness Freshness,
+    ConstructionSnapshotPresentationSelection? Selection)
+{
+    /// <summary>Gets whether the snapshot passed freshness validation and produced a selection.</summary>
+    public bool IsPresentable => Freshness == ConstructionSnapshotFreshness.Fresh && Selection is not null;
+}
+
 public static class ConstructionSnapshotPresentationSelector
 {
+    /// <summary>
+    /// Evaluates snapshot freshness before deriving a presentation selection.
+    /// The consumer supplies capture and evaluation timestamps; this method never reads a system clock.
+    /// Stale and future-dated snapshots produce an explicit non-presentable result with no selection.
+    /// </summary>
+    public static ConstructionSnapshotPresentationResult SelectIfFresh(
+        ConstructionSimulationSnapshot snapshot,
+        DateTimeOffset capturedAt,
+        DateTimeOffset evaluatedAt,
+        ConstructionSnapshotFreshnessPolicy freshnessPolicy,
+        string runId,
+        long sequence,
+        string spaceId,
+        ConstructionObserverPose observer,
+        ConstructionSnapshotPresentationPolicy presentationPolicy)
+    {
+        ArgumentNullException.ThrowIfNull(snapshot);
+        ArgumentNullException.ThrowIfNull(freshnessPolicy);
+
+        var freshness = freshnessPolicy.Evaluate(capturedAt, evaluatedAt);
+        if (freshness != ConstructionSnapshotFreshness.Fresh)
+            return new ConstructionSnapshotPresentationResult(freshness, null);
+
+        var selection = Select(snapshot, runId, sequence, spaceId, observer, presentationPolicy);
+        return new ConstructionSnapshotPresentationResult(freshness, selection);
+    }
+
     /// <summary>Selects individual and aggregated representations from one immutable snapshot.</summary>
     /// <param name="snapshot">Committed simulation snapshot to inspect.</param>
     /// <param name="runId">Stable identity of the simulation run.</param>
