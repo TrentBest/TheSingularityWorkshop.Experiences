@@ -132,6 +132,55 @@ public sealed class ConstructionSnapshotPresentationSelectorTests
     }
 
 
+
+    [Fact]
+    public void Select_CrowdBudgetAndObserverChangesCannotAlterActiveConstruction()
+    {
+        static ConstructionSimulation CreateActiveSimulation() => new(
+            width: 4,
+            height: 1,
+            requiredHeight: (x, _) => x == 3 ? 1 : 0,
+            agents: [new ConstructionAgent(10, new GridCell(0, 0))],
+            emitters: [new PositionedBlockEmitter(
+                new GridCell(0, 0), new BlockEmitter("emitter", initialInventory: 1))]);
+
+        var observedSimulation = CreateActiveSimulation();
+        var controlSimulation = CreateActiveSimulation();
+
+        var observedSnapshot = observedSimulation.Snapshot();
+        var aggregateOnly = ConstructionSnapshotPresentationSelector.Select(
+            observedSnapshot, "crowd-run", 0, observedSimulation.SpaceId,
+            new ConstructionObserverPose(new GridCell(0, 0)),
+            new ConstructionSnapshotPresentationPolicy(maximumIndividualAgents: 0, individualRadius: 0));
+        var individual = ConstructionSnapshotPresentationSelector.Select(
+            observedSnapshot, "crowd-run", 1, observedSimulation.SpaceId,
+            new ConstructionObserverPose(new GridCell(3, 0)),
+            new ConstructionSnapshotPresentationPolicy(maximumIndividualAgents: 1, individualRadius: 10));
+
+        Assert.Empty(aggregateOnly.IndividualAgents);
+        Assert.Equal(1, aggregateOnly.AggregatedAgentCount);
+        Assert.Single(individual.IndividualAgents);
+        Assert.Equal(0, individual.AggregatedAgentCount);
+
+        ConstructionSimulationSnapshot observedOutcome = observedSnapshot;
+        ConstructionSimulationSnapshot controlOutcome = controlSimulation.Snapshot();
+        for (var tick = 0; tick < 12 && !controlOutcome.IsComplete; tick++)
+        {
+            observedOutcome = observedSimulation.Step();
+            controlOutcome = controlSimulation.Step();
+        }
+
+        Assert.True(controlOutcome.IsComplete);
+        Assert.Equal(controlOutcome.Tick, observedOutcome.Tick);
+        Assert.Equal(controlOutcome.RequiredBlocks, observedOutcome.RequiredBlocks);
+        Assert.Equal(controlOutcome.PlacedBlocks, observedOutcome.PlacedBlocks);
+        Assert.Equal(controlOutcome.IsComplete, observedOutcome.IsComplete);
+        Assert.Equal(controlOutcome.Agents, observedOutcome.Agents);
+        Assert.Equal(controlOutcome.Emitters, observedOutcome.Emitters);
+        Assert.Equal(controlOutcome.CellPlacedBlocks, observedOutcome.CellPlacedBlocks);
+        Assert.Equal(controlOutcome.Tick, observedSimulation.TickCount);
+    }
+
     private static ConstructionSimulation CreateSimulation() => new(
         width: 4,
         height: 1,
