@@ -47,8 +47,18 @@ public sealed class ConstructionSnapshotPresentationFreshnessTests
         Assert.Equal(expected, result.Freshness);
         Assert.False(result.IsPresentable);
         Assert.Null(result.Selection);
+
+        // Compare simulation invariants, not snapshot object identity: each Snapshot() call
+        // creates new read-only collection instances.
+        var after = simulation.Snapshot();
+        Assert.Equal(snapshot.Tick, after.Tick);
+        Assert.Equal(snapshot.RequiredBlocks, after.RequiredBlocks);
+        Assert.Equal(snapshot.PlacedBlocks, after.PlacedBlocks);
+        Assert.Equal(snapshot.IsComplete, after.IsComplete);
+        Assert.Equal(snapshot.Agents, after.Agents);
+        Assert.Equal(snapshot.Emitters, after.Emitters);
+        Assert.Equal(snapshot.CellPlacedBlocks, after.CellPlacedBlocks);
         Assert.Equal(0, simulation.TickCount);
-        Assert.Equal(snapshot, simulation.Snapshot());
     }
 
     [Fact]
