@@ -192,7 +192,6 @@ public sealed class MinesweeperGame
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         if (mineCount < 1 || mineCount >= width * height) throw new ArgumentOutOfRangeException(nameof(mineCount));
         return Enumerable.Range(0, width * height)
-            .OrderBy(_ => 0) // Stable input sequence before the seeded Fisher-Yates shuffle below.
             .ToArray()
             .Shuffle(new Random(seed), mineCount, width);
     }
