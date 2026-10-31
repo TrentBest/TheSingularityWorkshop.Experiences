@@ -39,6 +39,22 @@ This still does not provide a general Experience catalog, manifest-to-artifact m
 
 For an execution-eligible manifest, all referenced artifacts must resolve to valid immutable identities (including SHA-256), every dependency must be present in the same trusted catalog, and the dependency closure must be acyclic. A nullable development hash in the Castle Siege example is not sufficient authorization to load executable bytes.
 
+## 3. Existing repository and runtime loading boundaries
+
+The cross-repository inspection found useful loading components that must be reused rather than replaced:
+
+- `MicroBundleRepository.Core` defines `IExperienceRepository` / `IExperienceCatalog` for immutable Experience bytes and publication pointers, plus `IMicroBundleRepository` for immutable MicroBundle bytes.
+- `RestExperienceClient` can read an Experience publication address and retrieve an immutable Experience artifact. Its constructor path verifies the SHA-256 through `ExperienceArtifact`; it is read-only and does not parse manifests or compose bundles.
+- `RestMicroBundleCatalog` uses `RestMicroBundleRepository` and `IMicroBundleArtifactMaterializer` to preload exact-version MicroBundle dependency closures, then exposes the resident bundles through FSM_COS `IMicroBundleCatalog`.
+- `MicroBundleDomain.IMicroBundleLoadContext` is deliberately host-neutral and supplies runtime identity plus per-bundle configuration. It is not an artifact repository or loader.
+- `FileSystemMicroBundleRepository` is an existing local filesystem implementation for MicroBundle artifacts.
+
+**The local Experience activation path is still incomplete.** The inspected repository has no local `IExperienceRepository` / `IExperienceCatalog` implementation, no Experiences-owned adapter that turns the generic manifest into the repository's immutable MicroBundle addresses, and no local equivalent of the REST catalog/materializer path. The REST Experience client is not a local host. These are concrete gaps, not reasons to create another catalog or runtime in Experiences.
+
+**Identity mismatch to resolve before materialization:** the current Experiences `ArtifactIdentity.BundleId` is a string, while MicroBundleRepository's `MicroBundleArtifactAddress.BundleId` and MicroBundleDomain's `MicroBundleDescriptor.Id` are `ulong`. Castle Siege's existing manifest example uses the logical string artifact ID `workshop-castle-siege`, while its MicroBundle implementation uses numeric ID `3301`. Do not silently parse, derive, or guess a numeric identity from the logical string. A reviewed cross-repository mapping contract (or a compatible shared identity contract) is required before a manifest can resolve to a repository artifact address.
+
+The next loader slice must therefore reuse the existing repository interfaces, materializer, and FSM_COS catalog contract; first close the identity mapping and local Experience artifact repository gaps. It must not add a parallel loader, bundle catalog, or composition runtime to Experiences.
+
 ## 4. Existing CI workflow identity
 
 The current general workflow is:
