@@ -28,6 +28,7 @@ jobs:
           - src/MarbleRun/TheSingularityWorkshop.Experiences.MarbleRun.csproj
           - src/DroneConstruction/TheSingularityWorkshop.Experiences.DroneConstruction.csproj
           - src/DroneConstruction.MicroBundles/TheSingularityWorkshop.Experiences.DroneConstruction.MicroBundles.csproj
+          - src/Minesweeper/TheSingularityWorkshop.Experiences.Minesweeper.csproj
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
@@ -125,6 +126,18 @@ jobs:
         with:
           name: experience-packages
           path: artifacts
+
+  test-minesweeper:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore Minesweeper domain tests
+        run: dotnet restore tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj
+      - name: Run deterministic Minesweeper rules tests
+        run: dotnet test tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj --configuration Release --no-restore
 
   # Card rules stay host-neutral and are tested without GUI or MicroBundle dependencies.
   test-games-cards:
