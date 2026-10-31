@@ -30,7 +30,7 @@ public sealed class MinesweeperGame
     private readonly bool[,] _revealed;
     private readonly bool[,] _flagged;
     private readonly int[,] _adjacent;
-    private readonly int _seed;
+    private readonly bool[,] _initialMines;
     private readonly int _mineCount;
     private bool _firstReveal = true;
 
@@ -53,7 +53,6 @@ public sealed class MinesweeperGame
 
         Width = width;
         Height = height;
-        _seed = seed;
         _mines = new bool[height, width];
         _revealed = new bool[height, width];
         _flagged = new bool[height, width];
@@ -67,6 +66,7 @@ public sealed class MinesweeperGame
             _mines[cell.Row, cell.Column] = true;
         }
 
+        _initialMines = (bool[,])_mines.Clone();
         _mineCount = CountMines();
         if (_mineCount >= width * height)
             throw new ArgumentException("At least one safe cell is required.", nameof(mineLocations));
@@ -133,6 +133,7 @@ public sealed class MinesweeperGame
     {
         Array.Clear(_revealed);
         Array.Clear(_flagged);
+        Array.Copy(_initialMines, _mines, _mines.Length);
         FlagCount = 0;
         RevealedSafeCount = 0;
         Status = MinesweeperStatus.Ready;
@@ -194,13 +195,6 @@ public sealed class MinesweeperGame
             .OrderBy(_ => 0) // Stable input sequence before the seeded Fisher-Yates shuffle below.
             .ToArray()
             .Shuffle(new Random(seed), mineCount, width);
-    }
-
-    private static int CountMines(bool[,] mines)
-    {
-        var count = 0;
-        foreach (var mine in mines) if (mine) count++;
-        return count;
     }
 
     private int CountMines()
