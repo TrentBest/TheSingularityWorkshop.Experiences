@@ -103,6 +103,27 @@ public sealed class ConstructionSnapshotPresentationSelectorTests
         Assert.Equal(controlOutcome.CellPlacedBlocks, observedOutcome.CellPlacedBlocks);
     }
 
+
+    [Fact]
+    public void Select_WhenRequestedSpaceHasNoAgents_ReturnsExplicitEmptySelection()
+    {
+        var snapshot = CreateSimulation().Snapshot();
+
+        var selection = ConstructionSnapshotPresentationSelector.Select(
+            snapshot, "run-empty", sequence: 3, spaceId: "unobserved-space",
+            new ConstructionObserverPose(new GridCell(0, 0)),
+            new ConstructionSnapshotPresentationPolicy(maximumIndividualAgents: 8, individualRadius: 8));
+
+        Assert.Equal(new ConstructionSnapshotProvenance("run-empty", snapshot.Tick, 3), selection.Provenance);
+        Assert.Equal(4, selection.TotalAgentsInSnapshot);
+        Assert.Equal(0, selection.TotalAgentsInSpace);
+        Assert.Empty(selection.IndividualAgents);
+        Assert.Empty(selection.Aggregates);
+        Assert.Equal(0, selection.SelectedIndividualCount);
+        Assert.Equal(0, selection.AggregatedAgentCount);
+    }
+
+
     private static ConstructionSimulation CreateSimulation() => new(
         width: 4,
         height: 1,
