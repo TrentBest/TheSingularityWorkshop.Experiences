@@ -374,6 +374,33 @@ jobs:
           path: artifacts/drone-construction-snapshot.svg
           if-no-files-found: error
 
+  # The generic authored Experience manifest is a versioned contract, independent of any host.
+  validate-experience-manifest:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install JSON Schema validator
+        run: python -m pip install jsonschema
+      - name: Validate generic Experience manifest example
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import validate
+
+          schema = json.loads(Path("docs/contracts/experience-manifest.schema.json").read_text(encoding="utf-8"))
+          example = json.loads(Path("docs/contracts/experience-manifest.example.json").read_text(encoding="utf-8"))
+          validate(instance=example, schema=schema)
+          assert example["schemaVersion"] == 1
+          assert example["experienceId"] > 0
+          assert example["artifacts"], "An Experience must declare at least one immutable artifact root"
+          assert all(len(item["sha256"]) == 64 for item in example["artifacts"])
+          print("Validated the generic Experience manifest schema and example.")
+          PY
+
   # Laboratory room catalogs are structured Experience data; validate schema and navigation before consumption by any manifestation.
   validate-experience-room-catalogs:
     runs-on: ubuntu-24.04
