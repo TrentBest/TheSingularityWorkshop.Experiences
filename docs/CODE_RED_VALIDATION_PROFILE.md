@@ -39,7 +39,7 @@ This still does not provide a general Experience catalog, manifest-to-artifact m
 
 For an execution-eligible manifest, all referenced artifacts must resolve to valid immutable identities (including SHA-256), every dependency must be present in the same trusted catalog, and the dependency closure must be acyclic. A nullable development hash in the Castle Siege example is not sufficient authorization to load executable bytes.
 
-## 3. Existing CI workflow identity
+## 4. Existing CI workflow identity
 
 The current general workflow is:
 
@@ -80,13 +80,13 @@ The existing `package` job runs on `workflow_dispatch` and has `packages: write`
 
 A dedicated validation workflow must have read-only permissions, no package publishing, no deployment, and explicit separation between trusted workflow code and the immutable candidate checkout.
 
-## 4. Cross-repository source reproducibility
+## 5. Cross-repository source reproducibility
 
 The existing `source-integration` and `source-integration-tests` jobs checkout MicroBundleDomain, GUI, and Physics from their moving `development` refs. Therefore an Experiences candidate SHA alone does not fully identify the source graph used by those jobs.
 
 Before these jobs can be used as reproducible CODE RED evidence, the run must also record and verify the resolved commit SHA for every external repository checkout. Alternatively, the dedicated validation workflow must pin approved dependency SHAs. A branch name is not an immutable dependency identity.
 
-## 5. Required candidate-validation inputs
+## 6. Required candidate-validation inputs
 
 The future dedicated workflow and CiAi profile must carry, validate, and preserve these separate values:
 
@@ -105,7 +105,7 @@ Reject repository mismatch, non-full or malformed SHA, unresolved candidate refs
 
 The workflow must emit a machine-readable checkout attestation from the actual checked-out repository state. A caller-supplied SHA string or a workflow-run `head_sha` field alone is not proof of the commit tested.
 
-## 6. CiAi evidence acceptance
+## 7. CiAi evidence acceptance
 
 The target evidence packet is the versioned contract under review in [CiAi PR #28](https://github.com/TrentBest/TheSingularityWorkshop.CiAi/pull/28), with the policy tracked in [CiAi issue #27](https://github.com/TrentBest/TheSingularityWorkshop.CiAi/issues/27).
 
@@ -124,7 +124,7 @@ Do not accept a packet as exact-candidate evidence until it proves all of the fo
 
 A green workflow conclusion without these proofs is ordinary CI status, not an accepted CODE RED evidence packet.
 
-## 7. Operational gates
+## 8. Operational gates
 
 | Gate | Current status |
 |---|---|
@@ -143,7 +143,7 @@ A green workflow conclusion without these proofs is ordinary CI status, not an a
 | Same Experience extended to first-person 3D | Not started. |
 | MyVR integration/deployment | Deliberately deferred until local Experiences proof. |
 
-## 8. Activation and authority rules
+## 9. Activation and authority rules
 
 - Work only on an isolated feature branch based on current `development`; do not write to `master` or `development`.
 - Keep this workflow/profile implementation on a feature branch and reviewable PR first.
@@ -152,7 +152,7 @@ A green workflow conclusion without these proofs is ordinary CI status, not an a
 - Foundry—not the LLM—authorizes claims, source mutations, reruns, budgets, and PR handoff.
 - Preserve red and green evidence for every attempt; never overwrite a failed attempt with a later pass.
 
-## 9. Pilot sequence
+## 10. Pilot sequence
 
 1. Close the contract and provenance gates above without implementing Minesweeper gameplay by hand.
 2. Have Foundry claim issue #36 and authorize an isolated Experiences feature branch.
