@@ -61,6 +61,7 @@ The following job IDs and named steps exist in the checked-in workflow:
 | `test-drone-construction` | Restore Drone Construction tests → Run construction/occupancy/transition/inventory invariants → Upload renderer-produced snapshot SVG. |
 | `validate-experience-room-catalogs` | Install JSON Schema validator → Validate laboratory room catalogs and navigation links. |
 | `drone-construction-showcase` | Run deterministic browser showcase → Upload generated HTML. |
+| `benchmark-quadrotor-populations` | Development-branch push only; runs the reproducible quadrotor population benchmark against the Physics development source. It is not a required PR candidate check in its current conditional form. |
 | `test-chemistry` | Run chemistry conservation tests. |
 | `test-moniker-motion` | Restore motion tests → Run motion contract tests. |
 
@@ -68,9 +69,9 @@ This is an inventory of existing checks, not a claim that each job is already re
 
 ### Explicitly excluded workflow path
 
-The existing `package` job runs on `workflow_dispatch` and has `packages: write` permission. It restores and packs publishable projects and uploads `experience-packages`.
+The existing `package` job runs on `workflow_dispatch` and has `packages: write` permission. It restores and packs projects, then uploads an `experience-packages` workflow artifact. The current YAML does not contain a package-push step, so this is a packaging/artifact-production path rather than proof of an actual NuGet publication.
 
-**Do not use this workflow's generic dispatch as the CODE RED candidate-validation entry point.** It is not a validation-only workflow, and a candidate agent must not receive a path that can accidentally invoke packaging/publication behavior.
+**Do not use this workflow's generic dispatch as the CODE RED candidate-validation entry point.** It is not a validation-only workflow, and a candidate agent must not receive a path that can trigger unrelated package production or artifact staging.
 
 A dedicated validation workflow must have read-only permissions, no package publishing, no deployment, and explicit separation between trusted workflow code and the immutable candidate checkout.
 
