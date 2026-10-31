@@ -59,6 +59,15 @@ public sealed record ConstructionSnapshotPresentationSelection(
     public int SelectedIndividualCount => IndividualAgents.Count;
     /// <summary>Gets the number of agents represented by aggregates.</summary>
     public int AggregatedAgentCount => Aggregates.Sum(aggregate => aggregate.Count);
+    /// <summary>Gets the number of aggregate draw candidates, independent of member population.</summary>
+    public int AggregateCount => Aggregates.Count;
+    /// <summary>Gets the number of snapshot agents outside the requested presentation space.</summary>
+    public int OmittedFromSpaceCount => TotalAgentsInSnapshot - TotalAgentsInSpace;
+    /// <summary>Gets the number of agents represented individually or through aggregates.</summary>
+    public int RepresentedAgentCount => SelectedIndividualCount + AggregatedAgentCount;
+    /// <summary>Gets whether every snapshot agent is accounted for as represented or outside this space.</summary>
+    public bool PopulationIsReconciled =>
+        TotalAgentsInSnapshot == RepresentedAgentCount + OmittedFromSpaceCount;
 }
 
 /// <summary>Freshness-gated result from a presentation consumer evaluation.</summary>
