@@ -74,10 +74,10 @@ public sealed class EmitterQueueLivenessTests
     }
 
     [Fact]
-    public void Simulation_SharedEmitterAndRepeatedAssignments_AllAgentsMakeBoundedProgress()
+    public void Simulation_SharedEmitterAndRepeatedAssignments_EveryAgentCompletesWork()
     {
-        // More tasks than agents forces agents to request a second assignment. This checks
-        // repeated service, not merely that each initially queued agent can finish once.
+        // More tasks than agents forces repeated assignments. Count each agent's committed
+        // completions so system-wide completion cannot conceal an agent receiving no service.
         var agents = new[]
         {
             new ConstructionAgent(1, new GridCell(0, 3)),
@@ -91,14 +91,27 @@ public sealed class EmitterQueueLivenessTests
             agents: agents,
             emitters: [new PositionedBlockEmitter(new GridCell(0, 2), new BlockEmitter("shared-emitter", 12))]);
 
+        var completionsByAgent = agents.ToDictionary(agent => agent.AgentId, _ => 0);
         var snapshot = simulation.Snapshot();
         for (var tick = 0; tick < 2_000 && !snapshot.IsComplete; tick++)
+        {
+            var previousStates = snapshot.Agents.ToDictionary(agent => agent.AgentId, agent => agent.State);
             snapshot = simulation.Step();
+            foreach (var agent in snapshot.Agents)
+            {
+                if (previousStates[agent.AgentId] == ConstructionAgentState.PlacingBlock
+                    && agent.State == ConstructionAgentState.Idle)
+                    completionsByAgent[agent.AgentId]++;
+            }
+        }
 
         Assert.True(snapshot.IsComplete,
             $"Expected all 12 tasks to complete under shared-emitter contention; placed {snapshot.PlacedBlocks} at tick {snapshot.Tick}.");
         Assert.Equal(12, snapshot.PlacedBlocks);
         Assert.Equal(0, Assert.Single(snapshot.Emitters).Inventory);
+        Assert.All(completionsByAgent, entry =>
+            Assert.True(entry.Value > 0, $"Agent {entry.Key} did not complete any placement task."));
+        Assert.Equal(12, completionsByAgent.Values.Sum());
         Assert.All(snapshot.Agents, agent =>
         {
             Assert.Equal(ConstructionAgentState.Idle, agent.State);
