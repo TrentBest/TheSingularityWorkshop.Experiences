@@ -61,10 +61,6 @@ public sealed record ConstructionSnapshotPresentationSelection(
     public int AggregatedAgentCount => Aggregates.Sum(aggregate => aggregate.Count);
 }
 
-/// <summary>
-/// Deterministically selects near-field agents up to a fixed budget and groups all remaining
-/// agents by qualified simulation-grid cell. It reads snapshots only and cannot mutate simulation state.
-/// </summary>
 /// <summary>Freshness-gated result from a presentation consumer evaluation.</summary>
 /// <param name="Freshness">Freshness classification using caller-owned timestamps.</param>
 /// <param name="Selection">Presentation selection when fresh; otherwise null.</param>
@@ -76,7 +72,7 @@ public sealed record ConstructionSnapshotPresentationResult(
     public bool IsPresentable => Freshness == ConstructionSnapshotFreshness.Fresh && Selection is not null;
 }
 
-public static class ConstructionSnapshotPresentationSelector
+/// <summary>\n/// Deterministically selects near-field agents up to a fixed budget and groups all remaining\n/// agents by qualified simulation-grid cell. It reads snapshots only and cannot mutate simulation state.\n/// </summary>\npublic static class ConstructionSnapshotPresentationSelector
 {
     /// <summary>
     /// Evaluates snapshot freshness before deriving a presentation selection.
