@@ -87,6 +87,18 @@ public sealed class MinesweeperGameTests
     }
 
     [Fact]
+    public void ResetRestoresOriginalFixedMineLayoutAfterFirstRevealRelocation()
+    {
+        var game = new MinesweeperGame(3, 1, new[] { new CellId(0, 0) });
+        game.Reveal(new CellId(0, 0));
+        game.Reset();
+
+        game.Reveal(new CellId(0, 2));
+        Assert.Equal(MinesweeperActionResult.Accepted, game.Reveal(new CellId(0, 0)));
+        Assert.Equal(MinesweeperStatus.Lost, game.Status);
+    }
+
+    [Fact]
     public void InvalidCoordinatesAreRejectedWithoutMutation()
     {
         var game = new MinesweeperGame(2, 2, new[] { new CellId(0, 0) });
