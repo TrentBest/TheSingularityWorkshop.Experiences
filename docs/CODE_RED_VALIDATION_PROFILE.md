@@ -31,7 +31,7 @@ The current authored example is Castle Siege:
 
 The Castle Siege manifest is explicitly schema version 1 and has a Castle-Siege-specific fixed ID/key. It is a useful example of the separation between Experience identity, artifact references, and creator-declared capabilities; it is **not** a generic manifest contract that Minesweeper can copy unchanged.
 
-The shared contract layer currently provides deterministic semantic-provider matching and immutable artifact-closure resolution. It does not yet provide a general Experience catalog, a manifest-to-artifact materializer, or a supported manifest-to-running-host loader.
+The shared contract layer provides deterministic semantic-provider matching and immutable artifact-closure resolution. This feature branch now adds a general `ExperienceManifest` contract in `src/Contracts/ExperienceManifest.cs`, plus its JSON Schema and an illustrative Minesweeper manifest under `docs/contracts/`. The generic contract reuses the existing `ArtifactIdentity` and `SemanticInteractionRequirement` types; it requires content-pinned artifact roots, validates stable Experience identity and semantic version ranges, rejects unknown JSON properties/schema versions, and emits deterministic compact JSON. Contract tests cover validation, canonical ordering, strict parsing, and the checked-in example. This does not yet provide a general Experience catalog, a manifest-to-artifact materializer, or a supported manifest-to-running-host loader.
 
 For an execution-eligible manifest, all referenced artifacts must resolve to valid immutable identities (including SHA-256), every dependency must be present in the same trusted catalog, and the dependency closure must be acyclic. A nullable development hash in the Castle Siege example is not sufficient authorization to load executable bytes.
 
@@ -59,6 +59,7 @@ The following job IDs and named steps exist in the checked-in workflow:
 | `test-marble-run` | Restore Marble Run tests → Run Marble Run scene contract tests. |
 | `test-games-cards` | Restore card tests → Run card capability tests. |
 | `test-drone-construction` | Restore Drone Construction tests → Run construction/occupancy/transition/inventory invariants → Upload renderer-produced snapshot SVG. |
+| `validate-experience-manifest` | Install JSON Schema validator → Validate the generic Experience manifest schema/example and pinned artifact-root shape. |
 | `validate-experience-room-catalogs` | Install JSON Schema validator → Validate laboratory room catalogs and navigation links. |
 | `drone-construction-showcase` | Run deterministic browser showcase → Upload generated HTML. |
 | `benchmark-quadrotor-populations` | Development-branch push only; runs the reproducible quadrotor population benchmark against the Physics development source. It is not a required PR candidate check in its current conditional form. |
@@ -123,9 +124,9 @@ A green workflow conclusion without these proofs is ordinary CI status, not an a
 
 | Gate | Current status |
 |---|---|
-| Isolated Experiences feature branch from current development | Created; no implementation commits yet. |
+| Isolated Experiences feature branch from current development | Created; generic manifest contract and validation documentation are committed. |
 | Existing semantic-provider and artifact-closure contracts | Implemented; contract tests exist. |
-| Generic Experience manifest contract | Not yet implemented; Castle Siege's manifest is Experience-specific. |
+| Generic Experience manifest contract | Implemented on this feature branch; schema, example, parser, canonical serializer, and contract tests added. CI execution is pending. |
 | Manifest-to-artifact materialization and supported local loader | Not yet established by repository evidence. |
 | Dedicated read-only candidate-validation workflow | Not implemented. |
 | Exact tested-checkout provenance and external dependency pinning | Not yet proven. |
