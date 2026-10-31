@@ -33,6 +33,8 @@ The Castle Siege manifest is explicitly schema version 1 and has a Castle-Siege-
 
 The shared contract layer provides deterministic semantic-provider matching and immutable artifact-closure resolution. This feature branch now adds a general `ExperienceManifest` contract in `src/Contracts/ExperienceManifest.cs`, plus its JSON Schema and an illustrative Minesweeper manifest under `docs/contracts/`. The generic contract reuses the existing `ArtifactIdentity` and `SemanticInteractionRequirement` types; it requires content-pinned artifact roots, validates stable Experience identity and semantic version ranges, rejects unknown JSON properties/schema versions, and emits deterministic compact JSON. Contract tests cover validation, canonical ordering, strict parsing, and the checked-in example. This does not yet provide a general Experience catalog, a manifest-to-artifact materializer, or a supported manifest-to-running-host loader.
 
+**Observed implementation validation:** PR workflow run [41227478266](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/41227478266), attempt 1, completed successfully on candidate SHA `fc5ae4f79aabe7ed63857981c25a11c527964c01`. The semantic-contract test job passed 23/23 tests and `validate-experience-manifest` passed. The package and development-only benchmark jobs were skipped as expected for a pull-request run. This is ordinary PR CI evidence for this code revision; it is not yet a CODE RED evidence packet or proof of exact checkout provenance.
+
 For an execution-eligible manifest, all referenced artifacts must resolve to valid immutable identities (including SHA-256), every dependency must be present in the same trusted catalog, and the dependency closure must be acyclic. A nullable development hash in the Castle Siege example is not sufficient authorization to load executable bytes.
 
 ## 3. Existing CI workflow identity
@@ -126,7 +128,7 @@ A green workflow conclusion without these proofs is ordinary CI status, not an a
 |---|---|
 | Isolated Experiences feature branch from current development | Created; generic manifest contract and validation documentation are committed. |
 | Existing semantic-provider and artifact-closure contracts | Implemented; contract tests exist. |
-| Generic Experience manifest contract | Implemented on this feature branch; schema, example, parser, canonical serializer, and contract tests added. CI execution is pending. |
+| Generic Experience manifest contract | Implemented on this feature branch; schema, example, parser, canonical serializer, and contract tests added. PR CI run 41227478266 passed on SHA `fc5ae4f79aabe7ed63857981c25a11c527964c01`. |
 | Manifest-to-artifact materialization and supported local loader | Not yet established by repository evidence. |
 | Dedicated read-only candidate-validation workflow | Not implemented. |
 | Exact tested-checkout provenance and external dependency pinning | Not yet proven. |
