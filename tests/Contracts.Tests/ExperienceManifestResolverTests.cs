@@ -45,9 +45,8 @@ public sealed class ExperienceManifestResolverTests
         Assert.Empty(result.Issues);
         Assert.Single(result.CapabilitySelections);
         Assert.Equal(
-            new[] { rules.StableKey, experience.StableKey, input.StableKey }.OrderBy(x => x, StringComparer.Ordinal),
-            result.OrderedArtifacts.Select(item => item.Identity.StableKey).OrderBy(x => x, StringComparer.Ordinal));
-        Assert.True(result.OrderedArtifacts.IndexOf(rules) < 0);
+            new[] { input.StableKey, rules.StableKey, experience.StableKey },
+            result.OrderedArtifacts.Select(item => item.Identity.StableKey));
     }
 
     [Fact]
