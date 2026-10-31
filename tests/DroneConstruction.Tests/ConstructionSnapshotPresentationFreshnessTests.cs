@@ -62,6 +62,31 @@ public sealed class ConstructionSnapshotPresentationFreshnessTests
     }
 
     [Fact]
+    public void SelectIfFresh_AllowsEmptyIndividualSelectionAndReconcilesAggregateMembership()
+    {
+        var simulation = CreateSimulation();
+        var snapshot = simulation.Snapshot();
+        var capturedAt = new DateTimeOffset(2026, 10, 31, 6, 0, 0, TimeSpan.Zero);
+
+        var result = ConstructionSnapshotPresentationSelector.SelectIfFresh(
+            snapshot, capturedAt, capturedAt, new ConstructionSnapshotFreshnessPolicy(TimeSpan.Zero),
+            "run-empty-near-field", 1, simulation.SpaceId,
+            new ConstructionObserverPose(new GridCell(100, 100)),
+            new ConstructionSnapshotPresentationPolicy(0, 0));
+
+        Assert.True(result.IsPresentable);
+        var selection = Assert.IsType<ConstructionSnapshotPresentationSelection>(result.Selection);
+        Assert.Empty(selection.IndividualAgents);
+        Assert.Equal(1, selection.TotalAgentsInSnapshot);
+        Assert.Equal(1, selection.TotalAgentsInSpace);
+        Assert.Equal(1, selection.AggregatedAgentCount);
+        var aggregate = Assert.Single(selection.Aggregates);
+        Assert.Equal("construction:construction-main:0:0", aggregate.AggregateId);
+        Assert.Equal(new ulong[] { 1 }, aggregate.MemberAgentIds);
+        Assert.Equal(0, simulation.TickCount);
+    }
+
+    [Fact]
     public void SelectIfFresh_ValidatesRequiredInputs()
     {
         var snapshot = CreateSimulation().Snapshot();
