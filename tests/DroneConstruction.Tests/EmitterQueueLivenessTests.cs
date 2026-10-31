@@ -72,4 +72,38 @@ public sealed class EmitterQueueLivenessTests
             Assert.Null(agent.AssignedTaskId);
         });
     }
+
+    [Fact]
+    public void Simulation_SharedEmitterAndRepeatedAssignments_AllAgentsMakeBoundedProgress()
+    {
+        // More tasks than agents forces agents to request a second assignment. This checks
+        // repeated service, not merely that each initially queued agent can finish once.
+        var agents = new[]
+        {
+            new ConstructionAgent(1, new GridCell(0, 3)),
+            new ConstructionAgent(2, new GridCell(1, 3)),
+            new ConstructionAgent(3, new GridCell(2, 3))
+        };
+        var simulation = new ConstructionSimulation(
+            width: 12,
+            height: 4,
+            requiredHeight: (x, y) => y == 0 ? 1 : 0,
+            agents: agents,
+            emitters: [new PositionedBlockEmitter(new GridCell(0, 2), new BlockEmitter("shared-emitter", 12))]);
+
+        var snapshot = simulation.Snapshot();
+        for (var tick = 0; tick < 2_000 && !snapshot.IsComplete; tick++)
+            snapshot = simulation.Step();
+
+        Assert.True(snapshot.IsComplete,
+            $"Expected all 12 tasks to complete under shared-emitter contention; placed {snapshot.PlacedBlocks} at tick {snapshot.Tick}.");
+        Assert.Equal(12, snapshot.PlacedBlocks);
+        Assert.Equal(0, Assert.Single(snapshot.Emitters).Inventory);
+        Assert.All(snapshot.Agents, agent =>
+        {
+            Assert.Equal(ConstructionAgentState.Idle, agent.State);
+            Assert.False(agent.IsCarryingBlock);
+            Assert.Null(agent.AssignedTaskId);
+        });
+    }
 }
