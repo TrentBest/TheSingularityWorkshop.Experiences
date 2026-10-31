@@ -1,6 +1,6 @@
 # Drone Construction — Snapshot and Living-View Contract
 
-**Status:** immutable snapshots, the standalone SVG renderer, and a maintained pull-based SVG view are implemented with focused tests. The optional GUI.SVG source-graph integration test is CI-verified. A hosted GUI.SVG application and telemetry stream remain open.
+**Status:** immutable snapshots, the standalone SVG renderer, a maintained pull-based SVG view, and an observer-relative Drone Construction → Renderer → Visualize → GUI.SVG CPU proof are implemented and CI-verified. The downstream proof uses a tiny three-agent fixture. A hosted live GUI.SVG application, production GPU path, stale-snapshot policy, bounded missing-resource/render-failure behavior, multi-frame freshness/backpressure, and construction-agent scale remain open.
 
 ## Authority boundary
 
@@ -73,9 +73,7 @@ Keep the domain snapshot as stable input. A renderer adapter may transform it in
 
 ## Observer-relative Renderer → Visualize integration target
 
-The existing cross-repository proof in [Visualize's RendererAdapter guide](https://github.com/TrentBest/TheSingularityWorkshop.Visualize/blob/development/integrations/RendererAdapter/Proof/README.md) establishes the downstream contract: a Renderer `RenderFrame` is adapted by `RendererFrameAdapter` into a Visualize frame, then `Visualizer.RenderAsync` submits it to a backend. That is a CPU-side integration proof, not a GPU backend or a complete observer/bucket/scheduling pipeline.
-
-Drone Construction does **not** yet have a production adapter that maps its committed snapshot into that pipeline. Implement this as a separate optional presentation layer; keep the construction domain and physics projects independent of Renderer, Visualize, GUI.SVG, and graphics APIs.
+The [Visualize Drone Construction proof](https://github.com/TrentBest/TheSingularityWorkshop.Visualize/tree/development/integrations/RendererAdapter/DroneConstructionProof) now establishes the actual cross-repository path: a committed Experiences snapshot is published to `ConstructionSnapshotObserver`, selected with explicit observer pose and bounded policy, mapped to Renderer identities/commands, adapted by `RendererFrameAdapter`, and submitted through `Visualizer` to `GuiSvgVisualizerBackend`. This is a real CPU/SVG vertical slice, not a production GPU path or complete scale pipeline. Continue to keep the construction domain and physics projects independent of Renderer, Visualize, GUI.SVG, and graphics APIs.
 
 ### Required data flow
 
@@ -86,9 +84,9 @@ Drone Construction does **not** yet have a production adapter that maps its comm
 5. Submit through the existing Visualize API. Keep GPU/backend resource state disposable and downstream of authoritative simulation state.
 6. Preserve a separate focused GUI.SVG path for inspectable living documentation and deterministic CI artifacts. SVG node count is not a proxy for the future GPU workload.
 
-### Acceptance gates before calling it integrated
+### Acceptance gates and remaining work
 
-- The same committed snapshot and observer/configuration produce deterministic selected identities and representation decisions.
+- Every emitted representation traces to a stable source identity and the snapshot tick/run; aggregation records the identities/count it summarizes.
 - Every emitted representation traces to a stable source identity and the snapshot tick/run; aggregation records the identities/count it summarizes.
 - Changing observer pose or representation policy changes selection only; it never mutates simulation state or changes physics results.
 - Tests distinguish total simulated population from selected representation count, submitted draw-command count, and resource count.
@@ -160,6 +158,6 @@ The next vertical slice belongs in an optional integration/proof project, not in
 
 ### Integration boundary and proof label
 
-Visualize already has a CPU-side Renderer-to-GUI.SVG proof using distance selection, FSM-backed representation state, `RenderFrameAdapter`, resource validation, and SVG submission. That proof is a reusable downstream boundary, not evidence that Drone Construction is connected to it. The new proof is complete only when a real `ConstructionSimulationSnapshot` is the upstream source and CI runs the entire snapshot → observer selection → Renderer frame → Visualize → GUI.SVG path.
+The Drone Construction-specific Visualize proof now uses a real `ConstructionSimulationSnapshot` as upstream source and CI runs the entire snapshot → observer selection → Renderer frame → Visualize → GUI.SVG path. Keep the proof label narrow: three-agent CPU/SVG fixture, not a hosted application, GPU execution, production Event Horizon/bucket coordination, starvation-freedom, or construction-agent scale.
 
 Do not claim a hosted live app, GPU execution, production Event Horizon/bucket coordination, starvation-freedom, or 100,000-agent construction scale from this slice. Measure presentation cost separately from simulation throughput.
