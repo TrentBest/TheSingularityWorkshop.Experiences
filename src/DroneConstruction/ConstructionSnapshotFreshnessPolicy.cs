@@ -3,8 +3,13 @@ namespace TheSingularityWorkshop.Experiences.DroneConstruction;
 /// <summary>Result of evaluating a caller-timestamped snapshot against an explicit freshness budget.</summary>
 public enum ConstructionSnapshotFreshness
 {
+    /// <summary>The capture timestamp is at or before evaluation time and within the age budget.</summary>
     Fresh,
+
+    /// <summary>The capture timestamp is older than the configured maximum age.</summary>
     Stale,
+
+    /// <summary>The capture timestamp is later than the caller-provided evaluation timestamp.</summary>
     FutureDated
 }
 
