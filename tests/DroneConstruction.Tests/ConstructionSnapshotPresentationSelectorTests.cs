@@ -26,6 +26,10 @@ public sealed class ConstructionSnapshotPresentationSelectorTests
         Assert.Equal(0, simulation.Snapshot().Tick);
         Assert.Equal(2, first.SelectedIndividualCount);
         Assert.Equal(2, first.AggregatedAgentCount);
+        Assert.Equal(2, first.AggregateCount);
+        Assert.Equal(0, first.OmittedFromSpaceCount);
+        Assert.Equal(4, first.RepresentedAgentCount);
+        Assert.True(first.PopulationIsReconciled);
         Assert.Equal(new ulong[] { 20, 10 }, first.IndividualAgents.Select(agent => agent.AgentId));
         Assert.Equal(first.IndividualAgents.Select(agent => agent.AgentId),
             second.IndividualAgents.Select(agent => agent.AgentId));
@@ -117,6 +121,10 @@ public sealed class ConstructionSnapshotPresentationSelectorTests
         Assert.Equal(new ConstructionSnapshotProvenance("run-empty", snapshot.Tick, 3), selection.Provenance);
         Assert.Equal(4, selection.TotalAgentsInSnapshot);
         Assert.Equal(0, selection.TotalAgentsInSpace);
+        Assert.Equal(4, selection.OmittedFromSpaceCount);
+        Assert.Equal(0, selection.AggregateCount);
+        Assert.Equal(0, selection.RepresentedAgentCount);
+        Assert.True(selection.PopulationIsReconciled);
         Assert.Empty(selection.IndividualAgents);
         Assert.Empty(selection.Aggregates);
         Assert.Equal(0, selection.SelectedIndividualCount);
