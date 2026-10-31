@@ -111,6 +111,19 @@ public sealed class ExperienceManifestTests
         Assert.Throws<InvalidOperationException>(() => (Manifest() with { Version = "0.1.0\n" }).Validate());
     }
 
+
+    [Fact]
+    public void CheckedInExampleParsesAsAValidManifest()
+    {
+        var path = Path.Combine(AppContext.BaseDirectory, "contracts", "experience-manifest.example.json");
+        var parsed = ExperienceManifest.Parse(File.ReadAllText(path));
+
+        Assert.Equal(4201UL, parsed.ExperienceId);
+        Assert.Equal("minesweeper", parsed.ExperienceKey);
+        Assert.Equal(2, parsed.Requirements.Count);
+        Assert.All(parsed.Artifacts, artifact => Assert.True(artifact.IsValid));
+    }
+
     [Fact]
     public void ParserRejectsUnknownProperties()
     {
