@@ -62,7 +62,7 @@ public sealed class ExperienceManifestTests
     public void UnsupportedSchemaVersionIsRejected()
     {
         var exception = Assert.Throws<InvalidOperationException>(() =>
-            Manifest() with { SchemaVersion = ExperienceManifest.CurrentSchemaVersion + 1 }.Validate());
+            (Manifest() with { SchemaVersion = ExperienceManifest.CurrentSchemaVersion + 1 }).Validate());
 
         Assert.Contains("Unsupported", exception.Message);
     }
