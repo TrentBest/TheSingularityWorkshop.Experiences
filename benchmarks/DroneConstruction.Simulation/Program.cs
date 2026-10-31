@@ -9,7 +9,7 @@ const int agentClusterWidth = 32;
 Console.WriteLine("Drone Construction authoritative simulation benchmark");
 Console.WriteLine($"Runtime: {Environment.Version}; OS: {Environment.OSVersion}; logical CPUs: {Environment.ProcessorCount}");
 Console.WriteLine($"Grid: {gridWidth}x{gridHeight}; required height: 1 per cell; agent cluster: {agentClusterWidth}x{agentClusterWidth}; warm-up: {warmupTicks}; measured: {measuredTicks}");
-Console.WriteLine("agents,ticks,elapsed_ms,ns_per_agent_tick,agent_ticks_per_second,allocated_bytes_total,allocated_bytes_per_tick,final_tick,placed_blocks,required_blocks,measured_agent_placements,agents_with_placement,min_placements_per_agent,max_placements_per_agent");
+Console.WriteLine("agents,ticks,elapsed_ms,ns_per_agent_tick,agent_ticks_per_second,allocated_bytes_total,allocated_bytes_per_tick,final_tick,placed_blocks,required_blocks");
 foreach (var population in new[] { 10, 100, 1_000 })
 {
     // Keep the initial population near the emitter and first scheduled tasks. This lets
@@ -25,29 +25,12 @@ foreach (var population in new[] { 10, 100, 1_000 })
             new BlockEmitter("benchmark-emitter", gridWidth * gridHeight))]);
     for (var i = 0; i < warmupTicks; i++) simulation.Step();
     GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect();
-    var completionsByAgent = agents.ToDictionary(agent => agent.AgentId, _ => 0);
-    var previousSnapshot = simulation.Snapshot();
     var allocatedBefore = GC.GetTotalAllocatedBytes(precise: true);
     var stopwatch = Stopwatch.StartNew();
     ConstructionSimulationSnapshot? snapshot = null;
-    for (var i = 0; i < measuredTicks; i++)
-    {
-        snapshot = simulation.Step();
-        var previousStates = previousSnapshot.Agents.ToDictionary(agent => agent.AgentId, agent => agent.State);
-        foreach (var agent in snapshot.Agents)
-        {
-            if (previousStates[agent.AgentId] == ConstructionAgentState.PlacingBlock
-                && agent.State == ConstructionAgentState.Idle)
-                completionsByAgent[agent.AgentId]++;
-        }
-        previousSnapshot = snapshot;
-    }
+    for (var i = 0; i < measuredTicks; i++) snapshot = simulation.Step();
     stopwatch.Stop();
     var allocated = GC.GetTotalAllocatedBytes(precise: true) - allocatedBefore;
     var agentTicks = (long)population * measuredTicks;
-    var measuredPlacements = completionsByAgent.Values.Sum();
-    var agentsWithPlacement = completionsByAgent.Count(entry => entry.Value > 0);
-    var minPlacements = completionsByAgent.Values.Min();
-    var maxPlacements = completionsByAgent.Values.Max();
-    Console.WriteLine($"{population},{measuredTicks},{stopwatch.Elapsed.TotalMilliseconds:F3},{stopwatch.Elapsed.TotalNanoseconds / agentTicks:F1},{agentTicks / stopwatch.Elapsed.TotalSeconds:F0},{allocated},{(double)allocated / measuredTicks:F1},{snapshot!.Tick},{snapshot.PlacedBlocks},{snapshot.RequiredBlocks},{measuredPlacements},{agentsWithPlacement},{minPlacements},{maxPlacements}");
+    Console.WriteLine($"{population},{measuredTicks},{stopwatch.Elapsed.TotalMilliseconds:F3},{stopwatch.Elapsed.TotalNanoseconds / agentTicks:F1},{agentTicks / stopwatch.Elapsed.TotalSeconds:F0},{allocated},{(double)allocated / measuredTicks:F1},{snapshot!.Tick},{snapshot.PlacedBlocks},{snapshot.RequiredBlocks}");
 }
