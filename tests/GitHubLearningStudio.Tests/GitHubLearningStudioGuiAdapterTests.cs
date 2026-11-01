@@ -59,6 +59,28 @@ public sealed class GitHubLearningStudioGuiAdapterTests
     }
 
     [Fact]
+    public void KnowledgeCheckButtonsSubmitTheirDeclaredAnswerValues()
+    {
+        var session = new GitHubLearningStudioSession();
+        session.Execute(GitHubLearningStudioCommands.InspectReadme);
+        session.Execute(GitHubLearningStudioCommands.CreateBranch);
+        session.Execute(GitHubLearningStudioCommands.EditReadme, "# Field Notes\\n\\nA project journal.");
+        session.Execute(GitHubLearningStudioCommands.CommitChanges, "Improve project home");
+        session.Execute(GitHubLearningStudioCommands.ConfigurePages);
+        session.Execute(GitHubLearningStudioCommands.BuildPages);
+        session.Execute(GitHubLearningStudioCommands.PublishPages);
+
+        var tree = GitHubLearningStudioGuiAdapter.Build(session.CaptureSnapshot());
+        var answer = tree.Find("github-learning-studio-answer-build-publish");
+
+        Assert.Equal(GitHubLearningStudioCommands.AnswerKnowledgeCheck,
+            answer.Properties["onClickCommand"]);
+        Assert.True(GitHubLearningStudioGuiCommandDispatcher.TryExecute(
+            session, answer, out var result));
+        Assert.True(result!.Snapshot.LessonCompleted);
+    }
+
+    [Fact]
     public void DispatcherIgnoresNodesWithoutButtonCommandMetadata()
     {
         var session = new GitHubLearningStudioSession();
