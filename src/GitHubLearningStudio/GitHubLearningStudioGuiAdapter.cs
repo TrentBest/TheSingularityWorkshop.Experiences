@@ -69,9 +69,30 @@ public static class GitHubLearningStudioGuiAdapter
                     : $"Simulated site: {snapshot.SimulatedPublishedUrl}"));
         root.Child(pages);
 
+        var lesson = GuiBuilder.Create("Panel", "github-learning-studio-lesson")
+            .Property("completed", snapshot.LessonCompleted ? "true" : "false")
+            .Child("Text", "github-learning-studio-guided-practice", child =>
+                child.Text(snapshot.GuidedPracticePrompt))
+            .Child("Text", "github-learning-studio-knowledge-check", child =>
+                child.Text(snapshot.KnowledgeCheckPrompt))
+            .Child("Text", "github-learning-studio-lesson-status", child =>
+                child.Text(snapshot.LessonCompleted ? "Understanding check complete." : "Understanding check not yet complete."));
+        root.Child(lesson);
+
         var controls = GuiBuilder.Create("Panel", "github-learning-studio-controls");
         foreach (var commandId in snapshot.AvailableCommands)
         {
+            if (commandId == GitHubLearningStudioCommands.AnswerKnowledgeCheck)
+            {
+                controls.Child("Button", "github-learning-studio-answer-build-publish", child =>
+                    child.Text("Build, then publish").Property("onClickCommand", commandId)
+                        .Property("commandValue", "build-then-publish"));
+                controls.Child("Button", "github-learning-studio-answer-commit-only", child =>
+                    child.Text("Commit only").Property("onClickCommand", commandId)
+                        .Property("commandValue", "commit-only"));
+                continue;
+            }
+
             var (controlId, label) = DescribeCommand(commandId);
             controls.Child("Button", controlId, child =>
                 child.Text(label).Property("onClickCommand", commandId));
@@ -123,7 +144,12 @@ public static class GitHubLearningStudioGuiCommandDispatcher
             return false;
         }
 
-        result = session.Execute(commandId, value);
+        var submittedValue = value;
+        if (submittedValue is null &&
+            control.Properties.TryGetValue("commandValue", out var declaredValue))
+            submittedValue = declaredValue;
+
+        result = session.Execute(commandId, submittedValue);
         return true;
     }
 }
