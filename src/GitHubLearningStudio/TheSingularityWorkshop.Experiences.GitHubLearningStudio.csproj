@@ -16,7 +16,7 @@
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="TheSingularityWorkshop.GUI.Core" Version="0.1.0-alpha.4" Condition="'$(WorkshopUseRepositorySources)' != 'true'" />
+    <PackageReference Include="../../../TheSingularityWorkshop.GUI/src/Core/TheSingularityWorkshop.GUI.Core.csproj" Version="0.1.0-alpha.4" Condition="'$(WorkshopUseRepositorySources)' != 'true'" />
     <ProjectReference Include="..\\..\\..\\TheSingularityWorkshop.GUI\\src\\Core\\TheSingularityWorkshop.GUI.Core.csproj" Condition="'$(WorkshopUseRepositorySources)' == 'true'" />
   </ItemGroup>
 </Project>
