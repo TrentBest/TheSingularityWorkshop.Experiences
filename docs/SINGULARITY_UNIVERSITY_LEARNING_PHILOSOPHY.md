@@ -142,8 +142,8 @@ Mark each claim as conceptual, source-checked, tested, CI-verified, analytically
 ## Related Physics roadmap
 
 - Physics umbrella mission: https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/38
-- Mathematics implementation: https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/44
-- Particle/nuclear/collider foundations: https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/43
+- Mathematics implementation: https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/42
+- Particle/nuclear/collider foundations: https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/41
 - Existing Marble Run / Domino boundary: ../docs/MARBLE_RUN_AND_DOMINO_MICROBUNDLE_BOUNDARY.md
 
 
