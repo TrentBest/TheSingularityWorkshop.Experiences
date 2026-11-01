@@ -10,6 +10,7 @@ public static class GitHubLearningStudioCommands
     public const string ConfigurePages = "pages.configure";
     public const string BuildPages = "pages.build";
     public const string PublishPages = "pages.publish";
+    public const string AnswerKnowledgeCheck = "lesson.answer-update-question";
 }
 
 /// <summary>Describes the modeled publication lifecycle.</summary>
@@ -45,6 +46,10 @@ public sealed record GitHubLearningStudioSnapshot(
     int? PublishedCommitSequence,
     string? SimulatedPublishedUrl,
     string Explanation,
+    string GuidedPracticePrompt,
+    string KnowledgeCheckPrompt,
+    bool KnowledgeCheckCorrect,
+    bool LessonCompleted,
     IReadOnlyList<string> AvailableCommands);
 
 /// <summary>The result of one semantic lesson command.</summary>
@@ -77,6 +82,7 @@ public sealed class GitHubLearningStudioSession
     private PagesLifecycle _pagesLifecycle;
     private int? _builtCommitSequence;
     private int? _publishedCommitSequence;
+    private bool _knowledgeCheckCorrect;
 
     public GitHubLearningStudioSession()
     {
@@ -102,6 +108,8 @@ public sealed class GitHubLearningStudioSession
         if (_pagesConfigured && _builtCommitSequence == _commits[^1].Sequence &&
             _publishedCommitSequence != _builtCommitSequence)
             commands.Add(GitHubLearningStudioCommands.PublishPages);
+        if (_publishedCommitSequence == _commits[^1].Sequence && !_knowledgeCheckCorrect)
+            commands.Add(GitHubLearningStudioCommands.AnswerKnowledgeCheck);
 
         return new GitHubLearningStudioSnapshot(
             "github-learning-studio.pages-first",
@@ -118,6 +126,10 @@ public sealed class GitHubLearningStudioSession
             _publishedCommitSequence,
             _publishedCommitSequence is null ? null : "https://example.invalid/field-notes/",
             BuildExplanation(),
+            "Make one more small README improvement, commit it, and follow the build → publish path to update the modeled site.",
+            "A new commit exists after the site was published. What must happen before visitors see that newer version?",
+            _knowledgeCheckCorrect,
+            _knowledgeCheckCorrect,
             Array.AsReadOnly(commands.ToArray()));
     }
 
@@ -134,12 +146,17 @@ public sealed class GitHubLearningStudioSession
             GitHubLearningStudioCommands.ConfigurePages => ConfigurePages(),
             GitHubLearningStudioCommands.BuildPages => BuildPages(),
             GitHubLearningStudioCommands.PublishPages => PublishPages(),
+            GitHubLearningStudioCommands.AnswerKnowledgeCheck => AnswerKnowledgeCheck(value),
             _ => false
         };
 
-        var message = accepted
-            ? $"The simulated action '{commandId}' was accepted."
-            : $"The action '{commandId}' is not available in the current lesson state.";
+        var message = commandId == GitHubLearningStudioCommands.AnswerKnowledgeCheck && accepted
+            ? (_knowledgeCheckCorrect
+                ? "Correct. A new commit must be built and then published before the modeled site reflects it."
+                : "Not quite. A commit records the change; the site still needs a new build and publication.")
+            : accepted
+                ? $"The simulated action '{commandId}' was accepted."
+                : $"The action '{commandId}' is not available in the current lesson state.";
         return new GitHubLearningStudioCommandResult(accepted, commandId, message, CaptureSnapshot());
     }
 
@@ -216,6 +233,15 @@ public sealed class GitHubLearningStudioSession
         return true;
     }
 
+    private bool AnswerKnowledgeCheck(string? value)
+    {
+        if (_publishedCommitSequence != _commits[^1].Sequence || _knowledgeCheckCorrect)
+            return false;
+
+        _knowledgeCheckCorrect = string.Equals(value?.Trim(), "build-then-publish", StringComparison.OrdinalIgnoreCase);
+        return true;
+    }
+
     private string BuildExplanation()
     {
         if (!_readmeInspected)
@@ -232,6 +258,8 @@ public sealed class GitHubLearningStudioSession
             return "The site artifact is ready. Publishing makes this modeled version available at the example URL.";
         if (_pagesLifecycle == PagesLifecycle.UpdateAvailable)
             return "The published site is behind the latest commit. Build and publish again to model the update loop.";
-        return "The published site represents the recorded commit. A later commit can produce a newer version.";
+        if (_knowledgeCheckCorrect)
+            return "You have completed the first journey: a recorded change became a modeled published site, and you can explain how updates reach visitors.";
+        return "The published site represents the recorded commit. Complete the short update question to check your understanding.";
     }
 }
