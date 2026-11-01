@@ -95,9 +95,9 @@ public sealed class GitHubLearningStudioSession
         var commands = new List<string>();
         if (!_readmeInspected)
             commands.Add(GitHubLearningStudioCommands.InspectReadme);
-        if (_activeBranch == "main")
+        else if (_activeBranch == "main")
             commands.Add(GitHubLearningStudioCommands.CreateBranch);
-        if (_readmeInspected)
+        else
             commands.Add(GitHubLearningStudioCommands.EditReadme);
         if (_hasUncommittedChanges)
             commands.Add(GitHubLearningStudioCommands.CommitChanges);
