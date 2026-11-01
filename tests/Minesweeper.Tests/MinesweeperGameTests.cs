@@ -57,9 +57,10 @@ public sealed class MinesweeperGameTests
     [Fact]
     public void RevealingMineLosesAndTerminalActionsAreRejected()
     {
-        var game = new MinesweeperGame(4, 1, new[] { new CellId(0, 3) });
-        game.Reveal(new CellId(0, 0));
-        Assert.Equal(MinesweeperActionResult.Accepted, game.Reveal(new CellId(0, 3)));
+        var game = new MinesweeperGame(3, 2, new[] { new CellId(0, 0) });
+        Assert.Equal(MinesweeperActionResult.Accepted, game.Reveal(new CellId(1, 1)));
+        Assert.Equal(MinesweeperStatus.Playing, game.Status);
+        Assert.Equal(MinesweeperActionResult.Accepted, game.Reveal(new CellId(0, 0)));
         Assert.Equal(MinesweeperStatus.Lost, game.Status);
         Assert.Equal(MinesweeperActionResult.RejectedTerminal, game.ToggleFlag(new CellId(0, 1)));
     }
@@ -91,11 +92,12 @@ public sealed class MinesweeperGameTests
     [Fact]
     public void ResetRestoresOriginalFixedMineLayoutAfterFirstRevealRelocation()
     {
-        var game = new MinesweeperGame(4, 1, new[] { new CellId(0, 0) });
+        var game = new MinesweeperGame(3, 2, new[] { new CellId(0, 0) });
         game.Reveal(new CellId(0, 0));
         game.Reset();
 
-        game.Reveal(new CellId(0, 3));
+        Assert.Equal(MinesweeperActionResult.Accepted, game.Reveal(new CellId(1, 1)));
+        Assert.Equal(MinesweeperStatus.Playing, game.Status);
         Assert.Equal(MinesweeperActionResult.Accepted, game.Reveal(new CellId(0, 0)));
         Assert.Equal(MinesweeperStatus.Lost, game.Status);
     }
