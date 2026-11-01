@@ -43,17 +43,17 @@ public sealed class GitHubLearningStudioSessionTests
         AssertAccepted(session, GitHubLearningStudioCommands.CreateBranch);
         var edit = AssertAccepted(session, GitHubLearningStudioCommands.EditReadme,
             "# Field Notes\n\nA project journal shared with the world.");
-        Assert.True(edit.Snapshot.HasUncommittedChanges);
+        Assert.True(edit.HasUncommittedChanges);
         AssertAccepted(session, GitHubLearningStudioCommands.CommitChanges, "Improve the project home");
 
         var configured = AssertAccepted(session, GitHubLearningStudioCommands.ConfigurePages);
-        Assert.Equal(PagesLifecycle.Configured, configured.Snapshot.PagesLifecycle);
+        Assert.Equal(PagesLifecycle.Configured, configured.PagesLifecycle);
         var built = AssertAccepted(session, GitHubLearningStudioCommands.BuildPages);
-        Assert.Equal(2, built.Snapshot.BuiltCommitSequence);
+        Assert.Equal(2, built.BuiltCommitSequence);
         var published = AssertAccepted(session, GitHubLearningStudioCommands.PublishPages);
-        Assert.Equal(PagesLifecycle.Published, published.Snapshot.PagesLifecycle);
-        Assert.Equal(2, published.Snapshot.PublishedCommitSequence);
-        Assert.Equal("https://example.invalid/field-notes/", published.Snapshot.SimulatedPublishedUrl);
+        Assert.Equal(PagesLifecycle.Published, published.PagesLifecycle);
+        Assert.Equal(2, published.PublishedCommitSequence);
+        Assert.Equal("https://example.invalid/field-notes/", published.SimulatedPublishedUrl);
     }
 
     [Fact]
@@ -71,11 +71,11 @@ public sealed class GitHubLearningStudioSessionTests
         Assert.Equal(3, changed.Commits[^1].Sequence);
 
         var rebuilt = AssertAccepted(session, GitHubLearningStudioCommands.BuildPages);
-        Assert.Equal(3, rebuilt.Snapshot.BuiltCommitSequence);
-        Assert.Equal(2, rebuilt.Snapshot.PublishedCommitSequence);
+        Assert.Equal(3, rebuilt.BuiltCommitSequence);
+        Assert.Equal(2, rebuilt.PublishedCommitSequence);
         var republished = AssertAccepted(session, GitHubLearningStudioCommands.PublishPages);
-        Assert.Equal(3, republished.Snapshot.PublishedCommitSequence);
-        Assert.Equal(PagesLifecycle.Published, republished.Snapshot.PagesLifecycle);
+        Assert.Equal(3, republished.PublishedCommitSequence);
+        Assert.Equal(PagesLifecycle.Published, republished.PagesLifecycle);
     }
 
     [Fact]
