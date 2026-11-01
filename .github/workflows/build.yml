@@ -203,24 +203,40 @@ jobs:
         shell: bash
         run: |
           set +e
-          mkdir -p artifacts/test-results
+          mkdir -p TestResults/minesweeper
           dotnet test tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj \
             --configuration Release \
             --logger "trx;LogFileName=minesweeper.trx" \
-            --results-directory artifacts/test-results
+            --results-directory TestResults/minesweeper
           exit_code=$?
           exit "$exit_code"
 
       - name: Write provenance and exact dispatch marker
         if: always()
         env:
+          REPOSITORY: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_REF: ${{ github.ref }}
+          EVENT_SHA: ${{ github.sha }}
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+          WORKFLOW_SHA: ${{ github.workflow_sha }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          CANDIDATE_REF: ${{ inputs.candidate_ref }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          REQUEST_ID: ${{ inputs.request_id }}
+          OPERATION_ID: ${{ inputs.operation_id }}
+          IDEMPOTENCY_KEY: ${{ inputs.idempotency_key }}
+          TASK_ID: ${{ inputs.task_id }}
+          CORRELATION_ID: ${{ inputs.correlation_id }}
           VERIFY_OUTCOME: ${{ steps.verify.outcome }}
           TEST_OUTCOME: ${{ steps.tests.outcome }}
           TESTED_SHA: ${{ steps.verify.outputs.tested_sha }}
         shell: bash
         run: |
-          mkdir -p artifacts
-          python3 - <<'PY'
+          /bin/rm -rf artifacts
+          /bin/mkdir -p artifacts
+          /usr/bin/python3 - <<'PY'
           import json
           import os
           from pathlib import Path
@@ -254,7 +270,7 @@ jobs:
               "testFramework": ".NET",
               "testFormat": "trx",
               "testProject": "tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj",
-              "testResultPath": "artifacts/test-results/minesweeper.trx",
+              "testResultPath": "TestResults/minesweeper/minesweeper.trx",
               "verificationOutcome": os.environ.get("VERIFY_OUTCOME", "unknown"),
               "testOutcome": os.environ.get("TEST_OUTCOME", "unknown"),
           }
@@ -279,7 +295,7 @@ jobs:
         with:
           name: ciai-test-results-${{ github.run_id }}-${{ github.run_attempt }}-test-minesweeper
           path: |
-            artifacts/test-results/minesweeper.trx
+            TestResults/minesweeper/minesweeper.trx
             artifacts/provenance.json
             artifacts/dispatch-marker.json
           if-no-files-found: warn
