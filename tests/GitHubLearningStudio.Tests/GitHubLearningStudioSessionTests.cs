@@ -122,6 +122,42 @@ public sealed class GitHubLearningStudioSessionTests
         Assert.Equal(firstSnapshot.Commits, secondSnapshot.Commits);
     }
 
+    [Fact]
+    public void KnowledgeCheckRequiresBuildThenPublishAndCompletesTheLesson()
+    {
+        var session = new GitHubLearningStudioSession();
+        PublishFirstVersion(session);
+
+        var incorrect = session.Execute(
+            GitHubLearningStudioCommands.AnswerKnowledgeCheck, "commit-only");
+        Assert.True(incorrect.Accepted);
+        Assert.False(incorrect.Snapshot.KnowledgeCheckCorrect);
+        Assert.False(incorrect.Snapshot.LessonCompleted);
+        Assert.Contains("Not quite", incorrect.Message);
+
+        var correct = session.Execute(
+            GitHubLearningStudioCommands.AnswerKnowledgeCheck, "build-then-publish");
+        Assert.True(correct.Accepted);
+        Assert.True(correct.Snapshot.KnowledgeCheckCorrect);
+        Assert.True(correct.Snapshot.LessonCompleted);
+        Assert.Contains("Correct", correct.Message);
+        Assert.DoesNotContain(
+            GitHubLearningStudioCommands.AnswerKnowledgeCheck,
+            correct.Snapshot.AvailableCommands);
+    }
+
+    [Fact]
+    public void KnowledgeCheckIsNotAvailableBeforeTheFirstPublication()
+    {
+        var session = new GitHubLearningStudioSession();
+
+        var result = session.Execute(
+            GitHubLearningStudioCommands.AnswerKnowledgeCheck, "build-then-publish");
+
+        Assert.False(result.Accepted);
+        Assert.False(result.Snapshot.LessonCompleted);
+    }
+
     private static GitHubLearningStudioSnapshot AssertAccepted(
         GitHubLearningStudioSession session,
         string command,
