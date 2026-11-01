@@ -121,8 +121,6 @@ jobs:
 
   # Trusted workflow definition from development validates an exact, separately checked-out candidate SHA.
   # This job never receives write credentials and never publishes packages.
-  # Trusted workflow definition from development validates an exact, separately checked-out candidate SHA.
-  # This job never receives write credentials and never publishes packages.
   test-minesweeper:
     name: test-minesweeper
     if: github.event_name == 'workflow_dispatch' && (inputs.candidate_ref != '' || inputs.candidate_sha != '')
@@ -288,9 +286,21 @@ jobs:
               json.dumps(marker, separators=(",", ":"), sort_keys=True), encoding="utf-8")
           PY
 
+      - name: Require non-empty TRX test report
+        id: report
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          report="TestResults/minesweeper/minesweeper.trx"
+          if [[ ! -s "$report" ]]; then
+            echo "::error::Required Minesweeper TRX report is missing or empty."
+            exit 1
+          fi
+
       - name: Upload exact-run CiAi test artifact
         id: upload
-        if: always()
+        if: always() && steps.report.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: ciai-test-results-${{ github.run_id }}-${{ github.run_attempt }}-test-minesweeper
@@ -298,19 +308,20 @@ jobs:
             TestResults/minesweeper/minesweeper.trx
             artifacts/provenance.json
             artifacts/dispatch-marker.json
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 14
 
-      - name: Preserve verification, test, and artifact outcome
+      - name: Preserve verification, test, report, and artifact outcome
         if: always()
         env:
           VERIFY_OUTCOME: ${{ steps.verify.outcome }}
           TEST_OUTCOME: ${{ steps.tests.outcome }}
+          REPORT_OUTCOME: ${{ steps.report.outcome }}
           UPLOAD_OUTCOME: ${{ steps.upload.outcome }}
         shell: bash
         run: |
-          if [[ "$VERIFY_OUTCOME" != "success" || "$TEST_OUTCOME" != "success" || "$UPLOAD_OUTCOME" != "success" ]]; then
-            echo "Candidate verification, tests, or artifact upload did not complete successfully."
+          if [[ "$VERIFY_OUTCOME" != "success" || "$TEST_OUTCOME" != "success" || "$REPORT_OUTCOME" != "success" || "$UPLOAD_OUTCOME" != "success" ]]; then
+            echo "Candidate verification, tests, required TRX report, or artifact upload did not complete successfully."
             exit 1
           fi
 
