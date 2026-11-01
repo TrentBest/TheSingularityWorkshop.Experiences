@@ -17,6 +17,10 @@ It is written against the `development` source revision inspected for this chapt
 
 Each chapter is standalone and can be taught, reordered, or extended independently. The sequence moves from domain meaning to immutable identity, manifestation, and capability resolution.
 
+## Singularity University
+
+The repository's educational mission is defined in the [Singularity University learning philosophy](../SINGULARITY_UNIVERSITY_LEARNING_PHILOSOPHY.md): an age-inclusive learning universe where curiosity has no minimum age, adults are not infantilized, and learners move from play and discovery toward formal understanding and creation.
+
 ## What this path covers
 
 - Experience identity and authored domain content.
