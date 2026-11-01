@@ -95,7 +95,7 @@ public sealed class GitHubLearningStudioSession
             commands.Add(GitHubLearningStudioCommands.EditReadme);
         if (_hasUncommittedChanges)
             commands.Add(GitHubLearningStudioCommands.CommitChanges);
-        if (!_pagesConfigured && !_hasUncommittedChanges)
+        if (!_pagesConfigured && !_hasUncommittedChanges && _commits.Count > 1)
             commands.Add(GitHubLearningStudioCommands.ConfigurePages);
         if (_pagesConfigured && _builtCommitSequence != _commits[^1].Sequence)
             commands.Add(GitHubLearningStudioCommands.BuildPages);
@@ -189,7 +189,7 @@ public sealed class GitHubLearningStudioSession
 
     private bool ConfigurePages()
     {
-        if (_pagesConfigured || _hasUncommittedChanges || !_readmeInspected)
+        if (_pagesConfigured || _hasUncommittedChanges || !_readmeInspected || _commits.Count < 2)
             return false;
         _pagesConfigured = true;
         _pagesLifecycle = PagesLifecycle.Configured;
