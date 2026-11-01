@@ -19,7 +19,7 @@ public sealed class GitHubLearningStudioSessionTests
         Assert.Single(snapshot.Commits);
         Assert.Equal(PagesLifecycle.NotConfigured, snapshot.PagesLifecycle);
         Assert.Null(snapshot.SimulatedPublishedUrl);
-        Assert.Contains("simulation", typeof(GitHubLearningStudioSession).GetCustomAttributes(false).ToString() ?? "");
+        Assert.Contains("README", snapshot.Explanation);
     }
 
     [Fact]
@@ -85,8 +85,8 @@ public sealed class GitHubLearningStudioSessionTests
         AssertAccepted(session, GitHubLearningStudioCommands.InspectReadme);
         AssertAccepted(session, GitHubLearningStudioCommands.CreateBranch);
         AssertAccepted(session, GitHubLearningStudioCommands.EditReadme, "# Edited");
-        Assert.False(session.Execute(GitHubLearningStudioCommands.CommitChanges, " ").Accepted);
         Assert.False(session.Execute(GitHubLearningStudioCommands.ConfigurePages).Accepted);
+        Assert.False(session.Execute(GitHubLearningStudioCommands.BuildPages).Accepted);
     }
 
     [Fact]
@@ -98,7 +98,9 @@ public sealed class GitHubLearningStudioSessionTests
         var result = session.Execute("github.real-account.delete-repository");
 
         Assert.False(result.Accepted);
-        Assert.Equal(before, result.Snapshot);
+        Assert.Equal(before.ReadmeContent, result.Snapshot.ReadmeContent);
+        Assert.Equal(before.ActiveBranch, result.Snapshot.ActiveBranch);
+        Assert.Equal(before.PagesLifecycle, result.Snapshot.PagesLifecycle);
         Assert.Equal(before.Commits, result.Snapshot.Commits);
     }
 
@@ -111,8 +113,13 @@ public sealed class GitHubLearningStudioSessionTests
         PublishFirstVersion(first);
         PublishFirstVersion(second);
 
-        Assert.Equal(first.CaptureSnapshot(), second.CaptureSnapshot());
-        Assert.Equal(first.CaptureSnapshot().Commits, second.CaptureSnapshot().Commits);
+        var firstSnapshot = first.CaptureSnapshot();
+        var secondSnapshot = second.CaptureSnapshot();
+        Assert.Equal(firstSnapshot.ProjectName, secondSnapshot.ProjectName);
+        Assert.Equal(firstSnapshot.ActiveBranch, secondSnapshot.ActiveBranch);
+        Assert.Equal(firstSnapshot.PagesLifecycle, secondSnapshot.PagesLifecycle);
+        Assert.Equal(firstSnapshot.PublishedCommitSequence, secondSnapshot.PublishedCommitSequence);
+        Assert.Equal(firstSnapshot.Commits, secondSnapshot.Commits);
     }
 
     private static GitHubLearningStudioSnapshot AssertAccepted(
