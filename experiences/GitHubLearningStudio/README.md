@@ -75,6 +75,20 @@ The experience must label the difference between:
 
 No real account changes, repository writes, permission changes, or deployments occur as a side effect of completing a simulated lesson.
 
+### Implemented first domain slice
+
+The first implementation is an in-memory, deterministic lesson model in `src/GitHubLearningStudio/`:
+
+- A fictional **Field Notes** repository starts with a README and one starter-history entry.
+- The learner inspects the README, creates a separate working branch, edits the project home, and records a commit.
+- The learner configures a modeled Pages source, builds the committed version, and publishes it to an explicitly fictional example address.
+- A later edit and commit mark the published version as out of date; another build and publish advances the modeled published commit.
+- Stable command identifiers and immutable snapshots let a host render and dispatch the same lesson semantics without owning the domain state.
+
+The model deliberately does not invoke Git, call GitHub, access a filesystem, configure a repository, create a real build artifact, or deploy a website. The example address uses the reserved `example.invalid` domain and is not a live site. The dedicated test project covers the command lifecycle, invalid ordering, deterministic histories, and the update loop; CI is configured to build and run these tests. A passing CI result has not yet been recorded for this feature branch.
+
+This is a domain foundation, not yet the complete learner-facing vertical slice. A GUI projection/command host, visual project/history/publishing representation, authored step-by-step explanation/checkpoint content, and an actual host route remain follow-on work.
+
 ## Curriculum map
 
 The Studio is modular. Learners can enter through the task they want to accomplish and follow links to related concepts.
@@ -128,7 +142,7 @@ This is an Experience authored in TheSingularityWorkshop.Experiences.
 - **Experience semantics** define the project scenario, lesson goals, learner actions, concept relationships, and educational state.
 - **GUI** owns interactive controls and learner interaction.
 - **Visualize** makes project structure, history, proposals, reviews, checks, and publication state visible.
-- **Renderer** presents explanations, terminology, decisions, and accessible text alternatives.
+- **Renderer** owns observer-relative computational representation and visibility/detail policy; it is not currently a textual explanation renderer. Lesson explanations remain authored Experience content and can be projected as semantic GUI text until a verified text-presentation owner is established.
 - **FSM_COS** composes the Experience through the existing manifest and MicroBundle contracts.
 - **The host** provides the environment in which the Experience is manifested.
 
@@ -155,11 +169,11 @@ A polished animation is not proof of a functioning GitHub operation. A simulated
 
 ## First implementation milestones
 
-1. **Lesson contract:** define the learner journey, educational state, concept vocabulary, and scenario data for the project-to-Pages journey.
-2. **Static living picture:** render the project, its files, change history, and publication path from deterministic scenario data.
-3. **Interactive lesson:** let the learner make a small content change, record a simulated commit, and progress through the modeled Pages publication states.
-4. **Explanation layer:** reveal the meaning and consequences of each step, with text-first alternatives and a short understanding check.
-5. **Host integration:** compose and manifest the Experience through existing contracts; verify the actual path rather than assuming it.
+1. **Lesson contract:** implemented as a deterministic in-memory session, stable command identifiers, immutable snapshots, and a fictional project/commit model.
+2. **Static living picture:** pending; the domain snapshot is ready to be projected, but no GitHub Studio GUI or Visualize artifact is claimed.
+3. **Interactive lesson:** the domain transitions are implemented; learner-facing controls and host dispatch are pending.
+4. **Explanation layer:** authored concept explanations exist in this design document; sequenced lesson prompts, text-first interaction, and an understanding check are pending.
+5. **Host integration:** pending; the intended Learning host and command-dispatch path must be verified before integration.
 6. **Expansion:** add pull requests, issues, settings, Actions, releases, and collaboration as independent lessons linked through the same project model.
 
 Build one complete, truthful vertical slice before attempting a comprehensive GitHub academy.
