@@ -31,6 +31,7 @@ public sealed class GitHubLearningStudioGuiAdapterTests
 
         Assert.Equal(GitHubLearningStudioCommands.InspectReadme,
             initialTree.Find("github-learning-studio-inspect-readme").Properties["onClickCommand"]);
+        Assert.False(initialTree.TryFind("github-learning-studio-edit-readme", out _));
         Assert.False(initialTree.TryFind("github-learning-studio-publish-pages", out _));
 
         Assert.True(GitHubLearningStudioGuiCommandDispatcher.TryExecute(
@@ -41,6 +42,12 @@ public sealed class GitHubLearningStudioGuiAdapterTests
         Assert.True(inspectedTree.TryFind("github-learning-studio-create-branch", out var createBranch));
         Assert.Equal(GitHubLearningStudioCommands.CreateBranch,
             createBranch.Properties["onClickCommand"]);
+        Assert.False(inspectedTree.TryFind("github-learning-studio-edit-readme", out _));
+
+        Assert.True(GitHubLearningStudioGuiCommandDispatcher.TryExecute(
+            session, createBranch, out var branchResult));
+        var branchedTree = GitHubLearningStudioGuiAdapter.Build(branchResult!.Snapshot);
+        Assert.True(branchedTree.TryFind("github-learning-studio-edit-readme", out _));
     }
 
     [Fact]
