@@ -64,7 +64,7 @@ public sealed class GitHubLearningStudioGuiAdapterTests
         var session = new GitHubLearningStudioSession();
         session.Execute(GitHubLearningStudioCommands.InspectReadme);
         session.Execute(GitHubLearningStudioCommands.CreateBranch);
-        session.Execute(GitHubLearningStudioCommands.EditReadme, "# Field Notes\\n\\nA project journal.");
+        session.Execute(GitHubLearningStudioCommands.EditReadme, "# Field Notes\n\nA project journal.");
         session.Execute(GitHubLearningStudioCommands.CommitChanges, "Improve project home");
         session.Execute(GitHubLearningStudioCommands.ConfigurePages);
         session.Execute(GitHubLearningStudioCommands.BuildPages);
