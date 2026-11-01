@@ -151,8 +151,17 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: Validate dispatch provenance and checkout exact candidate
+      - name: Checkout candidate branch without credentials
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.candidate_ref }}
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Validate dispatch provenance and stage exact candidate source
         id: verify
         shell: bash
         run: |
@@ -170,12 +179,15 @@ jobs:
           done
 
           branch="${CANDIDATE_REF#refs/heads/}"
-          git fetch --no-tags origin "+${CANDIDATE_REF}:refs/remotes/origin/${branch}"
-          git cat-file -e "${CANDIDATE_SHA}^{commit}"
-          git merge-base --is-ancestor "$CANDIDATE_SHA" "refs/remotes/origin/${branch}"
-          git checkout --detach "$CANDIDATE_SHA"
-          tested_sha="$(git rev-parse HEAD)"
+          git -C candidate cat-file -e "${CANDIDATE_SHA}^{commit}"
+          git -C candidate merge-base --is-ancestor "$CANDIDATE_SHA" "refs/remotes/origin/${branch}"
+          git -C candidate checkout --detach "$CANDIDATE_SHA"
+          tested_sha="$(git -C candidate rev-parse HEAD)"
           [[ "$tested_sha" == "$CANDIDATE_SHA" ]]
+          test -d candidate/src/Minesweeper
+          test -f tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj
+          rm -rf src/Minesweeper
+          cp -a candidate/src/Minesweeper src/Minesweeper
           echo "tested_sha=$tested_sha" >> "$GITHUB_OUTPUT"
 
       - name: Set up .NET
