@@ -86,9 +86,9 @@ The first implementation is an in-memory, deterministic lesson model in `src/Git
 - Stable command identifiers and immutable snapshots let a host render and dispatch the same lesson semantics without owning the domain state.
 - A GUI.Core adapter projects the repository, commit history, Pages lifecycle, simulation notice, and currently available commands into a semantic tree. A companion dispatcher submits button command metadata to the session and returns a fresh snapshot; the host still owns actual event handling.
 
-The model deliberately does not invoke Git, call GitHub, access a filesystem, configure a repository, create a real build artifact, or deploy a website. The example address uses the reserved `example.invalid` domain and is not a live site. The dedicated test project covers the command lifecycle, invalid ordering, deterministic histories, update loop, GUI projection, and semantic command dispatch. The domain tests passed in CI run [#1085](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/41364151400); the GUI adapter additions are newer than that test result and are awaiting their own CI verification.
+The model deliberately does not invoke Git, call GitHub, access a filesystem, configure a repository, create a real build artifact, or deploy a website. The example address uses the reserved `example.invalid` domain and is not a live site. The model also exposes a guided practice prompt and a short understanding check: learners decide what must happen after a new commit before the published site reflects it. The semantic GUI offers explicit answer choices, and the session records whether the correct build-then-publish sequence was understood. The dedicated test project covers the command lifecycle, invalid ordering, deterministic histories, update loop, GUI projection, semantic command dispatch, and the knowledge check. The domain tests passed in CI run [#1085](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/41364151400); the GUI adapter additions are newer than that test result and are awaiting their own CI verification.
 
-This is a domain and semantic-GUI foundation, not yet the complete learner-facing vertical slice. A concrete host event loop/route, a Visualize artifact where it adds genuine explanatory value, authored step-by-step checkpoint content, and a short understanding check remain follow-on work.
+This is a domain and semantic-GUI foundation, not yet the complete learner-facing vertical slice. A concrete host event loop/route, a Visualize artifact where it adds genuine explanatory value, and a richer sequence of authored step-by-step concept checkpoints remain follow-on work.
 
 ## Curriculum map
 
@@ -173,7 +173,7 @@ A polished animation is not proof of a functioning GitHub operation. A simulated
 1. **Lesson contract:** implemented as a deterministic in-memory session, stable command identifiers, immutable snapshots, and a fictional project/commit model.
 2. **Static living picture:** a GUI.Core semantic tree now projects repository identity, README, commit history, Pages state, and command affordances; a Visualize artifact remains pending.
 3. **Interactive lesson:** the domain transitions and semantic command dispatcher are implemented; a real host event loop and browser manifestation remain pending.
-4. **Explanation layer:** authored concept explanations exist in this design document; sequenced lesson prompts, text-first interaction, and an understanding check are pending.
+4. **Explanation layer:** the model now supplies contextual explanations, a guided practice prompt, and a short build-then-publish understanding check. A full authored sequence of concept cards and host-level text-first route remain pending.
 5. **Host integration:** pending; the intended Learning host and command-dispatch path must be verified before integration.
 6. **Expansion:** add pull requests, issues, settings, Actions, releases, and collaboration as independent lessons linked through the same project model.
 
