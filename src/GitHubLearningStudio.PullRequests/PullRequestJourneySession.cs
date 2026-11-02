@@ -23,11 +23,18 @@ public sealed record ProposalCommit(int Sequence, string Message, int Revision);
 public sealed record PullRequestJourneySnapshot(
     string ExperienceId,
     string ProjectName,
+    string TaskTitle,
+    string TaskDescription,
+    string SourceBranch,
+    string TargetBranch,
     string BranchName,
+    int? PullRequestNumber,
     IReadOnlyList<ProposalCommit> Commits,
+    IReadOnlyList<ProposalCommit> SharedHistory,
     int Revision,
     PullRequestLifecycle Lifecycle,
     PullRequestReviewState Review,
+    string? ReviewFeedback,
     PullRequestCheckState Checks,
     bool MergeAuthorized,
     string? MergedBy,
@@ -44,6 +51,7 @@ public sealed record PullRequestJourneyCommandResult(
 public sealed class PullRequestJourneySession
 {
     private readonly List<ProposalCommit> _commits = [];
+    private readonly List<ProposalCommit> _sharedHistory = [];
     private bool _branchCreated;
     private bool _pullRequestOpened;
     private bool _mergeAuthorized;
@@ -76,11 +84,20 @@ public sealed class PullRequestJourneySession
         return new PullRequestJourneySnapshot(
             "github-learning-studio.pull-request-collaboration",
             "Field Notes",
+            "Clarify the Field Notes project introduction",
+            "Make the project purpose easier for a new visitor to understand.",
+            "work/improve-field-notes",
+            "main",
             _branchCreated ? "work/improve-field-notes" : "(not created)",
+            _pullRequestOpened ? 1 : null,
             Array.AsReadOnly(_commits.ToArray()),
+            Array.AsReadOnly(_sharedHistory.ToArray()),
             _commits.Count == 0 ? 0 : _commits[^1].Revision,
             _lifecycle,
             _review,
+            _review == PullRequestReviewState.ChangesRequested
+                ? "Please make the project introduction clearer for a first-time visitor."
+                : null,
             _checks,
             _mergeAuthorized,
             _mergedBy,
@@ -177,6 +194,7 @@ public sealed class PullRequestJourneySession
             _review != PullRequestReviewState.Approved || _checks != PullRequestCheckState.Passed ||
             !_mergeAuthorized || !string.Equals(actor, "maintainer", StringComparison.Ordinal)) return false;
         _mergedBy = actor;
+        _sharedHistory.AddRange(_commits);
         _lifecycle = PullRequestLifecycle.Merged;
         return true;
     }
