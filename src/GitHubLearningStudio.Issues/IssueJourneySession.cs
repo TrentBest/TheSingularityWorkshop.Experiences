@@ -51,7 +51,6 @@ public sealed record IssueJourneyCommandResult(bool Accepted, string CommandId, 
 /// </summary>
 public sealed class IssueJourneySession
 {
-    private const string CorrectTitle = "Restore missing location attribution on field notes";
     private const string CorrectObserved = "A published field note appears without the location attribution shown on the source record.";
     private const string CorrectExpected = "The published field note displays the associated location attribution.";
     private const string CorrectContext = "Field note FN-014 in the fictional Field Notes project; the omission is visible in the published entry and its text-first representation.";
