@@ -1,3 +1,4 @@
+using Xunit;
 using TheSingularityWorkshop.Experiences.GitHubLearningStudio.PullRequests;
 
 namespace TheSingularityWorkshop.Experiences.GitHubLearningStudio.PullRequests.Tests;
