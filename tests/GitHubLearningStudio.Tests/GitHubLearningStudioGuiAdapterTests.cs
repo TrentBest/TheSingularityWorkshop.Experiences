@@ -18,7 +18,7 @@ public sealed class GitHubLearningStudioGuiAdapterTests
         Assert.Equal("NotConfigured", tree.Properties["pagesLifecycle"]);
         Assert.Contains("simulated GitHub project", tree.Find("github-learning-studio-title").Text);
         Assert.Contains("Teaching simulation only", tree.Find("github-learning-studio-simulation-notice").Text);
-        Assert.Equal("main", tree.Find("github-learning-studio-active-branch").Text);
+        Assert.Equal("Current line of work: main", tree.Find("github-learning-studio-active-branch").Text);
         Assert.Equal("Create the starter project",
             tree.Find("github-learning-studio-commit-1-title").Text);
     }
