@@ -28,6 +28,7 @@ jobs:
           - src/MarbleRun/TheSingularityWorkshop.Experiences.MarbleRun.csproj
           - src/DroneConstruction/TheSingularityWorkshop.Experiences.DroneConstruction.csproj
           - src/DroneConstruction.MicroBundles/TheSingularityWorkshop.Experiences.DroneConstruction.MicroBundles.csproj
+          - src/GitHubLearningStudio.PullRequests/TheSingularityWorkshop.Experiences.GitHubLearningStudio.PullRequests.csproj
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
@@ -75,6 +76,16 @@ jobs:
         run: dotnet restore tests/Contracts.Tests/TheSingularityWorkshop.Experiences.Contracts.Tests.csproj
       - name: Run semantic contract tests
         run: dotnet test tests/Contracts.Tests/TheSingularityWorkshop.Experiences.Contracts.Tests.csproj --configuration Release --no-restore
+
+  test-github-learning-studio-pull-requests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Run pull-request collaboration journey tests
+        run: dotnet test tests/GitHubLearningStudio.PullRequests.Tests/TheSingularityWorkshop.Experiences.GitHubLearningStudio.PullRequests.Tests.csproj --configuration Release
 
   test-chemistry:
     runs-on: ubuntu-24.04
