@@ -78,7 +78,7 @@ Provide a complete text-first route, keyboard-operable controls, explicit status
 
 ## Implementation boundary
 
-This design contract is implemented as a deterministic Experience-owned session in `src/GitHubLearningStudio.PullRequests/`, with a GUI.Core semantic projection and focused tests in `tests/GitHubLearningStudio.PullRequests.Tests/`. The model distinguishes proposal lifecycle, review state, check state, and merge authorization. The host must still supply real event handling and re-project snapshots; no WebApp route or live GitHub integration is claimed. CI verification is pending for this draft branch.
+This design contract is implemented as a deterministic Experience-owned session in `src/GitHubLearningStudio.PullRequests/`, with a GUI.Core semantic projection and focused tests in `tests/GitHubLearningStudio.PullRequests.Tests/`. The model distinguishes proposal lifecycle, review state, check state, and merge authorization. The host must still supply real event handling and re-project snapshots; no WebApp route or live GitHub integration is claimed. CI verification passed on draft PR head `71bd9c3f70e3f48e29279d9f47c959ffdf9f4c12`: workflow run [41392739859](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/41392739859) completed with all 30 jobs successful.
 
 ---
 
