@@ -73,7 +73,6 @@ public sealed class IssueJourneySession
     private string? _label;
     private string? _assignee;
     private IssueLifecycle _lifecycle;
-    private int _issueOpenCount;
 
     public IssueJourneySnapshot CaptureSnapshot()
     {
@@ -148,7 +147,6 @@ public sealed class IssueJourneySession
             !title.Contains("attribution", StringComparison.OrdinalIgnoreCase)) return false;
         _title = title.Trim();
         _created = true;
-        _issueOpenCount = 1;
         _lifecycle = IssueLifecycle.Open;
         return true;
     }
