@@ -65,6 +65,7 @@ public sealed class IssueJourneySession
     private readonly List<string> _commits = [];
     private readonly bool[] _evidence = new bool[2];
     private bool _created;
+    private string? _title;
     private bool _branchCreated;
     private bool _pullRequestOpened;
     private bool _pullRequestMerged;
@@ -98,7 +99,7 @@ public sealed class IssueJourneySession
             "github-learning-studio.issues",
             "Field Notes",
             _created ? 14 : null,
-            _created ? CorrectTitle : "Untitled issue",
+            _title ?? "Untitled issue",
             _created ? CorrectObserved : "A report says: “The place is missing.”",
             _created ? CorrectExpected : "Not yet recorded.",
             _created ? CorrectContext : "A visitor reported the problem but gave little context.",
@@ -143,7 +144,10 @@ public sealed class IssueJourneySession
 
     private bool CreateIssue(string? title)
     {
-        if (_created || string.IsNullOrWhiteSpace(title) || title.Trim().Length < 12) return false;
+        if (_created || string.IsNullOrWhiteSpace(title) || title.Trim().Length < 12 ||
+            !title.Contains("location", StringComparison.OrdinalIgnoreCase) ||
+            !title.Contains("attribution", StringComparison.OrdinalIgnoreCase)) return false;
+        _title = title.Trim();
         _created = true;
         _issueOpenCount = 1;
         _lifecycle = IssueLifecycle.Open;
