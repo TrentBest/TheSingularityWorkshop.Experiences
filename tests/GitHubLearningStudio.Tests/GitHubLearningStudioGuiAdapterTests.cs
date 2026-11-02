@@ -40,6 +40,7 @@ public sealed class GitHubLearningStudioGuiAdapterTests
 
         var inspectedTree = GitHubLearningStudioGuiAdapter.Build(inspect.Snapshot);
         Assert.True(inspectedTree.TryFind("github-learning-studio-create-branch", out var createBranch));
+        Assert.NotNull(createBranch);
         Assert.Equal(GitHubLearningStudioCommands.CreateBranch,
             createBranch.Properties["onClickCommand"]);
         Assert.False(inspectedTree.TryFind("github-learning-studio-edit-readme", out _));
