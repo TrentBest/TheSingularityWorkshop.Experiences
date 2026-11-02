@@ -78,7 +78,7 @@ Provide a complete text-first route, keyboard-operable controls, explicit status
 
 ## Implementation boundary
 
-This file is the authored design contract for issue [#47](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/issues/47). It is not evidence that the domain model, GUI projection, tests, or host manifestation are implemented. Update this document's maturity statement only when those artifacts exist and CI verifies them.
+This design contract is implemented as a deterministic Experience-owned session in `src/GitHubLearningStudio.PullRequests/`, with a GUI.Core semantic projection and focused tests in `tests/GitHubLearningStudio.PullRequests.Tests/`. The model distinguishes proposal lifecycle, review state, check state, and merge authorization. The host must still supply real event handling and re-project snapshots; no WebApp route or live GitHub integration is claimed. CI verification is pending for this draft branch.
 
 ---
 
