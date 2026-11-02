@@ -104,7 +104,7 @@ public sealed class IssueJourneySessionTests
     {
         var session = new IssueJourneySession();
         var tree = IssueJourneyGuiAdapter.Build(session.CaptureSnapshot());
-        var controls = Assert.Single(tree.Children.Where(node => node.Id == "github-issues-controls"));
+        var controls = Assert.Single(tree.Children, node => node.Id == "github-issues-controls");
         var button = Assert.Single(controls.Children);
         Assert.True(IssueJourneyGuiCommandDispatcher.TryExecute(session, button, out var result));
         Assert.True(result!.Accepted);
