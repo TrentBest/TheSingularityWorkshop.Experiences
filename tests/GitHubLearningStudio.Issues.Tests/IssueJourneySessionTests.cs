@@ -10,6 +10,7 @@ public sealed class IssueJourneySessionTests
     {
         var session = new IssueJourneySession();
         Assert.False(session.Execute(IssueJourneyCommands.CreateIssue, "Fix").Accepted);
+        Assert.False(session.Execute(IssueJourneyCommands.CreateIssue, "Improve the home page").Accepted);
         Assert.Equal(IssueLifecycle.NotCreated, session.CaptureSnapshot().Lifecycle);
         Assert.True(session.Execute(IssueJourneyCommands.CreateIssue, "Restore missing location attribution on field notes").Accepted);
         var snapshot = session.CaptureSnapshot();
