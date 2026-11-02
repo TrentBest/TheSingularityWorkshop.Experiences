@@ -96,7 +96,7 @@ If the change is merged but the acceptance criteria are not met, the issue shoul
 
 ## Interactive lesson contract
 
-The planned deterministic lesson uses this sequence:
+The deterministic session now models this sequence:
 
 1. Inspect the original, incomplete report.
 2. Write a clear issue title and problem statement.
@@ -112,11 +112,11 @@ The learner should be able to explore both a successful resolution and a respons
 
 ## Simulation and integration boundary
 
-The first implementation is an educational simulation with deterministic in-memory state. Its issue numbers, labels, people, branches, commits, pull requests, comments, checks, and closure events are teaching data.
+The current domain implementation is an educational simulation with deterministic in-memory state and a GUI.Core semantic projection. Its issue numbers, labels, people, branches, commits, pull requests, comments, checks, and closure events are teaching data.
 
 It does not call Git, the GitHub API, or modify a real repository or account. It does not imply a live WebApp route or a completed host event loop. GUI.Core command metadata describes available semantic actions; the host remains responsible for dispatch and re-projecting the resulting state.
 
-The authored explanation and a text-first, keyboard-operable route are part of the lesson—not optional fallbacks. Any future live GitHub integration must be a separately designed and explicitly authorized capability.
+The authored explanation and a text-first, keyboard-operable route are part of the lesson—not optional fallbacks. The current GUI.Core adapter projects the lesson state, acceptance evidence, discussion, and gated commands; it does not install an event loop. Any future live GitHub integration must be a separately designed and explicitly authorized capability.
 
 ## Architectural ownership
 
