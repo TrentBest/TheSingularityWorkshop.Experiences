@@ -18,9 +18,15 @@ public static class PullRequestJourneyGuiAdapter
         root.Child("Text", "github-pr-title", child => child.Text($"{snapshot.ProjectName} — propose, review, revise, and merge"));
         root.Child("Text", "github-pr-explanation", child => child.Text(snapshot.Explanation));
         root.Child("Text", "github-pr-simulation-notice", child => child.Text(snapshot.SimulationNotice));
-        root.Child("Text", "github-pr-branch", child => child.Text($"Working branch: {snapshot.BranchName}"));
+        root.Child("Text", "github-pr-task", child => child.Text($"Task: {snapshot.TaskTitle} — {snapshot.TaskDescription}"));
+        root.Child("Text", "github-pr-branch", child => child.Text($"Working branch: {snapshot.BranchName} → {snapshot.TargetBranch}"));
+        root.Child("Text", "github-pr-number", child => child.Text(snapshot.PullRequestNumber is null
+            ? "No pull request proposal has been opened."
+            : $"Pull request proposal #{snapshot.PullRequestNumber}"));
         root.Child("Text", "github-pr-lifecycle", child => child.Text($"Proposal: {snapshot.Lifecycle}"));
         root.Child("Text", "github-pr-review", child => child.Text($"Review: {snapshot.Review}"));
+        if (snapshot.ReviewFeedback is not null)
+            root.Child("Text", "github-pr-review-feedback", child => child.Text($"Reviewer feedback: {snapshot.ReviewFeedback}"));
         root.Child("Text", "github-pr-checks", child => child.Text($"Automated checks: {snapshot.Checks}"));
         var history = GuiBuilder.Create("Panel", "github-pr-commit-history");
         foreach (var commit in snapshot.Commits)
