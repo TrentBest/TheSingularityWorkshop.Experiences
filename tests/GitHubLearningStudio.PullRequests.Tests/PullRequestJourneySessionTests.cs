@@ -88,7 +88,7 @@ public sealed class PullRequestJourneySessionTests
         var session = new PullRequestJourneySession();
         var tree = PullRequestJourneyGuiAdapter.Build(session.CaptureSnapshot());
         Assert.Equal(PullRequestLifecycle.NotOpened.ToString(), tree.Properties["lifecycle"]);
-        Assert.Equal(0, session.CaptureSnapshot().Commits.Count);
+        Assert.Empty(session.CaptureSnapshot().Commits);
         Assert.Contains(tree.Children, node => node.Id == "github-pr-controls");
     }
 
