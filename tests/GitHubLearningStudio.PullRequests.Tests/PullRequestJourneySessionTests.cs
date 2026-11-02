@@ -19,6 +19,8 @@ public sealed class PullRequestJourneySessionTests
         Assert.True(merged.Accepted);
         Assert.Equal(PullRequestLifecycle.Merged, merged.Snapshot.Lifecycle);
         Assert.Equal("maintainer", merged.Snapshot.MergedBy);
+        Assert.Equal("main", merged.Snapshot.TargetBranch);
+        Assert.Equal(merged.Snapshot.Commits.Count, merged.Snapshot.SharedHistory.Count);
     }
 
     [Fact]
@@ -33,6 +35,8 @@ public sealed class PullRequestJourneySessionTests
         Assert.Equal(PullRequestReviewState.NotReviewed, snapshot.Review);
         Assert.Equal(2, snapshot.Revision);
         Assert.Equal(2, snapshot.Commits.Count);
+        Assert.Equal(1, snapshot.PullRequestNumber);
+        Assert.NotNull(snapshot.ReviewFeedback);
     }
 
     [Fact]
@@ -88,6 +92,7 @@ public sealed class PullRequestJourneySessionTests
         var session = new PullRequestJourneySession();
         var tree = PullRequestJourneyGuiAdapter.Build(session.CaptureSnapshot());
         Assert.Equal(PullRequestLifecycle.NotOpened.ToString(), tree.Properties["lifecycle"]);
+        Assert.Equal("Clarify the Field Notes project introduction", session.CaptureSnapshot().TaskTitle);
         Assert.Empty(session.CaptureSnapshot().Commits);
         Assert.Contains(tree.Children, node => node.Id == "github-pr-controls");
     }
