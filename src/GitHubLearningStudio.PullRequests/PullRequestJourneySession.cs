@@ -56,6 +56,7 @@ public sealed class PullRequestJourneySession
     private bool _pullRequestOpened;
     private bool _mergeAuthorized;
     private string? _mergedBy;
+    private string? _reviewFeedback;
     private PullRequestReviewState _review;
     private PullRequestCheckState _checks;
     private PullRequestLifecycle _lifecycle;
@@ -95,9 +96,7 @@ public sealed class PullRequestJourneySession
             _commits.Count == 0 ? 0 : _commits[^1].Revision,
             _lifecycle,
             _review,
-            _review == PullRequestReviewState.ChangesRequested
-                ? "Please make the project introduction clearer for a first-time visitor."
-                : null,
+            _reviewFeedback,
             _checks,
             _mergeAuthorized,
             _mergedBy,
@@ -157,6 +156,7 @@ public sealed class PullRequestJourneySession
         if (!_pullRequestOpened || _lifecycle != PullRequestLifecycle.Open ||
             _review != PullRequestReviewState.NotReviewed) return false;
         _review = PullRequestReviewState.ChangesRequested;
+        _reviewFeedback = "Please make the project introduction clearer for a first-time visitor.";
         _checks = PullRequestCheckState.NotRun;
         return true;
     }
