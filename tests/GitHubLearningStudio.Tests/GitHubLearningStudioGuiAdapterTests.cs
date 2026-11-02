@@ -19,7 +19,7 @@ public sealed class GitHubLearningStudioGuiAdapterTests
         Assert.Contains("simulated GitHub project", tree.Find("github-learning-studio-title").Text);
         Assert.Contains("Teaching simulation only", tree.Find("github-learning-studio-simulation-notice").Text);
         Assert.Equal("Current line of work: main", tree.Find("github-learning-studio-active-branch").Text);
-        Assert.Equal("Create the starter project",
+        Assert.Equal("Commit 1: Create the starter project",
             tree.Find("github-learning-studio-commit-1-title").Text);
     }
 
@@ -72,7 +72,7 @@ public sealed class GitHubLearningStudioGuiAdapterTests
         var session = new GitHubLearningStudioSession();
         session.Execute(GitHubLearningStudioCommands.InspectReadme);
         session.Execute(GitHubLearningStudioCommands.CreateBranch);
-        session.Execute(GitHubLearningStudioCommands.EditReadme, "# Field Notes\n\nA project journal.");
+        session.Execute(GitHubLearningStudioCommands.EditReadme, "# Field Notes\\n\\nA project journal.");
         session.Execute(GitHubLearningStudioCommands.CommitChanges, "Improve project home");
         session.Execute(GitHubLearningStudioCommands.ConfigurePages);
         session.Execute(GitHubLearningStudioCommands.BuildPages);
@@ -113,7 +113,7 @@ public sealed class GitHubLearningStudioGuiAdapterTests
         var session = new GitHubLearningStudioSession();
         session.Execute(GitHubLearningStudioCommands.InspectReadme);
         session.Execute(GitHubLearningStudioCommands.CreateBranch);
-        session.Execute(GitHubLearningStudioCommands.EditReadme, "# Field Notes\n\nA public project journal.");
+        session.Execute(GitHubLearningStudioCommands.EditReadme, "# Field Notes\\n\\nA public project journal.");
         session.Execute(GitHubLearningStudioCommands.CommitChanges, "Improve project home");
         session.Execute(GitHubLearningStudioCommands.ConfigurePages);
         session.Execute(GitHubLearningStudioCommands.BuildPages);
