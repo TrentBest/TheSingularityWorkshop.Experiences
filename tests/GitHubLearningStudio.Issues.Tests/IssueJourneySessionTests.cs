@@ -16,7 +16,7 @@ public sealed class IssueJourneySessionTests
         var snapshot = session.CaptureSnapshot();
         Assert.Equal(14, snapshot.IssueNumber);
         Assert.Equal(IssueLifecycle.Open, snapshot.Lifecycle);
-        Assert.Contains("expected", snapshot.ExpectedBehavior, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("location attribution", snapshot.ExpectedBehavior, StringComparison.OrdinalIgnoreCase);
         Assert.Equal(2, snapshot.AcceptanceCriteria.Count);
         Assert.All(snapshot.AcceptanceEvidence, Assert.False);
     }
