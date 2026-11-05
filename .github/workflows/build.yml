@@ -28,6 +28,7 @@ jobs:
           - src/MarbleRun/TheSingularityWorkshop.Experiences.MarbleRun.csproj
           - src/DroneConstruction/TheSingularityWorkshop.Experiences.DroneConstruction.csproj
           - src/DroneConstruction.MicroBundles/TheSingularityWorkshop.Experiences.DroneConstruction.MicroBundles.csproj
+          - src/Minesweeper/TheSingularityWorkshop.Experiences.Minesweeper.csproj
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
@@ -125,6 +126,59 @@ jobs:
         with:
           name: experience-packages
           path: artifacts
+
+  test-minesweeper:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore Minesweeper domain tests
+        run: dotnet restore tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj
+      - name: Run deterministic Minesweeper rules tests
+        run: dotnet test tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj --configuration Release --no-restore --logger "trx;LogFileName=minesweeper.trx" --results-directory ./TestResults/minesweeper
+      # Always retain the raw test report and the run/candidate provenance, including on red test runs.
+      # CiAi must independently verify the provider artifact and this metadata before treating it as evidence.
+      - name: Write Minesweeper test artifact provenance
+        if: always()
+        shell: bash
+        env:
+          REPOSITORY: ${{ github.repository }}
+          CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          TESTED_SHA: ${{ github.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+          WORKFLOW_SHA: ${{ github.workflow_sha }}
+          EVENT_NAME: ${{ github.event_name }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          JOB_ID: ${{ github.job }}
+        run: |
+          mkdir -p ./TestResults/minesweeper
+          cat > ./TestResults/minesweeper/provenance.json <<EOF
+          {
+            "schema": "workshop.test-artifact-provenance.v1",
+            "repository": "$REPOSITORY",
+            "candidateSha": "$CANDIDATE_SHA",
+            "testedSha": "$TESTED_SHA",
+            "baseSha": "$BASE_SHA",
+            "workflowRef": "$WORKFLOW_REF",
+            "workflowSha": "$WORKFLOW_SHA",
+            "eventName": "$EVENT_NAME",
+            "runId": "$RUN_ID",
+            "runAttempt": "$RUN_ATTEMPT",
+            "jobId": "$JOB_ID"
+          }
+          EOF
+      - name: Upload Minesweeper test results (including failures)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: minesweeper-test-results
+          path: TestResults/minesweeper/
+          if-no-files-found: error
+          retention-days: 14
 
   # Card rules stay host-neutral and are tested without GUI or MicroBundle dependencies.
   test-games-cards:
