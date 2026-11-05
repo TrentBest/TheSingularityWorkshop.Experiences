@@ -75,6 +75,14 @@ The experience must label the difference between:
 
 No real account changes, repository writes, permission changes, or deployments occur as a side effect of completing a simulated lesson.
 
+## The second journey: collaborating through a pull request
+
+**Guiding question: “How can I propose a change safely and work with others to improve it?”**
+
+The separate [Pull Request Collaboration Journey](PullRequestJourney/README.md) models a task branch, commits, one evolving pull request, review feedback, revisions, automated checks, approval, and an explicit merge decision. It is a deterministic simulation: proposal, approval, passing checks, and merge are distinct states, and the same proposal remains open while the author revises it.
+
+The current implementation lives in the separate `GitHubLearningStudio.PullRequests` domain project with a GUI.Core semantic adapter and focused tests. The host still owns event handling and re-projection; this does not claim a live WebApp route or real GitHub integration.
+
 ## Curriculum map
 
 The Studio is modular. Learners can enter through the task they want to accomplish and follow links to related concepts.
