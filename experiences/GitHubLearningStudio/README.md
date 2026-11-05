@@ -111,9 +111,7 @@ Make the key distinction visible: proposing, reviewing, approving, and merging a
 
 ## Issues as the project's memory
 
-Teach issues through recognizable situations: a defect someone encountered, a feature someone wants, a question that needs an answer, or a piece of work that can be completed.
-
-Show how a useful issue describes the problem, expected outcome, and enough context for someone else to help. Then connect an issue to the branch and pull request that address it. The learner should see how the project remembers not only what changed, but why.
+The dedicated [Issues journey](IssuesJourney/README.md) develops this idea into a complete learning contract: turn an unclear report into an actionable issue, preserve clarification and decisions, connect the issue to implementation, and verify acceptance criteria before closure. Its deterministic interactive implementation is tracked separately in [issue #48](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/issues/48); this document is the authored theory and scenario design, not a claim that the lesson is already runnable.
 
 ## Settings as stewardship
 
