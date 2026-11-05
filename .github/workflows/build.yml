@@ -5,12 +5,42 @@ on:
     branches: [master, development]
   pull_request:
   workflow_dispatch:
+    inputs:
+      candidate_ref:
+        description: "Exact isolated candidate branch ref to validate"
+        required: false
+        type: string
+      candidate_sha:
+        description: "Exact 40-character candidate commit SHA"
+        required: false
+        type: string
+      request_id:
+        description: "Persisted Foundry/CiAi request ID"
+        required: false
+        type: string
+      operation_id:
+        description: "Persisted Foundry/CiAi operation ID"
+        required: false
+        type: string
+      idempotency_key:
+        description: "Persisted Foundry/CiAi idempotency key"
+        required: false
+        type: string
+      task_id:
+        description: "Foundry task identity"
+        required: false
+        type: string
+      correlation_id:
+        description: "Foundry task correlation identity"
+        required: false
+        type: string
 
 permissions:
   contents: read
 
 jobs:
   build:
+    if: github.event_name != 'workflow_dispatch' || (inputs.candidate_ref == '' && inputs.candidate_sha == '')
     runs-on: ubuntu-24.04
     strategy:
       matrix:
@@ -49,6 +79,7 @@ jobs:
 
 
   drone-construction-showcase:
+    if: github.event_name != 'workflow_dispatch' || (inputs.candidate_ref == '' && inputs.candidate_sha == '')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -65,6 +96,7 @@ jobs:
 
   # Semantic requirement matching and immutable artifact-closure validation are host-neutral contracts.
   test-semantic-contracts:
+    if: github.event_name != 'workflow_dispatch' || (inputs.candidate_ref == '' && inputs.candidate_sha == '')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -77,6 +109,7 @@ jobs:
         run: dotnet test tests/Contracts.Tests/TheSingularityWorkshop.Experiences.Contracts.Tests.csproj --configuration Release --no-restore
 
   test-chemistry:
+    if: github.event_name != 'workflow_dispatch' || (inputs.candidate_ref == '' && inputs.candidate_sha == '')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -86,8 +119,214 @@ jobs:
       - name: Run chemistry conservation tests
         run: dotnet test tests/Chemistry.Tests/TheSingularityWorkshop.Experiences.Chemistry.Tests.csproj --configuration Release
 
+  # Trusted workflow definition from development validates an exact, separately checked-out candidate SHA.
+  # This job never receives write credentials and never publishes packages.
+  test-minesweeper:
+    name: test-minesweeper
+    if: github.event_name == 'workflow_dispatch' && (inputs.candidate_ref != '' || inputs.candidate_sha != '')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    env:
+      REPOSITORY: ${{ github.repository }}
+      EVENT_NAME: ${{ github.event_name }}
+      EVENT_REF: ${{ github.ref }}
+      EVENT_SHA: ${{ github.sha }}
+      WORKFLOW_REF: ${{ github.workflow_ref }}
+      WORKFLOW_SHA: ${{ github.workflow_sha }}
+      RUN_ID: ${{ github.run_id }}
+      RUN_ATTEMPT: ${{ github.run_attempt }}
+      CANDIDATE_REF: ${{ inputs.candidate_ref }}
+      CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+      REQUEST_ID: ${{ inputs.request_id }}
+      OPERATION_ID: ${{ inputs.operation_id }}
+      IDEMPOTENCY_KEY: ${{ inputs.idempotency_key }}
+      TASK_ID: ${{ inputs.task_id }}
+      CORRELATION_ID: ${{ inputs.correlation_id }}
+    steps:
+      - name: Checkout the trusted workflow event commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Checkout candidate branch without credentials
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.candidate_ref }}
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Validate dispatch provenance and stage exact candidate source
+        id: verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$EVENT_NAME" == "workflow_dispatch" ]]
+          [[ "$EVENT_REF" == "refs/heads/development" ]]
+          [[ "$WORKFLOW_REF" == "$REPOSITORY/.github/workflows/build.yml@refs/heads/development" ]]
+          [[ "$WORKFLOW_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$EVENT_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$CANDIDATE_REF" =~ ^refs/heads/feature/[A-Za-z0-9._/-]+$ ]]
+          [[ "$CANDIDATE_REF" != *".."* ]]
+          [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          for value in "$REQUEST_ID" "$OPERATION_ID" "$IDEMPOTENCY_KEY" "$TASK_ID" "$CORRELATION_ID"; do
+            [[ "$value" =~ ^[A-Za-z0-9._:-]{1,256}$ ]]
+          done
+
+          branch="${CANDIDATE_REF#refs/heads/}"
+          git -C candidate cat-file -e "${CANDIDATE_SHA}^{commit}"
+          git -C candidate merge-base --is-ancestor "$CANDIDATE_SHA" "refs/remotes/origin/${branch}"
+          git -C candidate checkout --detach "$CANDIDATE_SHA"
+          tested_sha="$(git -C candidate rev-parse HEAD)"
+          [[ "$tested_sha" == "$CANDIDATE_SHA" ]]
+          test -d candidate/src/Minesweeper
+          test -f tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj
+          rm -rf src/Minesweeper
+          cp -a candidate/src/Minesweeper src/Minesweeper
+          echo "tested_sha=$tested_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Set up .NET
+        if: success()
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Run exact-candidate Minesweeper tests
+        id: tests
+        if: success()
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e
+          mkdir -p TestResults/minesweeper
+          dotnet test tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=minesweeper.trx" \
+            --results-directory TestResults/minesweeper
+          exit_code=$?
+          exit "$exit_code"
+
+      - name: Write provenance and exact dispatch marker
+        if: always()
+        env:
+          REPOSITORY: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_REF: ${{ github.ref }}
+          EVENT_SHA: ${{ github.sha }}
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+          WORKFLOW_SHA: ${{ github.workflow_sha }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          CANDIDATE_REF: ${{ inputs.candidate_ref }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          REQUEST_ID: ${{ inputs.request_id }}
+          OPERATION_ID: ${{ inputs.operation_id }}
+          IDEMPOTENCY_KEY: ${{ inputs.idempotency_key }}
+          TASK_ID: ${{ inputs.task_id }}
+          CORRELATION_ID: ${{ inputs.correlation_id }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+          TEST_OUTCOME: ${{ steps.tests.outcome }}
+          TESTED_SHA: ${{ steps.verify.outputs.tested_sha }}
+        shell: bash
+        run: |
+          /bin/rm -rf artifacts
+          /bin/mkdir -p artifacts
+          /usr/bin/python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          run_id = int(os.environ["RUN_ID"])
+          run_attempt = int(os.environ["RUN_ATTEMPT"])
+          artifact_name = f"ciai-test-results-{run_id}-{run_attempt}-test-minesweeper"
+          provenance = {
+              "contract": "foundry.ciai-candidate-validation-provenance.v1",
+              "repository": os.environ["REPOSITORY"],
+              "requestId": os.environ["REQUEST_ID"],
+              "operationId": os.environ["OPERATION_ID"],
+              "idempotencyKey": os.environ["IDEMPOTENCY_KEY"],
+              "taskId": os.environ["TASK_ID"],
+              "correlationId": os.environ["CORRELATION_ID"],
+              "candidateRef": os.environ["CANDIDATE_REF"],
+              "candidateSha": os.environ["CANDIDATE_SHA"],
+              "testedSha": os.environ.get("TESTED_SHA", ""),
+              "workflowPath": ".github/workflows/build.yml",
+              "workflowRef": os.environ["WORKFLOW_REF"],
+              "workflowDefinitionRef": "refs/heads/development",
+              "workflowDefinitionSha": os.environ["WORKFLOW_SHA"],
+              "eventName": os.environ["EVENT_NAME"],
+              "eventRef": os.environ["EVENT_REF"],
+              "eventSha": os.environ["EVENT_SHA"],
+              "runId": run_id,
+              "runAttempt": run_attempt,
+              "jobKey": "test-minesweeper",
+              "jobName": "test-minesweeper",
+              "artifactName": artifact_name,
+              "testFramework": ".NET",
+              "testFormat": "trx",
+              "testProject": "tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj",
+              "testResultPath": "TestResults/minesweeper/minesweeper.trx",
+              "verificationOutcome": os.environ.get("VERIFY_OUTCOME", "unknown"),
+              "testOutcome": os.environ.get("TEST_OUTCOME", "unknown"),
+          }
+          marker = {
+              "contract": "foundry.ciai-dispatch-marker.v1",
+              "requestId": os.environ["REQUEST_ID"],
+              "operationId": os.environ["OPERATION_ID"],
+              "idempotencyKey": os.environ["IDEMPOTENCY_KEY"],
+              "runId": run_id,
+              "runAttempt": run_attempt,
+          }
+          Path("artifacts/provenance.json").write_text(
+              json.dumps(provenance, separators=(",", ":"), sort_keys=True), encoding="utf-8")
+          Path("artifacts/dispatch-marker.json").write_text(
+              json.dumps(marker, separators=(",", ":"), sort_keys=True), encoding="utf-8")
+          PY
+
+      - name: Require non-empty TRX test report
+        id: report
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          report="TestResults/minesweeper/minesweeper.trx"
+          if [[ ! -s "$report" ]]; then
+            echo "::error::Required Minesweeper TRX report is missing or empty."
+            exit 1
+          fi
+
+      - name: Upload exact-run CiAi test artifact
+        id: upload
+        if: always() && steps.report.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ciai-test-results-${{ github.run_id }}-${{ github.run_attempt }}-test-minesweeper
+          path: |
+            TestResults/minesweeper/minesweeper.trx
+            artifacts/provenance.json
+            artifacts/dispatch-marker.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Preserve verification, test, report, and artifact outcome
+        if: always()
+        env:
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+          TEST_OUTCOME: ${{ steps.tests.outcome }}
+          REPORT_OUTCOME: ${{ steps.report.outcome }}
+          UPLOAD_OUTCOME: ${{ steps.upload.outcome }}
+        shell: bash
+        run: |
+          if [[ "$VERIFY_OUTCOME" != "success" || "$TEST_OUTCOME" != "success" || "$REPORT_OUTCOME" != "success" || "$UPLOAD_OUTCOME" != "success" ]]; then
+            echo "Candidate verification, tests, required TRX report, or artifact upload did not complete successfully."
+            exit 1
+          fi
+
   package:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && inputs.candidate_ref == '' && inputs.candidate_sha == ''
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -128,6 +367,7 @@ jobs:
 
   # Card rules stay host-neutral and are tested without GUI or MicroBundle dependencies.
   test-games-cards:
+    if: github.event_name != 'workflow_dispatch' || (inputs.candidate_ref == '' && inputs.candidate_sha == '')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -142,6 +382,7 @@ jobs:
   # Castle Siege's initial semantic entry surface must state its current capability boundary honestly.
   # Capsule Clinic puzzle rules are deterministic and host-independent.
   test-capsule-clinic:
+    if: github.event_name != 'workflow_dispatch' || (inputs.candidate_ref == '' && inputs.candidate_sha == '')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -154,6 +395,7 @@ jobs:
         run: dotnet test tests/CapsuleClinic.Tests/TheSingularityWorkshop.Experiences.CapsuleClinic.Tests.csproj --configuration Release --no-restore
 
   test-castle-siege:
+    if: github.event_name != 'workflow_dispatch' || (inputs.candidate_ref == '' && inputs.candidate_sha == '')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -209,6 +451,7 @@ jobs:
 
   # Validate the grid encoding and scene setup contracts used by Marble Run and Domino Studio.
   test-domino-studio:
+    if: github.event_name != 'workflow_dispatch' || (inputs.candidate_ref == '' && inputs.candidate_sha == '')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -221,6 +464,7 @@ jobs:
         run: dotnet test tests/DominoStudio.Tests/TheSingularityWorkshop.Experiences.DominoStudio.Tests.csproj --configuration Release --no-restore
 
   test-marble-run:
+    if: github.event_name != 'workflow_dispatch' || (inputs.candidate_ref == '' && inputs.candidate_sha == '')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -234,6 +478,7 @@ jobs:
 
   # Keep motion contracts honest without requiring a host renderer.
   test-moniker-motion:
+    if: github.event_name != 'workflow_dispatch' || (inputs.candidate_ref == '' && inputs.candidate_sha == '')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -246,6 +491,7 @@ jobs:
         run: dotnet test tests/Moniker.Motion.Wave.Tests/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.Tests.csproj --configuration Release --no-restore
 
   source-integration:
+    if: github.event_name != 'workflow_dispatch' || (inputs.candidate_ref == '' && inputs.candidate_sha == '')
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -299,6 +545,7 @@ jobs:
         run: dotnet build "${{ matrix.project }}" --configuration Release --no-restore -p:WorkshopUseRepositorySources=true
 
   source-integration-tests:
+    if: github.event_name != 'workflow_dispatch' || (inputs.candidate_ref == '' && inputs.candidate_sha == '')
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout Experiences
@@ -355,6 +602,7 @@ jobs:
 
   # Drone Construction contracts stay deterministic and independent of any renderer or Unity runtime.
   test-drone-construction:
+    if: github.event_name != 'workflow_dispatch' || (inputs.candidate_ref == '' && inputs.candidate_sha == '')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -376,6 +624,7 @@ jobs:
 
   # Laboratory room catalogs are structured Experience data; validate schema and navigation before consumption by any manifestation.
   validate-experience-room-catalogs:
+    if: github.event_name != 'workflow_dispatch' || (inputs.candidate_ref == '' && inputs.candidate_sha == '')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
