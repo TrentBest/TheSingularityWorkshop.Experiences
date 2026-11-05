@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageId>TheSingularityWorkshop.Experiences.GitHubLearningStudio</PackageId>
+    <Version>0.1.0-alpha.1</Version>
+    <Authors>The Singularity Workshop</Authors>
+    <Company>The Singularity Workshop</Company>
+    <Description>Deterministic educational model for learning repositories, commits, branches, and GitHub Pages.</Description>
+    <PackageTags>singularity;workshop;experience;learning;github;pages</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/TrentBest/TheSingularityWorkshop.Experiences</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="TheSingularityWorkshop.GUI.Core" Version="0.1.0-alpha.4" Condition="'$(WorkshopUseRepositorySources)' != 'true'" />
+    <ProjectReference Include="../../../TheSingularityWorkshop.GUI/src/Core/TheSingularityWorkshop.GUI.Core.csproj" Condition="'$(WorkshopUseRepositorySources)' == 'true'" />
+  </ItemGroup>
+</Project>
