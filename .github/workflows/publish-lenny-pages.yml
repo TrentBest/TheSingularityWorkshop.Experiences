@@ -1,6 +1,9 @@
 name: Publish Lenny reading preview
 
 on:
+  push:
+    branches:
+      - development
   workflow_dispatch:
 
 permissions:
