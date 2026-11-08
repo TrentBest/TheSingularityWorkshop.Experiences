@@ -12,11 +12,12 @@ This is a story presentation, not a game, ocean simulator, or environmental data
 
 - [Source manuscript transcription](SourceManuscript.md)
 - [Structured reading sequence](story.json)
+- [StoryBuilder composition manifest](CompositionManifest.json) — source-linked, stable page IDs and exact transcription text for authoring import.
 - [Character and visual story plan](VisualStoryPlan.md)
 - [StoryBuilder composition pilot](https://github.com/TrentBest/StoryBuilder/blob/development/docs/LENNY_COMPOSITION_PILOT.md)
 - Original supplied source: `LENNY MANUSCRIPT.pdf` (35 pages)
 
-The structured sequence is derived directly from the transcription: title, dedication, 33 numbered story pages, and closing page. The transcription preserves the extracted wording and printed story-page order. The original PDF remains a useful reference for the printed layout and any visual details worth preserving. It is expected to be added to this repository later; visual development does not depend on waiting for it.
+The structured sequence is derived directly from the transcription: title, dedication, 33 numbered story pages, and closing page. `CompositionManifest.json` provides the same source material in an authoring-oriented shape with stable page IDs and source-blob provenance; it does not replace the reader's `story.json`. The transcription preserves the extracted wording and printed story-page order. The original PDF remains a useful reference for the printed layout and any visual details worth preserving. It is expected to be added to this repository later; visual development does not depend on waiting for it.
 
 ## Runnable reading preview
 
