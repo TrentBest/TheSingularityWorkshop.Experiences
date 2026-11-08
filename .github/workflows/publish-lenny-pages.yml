@@ -1,12 +1,7 @@
-name: Publish Lenny to GitHub Pages
+name: Publish Lenny reading preview
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - "experiences/Lenny/**"
-      - ".github/workflows/publish-lenny-pages.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -18,33 +13,47 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check out released content
+      - name: Check out development
         uses: actions/checkout@v4
-
-      - name: Assemble Pages site
-        run: |
-          mkdir -p _site
-          cp experiences/Lenny/index.html _site/index.html
-          cp experiences/Lenny/story.json _site/story.json
+        with:
+          ref: development
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Assemble static reading site
+        run: |
+          mkdir -p _site/experiences/Lenny
+          cp experiences/Lenny/index.html _site/experiences/Lenny/index.html
+          cp experiences/Lenny/story.json _site/experiences/Lenny/story.json
+          cat > _site/index.html <<'EOF'
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta http-equiv="refresh" content="0; url=./experiences/Lenny/">
+            <title>Little Lenny and the Big Ocean Problem</title>
+          </head>
+          <body>
+            <p><a href="./experiences/Lenny/">Read Little Lenny and the Big Ocean Problem</a></p>
+          </body>
+          </html>
+          EOF
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
