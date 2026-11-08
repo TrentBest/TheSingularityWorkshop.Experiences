@@ -23,7 +23,7 @@ This is a story presentation, not a game, ocean simulator, or environmental data
 - [StoryBuilder composition pilot](https://github.com/TrentBest/StoryBuilder/blob/development/docs/LENNY_COMPOSITION_PILOT.md)
 - Original supplied source: `LENNY MANUSCRIPT.pdf` (35 pages)
 
-The structured sequence is derived directly from the transcription: title, dedication, 33 numbered story pages, and closing page. `CompositionManifest.json` provides the same source material in an authoring-oriented shape with stable page IDs and source-blob provenance; it does not replace the reader's `story.json`. The transcription preserves the extracted wording and printed story-page order. The original PDF remains a useful reference for the printed layout and any visual details worth preserving. It is expected to be added to this repository later; visual development does not depend on waiting for it.
+The structured sequence is derived directly from the transcription: title, dedication, 33 numbered story pages, and closing page. `CompositionManifest.json` provides the same source material in an authoring-oriented shape with stable page IDs and source-blob provenance; it does not replace the reader's `story.json`. The transcription preserves the extracted wording and printed story-page order. The supplied 35-page PDF is already available as the original source reference and contains original illustrations on 29 of the 33 story pages. Those illustrations establish the visual baseline for character design, props, environments, palette, and rendering style. The PDF is retained as source material rather than copied into the public reader repository by default.
 
 ## Runnable reading preview
 
@@ -49,14 +49,14 @@ The page reads its content from `story.json`; it does not embed a second copy of
 
 ## Character and visual development
 
-The story's character and scene descriptions are sufficient to begin visual development now. [VisualStoryPlan.md](VisualStoryPlan.md) translates all 33 story pages into a consistent illustration plan and establishes a working character bible for Lenny, his dad, and the dolphin pod.
+The supplied manuscript already includes a substantial body of original artwork. [VisualStoryPlan.md](VisualStoryPlan.md) now treats that artwork as the primary continuity reference and maps the visual direction across all 33 story pages.
 
 The plan separates:
 - **Manuscript canon:** facts explicitly established by the author's story.
 - **Visual interpretation:** staging, expression, pose, and composition used to communicate a scene.
 - **Open design decisions:** physical traits and costume details the manuscript does not specify.
 
-Character silhouettes, proportions, props, and expressions should remain consistent across the full sequence. Unknown traits must remain provisional until an author-approved design is established. The original artwork is not a prerequisite, and no new illustration should alter the manuscript's events or meaning.
+Preserve the source-art designs: Lenny's blond hair, light-blue shirt, orange shorts, and childlike proportions; Dad's brown shoulder-length hair, mustache, tan shirt, and dark shorts; and the established gray-blue dolphin design. The original illustrations also establish a soft watercolor-edged presentation, warm beach palette, and deeper blue-green underwater palette. New artwork should extend this visual language, not redesign the cast.
 
 ## Ownership boundary
 
@@ -66,7 +66,7 @@ The host owns browser/application lifecycle and navigation transport. Shared ren
 
 ## Current maturity
 
-**Runnable static reading preview.** The manuscript transcription and structured page sequence are committed, and a browser reader can be served locally. This is not yet integrated into the Workshop WebPage host or a runtime-loaded Experience manifest. Approved artwork and the original PDF are not yet included.
+**Runnable static text-reading preview with source-art reference available.** The manuscript transcription and structured page sequence are committed, and a browser reader can be served locally. The original PDF contains illustrations for 29 story pages; those images have not yet been integrated into the reader. Four story pages (4, 13, 19, and 23) are text-only in the supplied source. This is not yet integrated into the Workshop WebPage host or a runtime-loaded Experience manifest.
 
 ## Acceptance criteria for this slice
 
