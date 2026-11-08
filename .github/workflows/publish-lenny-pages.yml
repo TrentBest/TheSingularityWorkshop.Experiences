@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out development
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: development
 
@@ -44,11 +44,12 @@ jobs:
           touch _site/.nojekyll
 
       - name: Upload the static site
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
   deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/development'
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -60,4 +61,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
