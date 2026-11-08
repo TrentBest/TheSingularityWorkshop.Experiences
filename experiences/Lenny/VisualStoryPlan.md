@@ -1,28 +1,19 @@
 # Little Lenny — Character and Visual Story Plan
 
-**Status:** Source-art-grounded visual brief. The original manuscript PDF contains the author's existing illustrations; this document uses them as the primary continuity reference. New artwork remains a proposal until reviewed.
+**Status:** Original visual development brief. The earlier illustrations were not created by the author and are explicitly excluded. They are not reference art, character models, style targets, or production assets. The author’s story is the source of truth; all visual design is being reimagined through StoryBuilder.
 
 ## Purpose
 
-Develop a coherent visual language for all 33 story pages by preserving and extending the artwork already supplied with the manuscript. The manuscript remains authoritative for events, relationships, emotional turns, and sequence. The original illustrations are the visual authority for established character appearance, props, palette, and rendering style; this brief translates that source material into repeatable direction.
+Create a distinctive, coherent illustrated children's book that serves the author's story and emotional intent. Use StoryBuilder to develop the cast, environments, page compositions, visual continuity, revision history, and eventual reading edition. Do not trace, imitate, extract, or adapt the previous concept illustrations.
 
+## Source and visual authority
 
-## Original artwork baseline
+- **Authoritative:** the author's manuscript, dedication, closing statement, page order, and any direct author feedback.
+- **Not authoritative:** the earlier illustrative PDF artwork. It was an informal communication aid, was not the author's art, and is intentionally ignored for all visual decisions.
+- **Proposals:** every new character design, palette, composition, and generated image remains provisional until reviewed and accepted by the author.
+- **Approved continuity:** only author-approved StoryBuilder asset revisions may become reusable design references.
 
-The supplied source PDF, `LENNY MANUSCRIPT.pdf` (35 physical PDF pages), contains original illustrations on 29 of the 33 numbered story pages. The story occupies PDF pages 2–34; the closing statement follows on PDF page 35. The four story pages without embedded illustrations are 4, 13, 19, and 23. Their text-only treatment is part of the supplied edition; do not add filler art merely to make every page look uniform.
-
-The illustrations are not generic inspiration. They are the existing visual identity of this book and should be preserved as the baseline for any restoration, extraction, adaptation, or new illustration:
-
-- **Lenny:** blond, tousled hair; large expressive eyes; light-blue short-sleeved shirt; orange/rust shorts; childlike proportions; barefoot in the beach scenes. Preserve his recognizable face, hair silhouette, outfit colors, and small scale beside Dad.
-- **Dad:** medium-to-long brown hair, a mustache, tan/beige short-sleeved shirt, dark navy shorts, and a taller, broad build; barefoot in the beach scenes. Preserve the recognizable hair and facial-hair silhouette and his gentle, protective body language.
-- **Dolphins:** gray-blue to deep blue backs with lighter undersides, natural dolphin anatomy, expressive but animal-like faces, and coordinated pod movement. The lead dolphin's friendly head-above-water reveal and nose-toss gesture are recurring visual motifs.
-- **Beach and water:** warm pale-gold sand, turquoise-to-deep-blue ocean, bright sky, soft sunlit colors, and loose watercolor-like painted edges.
-- **Underwater scenes:** a cooler teal/blue environment with luminous water, coral and sea plants, and vivid marine life. Pollution is visible but the illustrations remain suitable for a children's book rather than graphic disaster imagery.
-- **Rendering:** soft-edged, painterly digital illustrations with simple readable silhouettes, expressive faces, and a gentle storybook finish. Avoid switching to photorealism, hard-edged vector art, or an unrelated visual style.
-
-The physical traits above are directly visible in the supplied source illustrations. They are no longer open design questions for this edition. The manuscript text itself does not specify those traits, so provenance should distinguish **manuscript fact** from **existing source-art design**. New visual proposals should match the source-art design unless the author explicitly chooses a redesign.
-
-The PDF remains a source reference, not a public-reader dependency. Do not expose the complete source PDF or private authoring materials through GitHub Pages by default. If individual illustrations are extracted for the reader, retain their source-page mapping and confirm that the selected image is the correct story page before publication.
+The PDF may remain archived as historical source context, but it must not be indexed as visual inspiration, used to infer character appearance, or included in the production asset pipeline.
 
 ## Canon, interpretation, and open design
 
@@ -50,7 +41,7 @@ Use three levels of certainty:
 
 **Still unspecified by the manuscript/source art**
 - Exact age, precise height, eye color, and detailed biographical traits remain unspecified. Do not infer them.
-- The existing source illustration is the model-sheet baseline. Any turnaround should faithfully derive from that design rather than invent a new appearance.
+- Appearance is an open design decision. Explore original options and keep them provisional until author approval.
 
 ### Lenny's dad
 
@@ -65,7 +56,7 @@ Use three levels of certainty:
 - Keep his design visually stable across beach scenes and the underwater journey.
 
 **Still unspecified by the manuscript/source art**
-- Exact age, precise height, eye color, and detailed biographical traits remain unspecified. Do not infer a specific appearance or family resemblance beyond what the supplied illustration visibly establishes.
+- Exact age, precise height, eye color, and detailed biographical traits remain unspecified. Do not infer a specific appearance or family resemblance beyond what the author explicitly establishes.
 
 ### Dolphin and pod
 
@@ -82,11 +73,11 @@ Use three levels of certainty:
 - The dolphin's repeated nose-toss gesture can become a recognizable visual motif.
 
 **Still unspecified by the manuscript/source art**
-- Exact species, individual identity marks, and a definitive pod count are not established. Preserve the dolphin anatomy and gray-blue palette already shown; do not invent permanent markings as canon.
+- Exact species, individual identity marks, and a definitive pod count are not established. Develop a fresh, natural dolphin design; keep species details and permanent markings provisional unless the author specifies them.
 
 ## Visual continuity rules
 
-1. Match the character proportions, face construction, hair, clothing, colors, and props visible in the original supplied illustrations; do not wait for a new approval cycle to preserve the existing design.
+1. Use only author-approved StoryBuilder model sheets as continuity references. Never fall back to the excluded concept illustrations.
 2. Keep the beach geography coherent: shoreline, waterline, sand, horizon, and the family's relative position should not jump arbitrarily.
 3. Track the bucket and shovel in the opening beach play; track the trash bag from the cleanup onward. Do not teleport or multiply props.
 4. The trash bag begins as a practical small bag held by Dad; Lenny later carries it. Its scale helps communicate the difference between one child's effort and the size of the problem.
