@@ -12,9 +12,10 @@ This is a story presentation, not a game, ocean simulator, or environmental data
 
 - [Source manuscript transcription](SourceManuscript.md)
 - [Structured reading sequence](story.json)
+- [Character and visual story plan](VisualStoryPlan.md)
 - Original supplied source: `LENNY MANUSCRIPT.pdf` (35 pages)
 
-The structured sequence is derived directly from the transcription: title, dedication, 33 numbered story pages, and closing page. The transcription preserves the extracted wording and printed story-page order. The original PDF remains the authority for its page layout and illustrations. The PDF itself has not yet been added to this repository.
+The structured sequence is derived directly from the transcription: title, dedication, 33 numbered story pages, and closing page. The transcription preserves the extracted wording and printed story-page order. The original PDF remains a useful reference for the printed layout and any visual details worth preserving. It is expected to be added to this repository later; visual development does not depend on waiting for it.
 
 ## Runnable reading preview
 
@@ -38,22 +39,22 @@ The reader currently provides:
 
 The page reads its content from `story.json`; it does not embed a second copy of the manuscript in the HTML. This makes the authored sequence independently inspectable and keeps presentation separate from story content.
 
-## Artwork and presentation direction
+## Character and visual development
 
-The author has expressed dissatisfaction with the original artwork. No replacement art direction has been approved.
+The story's character and scene descriptions are sufficient to begin visual development now. [VisualStoryPlan.md](VisualStoryPlan.md) translates all 33 story pages into a consistent illustration plan and establishes a working character bible for Lenny, his dad, and the dolphin pod.
 
-Therefore:
+The plan separates:
+- **Manuscript canon:** facts explicitly established by the author's story.
+- **Visual interpretation:** staging, expression, pose, and composition used to communicate a scene.
+- **Open design decisions:** physical traits and costume details the manuscript does not specify.
 
-- Do not reuse, imitate, or replace the original illustrations by assumption.
-- Do not generate finished illustrations or establish a visual style without the author's direction.
-- Keep the reader structure independent of its eventual artwork.
-- The current interface is a restrained, text-first reading preview, not approved book artwork or a final visual design.
+Character silhouettes, proportions, props, and expressions should remain consistent across the full sequence. Unknown traits must remain provisional until an author-approved design is established. The original artwork is not a prerequisite, and no new illustration should alter the manuscript's events or meaning.
 
 ## Ownership boundary
 
 This Experience owns the story's presentation identity, authored sequence, and reader journey.
 
-The host owns browser/application lifecycle and navigation transport. Shared rendering and GUI packages own reusable presentation primitives. Story-authoring tools belong in StoryBuilder, not in this Experience.
+The host owns browser/application lifecycle and navigation transport. Shared rendering and GUI packages own reusable presentation primitives. Story-authoring tools belong in StoryBuilder, not in this Experience. StoryBuilder's provenance and canon discipline informs the visual brief, but the reading Experience remains independently runnable.
 
 ## Current maturity
 
