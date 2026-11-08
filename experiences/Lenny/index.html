@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f3ec">
+<meta name="description" content="A page-by-page reading preview for Little Lenny and the Big Ocean Problem.">
+<title>Little Lenny and the Big Ocean Problem</title>
+<style>
+:root{color-scheme:light;--ink:#26343a;--muted:#68777a;--paper:#fbfaf6;--line:#d8dedb;--accent:#477b83;font-family:Georgia,"Iowan Old Style","Palatino Linotype",serif}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#f0f1ed;color:var(--ink)}button{font:inherit}
+.shell{width:min(900px,calc(100% - 32px));margin:0 auto;padding:26px 0 38px}
+.topline{display:flex;justify-content:space-between;gap:12px;align-items:center;font:600 .72rem/1.3 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+main{margin:24px auto 0}.book{min-height:580px;background:var(--paper);border:1px solid var(--line);border-radius:5px;box-shadow:0 18px 55px #26343a12;display:flex;flex-direction:column;padding:clamp(26px,6vw,66px)}
+.book-head{display:flex;justify-content:space-between;gap:16px;align-items:center;padding-bottom:18px;border-bottom:1px solid var(--line);font:500 .78rem/1.4 system-ui,sans-serif;color:var(--muted)}
+.page-kind{letter-spacing:.1em;text-transform:uppercase}.page-number{font-variant-numeric:tabular-nums}
+.page-content{width:min(100%,650px);margin:auto;padding:42px 0}
+h1{font-size:clamp(2.2rem,6vw,4.6rem);font-weight:400;line-height:1.04;letter-spacing:-.045em;margin:0 0 24px}
+h2{font-size:clamp(1.7rem,4vw,2.7rem);font-weight:400;line-height:1.12;margin:0 0 28px}
+.kicker{font:600 .72rem/1.4 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 18px}
+.copy{font-size:1.22rem;line-height:1.75}.copy p{margin:0 0 1.1em}.dedication .copy{max-width:550px;font-style:italic}
+.closing{font-size:1.12rem;line-height:1.7}.endmark{font:600 .8rem/1.4 system-ui,sans-serif;letter-spacing:.2em;color:var(--accent);margin-bottom:26px}
+.controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px}
+button{border:1px solid #b8c6c2;background:#fff;color:var(--ink);border-radius:4px;padding:12px 18px;cursor:pointer;font:600 .9rem/1.2 system-ui,sans-serif}
+button:hover:enabled{background:#edf3f0;border-color:var(--accent)}button:focus-visible{outline:3px solid #477b83;outline-offset:3px}button:disabled{opacity:.35;cursor:not-allowed}
+#progressText{font:500 .82rem/1.4 system-ui,sans-serif;color:var(--muted);font-variant-numeric:tabular-nums;text-align:center}
+.progress{height:3px;background:#dfe5e1;margin-top:16px;overflow:hidden}#progressFill{height:100%;width:0;background:var(--accent);transition:width .2s ease}
+.tools{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.tools button{padding:7px 11px;font-size:.78rem;background:transparent}
+.hint{font:.78rem/1.5 system-ui,sans-serif;color:var(--muted);text-align:center;margin:16px 0 0}
+.error{padding:24px;background:#fff0ee;border:1px solid #d99;color:#612}
+@media(max-width:600px){.shell{width:calc(100% - 20px);padding-top:16px}.book{min-height:calc(100svh - 180px);padding:22px}.page-content{padding:30px 0}.controls button{padding:12px}.topline{font-size:.65rem}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topline"><span>The Singularity Workshop · Experiences</span><span>Reading preview</span></div>
+  <main>
+    <article class="book" aria-live="polite" aria-atomic="true">
+      <header class="book-head"><span id="pageKind" class="page-kind">Story</span><span id="pageNumber" class="page-number"></span></header>
+      <section id="pageContent" class="page-content"><p>Loading the manuscript…</p></section>
+    </article>
+    <div class="progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress"><div id="progressFill"></div></div>
+    <nav class="controls" aria-label="Reading navigation">
+      <button id="previous" type="button" disabled>← Previous</button>
+      <span id="progressText">Loading…</span>
+      <button id="next" type="button" disabled>Next →</button>
+    </nav>
+    <div class="tools" aria-label="Reading comfort"><button id="smaller" type="button" aria-label="Decrease text size">A−</button><button id="larger" type="button" aria-label="Increase text size">A+</button></div>
+    <p class="hint">Use ← and → keys to turn pages. On touch screens, swipe to move between pages.</p>
+  </main>
+</div>
+<script>
+(async function(){
+  const content=document.getElementById('pageContent'),kind=document.getElementById('pageKind'),number=document.getElementById('pageNumber');
+  const previous=document.getElementById('previous'),next=document.getElementById('next'),progressText=document.getElementById('progressText');
+  const progressFill=document.getElementById('progressFill'),progress=document.getElementById('progress');
+  let slides=[],index=0,fontScale=1;
+  function paragraph(text){const p=document.createElement('p');p.textContent=text;return p}
+  function render(){
+    const slide=slides[index];content.replaceChildren();kind.textContent=slide.kind;number.textContent=slide.label;
+    if(slide.title){const k=document.createElement('p');k.className='kicker';k.textContent='A story to read together';content.append(k);const h=document.createElement('h1');h.textContent=slide.title;content.append(h)}
+    if(slide.heading){const h=document.createElement('h2');h.textContent=slide.heading;content.append(h)}
+    content.classList.toggle('dedication',slide.kind==='Dedication');
+    const copy=document.createElement('div');copy.className='copy';if(slide.kind==='Closing')copy.classList.add('closing');
+    if(slide.kind==='Closing'){const mark=document.createElement('div');mark.className='endmark';mark.textContent='THE END';content.append(mark)}
+    slide.paragraphs.forEach(t=>copy.append(paragraph(t)));content.append(copy);copy.style.fontSize=(1.22*fontScale)+'rem';
+    previous.disabled=index===0;next.disabled=index===slides.length-1;
+    progressText.textContent=(index+1)+' / '+slides.length;
+    const pct=Math.round((index+1)/slides.length*100);progressFill.style.width=pct+'%';progress.setAttribute('aria-valuenow',String(pct));
+    document.title=(slide.title||slide.heading||slide.label)+' · Little Lenny';
+  }
+  function move(delta){index=Math.max(0,Math.min(slides.length-1,index+delta));render()}
+  previous.addEventListener('click',()=>move(-1));next.addEventListener('click',()=>move(1));
+  document.getElementById('smaller').addEventListener('click',()=>{fontScale=Math.max(.85,fontScale-.1);render()});
+  document.getElementById('larger').addEventListener('click',()=>{fontScale=Math.min(1.5,fontScale+.1);render()});
+  document.addEventListener('keydown',e=>{if(e.altKey||e.ctrlKey||e.metaKey)return;if(e.key==='ArrowLeft'){e.preventDefault();move(-1)}if(e.key==='ArrowRight'){e.preventDefault();move(1)}});
+  let touchX=null;document.querySelector('.book').addEventListener('touchstart',e=>{touchX=e.changedTouches[0].clientX},{passive:true});
+  document.querySelector('.book').addEventListener('touchend',e=>{if(touchX===null)return;const dx=e.changedTouches[0].clientX-touchX;if(Math.abs(dx)>65)move(dx<0?1:-1);touchX=null},{passive:true});
+  try{
+    const response=await fetch('./story.json');if(!response.ok)throw new Error('Could not load story.json ('+response.status+')');
+    const story=await response.json();
+    slides.push({kind:'Title',label:'Title',title:story.title,paragraphs:[]});
+    slides.push({kind:'Dedication',label:'Dedication',heading:'Dedication',paragraphs:[story.dedication]});
+    story.pages.forEach(p=>slides.push({kind:'Story',label:'Page '+p.number,paragraphs:p.paragraphs}));
+    slides.push({kind:'Closing',label:'Closing',paragraphs:story.closing.filter(t=>t!=='THE END')});
+    render();
+  }catch(error){content.replaceChildren();const p=paragraph(error.message);p.className='error';content.append(p);progressText.textContent='Unable to load story';}
+})();
+</script>
+</body>
+</html>
