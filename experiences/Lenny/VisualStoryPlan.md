@@ -39,7 +39,7 @@ Use three levels of certainty:
 - Keep the bucket, shovel, and small cleanup bag distinct props. The bag should remain visibly small beside the scale of the ocean problem.
 - His emotional arc is the visual anchor: curiosity → concern → enthusiasm → overwhelm → wonder → empathy → hopeful resolve.
 
-**Still unspecified by the manuscript/source art**
+**Still unspecified by the manuscript**
 - Exact age, precise height, eye color, and detailed biographical traits remain unspecified. Do not infer them.
 - Appearance is an open design decision. Explore original options and keep them provisional until author approval.
 
@@ -55,7 +55,7 @@ Use three levels of certainty:
 - Repeat recognizable gestures: bending or kneeling to meet Lenny at eye level; a supportive arm or hand on the shoulder; protective reach near the water; carrying Lenny securely on his shoulders.
 - Keep his design visually stable across beach scenes and the underwater journey.
 
-**Still unspecified by the manuscript/source art**
+**Still unspecified by the manuscript**
 - Exact age, precise height, eye color, and detailed biographical traits remain unspecified. Do not infer a specific appearance or family resemblance beyond what the author explicitly establishes.
 
 ### Dolphin and pod
@@ -72,7 +72,7 @@ Use three levels of certainty:
 - Make the protective bubble visually understandable and gentle; it should read as a safe space around Lenny and his dad.
 - The dolphin's repeated nose-toss gesture can become a recognizable visual motif.
 
-**Still unspecified by the manuscript/source art**
+**Still unspecified by the manuscript**
 - Exact species, individual identity marks, and a definitive pod count are not established. Develop a fresh, natural dolphin design; keep species details and permanent markings provisional unless the author specifies them.
 
 ## Visual continuity rules
@@ -142,8 +142,10 @@ A future StoryBuilder project can hold the richer world bible and asset provenan
 
 ## Next visual-development slice
 
-1. Build a source-art reference set from the existing illustrations, indexed to the 29 story pages that contain artwork; keep the four source text-only pages (4, 13, 19, and 23) intentionally unillustrated unless the author requests additions.
-2. Create character turnarounds and expression references by faithfully deriving them from the supplied Lenny, Dad, and dolphin artwork.
-3. Record the existing beach and underwater palettes, lighting, edge treatment, and illustration finish as reusable style guidance.
-4. Integrate original illustrations into the reader only after verifying each extracted image against its physical PDF page and printed story-page number; keep manuscript text as selectable HTML.
-5. Propose new artwork only for scenes that genuinely need it or where the author requests an alternative, and preserve the original source art and its provenance.
+1. Use the author's manuscript to establish the character and scene requirements; do not consult the excluded concept illustrations.
+2. Develop multiple original design directions for Lenny, Dad, and the lead dolphin. Keep all appearance choices provisional.
+3. Create original beach, shoreline, open-water, ocean-floor, and reef environment studies.
+4. Use StoryBuilder visual asset records to track each concept, prompt, revision, page/character relationship, and author review decision.
+5. Select a small representative set of page compositions covering curiosity, discouragement, dolphin reveal, underwater discovery, and hopeful resolution.
+6. Review continuity and author feedback; only approved revisions become reusable model references.
+7. Expand to the remaining pages, then explore restrained animation after the still compositions work.
