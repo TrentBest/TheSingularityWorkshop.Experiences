@@ -9,7 +9,6 @@
     "development",
     "feature/casino-ledger-core",
     "feature/code-red-ciai-experiences-integration",
-    "feature/game-cards-core",
     "feature/game-economy-microbundle-catalog",
     "feature/game-slots-core",
     "feature/living-experience-showcases",
@@ -20,9 +19,9 @@
     "work/github-learning-studio-pages-slice",
     "work/github-learning-studio-pull-request-journey"
   ],
-  "branch_count": 13,
+  "branch_count": 12,
   "status": "NON-COMPLIANT",
-  "evaluated_at": "2026-11-07T11:02:08Z",
-  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/42366433997",
-  "triggering_commit": "9a9b0d3b6ff44117c7b8e2ba9a8122d62be3e71c"
+  "evaluated_at": "2026-11-08T10:08:59Z",
+  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/42470168586",
+  "triggering_commit": "a7bdb49d9f67cd163b8a1fb988d3779421afcb36"
 }
