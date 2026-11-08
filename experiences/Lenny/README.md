@@ -13,6 +13,7 @@ This is a story presentation, not a game, ocean simulator, or environmental data
 - [Source manuscript transcription](SourceManuscript.md)
 - [Structured reading sequence](story.json)
 - [Character and visual story plan](VisualStoryPlan.md)
+- [StoryBuilder composition pilot](https://github.com/TrentBest/StoryBuilder/blob/development/docs/LENNY_COMPOSITION_PILOT.md)
 - Original supplied source: `LENNY MANUSCRIPT.pdf` (35 pages)
 
 The structured sequence is derived directly from the transcription: title, dedication, 33 numbered story pages, and closing page. The transcription preserves the extracted wording and printed story-page order. The original PDF remains a useful reference for the printed layout and any visual details worth preserving. It is expected to be added to this repository later; visual development does not depend on waiting for it.
@@ -54,7 +55,7 @@ Character silhouettes, proportions, props, and expressions should remain consist
 
 This Experience owns the story's presentation identity, authored sequence, and reader journey.
 
-The host owns browser/application lifecycle and navigation transport. Shared rendering and GUI packages own reusable presentation primitives. Story-authoring tools belong in StoryBuilder, not in this Experience. StoryBuilder's provenance and canon discipline informs the visual brief, but the reading Experience remains independently runnable.
+The host owns browser/application lifecycle and navigation transport. Shared rendering and GUI packages own reusable presentation primitives. Story-authoring tools belong in StoryBuilder, not in this Experience. StoryBuilder's provenance and canon discipline informs the visual brief, but the reading Experience remains independently runnable. The StoryBuilder repository now tracks the composition-to-publication pilot, including visual asset provenance, restrained animation, and the GitHub Pages publication boundary.
 
 ## Current maturity
 
