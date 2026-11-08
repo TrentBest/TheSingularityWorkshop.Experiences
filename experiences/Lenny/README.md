@@ -2,6 +2,12 @@
 
 A small reading Experience built around the supplied children's story manuscript.
 
+## Read the story
+
+**[Read Little Lenny and the Big Ocean Problem](https://trentbest.github.io/TheSingularityWorkshop.Experiences/experiences/Lenny/)**
+
+The reader is published from the `development` branch by the manually triggered **Publish Lenny reading preview** workflow. If the link is not live yet, run that workflow from the repository's GitHub Actions tab. It publishes only the static reader and its `story.json` content.
+
 ## Intent
 
 Present the author's story as a clear, page-by-page reading experience. Keep the story itself at the center: a child, a parent, a beach, and a conversation about caring for ocean life.
