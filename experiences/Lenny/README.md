@@ -23,7 +23,7 @@ This is a story presentation, not a game, ocean simulator, or environmental data
 - [StoryBuilder composition pilot](https://github.com/TrentBest/StoryBuilder/blob/development/docs/LENNY_COMPOSITION_PILOT.md)
 - Original supplied source: `LENNY MANUSCRIPT.pdf` (35 pages)
 
-The structured sequence is derived directly from the transcription: title, dedication, 33 numbered story pages, and closing page. `CompositionManifest.json` provides the same source material in an authoring-oriented shape with stable page IDs and source-blob provenance; it does not replace the reader's `story.json`. The transcription preserves the extracted wording and printed story-page order. The supplied 35-page PDF is already available as the original source reference and contains original illustrations on 29 of the 33 story pages. Those illustrations establish the visual baseline for character design, props, environments, palette, and rendering style. The PDF is retained as source material rather than copied into the public reader repository by default.
+The structured sequence is derived directly from the transcription: title, dedication, 33 numbered story pages, and closing page. `CompositionManifest.json` provides the same source material in an authoring-oriented shape with stable page IDs and source-blob provenance; it does not replace the reader's `story.json`. The transcription preserves the extracted wording and printed story-page order. The supplied PDF is retained only as historical context for how the author communicated the initial concept. Its illustrations are explicitly excluded from the visual direction, character design, palette, style references, and production assets. Do not extract, reproduce, adapt, or use those images as continuity references.
 
 ## Runnable reading preview
 
@@ -49,14 +49,7 @@ The page reads its content from `story.json`; it does not embed a second copy of
 
 ## Character and visual development
 
-The supplied manuscript already includes a substantial body of original artwork. [VisualStoryPlan.md](VisualStoryPlan.md) now treats that artwork as the primary continuity reference and maps the visual direction across all 33 story pages.
-
-The plan separates:
-- **Manuscript canon:** facts explicitly established by the author's story.
-- **Visual interpretation:** staging, expression, pose, and composition used to communicate a scene.
-- **Open design decisions:** physical traits and costume details the manuscript does not specify.
-
-Preserve the source-art designs: Lenny's blond hair, light-blue shirt, orange shorts, and childlike proportions; Dad's brown shoulder-length hair, mustache, tan shirt, and dark shorts; and the established gray-blue dolphin design. The original illustrations also establish a soft watercolor-edged presentation, warm beach palette, and deeper blue-green underwater palette. New artwork should extend this visual language, not redesign the cast.
+The previous illustrations were not the author's artwork and were only rough communication aids. They are intentionally excluded from this project. The book's new visual identity will be developed from the author's story through StoryBuilder. Character appearance, environment design, palette, rendering approach, and page compositions are new proposals; nothing becomes continuity canon until the author approves it. See [VisualStoryPlan.md](VisualStoryPlan.md).
 
 ## Ownership boundary
 
@@ -66,7 +59,7 @@ The host owns browser/application lifecycle and navigation transport. Shared ren
 
 ## Current maturity
 
-**Runnable static text-reading preview with source-art reference available.** The manuscript transcription and structured page sequence are committed, and a browser reader can be served locally. The original PDF contains illustrations for 29 story pages; those images have not yet been integrated into the reader. Four story pages (4, 13, 19, and 23) are text-only in the supplied source. This is not yet integrated into the Workshop WebPage host or a runtime-loaded Experience manifest.
+**Runnable static text-reading preview; original visual development is in progress through StoryBuilder.** The manuscript transcription and structured page sequence are committed, and a browser reader can be served locally. The earlier concept illustrations are intentionally not part of the reader or production pipeline. New page illustrations will be created and approved through StoryBuilder. This is not yet integrated into the Workshop WebPage host or a runtime-loaded Experience manifest.
 
 ## Acceptance criteria for this slice
 
