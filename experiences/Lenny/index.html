@@ -38,6 +38,7 @@ button:hover:enabled{background:#edf3f0;border-color:var(--accent)}button:focus-
 <div class="shell">
   <div class="topline"><span>The Singularity Workshop · Experiences</span><span>Reading preview</span></div>
   <main id="main-content" tabindex="-1">
+    <noscript><p class="error">This reading preview needs JavaScript to load the story pages. Enable JavaScript and reload this page to read Little Lenny.</p></noscript>
     <article class="book">
       <header class="book-head"><span id="pageKind" class="page-kind">Story</span><span id="pageNumber" class="page-number"></span></header>
       <section id="pageContent" class="page-content"><p>Loading the manuscript…</p></section>
@@ -97,7 +98,7 @@ button:hover:enabled{background:#edf3f0;border-color:var(--accent)}button:focus-
     story.pages.forEach(p=>slides.push({kind:'Story',label:'Page '+p.number,paragraphs:p.paragraphs}));
     slides.push({kind:'Closing',label:'Closing',paragraphs:story.closing.filter(t=>t!=='THE END')});
     render();
-  }catch(error){content.replaceChildren();const p=paragraph(error.message);p.className='error';content.append(p);progressText.textContent='Unable to load story';}
+  }catch(error){content.replaceChildren();const p=paragraph('The story could not be loaded. Check your connection and try again.');p.className='error';content.append(p);const retry=document.createElement('button');retry.type='button';retry.textContent='Try again';retry.addEventListener('click',()=>location.reload());content.append(retry);progressText.textContent='Unable to load story';}
 })();
 </script>
 </body>
