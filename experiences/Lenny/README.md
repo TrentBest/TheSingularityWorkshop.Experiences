@@ -11,21 +11,32 @@ This is a story presentation, not a game, ocean simulator, or environmental data
 ## Source material
 
 - [Source manuscript transcription](SourceManuscript.md)
+- [Structured reading sequence](story.json)
 - Original supplied source: `LENNY MANUSCRIPT.pdf` (35 pages)
 
-The transcription preserves the extracted wording and printed story-page order. The original PDF remains the authority for its page layout and illustrations. The PDF itself has not yet been added to this repository.
+The structured sequence is derived directly from the transcription: title, dedication, 33 numbered story pages, and closing page. The transcription preserves the extracted wording and printed story-page order. The original PDF remains the authority for its page layout and illustrations. The PDF itself has not yet been added to this repository.
 
-## First presentation slice
+## Runnable reading preview
 
-The initial reader should do only the following:
+Open [index.html](index.html) through a static HTTP server. From the repository root, for example:
 
-1. Present the title and dedication.
-2. Display one authored story page at a time, in the manuscript's original order.
-3. Let the reader move to the previous or next page.
-4. Show simple reading progress and a clear ending.
-5. Keep the text legible on desktop and mobile.
+```bash
+python -m http.server 8000
+```
 
-The page content must come from the source manuscript, not be paraphrased or regenerated. Preserve punctuation and wording. Do not add narration, lessons, facts, characters, or scenes that are not in the manuscript.
+Then visit `http://localhost:8000/experiences/Lenny/`.
+
+The reader currently provides:
+
+- Title and dedication pages.
+- One manuscript page at a time, followed by the original closing statement.
+- Previous/next buttons with bounded navigation.
+- Keyboard navigation with the left/right arrow keys.
+- Swipe navigation on touch screens.
+- Reading progress and adjustable text size.
+- Responsive layout and reduced-motion handling.
+
+The page reads its content from `story.json`; it does not embed a second copy of the manuscript in the HTML. This makes the authored sequence independently inspectable and keeps presentation separate from story content.
 
 ## Artwork and presentation direction
 
@@ -36,7 +47,7 @@ Therefore:
 - Do not reuse, imitate, or replace the original illustrations by assumption.
 - Do not generate finished illustrations or establish a visual style without the author's direction.
 - Keep the reader structure independent of its eventual artwork.
-- Until artwork is approved, use a restrained text-first presentation and label any temporary visual treatment as a placeholder.
+- The current interface is a restrained, text-first reading preview, not approved book artwork or a final visual design.
 
 ## Ownership boundary
 
@@ -46,9 +57,9 @@ The host owns browser/application lifecycle and navigation transport. Shared ren
 
 ## Current maturity
 
-**Source-preserved / presentation design.** The manuscript transcription is committed. A runnable reader, approved artwork, and host integration are not yet claimed.
+**Runnable static reading preview.** The manuscript transcription and structured page sequence are committed, and a browser reader can be served locally. This is not yet integrated into the Workshop WebPage host or a runtime-loaded Experience manifest. Approved artwork and the original PDF are not yet included.
 
-## Acceptance criteria for the first reader
+## Acceptance criteria for this slice
 
 - Every story page appears in the correct order.
 - Displayed wording matches the source transcription.
