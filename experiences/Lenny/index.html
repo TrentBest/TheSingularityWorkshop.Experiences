@@ -8,7 +8,7 @@
 <title>Little Lenny and the Big Ocean Problem</title>
 <style>
 :root{color-scheme:light;--ink:#26343a;--muted:#68777a;--paper:#fbfaf6;--line:#d8dedb;--accent:#477b83;font-family:Georgia,"Iowan Old Style","Palatino Linotype",serif}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#f0f1ed;color:var(--ink)}button{font:inherit}
+*{box-sizing:border-box}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}body{margin:0;min-height:100vh;background:#f0f1ed;color:var(--ink)}button{font:inherit}
 .shell{width:min(900px,calc(100% - 32px));margin:0 auto;padding:26px 0 38px}
 .topline{display:flex;justify-content:space-between;gap:12px;align-items:center;font:600 .72rem/1.3 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 main{margin:24px auto 0}.book{min-height:580px;background:var(--paper);border:1px solid var(--line);border-radius:5px;box-shadow:0 18px 55px #26343a12;display:flex;flex-direction:column;padding:clamp(26px,6vw,66px)}
@@ -35,8 +35,8 @@ button:hover:enabled{background:#edf3f0;border-color:var(--accent)}button:focus-
 <body>
 <div class="shell">
   <div class="topline"><span>The Singularity Workshop · Experiences</span><span>Reading preview</span></div>
-  <main>
-    <article class="book" aria-live="polite" aria-atomic="true">
+  <main id="main-content">
+    <article class="book">
       <header class="book-head"><span id="pageKind" class="page-kind">Story</span><span id="pageNumber" class="page-number"></span></header>
       <section id="pageContent" class="page-content"><p>Loading the manuscript…</p></section>
     </article>
@@ -46,6 +46,7 @@ button:hover:enabled{background:#edf3f0;border-color:var(--accent)}button:focus-
       <span id="progressText">Loading…</span>
       <button id="next" type="button" disabled>Next →</button>
     </nav>
+    <p id="pageAnnouncement" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
     <div class="tools" aria-label="Reading comfort"><button id="smaller" type="button" aria-label="Decrease text size">A−</button><button id="larger" type="button" aria-label="Increase text size">A+</button></div>
     <p class="hint">Use ← and → keys to turn pages. On touch screens, swipe to move between pages.</p>
   </main>
@@ -55,6 +56,7 @@ button:hover:enabled{background:#edf3f0;border-color:var(--accent)}button:focus-
   const content=document.getElementById('pageContent'),kind=document.getElementById('pageKind'),number=document.getElementById('pageNumber');
   const previous=document.getElementById('previous'),next=document.getElementById('next'),progressText=document.getElementById('progressText');
   const progressFill=document.getElementById('progressFill'),progress=document.getElementById('progress');
+  const announcement=document.getElementById('pageAnnouncement');
   let slides=[],index=0,fontScale=1;
   function paragraph(text){const p=document.createElement('p');p.textContent=text;return p}
   function render(){
@@ -68,13 +70,21 @@ button:hover:enabled{background:#edf3f0;border-color:var(--accent)}button:focus-
     previous.disabled=index===0;next.disabled=index===slides.length-1;
     progressText.textContent=(index+1)+' / '+slides.length;
     const pct=Math.round((index+1)/slides.length*100);progressFill.style.width=pct+'%';progress.setAttribute('aria-valuenow',String(pct));
-    document.title=(slide.title||slide.heading||slide.label)+' · Little Lenny';
+    const spokenLabel=slide.title||slide.heading||slide.label;
+    document.title=spokenLabel+' · Little Lenny';
+    announcement.textContent=spokenLabel+'. '+progressText.textContent+'.';
   }
   function move(delta){index=Math.max(0,Math.min(slides.length-1,index+delta));render()}
   previous.addEventListener('click',()=>move(-1));next.addEventListener('click',()=>move(1));
   document.getElementById('smaller').addEventListener('click',()=>{fontScale=Math.max(.85,fontScale-.1);render()});
   document.getElementById('larger').addEventListener('click',()=>{fontScale=Math.min(1.5,fontScale+.1);render()});
-  document.addEventListener('keydown',e=>{if(e.altKey||e.ctrlKey||e.metaKey)return;if(e.key==='ArrowLeft'){e.preventDefault();move(-1)}if(e.key==='ArrowRight'){e.preventDefault();move(1)}});
+  document.addEventListener('keydown',e=>{
+    if(e.altKey||e.ctrlKey||e.metaKey)return;
+    const target=e.target;
+    if(target instanceof Element && (target.closest('button, input, textarea, select, a, [contenteditable="true"]')))return;
+    if(e.key==='ArrowLeft'){e.preventDefault();move(-1)}
+    if(e.key==='ArrowRight'){e.preventDefault();move(1)}
+  });
   let touchX=null;document.querySelector('.book').addEventListener('touchstart',e=>{touchX=e.changedTouches[0].clientX},{passive:true});
   document.querySelector('.book').addEventListener('touchend',e=>{if(touchX===null)return;const dx=e.changedTouches[0].clientX-touchX;if(Math.abs(dx)>65)move(dx<0?1:-1);touchX=null},{passive:true});
   try{
