@@ -6,7 +6,7 @@ A small reading Experience built around the supplied children's story manuscript
 
 **[Read Little Lenny and the Big Ocean Problem](https://trentbest.github.io/TheSingularityWorkshop.Experiences/experiences/Lenny/)**
 
-The reader is published from the `development` branch by the manually triggered **Publish Lenny reading preview** workflow. If the link is not live yet, run that workflow from the repository's GitHub Actions tab. It publishes only the static reader and its `story.json` content.
+The reader is published from the `development` branch by the **Publish Lenny reading preview** workflow whenever that branch changes. It publishes only the static reader and its `story.json` content.
 
 ## Intent
 
