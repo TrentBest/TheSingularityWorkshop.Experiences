@@ -1,10 +1,28 @@
 # Little Lenny — Character and Visual Story Plan
 
-**Status:** Working visual-development brief derived from the manuscript. This is not approved final character artwork.
+**Status:** Source-art-grounded visual brief. The original manuscript PDF contains the author's existing illustrations; this document uses them as the primary continuity reference. New artwork remains a proposal until reviewed.
 
 ## Purpose
 
-Develop a coherent visual language for all 33 story pages without waiting for the original PDF and without silently inventing biographical details the manuscript does not provide. The manuscript remains authoritative for events, relationships, emotional turns, and sequence. This brief translates those facts into repeatable visual direction.
+Develop a coherent visual language for all 33 story pages by preserving and extending the artwork already supplied with the manuscript. The manuscript remains authoritative for events, relationships, emotional turns, and sequence. The original illustrations are the visual authority for established character appearance, props, palette, and rendering style; this brief translates that source material into repeatable direction.
+
+
+## Original artwork baseline
+
+The supplied source PDF, `LENNY MANUSCRIPT.pdf` (35 physical PDF pages), contains original illustrations on 29 of the 33 numbered story pages. The story occupies PDF pages 2–34; the closing statement follows on PDF page 35. The four story pages without embedded illustrations are 4, 13, 19, and 23. Their text-only treatment is part of the supplied edition; do not add filler art merely to make every page look uniform.
+
+The illustrations are not generic inspiration. They are the existing visual identity of this book and should be preserved as the baseline for any restoration, extraction, adaptation, or new illustration:
+
+- **Lenny:** blond, tousled hair; large expressive eyes; light-blue short-sleeved shirt; orange/rust shorts; childlike proportions; barefoot in the beach scenes. Preserve his recognizable face, hair silhouette, outfit colors, and small scale beside Dad.
+- **Dad:** medium-to-long brown hair, a mustache, tan/beige short-sleeved shirt, dark navy shorts, and a taller, broad build; barefoot in the beach scenes. Preserve the recognizable hair and facial-hair silhouette and his gentle, protective body language.
+- **Dolphins:** gray-blue to deep blue backs with lighter undersides, natural dolphin anatomy, expressive but animal-like faces, and coordinated pod movement. The lead dolphin's friendly head-above-water reveal and nose-toss gesture are recurring visual motifs.
+- **Beach and water:** warm pale-gold sand, turquoise-to-deep-blue ocean, bright sky, soft sunlit colors, and loose watercolor-like painted edges.
+- **Underwater scenes:** a cooler teal/blue environment with luminous water, coral and sea plants, and vivid marine life. Pollution is visible but the illustrations remain suitable for a children's book rather than graphic disaster imagery.
+- **Rendering:** soft-edged, painterly digital illustrations with simple readable silhouettes, expressive faces, and a gentle storybook finish. Avoid switching to photorealism, hard-edged vector art, or an unrelated visual style.
+
+The physical traits above are directly visible in the supplied source illustrations. They are no longer open design questions for this edition. The manuscript text itself does not specify those traits, so provenance should distinguish **manuscript fact** from **existing source-art design**. New visual proposals should match the source-art design unless the author explicitly chooses a redesign.
+
+The PDF remains a source reference, not a public-reader dependency. Do not expose the complete source PDF or private authoring materials through GitHub Pages by default. If individual illustrations are extracted for the reader, retain their source-page mapping and confirm that the selected image is the correct story page before publication.
 
 ## Canon, interpretation, and open design
 
@@ -30,9 +48,9 @@ Use three levels of certainty:
 - Keep the bucket, shovel, and small cleanup bag distinct props. The bag should remain visibly small beside the scale of the ocean problem.
 - His emotional arc is the visual anchor: curiosity → concern → enthusiasm → overwhelm → wonder → empathy → hopeful resolve.
 
-**Open design decisions**
-- Exact age, height, face shape, skin tone, hair, eye color, clothing, footwear, and any signature accessories are not specified. Do not lock these details as canon without author input.
-- Establish one repeatable model sheet once an author-approved design direction exists. Until then, use a deliberately simple, non-specific concept silhouette and record any temporary choices as provisional.
+**Still unspecified by the manuscript/source art**
+- Exact age, precise height, eye color, and detailed biographical traits remain unspecified. Do not infer them.
+- The existing source illustration is the model-sheet baseline. Any turnaround should faithfully derive from that design rather than invent a new appearance.
 
 ### Lenny's dad
 
@@ -46,8 +64,8 @@ Use three levels of certainty:
 - Repeat recognizable gestures: bending or kneeling to meet Lenny at eye level; a supportive arm or hand on the shoulder; protective reach near the water; carrying Lenny securely on his shoulders.
 - Keep his design visually stable across beach scenes and the underwater journey.
 
-**Open design decisions**
-- Exact age, build, face, hair, skin tone, clothing, footwear, and accessories are not specified. Do not infer a specific appearance or family resemblance as established fact.
+**Still unspecified by the manuscript/source art**
+- Exact age, precise height, eye color, and detailed biographical traits remain unspecified. Do not infer a specific appearance or family resemblance beyond what the supplied illustration visibly establishes.
 
 ### Dolphin and pod
 
@@ -63,12 +81,12 @@ Use three levels of certainty:
 - Make the protective bubble visually understandable and gentle; it should read as a safe space around Lenny and his dad.
 - The dolphin's repeated nose-toss gesture can become a recognizable visual motif.
 
-**Open design decisions**
-- Species-specific markings, exact coloration, individual identity marks, and pod size are not specified. Use naturalistic dolphin anatomy and keep any distinguishing marks provisional.
+**Still unspecified by the manuscript/source art**
+- Exact species, individual identity marks, and a definitive pod count are not established. Preserve the dolphin anatomy and gray-blue palette already shown; do not invent permanent markings as canon.
 
 ## Visual continuity rules
 
-1. Keep character proportions, face construction, hair, clothing, and props consistent from page to page once approved.
+1. Match the character proportions, face construction, hair, clothing, colors, and props visible in the original supplied illustrations; do not wait for a new approval cycle to preserve the existing design.
 2. Keep the beach geography coherent: shoreline, waterline, sand, horizon, and the family's relative position should not jump arbitrarily.
 3. Track the bucket and shovel in the opening beach play; track the trash bag from the cleanup onward. Do not teleport or multiply props.
 4. The trash bag begins as a practical small bag held by Dad; Lenny later carries it. Its scale helps communicate the difference between one child's effort and the size of the problem.
@@ -133,8 +151,8 @@ A future StoryBuilder project can hold the richer world bible and asset provenan
 
 ## Next visual-development slice
 
-1. Create a simple character turnaround for Lenny, Dad, and the lead dolphin using only neutral provisional design choices.
-2. Review the silhouettes and expressions against the story's emotional arc.
-3. Establish a small color and environment guide for beach, open water, and underwater scenes.
-4. Generate page illustrations from the page-by-page direction only after the character model is coherent.
-5. When the original PDF arrives, compare its layout and any useful visual references without treating it as a blocker or overriding the author's new direction.
+1. Build a source-art reference set from the existing illustrations, indexed to the 29 story pages that contain artwork; keep the four source text-only pages (4, 13, 19, and 23) intentionally unillustrated unless the author requests additions.
+2. Create character turnarounds and expression references by faithfully deriving them from the supplied Lenny, Dad, and dolphin artwork.
+3. Record the existing beach and underwater palettes, lighting, edge treatment, and illustration finish as reusable style guidance.
+4. Integrate original illustrations into the reader only after verifying each extracted image against its physical PDF page and printed story-page number; keep manuscript text as selectable HTML.
+5. Propose new artwork only for scenes that genuinely need it or where the author requests an alternative, and preserve the original source art and its provenance.
