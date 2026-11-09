@@ -101,7 +101,7 @@ These are scene descriptions and composition suggestions, not final image prompt
 | 5 | Dad explains the danger to sea life, water, and air. | Quiet explanatory moment; Dad and Lenny together, with the ocean present as the subject of their attention. |
 | 6 | Lenny decides to help and eagerly gathers litter for Dad's bag. | First energetic cleanup montage-like scene; show Lenny moving with purpose and Dad holding the bag. |
 | 7 | They finish the visible cleanup in that part of the beach. | A modest clean patch of beach; Lenny looks proud, not as if the entire ocean problem is solved. |
-| 8 | The next day, the family returns and the beach is littered again. | Echo page 1's beach composition, but with more people and scattered litter; contrast yesterday's effort. |
+| 8 | The next day, the family returns and the beach is littered again. | Begin with a relatively wide, welcoming view that echoes page 1. As Lenny notices the litter, guide the reader through deliberate pans and closer views of separate pieces of trash. Let each discovery register before moving to the next; then widen back out to reveal that the problem is spread across the beach. Return to Lenny's reaction so the scale of what he sees lands emotionally. Specific litter shown must be grounded in the manuscript or approved by the author. |
 | 9 | Lenny is discouraged and sits down; Dad kneels beside him. | Low, intimate framing; bucket and shovel dropped beside Lenny; Dad comes down to his level. |
 | 10 | Lenny worries; Dad comforts him and explains that small efforts add up. | Supportive two-shot with Dad's arm around Lenny; keep the ocean and beach visible but secondary. |
 | 11 | Lenny has an idea and urges Dad to tell everyone. | Lenny rises with renewed energy, open gesture toward beachgoers; Dad follows his lead. |
@@ -127,6 +127,20 @@ These are scene descriptions and composition suggestions, not final image prompt
 | 31 | Back at the beach, Lenny asks how they can help and looks at his small bag. | Return to familiar shoreline; Lenny's small bag contrasted with the remembered underwater scale. |
 | 32 | Dolphin returns with litter balanced on its nose and tosses it into the bag. | Playful callback to page 21; clear nose-balancing action, successful toss, fin wave, and dive. |
 | 33 | Lenny walks away smiling, carrying the bag and picking up litter. | Forward-moving closing image; Lenny's hopeful expression and continuing small actions lead the eye onward. |
+
+## Camera language: Lenny notices the beach-wide problem
+
+The author's direction for the page 8 realization is to use camera movement to guide the reader's discovery, rather than presenting all the litter as a single undifferentiated background.
+
+Provisional sequence for page 8:
+
+1. **Re-establish the beach:** open on a relatively wide composition that recalls the clean beach from the previous day and gives the reader a moment to share Lenny's expectation.
+2. **First discovery:** as Lenny stops and looks around, pan or reframe toward one visible piece of litter. Use a restrained closer view so the reader notices it with him.
+3. **Accumulate discoveries:** move to other separate pieces in different parts of the beach. Each pan or zoom should feel motivated by Lenny's searching gaze; give each discovery enough time to register.
+4. **Reveal the extent:** pull back to a wider view that makes clear the litter is not isolated to one spot. The beach is busy with people, while the trash has returned across the scene.
+5. **Return to Lenny:** bring the focus back to his response. The emotional effect comes from the contrast between yesterday's successful cleanup and the scale of what he now sees.
+
+Keep this visual rhythm patient and legible: no rapid montage, frantic camera movement, or spectacle. The camera follows Lenny's growing awareness. Do not add specific litter objects beyond what the manuscript establishes or the author approves. This is a visual staging proposal only; it does not add narration, alter page text, or establish final artwork. It remains provisional pending author review.
 
 ## StoryBuilder connection
 
