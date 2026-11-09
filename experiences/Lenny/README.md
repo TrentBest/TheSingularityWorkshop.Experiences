@@ -1,6 +1,6 @@
 # Little Lenny and the Big Ocean Problem
 
-A small reading Experience built around the supplied children's story manuscript.
+A shareable, illustrated reading Experience built around the supplied children's story manuscript.
 
 ## Read the story
 
@@ -39,6 +39,7 @@ The reader currently provides:
 
 - Title and dedication pages.
 - One manuscript page at a time, followed by the original closing statement.
+- A new original vector cover illustration and provisional scene illustrations for the beach cleanup, dolphin reveal, and underwater journey. These are first-pass visuals for author review, not final or approved artwork.
 - Previous/next buttons with bounded navigation.
 - Keyboard navigation with the left/right arrow keys.
 - Swipe navigation on touch screens.
@@ -79,7 +80,7 @@ The host owns browser/application lifecycle and navigation transport. Shared ren
 
 ## Current maturity
 
-**Runnable static text-reading preview; original visual development is in progress through StoryBuilder.** The manuscript transcription and structured page sequence are committed, and a browser reader can be served locally. The earlier concept illustrations are intentionally not part of the reader or production pipeline. New page illustrations will be created and approved through StoryBuilder. This is not yet integrated into the Workshop WebPage host or a runtime-loaded Experience manifest.
+**Runnable illustrated reading preview; original visual development is in progress.** The manuscript transcription and structured page sequence are committed, and a browser reader can be served locally. The new vector illustrations are an initial visual pass made for author review. They are not approved canon and can be freely revised or replaced. The earlier concept illustrations remain excluded from the reader and production pipeline. This is not yet integrated into the Workshop WebPage host or a runtime-loaded Experience manifest.
 
 ## Acceptance criteria for this slice
 
