@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f4ef">
+<meta name="description" content="A provisional presentation study for page 21 of Little Lenny and the Big Ocean Problem.">
+<title>Page 21 — Presentation Study · Little Lenny</title>
+<style>
+:root{color-scheme:light;--ink:#26343a;--muted:#68777a;--paper:#fbfaf6;--line:#d8dedb;--sea:#477b83;font-family:Georgia,"Iowan Old Style","Palatino Linotype",serif}
+*{box-sizing:border-box}body{margin:0;background:#eef0ec;color:var(--ink)}button{font:600 .9rem/1.2 system-ui,sans-serif}
+.shell{width:min(1080px,calc(100% - 32px));margin:0 auto;padding:28px 0 48px}
+header{display:flex;justify-content:space-between;gap:16px;align-items:center;font:600 .72rem/1.4 system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(2rem,5vw,3.6rem);font-weight:400;letter-spacing:-.04em;line-height:1.05;margin:32px 0 10px}
+.intro{max-width:720px;color:var(--muted);font:1rem/1.6 system-ui,sans-serif}
+.study-note{margin:24px 0;padding:12px 16px;border-left:3px solid var(--sea);background:#e5eeeb;font: .88rem/1.5 system-ui,sans-serif}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 14px}
+button{border:1px solid #b8c6c2;background:#fff;color:var(--ink);border-radius:4px;padding:11px 15px;cursor:pointer}
+button[aria-pressed=true]{background:#dce9e6;border-color:var(--sea);box-shadow:inset 0 -2px var(--sea)}
+button:focus-visible{outline:3px solid var(--sea);outline-offset:3px}
+.stage{min-height:480px;background:var(--paper);border:1px solid var(--line);border-radius:5px;box-shadow:0 18px 55px #26343a12;padding:clamp(24px,6vw,72px);display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.stage:before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,#b7d2ce,#477b83,#b7d2ce);opacity:.8}
+.meta{font:600 .72rem/1.4 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--sea);margin-bottom:28px}
+.copy{max-width:760px;margin:0 auto;width:100%;font-size:clamp(1.15rem,2.3vw,1.55rem);line-height:1.75}
+.copy p{margin:0 0 1.35em}.copy p:last-child{margin-bottom:0}
+.stage.quiet .copy p:first-child{font-size:1.35em;line-height:1.45}
+.stage.quiet .copy p:nth-child(2){max-width:620px;margin:2.5em auto;text-align:center}
+.stage.horizon{background:linear-gradient(180deg,#f7f8f4 0%,#fbfaf6 62%)}
+.stage.horizon .meta{text-align:center}
+.stage.horizon .copy{text-align:center;max-width:680px}
+.stage.horizon .copy p:first-child{font-size:clamp(1.6rem,4vw,2.5rem);line-height:1.25}
+.stage.horizon .copy p:nth-child(2){margin:2em auto;max-width:580px}
+.stage.horizon .copy p:nth-child(3){max-width:700px;margin:0 auto 1.5em}
+.stage.horizon .copy p:last-child{font-style:italic;color:#53686b}
+.stage.sequence .copy p{padding-left:1.1em;border-left:2px solid #d8e5e1}
+.stage.sequence .copy p+p{margin-top:1.4em}
+.footer{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-top:14px;color:var(--muted);font: .8rem/1.5 system-ui,sans-serif}
+@keyframes arrive{from{opacity:.35;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.stage.animate .copy{animation:arrive .45s ease both}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(max-width:600px){.shell{width:calc(100% - 20px);padding-top:16px}.stage{min-height:560px;padding:26px 22px}.footer{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header><span>The Singularity Workshop · Experiences</span><span>Provisional study · Page 21</span></header>
+<main>
+<h1>The dolphin reveal</h1>
+<p class="intro">Three ways to pace and compose the same manuscript moment. These are presentation experiments—not new story text, character designs, illustrations, or approved visual direction.</p>
+<p class="study-note"><strong>Artwork status:</strong> intentionally absent. The previous concept illustrations are excluded. No character appearance, palette, or visual style is being inferred here.</p>
+<div class="toolbar" role="group" aria-label="Choose a page 21 presentation">
+<button type="button" data-mode="sequence" aria-pressed="true">1 · Beat by beat</button>
+<button type="button" data-mode="quiet" aria-pressed="false">2 · Shared wonder</button>
+<button type="button" data-mode="horizon" aria-pressed="false">3 · Open horizon</button>
+</div>
+<section id="stage" class="stage sequence animate" aria-labelledby="page-label">
+<div id="page-label" class="meta">Page 21 · Beat by beat</div>
+<div id="copy" class="copy" aria-live="polite"><p>Loading the exact manuscript text…</p></div>
+</section>
+<div class="footer"><span id="description">Each paragraph remains in the author's original order and wording.</span><span>Page 21 of 33 · Text-only study</span></div>
+</main>
+</div>
+<script>
+(async function(){
+  const stage=document.getElementById('stage'),copy=document.getElementById('copy'),label=document.getElementById('page-label'),description=document.getElementById('description');
+  const modes={
+    sequence:{name:'Beat by beat',className:'sequence',description:'Clear paragraph beats with generous pauses; the reader controls the pace.'},
+    quiet:{name:'Shared wonder',className:'quiet',description:'A quieter two-part rhythm gives the moment of shared amazement more breathing room.'},
+    horizon:{name:'Open horizon',className:'horizon',description:'A more open, centered composition lets the dolphin reveal feel spacious without adding imagery.'}
+  };
+  function select(mode){
+    const option=modes[mode];if(!option)return;
+    stage.className='stage '+option.className+' animate';
+    label.textContent='Page 21 · '+option.name;
+    description.textContent=option.description;
+    document.querySelectorAll('[data-mode]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.mode===mode)));
+  }
+  document.querySelectorAll('[data-mode]').forEach(button=>button.addEventListener('click',()=>select(button.dataset.mode)));
+  try{
+    const response=await fetch('./story.json');if(!response.ok)throw new Error('Story data unavailable');
+    const story=await response.json(),page=story.pages.find(item=>item.number===21);
+    if(!page)throw new Error('Page 21 was not found');
+    copy.replaceChildren();
+    page.paragraphs.forEach(text=>{const p=document.createElement('p');p.textContent=text;copy.append(p)});
+  }catch(error){
+    copy.textContent='The exact page text could not be loaded. Open this study through the Lenny reader’s static HTTP server.';
+  }
+})();
+</script>
+</body>
+</html>
