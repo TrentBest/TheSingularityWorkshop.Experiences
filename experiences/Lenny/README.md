@@ -49,7 +49,7 @@ The page reads its content from `story.json`; it does not embed a second copy of
 
 ## Author review path
 
-Open the [guided author-review path](review.html) to move through the provisional presentation studies in story order: the first discouragement (pages 9–10), the second discouragement and transition (pages 15–20), the dolphin reveal (page 21), and the underwater discovery and empathy (pages 26–30). It links to the existing text-only studies and provides focused questions for author feedback. No approach is treated as approved until the author says so. This page does not change the manuscript, structured story data, or reading experience.
+Open the [guided author-review path](review.html) to move through the provisional presentation studies in story order: Lenny's beach-wide realization (page 8), the first discouragement (pages 9–10), the second discouragement and transition (pages 15–20), the dolphin reveal (page 21), and the underwater discovery and empathy (pages 26–30). It links to the existing text-only studies and provides focused questions for author feedback. No approach is treated as approved until the author says so. This page does not change the manuscript, structured story data, or reading experience.
 
 ## Page 8 beach-discovery study
 
