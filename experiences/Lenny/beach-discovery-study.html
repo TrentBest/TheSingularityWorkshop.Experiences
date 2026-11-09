@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f4ef">
+<meta name="description" content="A provisional text-only camera and pacing study for Lenny's page 8 realization.">
+<title>The Beach Discovery · Little Lenny</title>
+<style>
+:root{color-scheme:light;--ink:#26343a;--muted:#68777a;--paper:#fbfaf6;--line:#d8dedb;--sea:#477b83;font-family:Georgia,"Iowan Old Style","Palatino Linotype",serif}
+*{box-sizing:border-box}body{margin:0;background:#eef0ec;color:var(--ink)}button{font:600 .9rem/1.2 system-ui,sans-serif}
+.shell{width:min(1080px,calc(100% - 32px));margin:0 auto;padding:28px 0 48px}
+header{display:flex;justify-content:space-between;gap:16px;align-items:center;font:600 .72rem/1.4 system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(2rem,5vw,3.6rem);font-weight:400;letter-spacing:-.04em;line-height:1.05;margin:32px 0 10px}
+.intro{max-width:760px;color:var(--muted);font:1rem/1.6 system-ui,sans-serif}
+.note{margin:24px 0;padding:12px 16px;border-left:3px solid var(--sea);background:#e5eeeb;font:.88rem/1.5 system-ui,sans-serif}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 14px}
+button{border:1px solid #b8c6c2;background:#fff;color:var(--ink);border-radius:4px;padding:11px 15px;cursor:pointer}
+button[aria-pressed=true]{background:#dce9e6;border-color:var(--sea);box-shadow:inset 0 -2px var(--sea)}
+button:focus-visible{outline:3px solid var(--sea);outline-offset:3px}
+.stage{background:var(--paper);border:1px solid var(--line);border-radius:5px;box-shadow:0 18px 55px #26343a12;padding:clamp(22px,5vw,56px)}
+.meta{font:600 .72rem/1.4 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--sea);margin-bottom:18px}
+.beats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:20px 0 34px}
+.beat{border:1px solid var(--line);background:#f2f4f0;padding:14px 12px;min-height:150px}
+.beat b{display:block;font:600 .7rem/1.4 system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--sea);margin-bottom:10px}
+.beat p{font: .9rem/1.55 system-ui,sans-serif;margin:0}
+.copy{max-width:760px;margin:0 auto;width:100%;font-size:clamp(1.12rem,2.2vw,1.42rem);line-height:1.75}
+.copy p{margin:0 0 1.5em}.copy p:last-child{margin-bottom:0}
+.footer{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-top:14px;color:var(--muted);font:.8rem/1.5 system-ui,sans-serif}
+@media(max-width:760px){.beats{grid-template-columns:1fr 1fr}.beat:last-child{grid-column:1/-1}}
+@media(max-width:520px){.shell{width:calc(100% - 20px);padding-top:16px}.beats{grid-template-columns:1fr}.beat,.beat:last-child{grid-column:auto;min-height:0}.footer{align-items:flex-start;flex-direction:column}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header><span>The Singularity Workshop · Experiences</span><span>Provisional study · Page 8</span></header>
+<main>
+<h1>The beach discovery</h1>
+<p class="intro">A text-only camera and pacing study for the moment Lenny returns expecting the beach to be clean and realizes the trash is back. The question is how the reader discovers the scale of the problem alongside him.</p>
+<p class="note"><strong>Artwork status:</strong> no images or placeholders are used. The previous concept illustrations remain excluded. Camera beats are staging proposals only; no particular litter objects, character appearance, palette, or visual style are invented. The manuscript wording below is loaded directly from <code>story.json</code>.</p>
+<div class="controls" role="group" aria-label="Choose a camera approach">
+<button type="button" data-mode="measured" aria-pressed="true">1 · Measured discovery</button>
+<button type="button" data-mode="gaze" aria-pressed="false">2 · Follow Lenny’s gaze</button>
+<button type="button" data-mode="reveal" aria-pressed="false">3 · Wide reveal</button>
+</div>
+<section class="stage" aria-labelledby="study-label">
+<div id="study-label" class="meta">Page 8 · Measured discovery</div>
+<div id="beats" class="beats" aria-live="polite">
+<div class="beat"><b>01 · Establish</b><p>Wide beach view, echoing the opening page.</p></div>
+<div class="beat"><b>02 · Notice</b><p>Move closer to the first visible piece of litter.</p></div>
+<div class="beat"><b>03 · Search</b><p>Pan to separate discoveries; pause at each.</p></div>
+<div class="beat"><b>04 · Understand</b><p>Pull back to show the litter across the beach.</p></div>
+<div class="beat"><b>05 · Feel</b><p>Return to Lenny and let his reaction carry the moment.</p></div>
+</div>
+<div id="copy" class="copy" aria-live="polite"><p>Loading the exact manuscript text…</p></div>
+</section>
+<div class="footer"><span id="description">A patient sequence; each discovery has time to register.</span><span>Page 8 of 33 · Text-only study</span></div>
+</main>
+</div>
+<script>
+(async function(){
+ const beats=document.getElementById('beats'),copy=document.getElementById('copy'),label=document.getElementById('study-label'),description=document.getElementById('description');
+ const modes={
+  measured:{name:'Measured discovery',description:'A patient sequence; each discovery has time to register.',steps:[['01 · Establish','Wide beach view, echoing the opening page.'],['02 · Notice','Move closer to the first visible piece of litter.'],['03 · Search','Pan to separate discoveries; pause at each.'],['04 · Understand','Pull back to show the litter across the beach.'],['05 · Feel','Return to Lenny and let his reaction carry the moment.']]},
+  gaze:{name:'Follow Lenny’s gaze',description:'Each camera move is motivated by where Lenny looks; the reader discovers only what he notices.',steps:[['01 · Expect','Begin wide as Lenny runs toward the familiar beach.'],['02 · Stop','Hold when Lenny suddenly stops.'],['03 · Look','Follow his gaze to one discovery, then another.'],['04 · Connect','Use the direction of his looks to reveal more of the beach.'],['05 · Respond','Return to Lenny after the wider extent becomes clear.']]},
+  reveal:{name:'Wide reveal',description:'Keep the early movement restrained, then make the scale legible with one deliberate pullback.',steps:[['01 · Return','Re-establish the beach in a welcoming wide view.'],['02 · Interrupt','Frame Lenny stopping and looking around.'],['03 · Detail','Briefly move closer to a few separate discoveries.'],['04 · Expand','Pull back in one clear move to reveal the extent.'],['05 · Stay','Hold on Lenny’s response rather than adding more spectacle.']]}
+ };
+ function render(mode){
+  const m=modes[mode];label.textContent='Page 8 · '+m.name;description.textContent=m.description;
+  document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
+  beats.replaceChildren();m.steps.forEach(([title,body])=>{const article=document.createElement('article');article.className='beat';const b=document.createElement('b');b.textContent=title;const p=document.createElement('p');p.textContent=body;article.append(b,p);beats.append(article)});
+ }
+ document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>render(b.dataset.mode)));
+ try{const response=await fetch('./story.json');if(!response.ok)throw new Error();const story=await response.json();const page=story.pages.find(p=>p.number===8);copy.replaceChildren();page.paragraphs.forEach(text=>{const p=document.createElement('p');p.textContent=text;copy.append(p)});render('measured')}
+ catch(error){copy.textContent='The exact story text could not be loaded. Open this study through the Lenny reader’s static HTTP server.'}
+})();
+</script>
+</body>
+</html>
