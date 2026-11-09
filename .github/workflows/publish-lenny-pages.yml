@@ -27,6 +27,7 @@ jobs:
           mkdir -p _site/experiences/Lenny
           cp experiences/Lenny/index.html _site/experiences/Lenny/index.html
           cp experiences/Lenny/story.json _site/experiences/Lenny/story.json
+          cp -R experiences/Lenny/visuals _site/experiences/Lenny/visuals
           cat > _site/index.html <<'EOF'
           <!doctype html>
           <html lang="en">
