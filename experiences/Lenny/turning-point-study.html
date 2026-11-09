@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f4ef">
+<meta name="description" content="A provisional text-only pacing study for the turning point on pages 15–20 of Little Lenny and the Big Ocean Problem.">
+<title>The Turning Point · Little Lenny</title>
+<style>
+:root{color-scheme:light;--ink:#26343a;--muted:#68777a;--paper:#fbfaf6;--line:#d8dedb;--sea:#477b83;font-family:Georgia,"Iowan Old Style","Palatino Linotype",serif}
+*{box-sizing:border-box}body{margin:0;background:#eef0ec;color:var(--ink)}button{font:600 .9rem/1.2 system-ui,sans-serif}
+.shell{width:min(1080px,calc(100% - 32px));margin:0 auto;padding:28px 0 48px}
+header{display:flex;justify-content:space-between;gap:16px;align-items:center;font:600 .72rem/1.4 system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(2rem,5vw,3.6rem);font-weight:400;letter-spacing:-.04em;line-height:1.05;margin:32px 0 10px}
+.intro{max-width:760px;color:var(--muted);font:1rem/1.6 system-ui,sans-serif}
+.note{margin:24px 0;padding:12px 16px;border-left:3px solid var(--sea);background:#e5eeeb;font:.88rem/1.5 system-ui,sans-serif}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 14px}
+button{border:1px solid #b8c6c2;background:#fff;color:var(--ink);border-radius:4px;padding:11px 15px;cursor:pointer}
+button[aria-pressed=true]{background:#dce9e6;border-color:var(--sea);box-shadow:inset 0 -2px var(--sea)}
+button:focus-visible{outline:3px solid var(--sea);outline-offset:3px}
+.stage{min-height:460px;background:var(--paper);border:1px solid var(--line);border-radius:5px;box-shadow:0 18px 55px #26343a12;padding:clamp(24px,6vw,72px);display:flex;flex-direction:column;justify-content:center}
+.meta{font:600 .72rem/1.4 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--sea);margin-bottom:28px}
+.copy{max-width:760px;margin:0 auto;width:100%;font-size:clamp(1.12rem,2.2vw,1.48rem);line-height:1.75}
+.copy p{margin:0 0 1.5em}.copy p:last-child{margin-bottom:0}
+.stage.stillness .copy p:nth-child(odd){max-width:680px}
+.stage.stillness .copy p:nth-child(even){max-width:620px;margin-left:auto;font-style:italic}
+.stage.support .copy p:first-child{max-width:620px;margin:0 auto 2.2em}
+.stage.support .copy p:last-child{text-align:center;max-width:640px;font-size:1.2em}
+.stage.interruption .copy p{padding:1em 1.2em;border-left:2px solid #c7d9d4;background:#f3f6f2;margin-bottom:1em}
+.stage.interruption .copy p:nth-child(even){margin-left:clamp(0px,5vw,48px)}
+.stage.suspense .copy p:first-child{font-size:1.3em;line-height:1.5;text-align:center}
+.stage.suspense .copy p:last-child{max-width:650px;margin:2.5em auto 0;text-align:center}
+.footer{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-top:14px;color:var(--muted);font:.8rem/1.5 system-ui,sans-serif}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important}}
+@media(max-width:600px){.shell{width:calc(100% - 20px);padding-top:16px}.stage{min-height:560px;padding:26px 22px}.footer{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header><span>The Singularity Workshop · Experiences</span><span>Provisional study · Pages 15–20</span></header>
+<main>
+<h1>The turning point</h1>
+<p class="intro">A text-only pacing study of Lenny’s second discouragement, Dad’s attempt to comfort him, and the first surprising interruption that leads into the dolphin reveal.</p>
+<p class="note"><strong>Artwork status:</strong> intentionally absent. The excluded concept illustrations are not used. No character appearance, animal markings, species details, palette, or visual style is inferred. Every paragraph is loaded from the canonical story data.</p>
+<div class="controls" role="group" aria-label="Choose a passage">
+<button type="button" data-scene="despair" aria-pressed="true">Pages 15–18 · Discouragement</button>
+<button type="button" data-scene="shift" aria-pressed="false">Pages 19–20 · The interruption</button>
+</div>
+<div class="controls" role="group" aria-label="Choose a presentation approach">
+<button type="button" data-mode="stillness" aria-pressed="true">1 · Let the silence sit</button>
+<button type="button" data-mode="support" aria-pressed="false">2 · Stay with Dad’s support</button>
+<button type="button" data-mode="interruption" aria-pressed="false" hidden>1 · One event at a time</button>
+<button type="button" data-mode="suspense" aria-pressed="false" hidden>2 · Build the question</button>
+</div>
+<section id="stage" class="stage stillness" aria-labelledby="page-label">
+<div id="page-label" class="meta">Pages 15–18 · Let the silence sit</div>
+<div id="copy" class="copy" aria-live="polite"><p>Loading the exact manuscript text…</p></div>
+</section>
+<div class="footer"><span id="description">The author's paragraph order and wording are preserved.</span><span id="page-count">Pages 15–18 of 33 · Text-only study</span></div>
+</main>
+</div>
+<script>
+(async function(){
+  const stage=document.getElementById('stage'),copy=document.getElementById('copy'),label=document.getElementById('page-label'),description=document.getElementById('description'),pageCount=document.getElementById('page-count');
+  let story=null,scene='despair',mode='stillness';
+  const options={
+    stillness:{name:'Let the silence sit',description:'Allow the hopelessness and Lenny’s quiet defeat to register without rushing to resolve them.',className:'stillness'},
+    support:{name:'Stay with Dad’s support',description:'Keep Dad’s reassurance and his effort to comfort Lenny together as the emotional center of this passage.',className:'support'},
+    interruption:{name:'One event at a time',description:'Separate the first can, Lenny’s response, and the next arrivals into clear beats.',className:'interruption'},
+    suspense:{name:'Build the question',description:'Let the repeated arrivals lead into the turn toward the ocean, without adding an explanation before the manuscript gives one.',className:'suspense'}
+  };
+  const sceneButtons=[...document.querySelectorAll('[data-scene]')],modeButtons=[...document.querySelectorAll('[data-mode]')];
+  function render(){
+    const isDespair=scene==='despair',chosen=options[mode];
+    stage.className='stage '+chosen.className;
+    label.textContent=(isDespair?'Pages 15–18':'Pages 19–20')+' · '+chosen.name;
+    description.textContent=chosen.description;
+    pageCount.textContent=isDespair?'Pages 15–18 of 33 · Text-only study':'Pages 19–20 of 33 · Text-only study';
+    sceneButtons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.scene===scene)));
+    modeButtons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
+    copy.replaceChildren();
+    const numbers=isDespair?[15,16,17,18]:[19,20];
+    numbers.forEach(number=>{
+      const page=story.pages.find(p=>p.number===number);
+      if(page)page.paragraphs.forEach(text=>{const p=document.createElement('p');p.textContent=text;copy.append(p)});
+    });
+  }
+  function updateModes(){
+    modeButtons.forEach(b=>b.hidden=scene==='despair'?!['stillness','support'].includes(b.dataset.mode):!['interruption','suspense'].includes(b.dataset.mode));
+  }
+  sceneButtons.forEach(button=>button.addEventListener('click',()=>{
+    scene=button.dataset.scene;mode=scene==='despair'?'stillness':'interruption';updateModes();render();
+  }));
+  modeButtons.forEach(button=>button.addEventListener('click',()=>{
+    const requested=button.dataset.mode;
+    if((scene==='despair'&&['stillness','support'].includes(requested))||(scene==='shift'&&['interruption','suspense'].includes(requested))){mode=requested;render();}
+  }));
+  try{
+    const response=await fetch('./story.json');if(!response.ok)throw new Error('Story data unavailable');
+    story=await response.json();updateModes();render();
+  }catch(error){copy.textContent='The exact story text could not be loaded. Open this study through the Lenny reader’s static HTTP server.';}
+})();
+</script>
+</body>
+</html>
