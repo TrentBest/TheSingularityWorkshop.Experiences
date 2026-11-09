@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f4ef">
+<meta name="description" content="A provisional text-only pacing study for the discouragement and underwater discovery sequences in Little Lenny and the Big Ocean Problem.">
+<title>Emotional Arc Study · Little Lenny</title>
+<style>
+:root{color-scheme:light;--ink:#26343a;--muted:#68777a;--paper:#fbfaf6;--line:#d8dedb;--sea:#477b83;font-family:Georgia,"Iowan Old Style","Palatino Linotype",serif}
+*{box-sizing:border-box}body{margin:0;background:#eef0ec;color:var(--ink)}button{font:600 .9rem/1.2 system-ui,sans-serif}
+.shell{width:min(1080px,calc(100% - 32px));margin:0 auto;padding:28px 0 48px}
+header{display:flex;justify-content:space-between;gap:16px;align-items:center;font:600 .72rem/1.4 system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(2rem,5vw,3.6rem);font-weight:400;letter-spacing:-.04em;line-height:1.05;margin:32px 0 10px}
+.intro{max-width:760px;color:var(--muted);font:1rem/1.6 system-ui,sans-serif}
+.note{margin:24px 0;padding:12px 16px;border-left:3px solid var(--sea);background:#e5eeeb;font:.88rem/1.5 system-ui,sans-serif}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 14px}
+button{border:1px solid #b8c6c2;background:#fff;color:var(--ink);border-radius:4px;padding:11px 15px;cursor:pointer}
+button[aria-pressed=true]{background:#dce9e6;border-color:var(--sea);box-shadow:inset 0 -2px var(--sea)}
+button:focus-visible{outline:3px solid var(--sea);outline-offset:3px}
+.scene-tabs{margin-bottom:10px}
+.stage{min-height:460px;background:var(--paper);border:1px solid var(--line);border-radius:5px;box-shadow:0 18px 55px #26343a12;padding:clamp(24px,6vw,72px);display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.stage:before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,#b7d2ce,#477b83,#b7d2ce);opacity:.8}
+.meta{font:600 .72rem/1.4 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--sea);margin-bottom:28px}
+.copy{max-width:760px;margin:0 auto;width:100%;font-size:clamp(1.12rem,2.2vw,1.48rem);line-height:1.75}
+.copy p{margin:0 0 1.5em}.copy p:last-child{margin-bottom:0}
+.stage.comfort .copy p{max-width:700px;margin-left:auto;margin-right:auto}
+.stage.comfort .copy p:nth-child(2){padding-left:1.2em;border-left:2px solid #c7d9d4}
+.stage.comfort .copy p:last-child{font-size:1.12em;font-style:italic;text-align:center;margin-top:2em}
+.stage.reassure{background:linear-gradient(180deg,#f7f8f4,#fbfaf6)}
+.stage.reassure .copy p:first-child{max-width:620px;margin:0 auto 2.5em}
+.stage.reassure .copy p:nth-child(2){max-width:700px;margin:0 auto 2em}
+.stage.reassure .copy p:last-child{text-align:center;max-width:620px;margin:0 auto;font-size:1.25em;line-height:1.5}
+.stage.descent .copy p{padding:1.1em 1.2em;border-left:2px solid #c7d9d4;background:#f4f6f1;margin-bottom:1em}
+.stage.descent .copy p:nth-child(even){margin-left:clamp(0px,5vw,48px)}
+.stage.descent .copy p:nth-child(odd){margin-right:clamp(0px,5vw,48px)}
+.stage.empathy .copy p{text-align:center;max-width:680px;margin:0 auto 2em}
+.stage.empathy .copy p:nth-child(1){font-size:1.3em}
+.stage.empathy .copy p:nth-child(2){font-size:1.12em}
+.stage.empathy .copy p:nth-child(3){font-style:italic;color:#53686b}
+.footer{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-top:14px;color:var(--muted);font:.8rem/1.5 system-ui,sans-serif}
+@keyframes arrive{from{opacity:.35;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.stage.animate .copy{animation:arrive .4s ease both}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(max-width:600px){.shell{width:calc(100% - 20px);padding-top:16px}.stage{min-height:560px;padding:26px 22px}.footer{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header><span>The Singularity Workshop · Experiences</span><span>Provisional study · Pages 9–10, 26–30</span></header>
+<main>
+<h1>From discouragement to empathy</h1>
+<p class="intro">A text-only pacing study of two important movements in Lenny’s emotional journey: his worry that the problem is too large, and the underwater journey that lets him and Dad understand what the sea life is experiencing.</p>
+<p class="note"><strong>Artwork status:</strong> intentionally absent. The excluded concept illustrations are not used. No character appearance, animal markings, species details, palette, or visual style is inferred. All wording is loaded from the canonical story data.</p>
+<div class="controls scene-tabs" role="group" aria-label="Choose a story sequence">
+<button type="button" data-scene="shore" aria-pressed="true">Pages 9–10 · Discouragement</button>
+<button type="button" data-scene="ocean" aria-pressed="false">Pages 26–30 · Underwater discovery</button>
+</div>
+<div class="controls" role="group" aria-label="Choose a presentation approach">
+<button type="button" data-mode="comfort" aria-pressed="true">1 · Quiet support</button>
+<button type="button" data-mode="reassure" aria-pressed="false">2 · Reassurance builds</button>
+</div>
+<section id="stage" class="stage comfort" aria-labelledby="page-label">
+<div id="page-label" class="meta">Pages 9–10 · Quiet support</div>
+<div id="copy" class="copy" aria-live="polite"><p>Loading the exact manuscript text…</p></div>
+</section>
+<div class="footer"><span id="description">The original paragraph order and wording are preserved.</span><span id="page-count">Pages 9–10 of 33 · Text-only study</span></div>
+</main>
+</div>
+<script>
+(async function(){
+  const stage=document.getElementById('stage'),copy=document.getElementById('copy'),label=document.getElementById('page-label'),description=document.getElementById('description'),pageCount=document.getElementById('page-count');
+  let story=null,scene='shore',mode='comfort';
+  const options={
+    comfort:{name:'Quiet support',description:'Keep Lenny’s discouragement close and let Dad’s physical reassurance read as a gentle response.',className:'comfort'},
+    reassure:{name:'Reassurance builds',description:'Give Lenny’s worry, Dad’s explanation, and the closing thought distinct pauses so the emotional turn can unfold.',className:'reassure'},
+    descent:{name:'Discovery sequence',description:'Let each underwater environment arrive as its own discovery, preserving the manuscript’s page-by-page progression.',className:'descent'},
+    empathy:{name:'Shared empathy',description:'Give the emotional recognition at the end of the sequence a quieter, more spacious reading moment.',className:'empathy'}
+  };
+  const sceneButtons=[...document.querySelectorAll('[data-scene]')],modeButtons=[...document.querySelectorAll('[data-mode]')];
+  function render(){
+    const isShore=scene==='shore',chosen=options[mode];
+    stage.className='stage '+chosen.className+' animate';
+    label.textContent=(isShore?'Pages 9–10':'Pages 26–30')+' · '+chosen.name;
+    description.textContent=chosen.description;
+    pageCount.textContent=isShore?'Pages 9–10 of 33 · Text-only study':'Pages 26–30 of 33 · Text-only study';
+    sceneButtons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.scene===scene)));
+    modeButtons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
+    copy.replaceChildren();
+    const numbers=isShore?[9,10]:[26,27,28,29,30];
+    numbers.forEach(number=>{
+      const page=story.pages.find(p=>p.number===number);
+      if(!page)return;
+      page.paragraphs.forEach(text=>{
+        const p=document.createElement('p');p.textContent=text;copy.append(p);
+      });
+    });
+  }
+  sceneButtons.forEach(button=>button.addEventListener('click',()=>{
+    scene=button.dataset.scene;mode=scene==='shore'?'comfort':'descent';render();
+    modeButtons.forEach(b=>b.hidden=scene==='ocean'?false:false);
+  }));
+  modeButtons.forEach(button=>button.addEventListener('click',()=>{
+    const requested=button.dataset.mode;
+    if(scene==='shore'&&(requested==='comfort'||requested==='reassure'))mode=requested;
+    if(scene==='ocean'&&(requested==='descent'||requested==='empathy'))mode=requested;
+    render();
+  }));
+  try{
+    const response=await fetch('./story.json');if(!response.ok)throw new Error('Story data unavailable');
+    story=await response.json();render();
+    modeButtons.forEach(b=>b.hidden=(scene==='shore'?!['comfort','reassure'].includes(b.dataset.mode):!['descent','empathy'].includes(b.dataset.mode)));
+    sceneButtons.forEach(button=>button.addEventListener('click',()=>{
+      mode=scene==='shore'?'comfort':'descent';
+      modeButtons.forEach(b=>b.hidden=(scene==='shore'?!['comfort','reassure'].includes(b.dataset.mode):!['descent','empathy'].includes(b.dataset.mode)));
+      render();
+    }));
+  }catch(error){
+    copy.textContent='The exact story text could not be loaded. Open this study through the Lenny reader’s static HTTP server.';
+  }
+})();
+</script>
+</body>
+</html>
