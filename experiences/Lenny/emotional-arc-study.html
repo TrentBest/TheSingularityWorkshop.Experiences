@@ -59,6 +59,8 @@ button:focus-visible{outline:3px solid var(--sea);outline-offset:3px}
 <div class="controls" role="group" aria-label="Choose a presentation approach">
 <button type="button" data-mode="comfort" aria-pressed="true">1 · Quiet support</button>
 <button type="button" data-mode="reassure" aria-pressed="false">2 · Reassurance builds</button>
+<button type="button" data-mode="descent" aria-pressed="false" hidden>1 · Discovery sequence</button>
+<button type="button" data-mode="empathy" aria-pressed="false" hidden>2 · Shared empathy</button>
 </div>
 <section id="stage" class="stage comfort" aria-labelledby="page-label">
 <div id="page-label" class="meta">Pages 9–10 · Quiet support</div>
@@ -97,24 +99,19 @@ button:focus-visible{outline:3px solid var(--sea);outline-offset:3px}
     });
   }
   sceneButtons.forEach(button=>button.addEventListener('click',()=>{
-    scene=button.dataset.scene;mode=scene==='shore'?'comfort':'descent';render();
-    modeButtons.forEach(b=>b.hidden=scene==='ocean'?false:false);
+    scene=button.dataset.scene;mode=scene==='shore'?'comfort':'descent';
+    modeButtons.forEach(b=>b.hidden=scene==='shore'?!['comfort','reassure'].includes(b.dataset.mode):!['descent','empathy'].includes(b.dataset.mode));
+    render();
   }));
   modeButtons.forEach(button=>button.addEventListener('click',()=>{
     const requested=button.dataset.mode;
-    if(scene==='shore'&&(requested==='comfort'||requested==='reassure'))mode=requested;
-    if(scene==='ocean'&&(requested==='descent'||requested==='empathy'))mode=requested;
-    render();
+    if((scene==='shore'&&['comfort','reassure'].includes(requested))||(scene==='ocean'&&['descent','empathy'].includes(requested))){mode=requested;render();}
   }));
   try{
     const response=await fetch('./story.json');if(!response.ok)throw new Error('Story data unavailable');
-    story=await response.json();render();
-    modeButtons.forEach(b=>b.hidden=(scene==='shore'?!['comfort','reassure'].includes(b.dataset.mode):!['descent','empathy'].includes(b.dataset.mode)));
-    sceneButtons.forEach(button=>button.addEventListener('click',()=>{
-      mode=scene==='shore'?'comfort':'descent';
-      modeButtons.forEach(b=>b.hidden=(scene==='shore'?!['comfort','reassure'].includes(b.dataset.mode):!['descent','empathy'].includes(b.dataset.mode)));
-      render();
-    }));
+    story=await response.json();
+    modeButtons.forEach(b=>b.hidden=scene==='shore'?!['comfort','reassure'].includes(b.dataset.mode):!['descent','empathy'].includes(b.dataset.mode));
+    render();
   }catch(error){
     copy.textContent='The exact story text could not be loaded. Open this study through the Lenny reader’s static HTTP server.';
   }
