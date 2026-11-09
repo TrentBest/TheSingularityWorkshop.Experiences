@@ -51,6 +51,10 @@ The page reads its content from `story.json`; it does not embed a second copy of
 
 Open the [guided author-review path](review.html) to move through the provisional presentation studies in story order: the first discouragement (pages 9–10), the second discouragement and transition (pages 15–20), the dolphin reveal (page 21), and the underwater discovery and empathy (pages 26–30). It links to the existing text-only studies and provides focused questions for author feedback. No approach is treated as approved until the author says so. This page does not change the manuscript, structured story data, or reading experience.
 
+## Page 8 beach-discovery study
+
+Open the [provisional beach-discovery camera study](beach-discovery-study.html) to compare three text-only approaches to Lenny noticing that the beach is littered again: a measured discovery, camera movement following Lenny's gaze, and a restrained wide reveal. The study loads the exact page 8 paragraphs from `story.json`, preserves their wording, and introduces no artwork or invented litter details. It is separate from the reader and does not alter the manuscript.
+
 ## Page 21 presentation study
 
 Open the [provisional dolphin-reveal presentation study](presentation-study.html) to compare three text-only composition and pacing approaches using the exact page 21 manuscript paragraphs. It contains no generated or placeholder artwork and makes no character-design or visual-style decisions. The study is separate from the reader and does not change the published reading experience.
