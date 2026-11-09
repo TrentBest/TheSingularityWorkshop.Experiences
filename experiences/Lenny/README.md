@@ -51,6 +51,10 @@ The page reads its content from `story.json`; it does not embed a second copy of
 
 Open the [provisional dolphin-reveal presentation study](presentation-study.html) to compare three text-only composition and pacing approaches using the exact page 21 manuscript paragraphs. It contains no generated or placeholder artwork and makes no character-design or visual-style decisions. The study is separate from the reader and does not change the published reading experience.
 
+## Emotional arc presentation study
+
+Open the [provisional emotional-arc presentation study](emotional-arc-study.html) to compare text-only pacing approaches for Lenny's discouragement on pages 9–10 and the underwater discovery and shared sadness on pages 26–30. It loads the exact paragraphs from `story.json`, preserves their order and wording, and introduces no artwork or unapproved character or animal details. It is a separate study and does not alter the reader or manuscript.
+
 ## Character and visual development
 
 The previous illustrations were not the author's artwork and were only rough communication aids. They are intentionally excluded from this project. The book's new visual identity will be developed from the author's story through StoryBuilder. Character appearance, environment design, palette, rendering approach, and page compositions are new proposals; nothing becomes continuity canon until the author approves it. See [VisualStoryPlan.md](VisualStoryPlan.md).
