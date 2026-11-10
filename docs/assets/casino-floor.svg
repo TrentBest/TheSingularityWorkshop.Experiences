@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+<title id="title">A living casino floor with an inspectable virtual economy</title>
+<desc id="desc">A stylized neon casino interior: a cashier cage at the left, blackjack tables and players in the center, glowing slot machines at the right, and an operator strip showing wagers, payouts, chip obligations, and reconciliation. Colored animated traces represent virtual buy-in, wager, payout, and cash-out events. Simulation only, with no real-money redemption.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="0.9" y2="1"><stop stop-color="#090f21"/><stop offset=".55" stop-color="#17203a"/><stop offset="1" stop-color="#090f19"/></linearGradient>
+ <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#172442"/><stop offset="1" stop-color="#10172a"/></linearGradient>
+ <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#283552"/><stop offset="1" stop-color="#11182b"/></linearGradient>
+ <linearGradient id="felt" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#168c76"/><stop offset="1" stop-color="#06463e"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#ffe58a"/><stop offset="1" stop-color="#ff9c48"/></linearGradient>
+ <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#162b4a"/><stop offset="1" stop-color="#090e1c"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <filter id="soft"><feGaussianBlur stdDeviation="12"/></filter>
+ <style>
+ text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#f4f7ff}.muted{fill:#aebbd5}.tiny{font-size:11px;letter-spacing:1px}.flow{fill:none;stroke-width:3.5;stroke-linecap:round;stroke-dasharray:8 11;animation:travel 2.6s linear infinite}.cash{stroke:#ffd76a}.wager{stroke:#58d9ff}.payout{stroke:#ff79c6}.redeem{stroke:#64e5bf}.metric{font-size:25px;font-weight:800}.pill{fill:#111a2c;fill-opacity:.92;stroke-width:1.5}.card{fill:#fff9e9;stroke:#d7e0ed;stroke-width:1}.chip{fill:#162541;stroke-width:3}.silhouette{fill:#080e1c;stroke:#35435e;stroke-width:1.5}.reel{fill:#10172a;stroke:#607498;stroke-width:1}.pulse{animation:pulse 2s ease-in-out infinite}@keyframes travel{to{stroke-dashoffset:-76}}@keyframes pulse{0%,100%{opacity:.7}50%{opacity:1}}
+ </style>
+</defs>
+<rect width="1200" height="760" rx="24" fill="url(#bg)"/>
+<circle cx="200" cy="250" r="170" fill="#ffd76a" opacity=".05" filter="url(#soft)"/><circle cx="920" cy="290" r="210" fill="#ff79c6" opacity=".06" filter="url(#soft)"/>
+<text x="44" y="43" class="tiny" fill="#58d9ff" font-weight="800">THE SINGULARITY WORKSHOP · LIVING EXPERIENCE</text>
+<text x="44" y="82" font-size="31" font-weight="800">A casino you can see. An economy you can inspect.</text>
+<text x="44" y="107" class="muted" font-size="14">Virtual currency · visible game floor · auditable events · no real-money redemption</text>
+<!-- Room shell and perspective floor -->
+<path d="M30 138 Q600 95 1170 138 L1170 482 L30 482Z" fill="url(#wall)" stroke="#334464" stroke-width="1.5"/>
+<path d="M30 138 Q600 95 1170 138" fill="none" stroke="#58d9ff" stroke-opacity=".5" stroke-width="2"/>
+<path d="M30 435 L1170 435 L1200 568 L0 568Z" fill="url(#floor)"/>
+<g stroke="#526180" stroke-opacity=".26" stroke-width="1">
+ <path d="M600 435L80 568 M600 435L240 568 M600 435L400 568 M600 435L600 568 M600 435L800 568 M600 435L960 568 M600 435L1120 568"/>
+ <path d="M18 463H1182 M10 493H1190 M5 526H1195 M2 552H1198"/>
+</g>
+<!-- Neon sign -->
+<rect x="415" y="132" width="370" height="48" rx="12" fill="#111a2c" stroke="#58d9ff" stroke-width="1.5" filter="url(#glow)"/>
+<text x="600" y="163" text-anchor="middle" font-size="21" font-weight="900" letter-spacing="3" fill="#d7f7ff">SINGULARITY CASINO</text>
+<path d="M430 191H770" stroke="#ff79c6" stroke-width="2" opacity=".7" filter="url(#glow)"/>
+<!-- Cashier cage -->
+<g>
+ <rect x="48" y="190" width="245" height="230" rx="13" fill="#17233c" stroke="#ffd76a" stroke-width="1.5"/>
+ <rect x="62" y="205" width="217" height="25" rx="5" fill="#2d2b34"/>
+ <text x="170" y="222" text-anchor="middle" font-size="13" font-weight="900" letter-spacing="2" fill="#ffd76a">CASHIER CAGE</text>
+ <rect x="65" y="244" width="211" height="105" rx="6" fill="#101a2d" stroke="#536584"/>
+ <path d="M65 280H276 M170 244V349" stroke="#536584" stroke-width="2"/>
+ <rect x="77" y="255" width="78" height="17" rx="3" fill="#152d3c"/><text x="116" y="267" text-anchor="middle" font-size="9" fill="#64e5bf">VIRTUAL S$</text>
+ <circle cx="217" cy="270" r="12" fill="#dcae8b"/><path d="M198 302Q199 283 217 283Q235 283 236 302Z" fill="#294d67"/><path d="M203 254Q216 239 231 254L229 261H205Z" fill="#101421"/>
+ <rect x="58" y="347" width="226" height="20" rx="4" fill="#b68b54"/><path d="M58 367H284L274 381H68Z" fill="#6f503b"/>
+ <text x="170" y="399" text-anchor="middle" class="tiny" fill="#ffd76a">BUY-IN  ↔  CASH-OUT</text>
+ <g transform="translate(85 319)"><ellipse cx="0" cy="0" rx="12" ry="4" fill="#ffd76a"/><path d="M-12 0V10Q0 18 12 10V0" fill="#b87536" stroke="#ffe58a"/><ellipse cx="0" cy="10" rx="12" ry="4" fill="#ffbd55"/></g>
+ <g transform="translate(115 319)"><ellipse cx="0" cy="0" rx="12" ry="4" fill="#58d9ff"/><path d="M-12 0V10Q0 18 12 10V0" fill="#246f9b" stroke="#9be9ff"/><ellipse cx="0" cy="10" rx="12" ry="4" fill="#58d9ff"/></g>
+</g>
+<!-- Blackjack table one -->
+<g>
+ <ellipse cx="425" cy="330" rx="132" ry="65" fill="#0a0f1c" opacity=".75"/>
+ <ellipse cx="425" cy="315" rx="132" ry="65" fill="#624735" stroke="#d3a96c" stroke-width="3"/>
+ <ellipse cx="425" cy="311" rx="119" ry="53" fill="url(#felt)" stroke="#f1cc8a" stroke-width="1.5"/>
+ <ellipse cx="425" cy="311" rx="98" ry="39" fill="none" stroke="#a3ecd3" stroke-opacity=".65" stroke-dasharray="3 5"/>
+ <text x="425" y="287" text-anchor="middle" font-size="11" font-weight="800" fill="#baf7df">BLACKJACK</text>
+ <rect x="382" y="297" width="24" height="33" rx="3" class="card" transform="rotate(-9 394 313)"/><text x="389" y="310" font-size="12" fill="#b51e73">A</text><text x="389" y="322" font-size="10" fill="#b51e73">♥</text>
+ <rect x="408" y="294" width="24" height="33" rx="3" class="card" transform="rotate(6 420 310)"/><text x="415" y="308" font-size="12" fill="#17233c">K</text><text x="415" y="321" font-size="10" fill="#17233c">♠</text>
+ <g transform="translate(461 317)"><ellipse cy="0" rx="13" ry="4" fill="#58d9ff"/><path d="M-13 0V10Q0 18 13 10V0" fill="#246f9b" stroke="#a2edff"/><ellipse cy="10" rx="13" ry="4" fill="#58d9ff"/></g>
+ <!-- players -->
+ <g><circle cx="340" cy="258" r="13" fill="#d2a17c"/><path d="M319 294Q320 273 340 273Q360 273 361 294Z" class="silhouette"/><path d="M328 249Q340 230 352 249" fill="#151b2b"/></g>
+ <g><circle cx="511" cy="262" r="13" fill="#a86e52"/><path d="M490 298Q491 277 511 277Q531 277 532 298Z" class="silhouette"/><path d="M499 253Q511 233 523 253" fill="#151b2b"/></g>
+</g>
+<!-- Roulette / second table -->
+<g>
+ <ellipse cx="685" cy="361" rx="115" ry="52" fill="#090e1b" opacity=".8"/>
+ <ellipse cx="685" cy="347" rx="115" ry="52" fill="#59412e" stroke="#d3a96c" stroke-width="3"/>
+ <ellipse cx="685" cy="343" rx="103" ry="42" fill="url(#felt)" stroke="#f1cc8a" stroke-width="1.5"/>
+ <ellipse cx="685" cy="343" rx="72" ry="29" fill="#123d38" stroke="#b5e8d9" stroke-width="1.5"/>
+ <path d="M613 343H757 M685 314V372 M635 324L735 362 M635 362L735 324" stroke="#e6d6a5" stroke-opacity=".7" stroke-width="1.5"/>
+ <circle cx="685" cy="343" r="17" fill="#d7b875" stroke="#fff1c8" stroke-width="2"/><circle cx="685" cy="343" r="8" fill="#c3465b"/><circle cx="685" cy="343" r="3" fill="#fff1c8"/>
+ <g><circle cx="603" cy="302" r="12" fill="#c18a67"/><path d="M584 333Q585 314 603 314Q621 314 622 333Z" class="silhouette"/></g>
+ <g><circle cx="765" cy="304" r="12" fill="#d5ad87"/><path d="M746 335Q747 316 765 316Q783 316 784 335Z" class="silhouette"/></g>
+</g>
+<!-- Slot bank -->
+<g>
+ <text x="1002" y="197" text-anchor="middle" class="tiny" fill="#ffb3df">LUCKY STAR · SLOT BANK</text>
+ <g transform="translate(870 211)">
+  <rect width="62" height="183" rx="8" fill="#313d5a" stroke="#ff79c6" stroke-width="1.5"/><rect x="6" y="8" width="50" height="104" rx="5" fill="url(#screen)"/><rect x="10" y="17" width="42" height="82" rx="4" fill="#0b1221" stroke="#6a7fa4"/><text x="31" y="45" text-anchor="middle" font-size="19" fill="#ffd76a">7</text><text x="31" y="66" text-anchor="middle" font-size="19" fill="#ff79c6">★</text><text x="31" y="87" text-anchor="middle" font-size="19" fill="#64e5bf">7</text><circle cx="31" cy="131" r="8" fill="#ffd76a" stroke="#fff1c8"/><rect x="10" y="149" width="42" height="23" rx="5" fill="#18223a" stroke="#7286a9"/><text x="31" y="164" text-anchor="middle" font-size="8">CHIP</text>
+ </g>
+ <g transform="translate(941 211)">
+  <rect width="62" height="183" rx="8" fill="#313d5a" stroke="#58d9ff" stroke-width="1.5"/><rect x="6" y="8" width="50" height="104" rx="5" fill="url(#screen)"/><rect x="10" y="17" width="42" height="82" rx="4" fill="#0b1221" stroke="#6a7fa4"/><text x="31" y="45" text-anchor="middle" font-size="19" fill="#58d9ff">♦</text><text x="31" y="66" text-anchor="middle" font-size="19" fill="#ffd76a">9</text><text x="31" y="87" text-anchor="middle" font-size="19" fill="#58d9ff">♦</text><circle cx="31" cy="131" r="8" fill="#58d9ff" stroke="#d7f7ff"/><rect x="10" y="149" width="42" height="23" rx="5" fill="#18223a" stroke="#7286a9"/><text x="31" y="164" text-anchor="middle" font-size="8">CHIP</text>
+ </g>
+ <g transform="translate(1012 211)">
+  <rect width="62" height="183" rx="8" fill="#313d5a" stroke="#ffd76a" stroke-width="1.5"/><rect x="6" y="8" width="50" height="104" rx="5" fill="url(#screen)"/><rect x="10" y="17" width="42" height="82" rx="4" fill="#0b1221" stroke="#6a7fa4"/><text x="31" y="45" text-anchor="middle" font-size="19" fill="#ff79c6">♣</text><text x="31" y="66" text-anchor="middle" font-size="19" fill="#64e5bf">A</text><text x="31" y="87" text-anchor="middle" font-size="19" fill="#ff79c6">♣</text><circle cx="31" cy="131" r="8" fill="#ffd76a" stroke="#fff1c8"/><rect x="10" y="149" width="42" height="23" rx="5" fill="#18223a" stroke="#7286a9"/><text x="31" y="164" text-anchor="middle" font-size="8">CHIP</text>
+ </g>
+ <g><circle cx="1095" cy="334" r="12" fill="#d5ad87"/><path d="M1076 365Q1077 346 1095 346Q1113 346 1114 365Z" class="silhouette"/></g>
+</g>
+<!-- Visible value traces -->
+<path d="M278 332 C320 332 324 286 365 286 S480 292 540 330" class="flow cash" filter="url(#glow)"/>
+<path d="M505 328 C566 385 620 388 667 361 S815 326 870 336" class="flow wager" filter="url(#glow)"/>
+<path d="M875 356 C822 414 765 420 717 385 S568 353 520 341" class="flow payout" filter="url(#glow)"/>
+<path d="M875 374 C790 437 420 435 278 352" class="flow redeem" filter="url(#glow)"/>
+<g>
+ <rect x="303" y="240" width="94" height="24" rx="8" class="pill" stroke="#ffd76a"/><text x="350" y="256" text-anchor="middle" font-size="10" font-weight="800" fill="#ffd76a">BUY-IN</text>
+ <rect x="581" y="390" width="86" height="24" rx="8" class="pill" stroke="#58d9ff"/><text x="624" y="406" text-anchor="middle" font-size="10" font-weight="800" fill="#58d9ff">WAGER</text>
+ <rect x="770" y="409" width="90" height="24" rx="8" class="pill" stroke="#ff79c6"/><text x="815" y="425" text-anchor="middle" font-size="10" font-weight="800" fill="#ff79c6">PAYOUT</text>
+ <rect x="332" y="420" width="100" height="24" rx="8" class="pill" stroke="#64e5bf"/><text x="382" y="436" text-anchor="middle" font-size="10" font-weight="800" fill="#64e5bf">CASH-OUT</text>
+</g>
+<!-- Operator strip: figures are definitions, not fabricated live telemetry -->
+<rect x="38" y="578" width="1124" height="139" rx="18" fill="#10182b" fill-opacity=".96" stroke="#425270" stroke-width="1.5"/>
+<text x="62" y="607" class="tiny muted" font-weight="800">THE OPERATOR'S VIEW · DERIVED FROM THE JOURNAL</text>
+<g transform="translate(62 625)"><rect width="245" height="70" rx="10" fill="#18223a" stroke="#425270"/><text x="15" y="22" class="tiny muted">GROSS WAGERS</text><text x="15" y="50" class="metric">Σ stakes</text><text x="128" y="50" font-size="11" fill="#58d9ff">activity</text></g>
+<g transform="translate(326 625)"><rect width="245" height="70" rx="10" fill="#18223a" stroke="#425270"/><text x="15" y="22" class="tiny muted">GROSS PAYOUTS</text><text x="15" y="50" class="metric">Σ returns</text><text x="128" y="50" font-size="11" fill="#ff79c6">returned value</text></g>
+<g transform="translate(590 625)"><rect width="245" height="70" rx="10" fill="#18223a" stroke="#425270"/><text x="15" y="22" class="tiny muted">CHIP OBLIGATION</text><text x="15" y="50" class="metric">Σ unredeemed</text><text x="15" y="64" font-size="10" fill="#ffd76a">not profit</text></g>
+<g transform="translate(854 625)"><rect width="284" height="70" rx="10" fill="#102d2a" stroke="#64e5bf" stroke-width="2"/><text x="15" y="22" class="tiny muted">RECONCILIATION</text><text x="15" y="50" class="metric pulse" fill="#64e5bf">Δ = 0</text><text x="110" y="50" font-size="11" fill="#64e5bf">all currencies balance</text></g>
+<text x="42" y="742" class="muted" font-size="11">Illustrative simulation floor · traces are conceptual · no real-money handling or redemption</text>
+</svg>
