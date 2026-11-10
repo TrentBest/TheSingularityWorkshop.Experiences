@@ -20,6 +20,7 @@ The visitor should be able to:
 - inspect and operate exoskeletons as engineered extensions of the body;
 - move from ground engagements into spacecraft, ships, capital vessels, fleets, and alliances;
 - meet heroes, villains, allies, rivals, and ordinary people with their own motives;
+- encounter an increasingly distinctive cast of agents, specialists, lieutenants, commanders, and legendary adversaries;
 - develop a distinctive visual identity through fashion, equipment, ship design, flags, and earned decorations;
 - travel through ships as lived-in places, not merely pilot them through a camera;
 - see the consequences of missions ripple outward through a living social and political galaxy.
@@ -28,12 +29,13 @@ The visitor should be able to:
 
 1. **Technological magic.** The world should feel wondrous, but its systems should remain discoverable and internally coherent. Advanced technology, fictional physics, and any genuinely magical phenomena need explicit rules.
 2. **Larger-than-life identity.** Characters should be instantly recognizable through bold silhouettes, extraordinary proportions, signature equipment, fashion, bearing, and personal symbols. The world celebrates individuality rather than funneling everyone into interchangeable gear.
-3. **Survival before spectacle.** The visitor's first problem is often to survive and understand what is happening. Power and context are earned through discovery, preparation, and action.
-4. **A mission is a changing question.** The initial objective may be incomplete, misleading, or only one part of a larger situation. Discovery changes what the visitor believes the mission to be.
-5. **People make the galaxy.** Relationships, trust, institutions, cultures, factions, and conflicting accounts matter as much as weapons and vehicles.
-6. **Scale is continuous.** Personal equipment, exoskeletons, spacecraft, ships, capital ships, fleets, and galaxy-wide alliances are connected layers of the same world.
-7. **Learning creates agency.** Early learning introduces the systems and choices that shape the future. It should open paths, not force every learner toward combat or military service.
-8. **Consequences persist.** Missions change knowledge, relationships, resources, access, ownership, alliances, or the balance of power. Rare objects have histories and provenance, not just rarity-colored inventory labels.
+3. **An escalating cast.** The galaxy reveals increasingly outrageous and memorable adversaries through agents, specialists, lieutenants, commanders, and legendary powers. Each should introduce a distinct identity, method, motive, and challenge—not merely higher statistics. The progression is a tonal and structural reference, not a reproduction of another work.
+4. **Survival before spectacle.** The visitor's first problem is often to survive and understand what is happening. Power and context are earned through discovery, preparation, and action.
+5. **A mission is a changing question.** The initial objective may be incomplete, misleading, or only one part of a larger situation. Discovery changes what the visitor believes the mission to be.
+6. **People make the galaxy.** Relationships, trust, institutions, cultures, factions, and conflicting accounts matter as much as weapons and vehicles.
+7. **Scale is continuous.** Personal equipment, exoskeletons, spacecraft, ships, capital ships, fleets, and galaxy-wide alliances are connected layers of the same world.
+8. **Learning creates agency.** Early learning introduces the systems and choices that shape the future. It should open paths, not force every learner toward combat or military service.
+9. **Consequences persist.** Missions change knowledge, relationships, resources, access, ownership, alliances, or the balance of power. Rare objects have histories and provenance, not just rarity-colored inventory labels.
 
 ## The signature mission rhythm
 
