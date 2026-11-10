@@ -68,7 +68,7 @@ See [Style, Identity, and Provenance](design/STYLE_IDENTITY_AND_PROVENANCE.md) a
 
 Stations are inhabited destinations, not service menus. A fighter, shuttle, freighter, and capital ship should each experience an arrival appropriate to their scale; once docked, the visitor enters a place with its own people, districts, routines, institutions, and circumstances. Stations can be ports, cities, shipyards, academies, research centers, refuges, and much more. They should remain worth inhabiting between missions.
 
-See [Space Stations and Docking](design/STATIONS_AND_DOCKING.md) for the arrival-to-departure rhythm, station identity, learning districts, and first useful station slice.
+See [Space Stations and Docking](design/STATIONS_AND_DOCKING.md) for the arrival-to-departure rhythm, station identity, learning districts, and first useful station slice. [Vesper Reach](design/FIRST_STATION_CANDIDATE.md) is a concrete candidate station that explores these principles without declaring its details canon.
 
 ## Learning and social life
 
