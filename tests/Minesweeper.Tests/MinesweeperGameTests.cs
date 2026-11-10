@@ -10,16 +10,27 @@ public sealed class MinesweeperGameTests
     {
         var first = new MinesweeperGame(9, 9, 10, seed: 123);
         var second = new MinesweeperGame(9, 9, 10, seed: 123);
-        Assert.Equal(first.Snapshot().Select(c => (c.Id, c.AdjacentMines)), second.Snapshot().Select(c => (c.Id, c.AdjacentMines)));
+
+        for (var row = 0; row < first.Height; row++)
+        for (var column = 0; column < first.Width; column++)
+        {
+            var cell = new CellId(row, column);
+            Assert.Equal(first.Reveal(cell), second.Reveal(cell));
+            Assert.Equal(first.Snapshot(), second.Snapshot());
+            if (first.Status is MinesweeperStatus.Won or MinesweeperStatus.Lost) return;
+        }
     }
 
     [Fact]
     public void FixedLayoutComputesNeighborCounts()
     {
         var game = new MinesweeperGame(3, 3, new[] { new CellId(0, 0), new CellId(2, 2) });
-        Assert.Equal(2, game.GetCell(new CellId(1, 1)).AdjacentMines);
-        Assert.Equal(1, game.GetCell(new CellId(0, 1)).AdjacentMines);
-        Assert.Equal(0, game.GetCell(new CellId(0, 2)).AdjacentMines);
+        var center = new CellId(1, 1);
+        Assert.Equal(0, game.GetCell(center).AdjacentMines);
+        Assert.Equal(0, game.Snapshot().Where(c => !c.IsRevealed).Sum(c => c.AdjacentMines));
+
+        Assert.Equal(MinesweeperActionResult.Accepted, game.Reveal(center));
+        Assert.Equal(2, game.GetCell(center).AdjacentMines);
     }
 
     [Fact]

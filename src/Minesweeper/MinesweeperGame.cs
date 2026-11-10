@@ -112,8 +112,9 @@ public sealed class MinesweeperGame
     public CellSnapshot GetCell(CellId cell)
     {
         ValidateCell(cell);
-        return new CellSnapshot(cell, _revealed[cell.Row, cell.Column], _flagged[cell.Row, cell.Column],
-            _adjacent[cell.Row, cell.Column], _revealed[cell.Row, cell.Column] && _mines[cell.Row, cell.Column]);
+        var isRevealed = _revealed[cell.Row, cell.Column];
+        return new CellSnapshot(cell, isRevealed, _flagged[cell.Row, cell.Column],
+            isRevealed ? _adjacent[cell.Row, cell.Column] : 0, isRevealed && _mines[cell.Row, cell.Column]);
     }
 
     public IReadOnlyList<CellSnapshot> Snapshot()
