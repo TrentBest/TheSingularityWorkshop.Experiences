@@ -78,3 +78,33 @@ History should be discoverable through people, archives, locations, and conflict
 - What is the first world, institution, or community the visitor encounters?
 - Which social structures make early learning natural without making the world feel like a school simulator?
 - How do the setting's extraordinary heroes and villains intersect with ordinary people's lives?
+
+
+## Stations as places in the galaxy
+
+Space stations are a fundamental part of the inhabited galaxy, not just service menus or scenery. They can be ports, cities, shipyards, markets, universities, research centers, diplomatic venues, military installations, refuges, industrial complexes, cultural landmarks, or combinations that reveal the civilization that built them.
+
+A station should have a reason to exist, a physical relationship to its location, and a life that continues when the visitor is not looking. Its architecture, traffic, docking capacity, services, security, population, and customs should express its purpose and history. Some stations are welcoming crossroads; others are tightly controlled, improvised, crowded, luxurious, ancient, or visibly under pressure.
+
+Stations create a social and logistical layer between personal adventure and galaxy-scale travel. They are places to find work, learn, trade, repair, recruit, meet contacts, investigate rumors, encounter rivals, attend events, see the consequences of faction changes, and simply spend time among people. A station can be a safe harbor, a contested prize, a neutral meeting ground, or a dangerous place where the visitor must understand local rules.
+
+The same station can be experienced at different scales: arriving in a small fighter, entering a shuttle concourse, walking through public districts, visiting a workshop, or watching a capital ship occupy an enormous berth. Its scale should be felt through distances, sound, traffic, sightlines, architecture, and the movement of other vessels.
+
+## Docking is an embodied arrival
+
+Docking should communicate the craft's size, mass, capability, and relationship to the station. A fighter approaches a small berth with precise maneuvering and a compact clamp. A shuttle may follow traffic control into a hangar. A freighter aligns with a cargo collar and connects loading systems. A capital ship eases into a vast external berth or docking cradle, with station crews, tug craft, guidance lights, structural clamps, service bridges, and umbilicals coordinating the operation.
+
+These are not simply different animations of the same interaction. Each class has distinct approach envelopes, clearances, maneuvering authority, station interfaces, traffic priority, service needs, and consequences for mistakes. The visitor should understand where they are in the approach and what the station is asking them to do.
+
+Docking can be a satisfying skill and a source of personality without making every arrival tedious. Routine docking may support assisted guidance or automation; manual control, unusual berths, damaged stations, emergencies, restricted access, and high-stakes arrivals can invite more involvement. The level of challenge should match the situation and the vessel.
+
+## A station is a lived environment
+
+Once docked, the visitor should cross a meaningful boundary from vessel to station: pressure and atmosphere checks where appropriate, secure connections, access control, customs or declarations where relevant, and a transition through an airlock, gangway, docking tube, or hangar. Not every culture or technology uses the same procedure, but the rules should be legible.
+
+A station can contain public promenades, transit systems, markets, repair bays, crew facilities, residential districts, schools, training halls, medical services, workshops, observation galleries, command centers, hidden passages, and restricted infrastructure. The visitor should be able to see ships arriving and departing, hear local announcements, notice working crews, and encounter stories that are not all mission prompts.
+
+Stations also create scale contrast. A fighter can be swallowed by a capital-ship hangar; a person can look tiny beneath a docking clamp; a whole capital ship can feel small beside a planetary orbital complex. These contrasts make the galaxy feel immense while preserving the intimacy of individual places.
+
+Stations must remain causally connected to the world. Traffic reflects trade and conflict. Services depend on supply, personnel, power, and political control. Damage, blockades, shortages, celebrations, arrivals, and departures can alter what the visitor sees and can do.
+
