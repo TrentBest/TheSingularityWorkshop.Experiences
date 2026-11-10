@@ -75,6 +75,29 @@ The experience must label the difference between:
 
 No real account changes, repository writes, permission changes, or deployments occur as a side effect of completing a simulated lesson.
 
+### Implemented first domain slice
+
+The first implementation is an in-memory, deterministic lesson model in `src/GitHubLearningStudio/`:
+
+- A fictional **Field Notes** repository starts with a README and one starter-history entry.
+- The learner inspects the README, creates a separate working branch, edits the project home, and records a commit.
+- The learner configures a modeled Pages source, builds the committed version, and publishes it to an explicitly fictional example address.
+- A later edit and commit mark the published version as out of date; another build and publish advances the modeled published commit.
+- Stable command identifiers and immutable snapshots let a host render and dispatch the same lesson semantics without owning the domain state.
+- A GUI.Core adapter projects the repository, commit history, Pages lifecycle, simulation notice, and currently available commands into a semantic tree. A companion dispatcher submits button command metadata to the session and returns a fresh snapshot; the host still owns actual event handling.
+
+The model deliberately does not invoke Git, call GitHub, access a filesystem, configure a repository, create a real build artifact, or deploy a website. The example address uses the reserved `example.invalid` domain and is not a live site. The model also exposes a guided practice prompt and a short understanding check: learners decide what must happen after a new commit before the published site reflects it. The semantic GUI offers explicit answer choices, and the session records whether the correct build-then-publish sequence was understood. The dedicated test project covers the command lifecycle, invalid ordering, deterministic histories, update loop, GUI projection, semantic command dispatch, and the knowledge check. The dedicated domain and GUI/knowledge-check test suite passed in CI run [#1104](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/41390449549), including command lifecycle, invalid ordering, deterministic histories, update flow, GUI projection, semantic command dispatch, and the knowledge check.
+
+This is a domain and semantic-GUI foundation, not yet the complete learner-facing vertical slice. A concrete host event loop/route, a Visualize artifact where it adds genuine explanatory value, and a richer sequence of authored step-by-step concept checkpoints remain follow-on work.
+
+## The second journey: collaborating through a pull request
+
+**Guiding question: “How can I propose a change safely and work with others to improve it?”**
+
+The separate [Pull Request Collaboration Journey](PullRequestJourney/README.md) models a task branch, commits, one evolving pull request, review feedback, revisions, automated checks, approval, and an explicit merge decision. It is a deterministic simulation: proposal, approval, passing checks, and merge are distinct states, and the same proposal remains open while the author revises it.
+
+The current implementation lives in the separate `GitHubLearningStudio.PullRequests` domain project with a GUI.Core semantic adapter and focused tests. The host still owns event handling and re-projection; this does not claim a live WebApp route or real GitHub integration.
+
 ## Curriculum map
 
 The Studio is modular. Learners can enter through the task they want to accomplish and follow links to related concepts.
@@ -111,9 +134,9 @@ Make the key distinction visible: proposing, reviewing, approving, and merging a
 
 ## Issues as the project's memory
 
-Teach issues through recognizable situations: a defect someone encountered, a feature someone wants, a question that needs an answer, or a piece of work that can be completed.
+The dedicated [Issues journey](IssuesJourney/README.md) develops this idea into a complete learning contract: turn an unclear report into an actionable issue, preserve clarification and decisions, connect the issue to implementation, and verify acceptance criteria before closure.
 
-Show how a useful issue describes the problem, expected outcome, and enough context for someone else to help. Then connect an issue to the branch and pull request that address it. The learner should see how the project remembers not only what changed, but why.
+The current deterministic implementation lives in the separate `GitHubLearningStudio.Issues` domain project with a GUI.Core semantic adapter and focused tests. It does not create or modify real GitHub issues, branches, pull requests, or repositories.
 
 ## Settings as stewardship
 
@@ -126,9 +149,9 @@ Use a fictional project to explore visibility, collaborators, permissions, notif
 This is an Experience authored in TheSingularityWorkshop.Experiences.
 
 - **Experience semantics** define the project scenario, lesson goals, learner actions, concept relationships, and educational state.
-- **GUI** owns interactive controls and learner interaction.
+- **GUI** owns interactive controls and learner interaction. The first GUI.Core semantic projection is implemented; a concrete host event loop remains host-owned and unverified.
 - **Visualize** makes project structure, history, proposals, reviews, checks, and publication state visible.
-- **Renderer** presents explanations, terminology, decisions, and accessible text alternatives.
+- **Renderer** owns observer-relative computational representation and visibility/detail policy; it is not currently a textual explanation renderer. Lesson explanations remain authored Experience content and can be projected as semantic GUI text until a verified text-presentation owner is established.
 - **FSM_COS** composes the Experience through the existing manifest and MicroBundle contracts.
 - **The host** provides the environment in which the Experience is manifested.
 
@@ -155,11 +178,11 @@ A polished animation is not proof of a functioning GitHub operation. A simulated
 
 ## First implementation milestones
 
-1. **Lesson contract:** define the learner journey, educational state, concept vocabulary, and scenario data for the project-to-Pages journey.
-2. **Static living picture:** render the project, its files, change history, and publication path from deterministic scenario data.
-3. **Interactive lesson:** let the learner make a small content change, record a simulated commit, and progress through the modeled Pages publication states.
-4. **Explanation layer:** reveal the meaning and consequences of each step, with text-first alternatives and a short understanding check.
-5. **Host integration:** compose and manifest the Experience through existing contracts; verify the actual path rather than assuming it.
+1. **Lesson contract:** implemented as a deterministic in-memory session, stable command identifiers, immutable snapshots, and a fictional project/commit model.
+2. **Static living picture:** a GUI.Core semantic tree now projects repository identity, README, commit history, Pages state, and command affordances; a Visualize artifact remains pending.
+3. **Interactive lesson:** the domain transitions and semantic command dispatcher are implemented; a real host event loop and browser manifestation remain pending.
+4. **Explanation layer:** the model now supplies contextual explanations, a guided practice prompt, and a short build-then-publish understanding check. A full authored sequence of concept cards and host-level text-first route remain pending.
+5. **Host integration:** pending; the intended Learning host and command-dispatch path must be verified before integration.
 6. **Expansion:** add pull requests, issues, settings, Actions, releases, and collaboration as independent lessons linked through the same project model.
 
 Build one complete, truthful vertical slice before attempting a comprehensive GitHub academy.

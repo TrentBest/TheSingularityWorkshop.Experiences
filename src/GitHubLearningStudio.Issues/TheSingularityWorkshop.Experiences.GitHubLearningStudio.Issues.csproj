@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageId>TheSingularityWorkshop.Experiences.GitHubLearningStudio.Issues</PackageId>
+    <Version>0.1.0-alpha.1</Version>
+    <Description>Deterministic issue-tracking learning journey for GitHub Learning Studio.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="TheSingularityWorkshop.GUI.Core" Version="0.1.0-alpha.4" Condition="'$(WorkshopUseRepositorySources)' != 'true'" />
+    <ProjectReference Include="../../../TheSingularityWorkshop.GUI/src/Core/TheSingularityWorkshop.GUI.Core.csproj" Condition="'$(WorkshopUseRepositorySources)' == 'true'" />
+  </ItemGroup>
+</Project>
