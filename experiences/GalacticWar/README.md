@@ -92,10 +92,12 @@ This repository currently captures authored intent and design boundaries. It doe
 - [Exoskeletons and spacecraft combat](design/EMBODIED_COMBAT_AND_SPACEFLIGHT.md)
 - [Learning and the living social galaxy](design/LEARNING_AND_SOCIAL_GALAXY.md)
 - [Learning progression and professional qualification](design/LEARNING_PROGRESSION_AND_QUALIFICATION.md)
+- [Learning progression and professional qualification](design/LEARNING_PROGRESSION_AND_QUALIFICATION.md)
 - [Style, identity, and provenance](design/STYLE_IDENTITY_AND_PROVENANCE.md)
 - [Lived-in ships and viewports](design/LIVED_IN_SHIPS_AND_VIEWPORTS.md)
 - [Space stations and docking](design/STATIONS_AND_DOCKING.md)
 - [Station life and background activity](design/STATION_LIFE_AND_BACKGROUND_ACTIVITY.md)
+- [First station candidate: Vesper Reach](design/FIRST_STATION_CANDIDATE.md)
 
 ## Architecture boundaries
 
