@@ -1,6 +1,6 @@
-# Embodied Combat, Exoskeletons, and Spaceflight
+# Embodied Combat, Exoskeletons, Spaceflight, and Ship Presence
 
-**Status:** candidate direction. No combat or flight implementation is claimed.
+**Status:** candidate direction. No combat, flight, or interior-navigation implementation is claimed.
 
 ## First-person embodiment
 
@@ -19,23 +19,37 @@ The design should support clear distinctions between:
 - what the authoritative simulation knows;
 - what the visitor believes.
 
-## Spacecraft motion
+## Spacecraft motion and dogfighting
 
-Space combat should respect momentum and orientation as separate concerns. A craft may continue translating while rotating to face another direction. Aiming, target lock, and thrust correction should not collapse into a single arcade steering rule.
+Space combat should respect momentum and orientation as separate concerns. A craft may continue translating while rotating to face another direction. A pilot can maintain a target relationship, rotate or flip the craft, and continue firing while the vessel coasts along its existing trajectory. Axis-specific thrusters provide deliberate corrections to translation and orientation.
 
 Candidate concepts include:
 - target lock as a maintained relationship to a target, not an automatic guarantee of a hit;
 - independent orientation and translation;
 - axis-specific thruster corrections;
 - momentum-aware intercept and evasion;
+- firing solutions that account for relative motion, weapon behavior, and target movement;
 - fictional gravity-field technology as a distinct, explicitly defined capability.
 
 The gravity-field concept is not a license to ignore the movement model. Its effects, limits, costs, and failure conditions must be specified before it is treated as simulation truth.
 
+## Ships as places
+
+The visitor's view should evolve with the vessel and the scale of the journey.
+
+1. **Viewport presence:** in a small craft, the primary view is through the actual viewport or canopy. The frame, glass, reflections, instruments, hull geometry, and physical cockpit establish that the visitor is inside a machine.
+2. **Readable systems:** the visitor can inspect meaningful ship systems and understand where they are relative to the vessel. The ship is not an abstract HUD surrounding a camera.
+3. **Walkable interiors:** on vessels large enough to support them, the visitor can leave the control station and move through corridors, rooms, hangars, engineering spaces, crew areas, and other authored spaces.
+4. **Traveling home and base:** large ships become places to live and work. During long-distance travel, the vessel continues its journey while the visitor moves through it, interacts with systems, speaks with people, prepares equipment, rests, and participates in shipboard life.
+
+The transition should be diegetic and spatially legible. The visitor should understand whether they are piloting, riding, walking aboard, remotely operating, or observing. The ship's authoritative position and movement continue independently of which interior space the visitor currently occupies.
+
+Not every vessel needs a fully walkable interior. Small craft can remain cockpit-centered; interior scale, crew complement, and interaction depth should follow the vessel's role and size. A larger ship is not merely a larger cockpit.
+
 ## Scale progression
 
 The visitor's embodied journey may expand through:
-**person → exoskeleton → small craft → ship → capital ship → fleet**.
+**person → exoskeleton → small craft → crewed vessel → capital ship → fleet**.
 
 Each step should preserve the underlying physical and organizational relationships. A larger vessel still contains crew, stations, power, sensors, propulsion, maintenance, and command responsibilities.
 
