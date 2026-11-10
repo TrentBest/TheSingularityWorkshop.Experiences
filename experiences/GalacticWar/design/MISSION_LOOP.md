@@ -18,17 +18,25 @@ The visitor enters a situation with limited resources, incomplete information, a
 
 The apparent mission is not necessarily the real mission. The visitor learns more about the location, people, adversary, environment, and larger situation. New evidence may change the objective.
 
+Adversaries should be discovered as people and organizations, not just health bars with names. A local agent may reveal a specialist, a chain of command, a rival, a patron, or a much larger force. Evidence can precede direct contact: methods, insignia, equipment, intercepted plans, witness accounts, and the consequences of previous encounters. Information may be incomplete, biased, or intentionally planted.
+
 ### 3. Solve
 
 The visitor determines what must change and how. Solutions may involve engineering, negotiation, investigation, rescue, logistics, tactical action, or combinations of these.
+
+A formidable adversary should create a problem to understand, not merely a larger damage requirement. The visitor may need to learn a system, expose a dependency, change the terrain, disrupt supply, win an ally, exploit a doctrine, or choose not to engage.
 
 ### 4. Prepare
 
 Preparation is meaningful work: assemble a team, select equipment, repair or modify systems, acquire intelligence, plan routes, secure resources, and establish contingencies.
 
+Preparation should reflect what has actually been discovered about the adversary. It should not require foreknowledge the visitor has not earned.
+
 ### 5. Execute
 
 Execution should be embodied and consequential. The visitor's position, timing, coordination, momentum, equipment configuration, and decisions should matter. The simulation must resolve outcomes from declared rules rather than scripted spectacle presented as physics.
+
+The same adversary may be encountered under different conditions, with different allies, objectives, and constraints. A retreat, diversion, negotiation, capture, or partial success can be a meaningful resolution rather than a failed boss fight.
 
 ### 6. Change the Galaxy
 
@@ -38,9 +46,18 @@ The result becomes part of persistent world state. A mission may affect:
 - access to places, services, or institutions;
 - equipment, resources, and supply;
 - local safety, ownership, or political control;
-- faction relationships, alliances, and strategic options.
+- faction relationships, alliances, and strategic options;
+- adversary capabilities, leadership, loyalties, and future behavior.
 
 Not every outcome needs to affect every category. The important rule is that consequences are explicit, attributable, and discoverable.
+
+## Adversary escalation without power inflation
+
+The cast can escalate from local agents and dangerous specialists to lieutenants, commanders, legendary individuals, and galaxy-shaping powers. This is a widening of the visitor's understanding and the world's stakes, not a single linear ladder of hit points.
+
+Each major adversary should have a distinct identity, role, method, motive, operating constraints, relationships, and discoverable counters. A new encounter should teach the visitor something new about the world or force a meaningful change in approach. Earlier threats remain relevant in their own contexts and may adapt to changed circumstances.
+
+A stronger figure should not appear solely because the visitor's level increased. Their presence should follow from world causality: territory, faction action, strategic objectives, prior events, reputation, or the visitor uncovering a deeper layer of the conflict. Their arrival should be foreshadowed where possible, and the consequences should persist whether the visitor fights, evades, negotiates, or loses.
 
 ## Mission truth
 
@@ -65,4 +82,5 @@ A visitor may revisit a mission as an observer, inspect alternate plans, or comp
 - How are delayed consequences represented?
 - Can missions be solved without combat, and what does the simulation require to validate those solutions?
 - How are failure, retreat, capture, rescue, and partial success represented?
+- How are adversary identities, capabilities, relationships, and adaptations represented as data?
 - What evidence is retained to explain why the galaxy changed?
