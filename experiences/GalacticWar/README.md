@@ -4,9 +4,9 @@
 
 **A universe of impossible machines, extraordinary people, and a future worth learning how to shape.**
 
-Galactic War is a far-future technological-magical universe in which humanity and other powers contend across a vast galaxy. It is designed as a living Experience rather than a sequence of isolated combat levels: personal stories, learning, social life, engineering, missions, spacecraft, factions, and galaxy-scale consequences belong to one connected world.
+Galactic War is a far-future technological-magical universe in which humanity and other powers contend across a vast galaxy. It is a living Experience rather than a sequence of isolated combat levels: personal stories, learning, social life, engineering, missions, spacecraft, factions, and galaxy-scale consequences belong to one connected world.
 
-Its signature promise is scale with intimacy. A visitor can begin with one person trying to survive a dangerous encounter, discover that the apparent mission is only part of a larger problem, prepare with other people, and eventually see how the outcome changes a world or the galaxy.
+Its signature promise is **scale with intimacy**. A visitor can begin as one person trying to survive a dangerous encounter, discover that the apparent mission is only part of a larger problem, prepare with other people, and eventually see how the outcome changes a world or the galaxy.
 
 This is a distinct Experience preforge. **raWWar is a combat-style reference, not the identity or source of truth for this project.**
 
@@ -20,17 +20,20 @@ The visitor should be able to:
 - inspect and operate exoskeletons as engineered extensions of the body;
 - move from ground engagements into spacecraft, ships, capital vessels, fleets, and alliances;
 - meet heroes, villains, allies, rivals, and ordinary people with their own motives;
+- develop a distinctive visual identity through fashion, equipment, ship design, flags, and earned decorations;
+- travel through ships as lived-in places, not merely pilot them through a camera;
 - see the consequences of missions ripple outward through a living social and political galaxy.
 
 ## Experience pillars
 
 1. **Technological magic.** The world should feel wondrous, but its systems should remain discoverable and internally coherent. Advanced technology, fictional physics, and any genuinely magical phenomena need explicit rules.
-2. **Survival before spectacle.** The visitor's first problem is often to survive and understand what is happening. Power and context are earned through discovery, preparation, and action.
-3. **A mission is a changing question.** The initial objective may be incomplete, misleading, or only one part of a larger situation. Discovery changes what the visitor believes the mission to be.
-4. **People make the galaxy.** Relationships, trust, institutions, cultures, factions, and conflicting accounts matter as much as weapons and vehicles.
-5. **Scale is continuous.** Personal equipment, exoskeletons, spacecraft, ships, capital ships, fleets, and galaxy-wide alliances are connected layers of the same world.
-6. **Learning creates agency.** Early learning introduces the systems and choices that shape the future. It should open paths, not force every learner toward combat or military service.
-7. **Consequences persist.** A mission should change something meaningful: knowledge, relationships, resources, access, ownership, alliances, or the balance of power.
+2. **Larger-than-life identity.** Characters should be instantly recognizable through bold silhouettes, extraordinary proportions, signature equipment, fashion, bearing, and personal symbols. The world celebrates individuality rather than funneling everyone into interchangeable gear.
+3. **Survival before spectacle.** The visitor's first problem is often to survive and understand what is happening. Power and context are earned through discovery, preparation, and action.
+4. **A mission is a changing question.** The initial objective may be incomplete, misleading, or only one part of a larger situation. Discovery changes what the visitor believes the mission to be.
+5. **People make the galaxy.** Relationships, trust, institutions, cultures, factions, and conflicting accounts matter as much as weapons and vehicles.
+6. **Scale is continuous.** Personal equipment, exoskeletons, spacecraft, ships, capital ships, fleets, and galaxy-wide alliances are connected layers of the same world.
+7. **Learning creates agency.** Early learning introduces the systems and choices that shape the future. It should open paths, not force every learner toward combat or military service.
+8. **Consequences persist.** Missions change knowledge, relationships, resources, access, ownership, alliances, or the balance of power. Rare objects have histories and provenance, not just rarity-colored inventory labels.
 
 ## The signature mission rhythm
 
@@ -50,6 +53,14 @@ Not every mission needs every phase to have equal duration. The rhythm is a desi
 **Person → exoskeleton → craft → ship → capital ship → fleet → alliance → galaxy**
 
 Each increase in scale should preserve meaningful relationships to the level below it. A fleet is not just a bigger icon; it is people, vessels, readiness, supply, command, and political commitments. A personal action can matter at larger scales without pretending that one individual controls the galaxy.
+
+## Identity, provenance, and lived-in ships
+
+Fashion, silhouette, flags, insignia, decorations, and ship interiors are core world identity. Some objects should be genuinely finite and historically attributable: if a decoration has 200 legitimate copies, there are 200 owners, not an endlessly reproducible cosmetic. For designated trophy objects, acquisition may require defeating a current holder and taking possession through the world's rules. The detailed ownership, transfer, loss, and anti-exploit contracts remain to be designed.
+
+Ships are places as well as vehicles. The experience should grow from viewing the world through a craft's viewport, to seeing meaningful ship systems and interior spaces, to physically navigating a vessel and interacting with its stations, people, and spaces while it travels. Larger ships can become mobile homes, bases, and social environments.
+
+See [Style, Identity, and Provenance](design/STYLE_IDENTITY_AND_PROVENANCE.md) and [Lived-In Ships and Viewports](design/LIVED_IN_SHIPS_AND_VIEWPORTS.md).
 
 ## Learning and social life
 
@@ -72,6 +83,8 @@ This repository currently captures authored intent and design boundaries. It doe
 - [Mission loop and consequence model](design/MISSION_LOOP.md)
 - [Exoskeletons and spacecraft combat](design/EMBODIED_COMBAT_AND_SPACEFLIGHT.md)
 - [Learning and the living social galaxy](design/LEARNING_AND_SOCIAL_GALAXY.md)
+- [Style, identity, and provenance](design/STYLE_IDENTITY_AND_PROVENANCE.md)
+- [Lived-in ships and viewports](design/LIVED_IN_SHIPS_AND_VIEWPORTS.md)
 
 ## Architecture boundaries
 
