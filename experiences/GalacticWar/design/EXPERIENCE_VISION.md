@@ -8,6 +8,12 @@ A far-future civilization inhabits a universe where technology has advanced far 
 
 The universe must remain internally coherent. The audience should be able to wonder how something works, investigate it, and gradually understand its rules. The word *magic* describes the intended sense of wonder; whether specific phenomena are technological, physical, or genuinely supernatural remains an explicit worldbuilding decision.
 
+## Larger-than-life people
+
+The emotional and visual register is deliberately heightened: people can be as unmistakable as legends. Think dramatic anime-scale proportions and signature objects translated into convincing live-action physicality: a sword whose size seems absurd until its owner makes it feel inevitable; a silhouette, coat, hat, stance, weapon, or detail of dress that can be recognized at a distance. The live-action adaptation of *One Piece* is a useful tonal reference for making extravagant character design feel tangible. The goal is not to reproduce its characters or designs, but to capture the confidence, commitment, and visual specificity.
+
+Characters should feel like bosses even when they are simply standing in a room. A hero or villain's presence comes from the complete composition: fashion, posture, movement, voice, equipment, insignia, personal history, and the way the world responds to them. The design should welcome flamboyance, elegance, menace, humor, eccentricity, and extreme personal taste.
+
 ## Learning before adulthood
 
 Children encounter the systems of their civilization early through discovery, play, guided experimentation, and age-appropriate learning. They can explore machines, energy, materials, navigation, biology, history, culture, and the institutions around them.
