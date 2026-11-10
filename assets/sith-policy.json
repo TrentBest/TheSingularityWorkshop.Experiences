@@ -9,19 +9,23 @@
     "development",
     "feature/casino-ledger-core",
     "feature/code-red-ciai-experiences-integration",
+    "feature/galactic-war-experience-vision",
     "feature/game-economy-microbundle-catalog",
     "feature/game-slots-core",
     "feature/living-experience-showcases",
     "feature/minesweeper-domain-pilot",
     "feature/trusted-minesweeper-candidate-validation",
     "master",
+    "work/game-economy-core-integration",
+    "work/github-learning-studio-integration",
     "work/github-learning-studio-issues-journey",
     "work/github-learning-studio-pages-slice",
-    "work/github-learning-studio-pull-request-journey"
+    "work/github-learning-studio-pull-request-journey",
+    "work/living-casino-docs-salvage"
   ],
-  "branch_count": 12,
+  "branch_count": 16,
   "status": "NON-COMPLIANT",
-  "evaluated_at": "2026-11-09T12:50:24Z",
-  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/42620311326",
-  "triggering_commit": "3ddd544c94d22406a6df0737d9e1555cac65a906"
+  "evaluated_at": "2026-11-10T12:37:09Z",
+  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/42817272846",
+  "triggering_commit": "6df5ce9a16391a68773b4a68416329748a0e7b6a"
 }
