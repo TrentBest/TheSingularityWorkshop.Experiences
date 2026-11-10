@@ -68,6 +68,10 @@ These dimensions should reinforce one another. A remote repair station may have 
 
 Not every station needs every district or service. Distinctiveness comes from meaningful combinations and trade-offs, not from making every location a miniature capital city.
 
+## Background life and station continuity
+
+See [Station Life and Background Activity](STATION_LIFE_AND_BACKGROUND_ACTIVITY.md) for a deeper contract covering daily rhythms, resident roles, optional activities, visible supply, local events, and bounded persistence. This companion document expands the lived-in-station promise without requiring every resident or ambient detail to be simulated.
+
 ## The station continues when the visitor leaves
 
 Stations should have a bounded but coherent world rhythm. Ships arrive and depart, people change shifts, goods are consumed and replenished, systems need maintenance, schools hold classes, public events begin and end, and local decisions have consequences.
