@@ -24,6 +24,19 @@ The intended journey is:
 
 The WebApp is the intended distribution and discovery surface; the Experiences repository remains the authored source of identity and intent. FSM_COS composes compatible capabilities. AnyApp may provide a desktop manifestation for heavier local work. None of these layers should be collapsed into a single implementation.
 
+### raWWar — a civilization that learns to become its future
+
+**Explore:** a far-future human civilization where learning, invention, service, and conflict are woven into one living galaxy. Children encounter the technologies and institutions shaping their future long before they choose an adult vocation; later, qualified citizens may inhabit the roles, vehicles, and exoskeleton systems they once studied.
+
+**Why visit:** make the future tangible. The visitor should be able to move from a classroom-scale discovery to a workshop, a vehicle, a squad, a world, and eventually the politics and logistics of a galaxy-spanning conflict—without losing sight of the people living inside it.
+
+**Current truth:** this is an authored vision and design foundation, not a running galaxy simulator, combat game, or deployed VR experience. The persistent-war model, Commander and Enlisted campaign perspectives, and diegetic training principles are design commitments to be developed and validated in stages.
+
+- [Experience home](raWWar/README.md)
+- [Vision and world premise](raWWar/design/EXPERIENCE_VISION.md)
+- [Learning, training, and vocation](raWWar/design/LEARNING_AND_TRAINING.md)
+- [Persistent war and campaign perspectives](raWWar/design/PERSISTENT_WAR_AND_CAMPAIGNS.md)
+
 ## First exhibit families
 
 ### Domino Studio — discrete causality
