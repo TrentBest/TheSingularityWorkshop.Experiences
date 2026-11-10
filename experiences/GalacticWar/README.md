@@ -64,6 +64,12 @@ Ships are places as well as vehicles. The experience should grow from viewing th
 
 See [Style, Identity, and Provenance](design/STYLE_IDENTITY_AND_PROVENANCE.md) and [Lived-In Ships and Viewports](design/LIVED_IN_SHIPS_AND_VIEWPORTS.md).
 
+## Stations, docking, and places to belong
+
+Stations are inhabited destinations, not service menus. A fighter, shuttle, freighter, and capital ship should each experience an arrival appropriate to their scale; once docked, the visitor enters a place with its own people, districts, routines, institutions, and circumstances. Stations can be ports, cities, shipyards, academies, research centers, refuges, and much more. They should remain worth inhabiting between missions.
+
+See [Space Stations and Docking](design/STATIONS_AND_DOCKING.md) for the arrival-to-departure rhythm, station identity, learning districts, and first useful station slice.
+
 ## Learning and social life
 
 Learning begins early as exploration of a complex and wondrous civilization. People discover sciences, crafts, institutions, vehicles, social responsibilities, and possible vocations. Advanced training is a later, deliberate choice with prerequisites and meaningful qualifications.
