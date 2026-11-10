@@ -6,6 +6,8 @@ A station should be enjoyable before it offers the visitor a mission. It is a pl
 
 The goal is not to simulate every resident continuously. The goal is to make the station's life coherent, observable, and occasionally participatory. Background activity should make the world feel active while leaving room for the visitor to choose what deserves attention.
 
+This document complements [Space Stations and Docking](STATIONS_AND_DOCKING.md), which defines the arrival-to-departure experience, and [Vesper Reach](FIRST_STATION_CANDIDATE.md), which proposes a first station where these ideas can be explored. Learning institutions and pathways are described in [Learning and the Living Social Galaxy](LEARNING_AND_SOCIAL_GALAXY.md) and [Learning Progression and Professional Qualification](LEARNING_PROGRESSION_AND_QUALIFICATION.md).
+
 ## The station has a day, even in space
 
 Each station should have a recognizable rhythm appropriate to its purpose and culture. A useful rhythm can include:
