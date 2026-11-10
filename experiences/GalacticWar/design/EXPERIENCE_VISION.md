@@ -14,6 +14,25 @@ The emotional and visual register is deliberately heightened: people can be as u
 
 Characters should feel like bosses even when they are simply standing in a room. A hero or villain's presence comes from the complete composition: fashion, posture, movement, voice, equipment, insignia, personal history, and the way the world responds to them. The design should welcome flamboyance, elegance, menace, humor, eccentricity, and extreme personal taste.
 
+## An ever-escalating cast of adversaries
+
+The opposing cast should unfold with the sense of discovery and escalation found in a long-form adventure: first recognizable agents and local threats, then increasingly formidable specialists, lieutenants, commanders, legendary individuals, and powers whose reach changes entire regions or the galaxy. The reference is the *progression* of a memorable ensemble—not a copy of another work's characters, factions, powers, or plot.
+
+Escalation must be more than increasing statistics. Each significant adversary should introduce a new reason to pay attention:
+- **Presence:** an unmistakable silhouette, bearing, voice, signature equipment, and visual language.
+- **Method:** a distinct combat doctrine, strategy, technology, ability, or way of manipulating the environment.
+- **Context:** a personal history, role, allegiance, ambition, grievance, or relationship to the larger conflict.
+- **Challenge:** a new question the visitor must investigate or a capability they must learn to counter.
+- **Consequence:** a meaningful change in the local situation, faction balance, available knowledge, or future choices.
+
+The cast should have a legible ecology. Foot soldiers, scouts, hunters, engineers, assassins, champions, officers, strategists, political agents, and extraordinary leaders are not interchangeable difficulty tiers; they perform different jobs and create different kinds of pressure. Some enemies should be terrifying because they are clever, elusive, influential, or impossible to reach—not because they have the largest weapon.
+
+The visitor should often encounter evidence of a greater figure before meeting them: a defeated agent's insignia, a distinctive weapon, a changed patrol pattern, a frightened witness, a strategic response, or a trophy whose provenance points to a previous owner. Rumor and reputation may be incomplete or deliberately misleading. The eventual encounter should reward accumulated understanding without requiring that every mystery resolve in a boss fight.
+
+A powerful adversary must still obey the world's rules. Their apparent impossibility should invite discovery: identify constraints, dependencies, habits, costs, vulnerabilities, allies, or competing obligations. A counter may be tactical, technical, social, diplomatic, logistical, or moral. The design should preserve room for retreat, negotiation, evasion, rescue, and non-combat solutions where appropriate.
+
+Escalation should widen the world rather than invalidate it. Earlier adversaries do not become meaningless when stronger figures appear; they remain dangerous in their own context, can adapt, form alliances, exploit changed conditions, and return with consequences. A larger threat may be a different kind of problem, not simply a higher rung on one universal power scale.
+
 ## Learning before adulthood
 
 Children encounter the systems of their civilization early through discovery, play, guided experimentation, and age-appropriate learning. They can explore machines, energy, materials, navigation, biology, history, culture, and the institutions around them.
@@ -47,10 +66,14 @@ History should be discoverable through people, archives, locations, and conflict
 - Keep fictional physics distinct from established Physics implementations until explicitly modelled and validated.
 - Keep the visitor's perspective and agency clear at every scale.
 - Preserve the difference between authored lore, simulated state, and illustrative presentation.
+- Escalate adversaries through identity, methods, context, and consequences—not only numerical power.
 
 ## Questions requiring illumination
 
 - What is the nature of the overwhelming opposing force, and what makes it difficult to defeat?
+- How is the adversary hierarchy organized, and where do independent agents, rival factions, and defectors fit?
+- What makes each major adversary distinct in ways the visitor can discover and respond to?
+- How do adversaries adapt to the visitor's successes without resorting to arbitrary difficulty inflation?
 - Is the universe's magical dimension literal, technological, or a deliberate combination?
 - What is the first world, institution, or community the visitor encounters?
 - Which social structures make early learning natural without making the world feel like a school simulator?
