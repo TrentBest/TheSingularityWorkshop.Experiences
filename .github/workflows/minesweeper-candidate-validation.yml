@@ -1,0 +1,184 @@
+name: Minesweeper trusted candidate validation
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_ref:
+        description: "Candidate branch ref (refs/heads/feature/...)"
+        required: true
+        type: string
+      candidate_sha:
+        description: "Exact 40-character candidate commit SHA"
+        required: true
+        type: string
+      request_id:
+        description: "Persisted Foundry/CiAi request ID"
+        required: true
+        type: string
+      operation_id:
+        description: "Persisted Foundry/CiAi operation ID"
+        required: true
+        type: string
+      idempotency_key:
+        description: "Persisted Foundry/CiAi idempotency key"
+        required: true
+        type: string
+      task_id:
+        description: "Foundry task identity"
+        required: true
+        type: string
+      correlation_id:
+        description: "Foundry task correlation identity"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  test-minesweeper:
+    name: test-minesweeper
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/development'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    env:
+      REPOSITORY: ${{ github.repository }}
+      EVENT_NAME: ${{ github.event_name }}
+      EVENT_REF: ${{ github.ref }}
+      EVENT_SHA: ${{ github.sha }}
+      WORKFLOW_REF: ${{ github.workflow_ref }}
+      WORKFLOW_SHA: ${{ github.workflow_sha }}
+      RUN_ID: ${{ github.run_id }}
+      RUN_ATTEMPT: ${{ github.run_attempt }}
+      CANDIDATE_REF: ${{ inputs.candidate_ref }}
+      CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+      REQUEST_ID: ${{ inputs.request_id }}
+      OPERATION_ID: ${{ inputs.operation_id }}
+      IDEMPOTENCY_KEY: ${{ inputs.idempotency_key }}
+      TASK_ID: ${{ inputs.task_id }}
+      CORRELATION_ID: ${{ inputs.correlation_id }}
+    steps:
+      - name: Checkout trusted workflow and test suite
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Checkout candidate source without credentials
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.candidate_ref }}
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Validate provenance and stage exact candidate source
+        id: verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$EVENT_NAME" == "workflow_dispatch" ]]
+          [[ "$EVENT_REF" == "refs/heads/development" ]]
+          [[ "$WORKFLOW_REF" == "$REPOSITORY/.github/workflows/minesweeper-candidate-validation.yml@refs/heads/development" ]]
+          [[ "$WORKFLOW_SHA" =~ ^[0-9a-f]{40}$ && "$EVENT_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$CANDIDATE_REF" =~ ^refs/heads/feature/[A-Za-z0-9._/-]+$ ]]
+          [[ "$CANDIDATE_REF" != *".."* ]]
+          [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          for value in "$REQUEST_ID" "$OPERATION_ID" "$IDEMPOTENCY_KEY" "$TASK_ID" "$CORRELATION_ID"; do
+            [[ "$value" =~ ^[A-Za-z0-9._:-]{1,256}$ ]]
+          done
+          branch="${CANDIDATE_REF#refs/heads/}"
+          git -C candidate cat-file -e "${CANDIDATE_SHA}^{commit}"
+          git -C candidate merge-base --is-ancestor "$CANDIDATE_SHA" "refs/remotes/origin/${branch}"
+          git -C candidate checkout --detach "$CANDIDATE_SHA"
+          tested_sha="$(git -C candidate rev-parse HEAD)"
+          [[ "$tested_sha" == "$CANDIDATE_SHA" ]]
+          test -d candidate/src/Minesweeper
+          test -f tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj
+          rm -rf src/Minesweeper
+          cp -a candidate/src/Minesweeper src/Minesweeper
+          echo "tested_sha=$tested_sha" >> "$GITHUB_OUTPUT"
+      - name: Set up .NET
+        if: success()
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Run exact-candidate Minesweeper tests
+        id: tests
+        if: success()
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e
+          mkdir -p TestResults/minesweeper
+          dotnet test tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj --configuration Release --logger "trx;LogFileName=minesweeper.trx" --results-directory TestResults/minesweeper
+          exit_code=$?
+          exit "$exit_code"
+      - name: Write provenance and dispatch marker
+        if: always()
+        env:
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+          TEST_OUTCOME: ${{ steps.tests.outcome }}
+          TESTED_SHA: ${{ steps.verify.outputs.tested_sha }}
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          run_id, attempt = int(os.environ["RUN_ID"]), int(os.environ["RUN_ATTEMPT"])
+          provenance = {
+            "contract":"foundry.ciai-candidate-validation-provenance.v1",
+            "repository":os.environ["REPOSITORY"],"requestId":os.environ["REQUEST_ID"],
+            "operationId":os.environ["OPERATION_ID"],"idempotencyKey":os.environ["IDEMPOTENCY_KEY"],
+            "taskId":os.environ["TASK_ID"],"correlationId":os.environ["CORRELATION_ID"],
+            "candidateRef":os.environ["CANDIDATE_REF"],"candidateSha":os.environ["CANDIDATE_SHA"],
+            "testedSha":os.environ.get("TESTED_SHA",""),
+            "workflowPath":".github/workflows/minesweeper-candidate-validation.yml",
+            "workflowRef":os.environ["WORKFLOW_REF"],"workflowDefinitionRef":"refs/heads/development",
+            "workflowDefinitionSha":os.environ["WORKFLOW_SHA"],"eventName":os.environ["EVENT_NAME"],
+            "eventRef":os.environ["EVENT_REF"],"eventSha":os.environ["EVENT_SHA"],
+            "runId":run_id,"runAttempt":attempt,"jobKey":"test-minesweeper","jobName":"test-minesweeper",
+            "artifactName":f"ciai-test-results-{run_id}-{attempt}-test-minesweeper",
+            "testFramework":".NET","testFormat":"trx",
+            "testProject":"tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj",
+            "testResultPath":"TestResults/minesweeper/minesweeper.trx",
+            "verificationOutcome":os.environ.get("VERIFY_OUTCOME","unknown"),
+            "testOutcome":os.environ.get("TEST_OUTCOME","unknown")}
+          marker = {"contract":"foundry.ciai-dispatch-marker.v1","requestId":os.environ["REQUEST_ID"],
+            "operationId":os.environ["OPERATION_ID"],"idempotencyKey":os.environ["IDEMPOTENCY_KEY"],
+            "runId":run_id,"runAttempt":attempt}
+          Path("artifacts/provenance.json").write_text(json.dumps(provenance,separators=(",",":"),sort_keys=True))
+          Path("artifacts/dispatch-marker.json").write_text(json.dumps(marker,separators=(",",":"),sort_keys=True))
+          PY
+      - name: Require non-empty TRX report
+        id: report
+        if: always()
+        shell: bash
+        run: |
+          test -s TestResults/minesweeper/minesweeper.trx || { echo "::error::Required TRX report missing"; exit 1; }
+      - name: Upload exact-run CiAi evidence
+        id: upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ciai-test-results-${{ github.run_id }}-${{ github.run_attempt }}-test-minesweeper
+          path: |
+            TestResults/minesweeper/minesweeper.trx
+            artifacts/provenance.json
+            artifacts/dispatch-marker.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Require all validation and evidence stages to succeed
+        if: always()
+        env:
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+          TEST_OUTCOME: ${{ steps.tests.outcome }}
+          REPORT_OUTCOME: ${{ steps.report.outcome }}
+          UPLOAD_OUTCOME: ${{ steps.upload.outcome }}
+        shell: bash
+        run: |
+          if [[ "$VERIFY_OUTCOME" != success || "$TEST_OUTCOME" != success || "$REPORT_OUTCOME" != success || "$UPLOAD_OUTCOME" != success ]]; then
+            echo "Candidate validation or evidence capture did not complete successfully."
+            exit 1
+          fi
