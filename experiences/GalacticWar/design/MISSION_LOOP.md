@@ -84,3 +84,18 @@ A visitor may revisit a mission as an observer, inspect alternate plans, or comp
 - How are failure, retreat, capture, rescue, and partial success represented?
 - How are adversary identities, capabilities, relationships, and adaptations represented as data?
 - What evidence is retained to explain why the galaxy changed?
+
+
+## Stations as hubs between missions
+
+A station can be the place where several parts of the mission rhythm meet. The visitor may arrive to repair a vessel, gather intelligence, meet a contact, train a skill, recruit help, obtain supplies, or discover that the local situation has changed. Stations are not mandatory mission lobbies; they are inhabited places whose services and opportunities arise from their purpose and current condition.
+
+The visitor's arrival should have a physical and social context. Docking clearance, berth assignment, traffic control, inspections, and access permissions can depend on vessel class, station capacity, local law, reputation, and the current situation. A fighter, passenger shuttle, cargo vessel, and capital ship should not all arrive in the same way. Routine arrivals can be assisted; unusual or consequential arrivals can become active experiences.
+
+Station activity can create mission opportunities without reducing every resident to a quest giver. Conversations, public events, maintenance work, shortages, school projects, local disputes, and visible traffic can reveal the needs and history of a place. Mission consequences should affect station services, safety, access, population, supply, and relationships where causally appropriate.
+
+## Learning and qualification in the mission rhythm
+
+Education and training are part of the world before and between missions. Schools, academies, mentors, workshops, and simulators can introduce systems safely and help the visitor discover possible vocations. Training develops particular capabilities through practice and qualification; it is not a blanket permission to perform every hazardous role.
+
+Preparation can include refreshing a skill, learning a station's procedures, qualifying on unfamiliar equipment, or practicing with a team. A visitor's education should open more choices over time, including non-combat careers and contributions. No mission loop should imply that all learning culminates in military service.
