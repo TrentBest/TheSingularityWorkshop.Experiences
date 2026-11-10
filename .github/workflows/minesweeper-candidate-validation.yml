@@ -65,13 +65,6 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
-      - name: Checkout candidate source without credentials
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ inputs.candidate_ref }}
-          path: candidate
-          fetch-depth: 0
-          persist-credentials: false
       - name: Validate provenance and stage exact candidate source
         id: verify
         shell: bash
@@ -81,18 +74,19 @@ jobs:
           [[ "$EVENT_REF" == "refs/heads/development" ]]
           [[ "$WORKFLOW_REF" == "$REPOSITORY/.github/workflows/minesweeper-candidate-validation.yml@refs/heads/development" ]]
           [[ "$WORKFLOW_SHA" =~ ^[0-9a-f]{40}$ && "$EVENT_SHA" =~ ^[0-9a-f]{40}$ ]]
-          [[ "$CANDIDATE_REF" =~ ^refs/heads/feature/[A-Za-z0-9._/-]+$ ]]
-          [[ "$CANDIDATE_REF" != *".."* ]]
+          [[ "$CANDIDATE_REF" == refs/heads/feature/* ]]
+          git check-ref-format "$CANDIDATE_REF"
           [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]]
           for value in "$REQUEST_ID" "$OPERATION_ID" "$IDEMPOTENCY_KEY" "$TASK_ID" "$CORRELATION_ID"; do
             [[ "$value" =~ ^[A-Za-z0-9._:-]{1,256}$ ]]
           done
-          branch="${CANDIDATE_REF#refs/heads/}"
-          git -C candidate cat-file -e "${CANDIDATE_SHA}^{commit}"
-          git -C candidate merge-base --is-ancestor "$CANDIDATE_SHA" "refs/remotes/origin/${branch}"
-          git -C candidate checkout --detach "$CANDIDATE_SHA"
-          tested_sha="$(git -C candidate rev-parse HEAD)"
+          git fetch --no-tags origin "$CANDIDATE_REF:refs/remotes/origin/candidate-validation"
+          git cat-file -e "${CANDIDATE_SHA}^{commit}"
+          git merge-base --is-ancestor "$CANDIDATE_SHA" refs/remotes/origin/candidate-validation
+          tested_sha="$(git rev-parse "$CANDIDATE_SHA^{commit}")"
           [[ "$tested_sha" == "$CANDIDATE_SHA" ]]
+          mkdir -p candidate
+          git archive "$tested_sha" src/Minesweeper | tar -x -C candidate
           test -d candidate/src/Minesweeper
           test -f tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj
           rm -rf src/Minesweeper
