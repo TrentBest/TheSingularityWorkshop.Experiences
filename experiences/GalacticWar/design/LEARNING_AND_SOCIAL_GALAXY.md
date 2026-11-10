@@ -21,9 +21,10 @@ The galaxy should contain ordinary social structures and activities:
 - education, research, trades, and creative work;
 - markets, services, transport, and shared infrastructure;
 - local governance, cultural practices, institutions, and public life;
-- recreation, celebrations, disagreements, and competing interests.
+- recreation, celebrations, disagreements, and competing interests;
+- fashion, personal presentation, heraldry, flags, ship markings, collections, and objects whose histories are known.
 
-These systems give the galaxy texture between major events and establish what is at stake when a mission changes a place.
+Identity should be visible in the world. Two people in the same role should not automatically look alike. Uniforms and faction standards may exist, but individuals should be able to express rank, allegiance, achievement, origin, taste, and defiance through deliberate details.
 
 ## Relationships and memory
 
