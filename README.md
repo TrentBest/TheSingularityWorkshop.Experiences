@@ -39,9 +39,9 @@ Keep Experience semantics and artifact identity here; let hosts own presentation
 
 ![Story Forge: parallel timelines connected to book coverage](docs/assets/story-forge-coverage.svg)
 
-[Open the interactive Story Forge demo source](docs/demos/story-forge.html) · [Story Forge domain concept](src/StoryForge/README.md)
+[Open the interactive Story Forge demo source](docs/demos/story-forge.html) · [Story Forge domain](src/StoryForge/README.md)
 
-The HTML demos are self-contained: download each file and open it locally to interact with the prototype. They use illustrative browser-side data, not the C# ledger or a canonical StoryForge domain. The C# scene sample generates the casino floor through GUI.Core → GUI.SVG; Story Forge remains a standalone visual prototype until its canonical domain implementation exists.
+The HTML demos are self-contained: download each file and open it locally to interact with the prototype. They use illustrative browser-side data, not the C# ledger or StoryForge domain. CI also builds the C# scene proof against the actual GUI.Core and GUI.SVG source and uploads both generated SVGs as artifacts. The sample uses StoryForge domain values for its timeline and publication-coverage scene; the browser demo remains an illustrative interaction prototype, not the runtime.
 
 The next integration step is to replace authored snapshots with reviewed generated outputs, then connect domain-derived scene data through [Visualize](https://github.com/TrentBest/TheSingularityWorkshop.Visualize) and the [GUI.Core model](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/GUI_MODEL.md) → [GUI.SVG adapter](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/SVG_ADAPTER.md) path, with [Renderer](https://github.com/TrentBest/TheSingularityWorkshop.Renderer) selecting observer-appropriate representation.
 
