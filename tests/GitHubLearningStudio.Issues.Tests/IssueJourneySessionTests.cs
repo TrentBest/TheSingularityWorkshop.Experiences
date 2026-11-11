@@ -51,11 +51,60 @@ public sealed class IssueJourneySessionTests
         Assert.True(session.Execute(IssueJourneyCommands.MergePullRequest).Accepted);
         Assert.False(session.Execute(IssueJourneyCommands.CloseIssue).Accepted);
         Assert.False(session.CaptureSnapshot().AcceptanceVerified);
+        Assert.False(session.Execute(IssueJourneyCommands.VerifyAcceptance).Accepted);
+        Assert.True(session.Execute(IssueJourneyCommands.RecordAcceptanceEvidence, "1:pass").Accepted);
+        Assert.False(session.Execute(IssueJourneyCommands.VerifyAcceptance).Accepted);
+        Assert.True(session.Execute(IssueJourneyCommands.RecordAcceptanceEvidence, "2:fail").Accepted);
+        Assert.False(session.Execute(IssueJourneyCommands.VerifyAcceptance).Accepted);
+        Assert.True(session.Execute(IssueJourneyCommands.RecordAcceptanceEvidence, "2:pass").Accepted);
         Assert.True(session.Execute(IssueJourneyCommands.VerifyAcceptance).Accepted);
         var verified = session.CaptureSnapshot();
         Assert.All(verified.AcceptanceEvidence, Assert.True);
+        Assert.All(verified.AcceptanceEvidenceRecorded, Assert.True);
         Assert.True(session.Execute(IssueJourneyCommands.CloseIssue).Accepted);
         Assert.Equal(IssueLifecycle.Closed, session.CaptureSnapshot().Lifecycle);
+    }
+
+    [Fact]
+    public void AcceptanceCannotBeVerifiedUntilEveryCriterionHasPassingEvidence()
+    {
+        var session = PreparedIssue();
+        session.Execute(IssueJourneyCommands.ClassifyIssue, "bug");
+        session.Execute(IssueJourneyCommands.AssignIssue, "maintainer");
+        session.Execute(IssueJourneyCommands.AddClarification, "Which entry is affected and which views need the attribution?");
+        session.Execute(IssueJourneyCommands.CreateBranch);
+        session.Execute(IssueJourneyCommands.CommitFix, "Restore location attribution in both views");
+        session.Execute(IssueJourneyCommands.OpenPullRequest);
+        session.Execute(IssueJourneyCommands.MergePullRequest);
+
+        Assert.False(session.Execute(IssueJourneyCommands.VerifyAcceptance).Accepted);
+        Assert.False(session.Execute(IssueJourneyCommands.RecordAcceptanceEvidence, "3:pass").Accepted);
+        Assert.True(session.Execute(IssueJourneyCommands.RecordAcceptanceEvidence, "1:fail").Accepted);
+        Assert.True(session.Execute(IssueJourneyCommands.RecordAcceptanceEvidence, "2:pass").Accepted);
+        Assert.False(session.Execute(IssueJourneyCommands.VerifyAcceptance).Accepted);
+        Assert.False(session.Execute(IssueJourneyCommands.CloseIssue).Accepted);
+        var snapshot = session.CaptureSnapshot();
+        Assert.False(snapshot.AcceptanceVerified);
+        Assert.Equal(new[] { true, true }, snapshot.AcceptanceEvidenceRecorded);
+        Assert.Equal(new[] { false, true }, snapshot.AcceptanceEvidence);
+        Assert.Equal(IssueLifecycle.Open, snapshot.Lifecycle);
+    }
+
+    [Fact]
+    public void FailedAcceptanceEvidenceCanBeCorrectedBeforeVerification()
+    {
+        var session = PreparedIssue();
+        session.Execute(IssueJourneyCommands.ClassifyIssue, "bug");
+        session.Execute(IssueJourneyCommands.AssignIssue, "maintainer");
+        session.Execute(IssueJourneyCommands.AddClarification, "Which entry is affected and which views need the attribution?");
+        session.Execute(IssueJourneyCommands.CreateBranch);
+        session.Execute(IssueJourneyCommands.CommitFix, "Restore location attribution in both views");
+        session.Execute(IssueJourneyCommands.OpenPullRequest);
+        session.Execute(IssueJourneyCommands.MergePullRequest);
+        session.Execute(IssueJourneyCommands.RecordAcceptanceEvidence, "1:fail");
+        Assert.True(session.Execute(IssueJourneyCommands.RecordAcceptanceEvidence, "1:pass").Accepted);
+        Assert.True(session.Execute(IssueJourneyCommands.RecordAcceptanceEvidence, "2:pass").Accepted);
+        Assert.True(session.Execute(IssueJourneyCommands.VerifyAcceptance).Accepted);
     }
 
     [Fact]
@@ -78,6 +127,8 @@ public sealed class IssueJourneySessionTests
         session.Execute(IssueJourneyCommands.CommitFix, "Restore location attribution in both views");
         session.Execute(IssueJourneyCommands.OpenPullRequest);
         session.Execute(IssueJourneyCommands.MergePullRequest);
+        session.Execute(IssueJourneyCommands.RecordAcceptanceEvidence, "1:pass");
+        session.Execute(IssueJourneyCommands.RecordAcceptanceEvidence, "2:pass");
         session.Execute(IssueJourneyCommands.VerifyAcceptance);
         session.Execute(IssueJourneyCommands.CloseIssue);
         Assert.True(session.Execute(IssueJourneyCommands.ReopenIssue).Accepted);
@@ -85,6 +136,7 @@ public sealed class IssueJourneySessionTests
         Assert.Equal(IssueLifecycle.Open, reopened.Lifecycle);
         Assert.False(reopened.AcceptanceVerified);
         Assert.All(reopened.AcceptanceEvidence, Assert.False);
+        Assert.All(reopened.AcceptanceEvidenceRecorded, Assert.False);
         Assert.Contains(IssueJourneyCommands.VerifyAcceptance, reopened.AvailableCommands);
     }
 
