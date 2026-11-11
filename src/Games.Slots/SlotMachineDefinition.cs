@@ -98,33 +98,48 @@ public sealed class SlotMachineDefinition
         return new SlotSpinResult(Array.AsReadOnly(resultStops), stake, multiplier, stake * multiplier);
     }
 
-    /// <summary>
-    /// Calculates the exact expected gross payout for one spin by enumerating symbol
-    /// probabilities analytically; it does not run a Monte Carlo simulation.
-    /// </summary>
-    public decimal CalculateExpectedPayoutPerSpin(decimal stake)
+    /// <summary>Calculates the exact expected gross payout as a reduced rational number.</summary>
+    public ExactRational CalculateExpectedPayoutPerSpinExact(decimal stake)
     {
         ValidateStake(stake);
+        return CalculateReturnToPlayerExact() * ExactRational.FromDecimal(stake);
+    }
 
-        decimal expectedMultiplier = 0m;
+    /// <summary>
+    /// Calculates exact return-to-player as a reduced rational number (for example, 4/9).
+    /// Each reel probability and each decimal paytable multiplier is represented without rounding.
+    /// </summary>
+    public ExactRational CalculateReturnToPlayerExact()
+    {
+        var expectedMultiplier = ExactRational.Zero;
         foreach (var (symbol, multiplier) in _payoutMultipliers)
         {
-            decimal probability = 1m;
+            var probability = ExactRational.One;
             foreach (var reel in _reels)
             {
                 var occurrences = reel.Count(stop => string.Equals(stop, symbol, StringComparison.Ordinal));
-                probability *= (decimal)occurrences / reel.Length;
+                probability *= new ExactRational(occurrences, reel.Length);
             }
 
-            expectedMultiplier += probability * multiplier;
+            expectedMultiplier += probability * ExactRational.FromDecimal(multiplier);
         }
 
-        return stake * expectedMultiplier;
+        return expectedMultiplier;
     }
 
-    /// <summary>Returns expected gross payout divided by stake, as a fraction (1.0 means 100%).</summary>
-    public decimal CalculateReturnToPlayer(decimal stake) =>
-        CalculateExpectedPayoutPerSpin(stake) / ValidateStake(stake);
+    /// <summary>
+    /// Returns the expected gross payout as a decimal display value. Use the exact method
+    /// when the rational result itself is required; this conversion rounds to decimal precision.
+    /// </summary>
+    public decimal CalculateExpectedPayoutPerSpin(decimal stake) =>
+        CalculateExpectedPayoutPerSpinExact(stake).ToDecimal();
+
+    /// <summary>Returns exact expected gross payout divided by stake as a decimal display value.</summary>
+    public decimal CalculateReturnToPlayer(decimal stake)
+    {
+        ValidateStake(stake);
+        return CalculateReturnToPlayerExact().ToDecimal();
+    }
 
     private static decimal ValidateStake(decimal stake)
     {
