@@ -5,8 +5,11 @@ namespace TheSingularityWorkshop.Games.Slots;
 /// <summary>An exact, reduced rational number backed by arbitrary-precision integers.</summary>
 public readonly struct ExactRational : IEquatable<ExactRational>
 {
-    public BigInteger Numerator { get; }
-    public BigInteger Denominator { get; }
+    private readonly BigInteger _numerator;
+    private readonly BigInteger _denominator;
+
+    public BigInteger Numerator => _numerator;
+    public BigInteger Denominator => _denominator.IsZero ? BigInteger.One : _denominator;
 
     public ExactRational(BigInteger numerator, BigInteger denominator)
     {
@@ -20,8 +23,8 @@ public readonly struct ExactRational : IEquatable<ExactRational>
         }
 
         var divisor = BigInteger.GreatestCommonDivisor(BigInteger.Abs(numerator), denominator);
-        Numerator = numerator / divisor;
-        Denominator = denominator / divisor;
+        _numerator = numerator / divisor;
+        _denominator = denominator / divisor;
     }
 
     public static ExactRational Zero => new(BigInteger.Zero, BigInteger.One);
