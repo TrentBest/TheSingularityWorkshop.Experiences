@@ -7,19 +7,11 @@
   ],
   "actual_branches": [
     "development",
-    "feature/casino-ledger-core",
-    "feature/game-economy-microbundle-catalog",
-    "feature/game-slots-core",
-    "feature/trusted-minesweeper-candidate-validation",
-    "master",
-    "work/github-learning-studio-issues-journey",
-    "work/github-learning-studio-pages-slice",
-    "work/github-learning-studio-pull-request-journey",
-    "work/living-casino-docs-salvage"
+    "master"
   ],
-  "branch_count": 10,
-  "status": "NON-COMPLIANT",
-  "evaluated_at": "2026-11-11T02:58:01Z",
-  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/42949540770",
-  "triggering_commit": "5fa90b11fc2123168e0cb70311f3cd20107bddda"
+  "branch_count": 2,
+  "status": "COMPLIANT",
+  "evaluated_at": "2026-11-11T02:58:10Z",
+  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/42949556061",
+  "triggering_commit": "20e4e6b510868fb4692f6f2622683319ab4ebe9e"
 }
