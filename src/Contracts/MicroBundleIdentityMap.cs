@@ -1,14 +1,14 @@
 namespace TheSingularityWorkshop.Experiences.Contracts;
 
 /// <summary>
-/// An explicit mapping from an Experience-authored bundle key to the numeric MicroBundle identity
-/// used by MicroBundleDomain, MicroBundleRepository, and FSM_COS.
+/// Maps canonical string ontology identities to repository-local numeric handles.
 /// </summary>
 /// <remarks>
-/// This contract deliberately does not allocate IDs, hash keys, or infer mappings. The host or
-/// deployment configuration must supply the authoritative bindings. Both directions are unique so
-/// an Experience key cannot alias another runtime bundle and a runtime bundle cannot be claimed by
-/// multiple authored keys within one mapping.
+/// The ontology string is the identity and remains stable across repositories. The non-zero
+/// numeric ID is only a local address/handle assigned by a particular repository for locating
+/// the stored artifact in its blob data. It is not a global identity and must not be exchanged
+/// as though it were portable between repositories. The repository/host supplies the bindings;
+/// this type does not allocate handles, hash ontology strings, or infer mappings.
 /// </remarks>
 public sealed class MicroBundleIdentityMap
 {
@@ -23,14 +23,15 @@ public sealed class MicroBundleIdentityMap
         _keysById = new System.Collections.ObjectModel.ReadOnlyDictionary<ulong, string>(keysById);
     }
 
-    /// <summary>Gets the number of explicit identity bindings.</summary>
+    /// <summary>Gets the number of explicit ontology-to-local-handle bindings.</summary>
     public int Count => _idsByKey.Count;
 
     /// <summary>
-    /// Creates a validated one-to-one mapping. No IDs are generated or inferred.
+    /// Creates a validated one-to-one mapping for one local repository. No handles are generated
+    /// or inferred; the repository supplies its persisted bindings.
     /// </summary>
     /// <exception cref="ArgumentNullException">The binding sequence is null.</exception>
-    /// <exception cref="ArgumentException">A key or ID is invalid, or either side is duplicated.</exception>
+    /// <exception cref="ArgumentException">An ontology key or local handle is invalid, or either side is duplicated.</exception>
     public static MicroBundleIdentityMap Create(IEnumerable<MicroBundleIdentityBinding> bindings)
     {
         ArgumentNullException.ThrowIfNull(bindings);
@@ -46,22 +47,22 @@ public sealed class MicroBundleIdentityMap
             if (string.IsNullOrWhiteSpace(binding.BundleKey) ||
                 !string.Equals(binding.BundleKey, binding.BundleKey.Trim(), StringComparison.Ordinal) ||
                 binding.BundleKey.Any(char.IsControl))
-                throw new ArgumentException("Bundle keys must be non-empty, trimmed, and contain no control characters.", nameof(bindings));
+                throw new ArgumentException("Ontology keys must be non-empty, trimmed, and contain no control characters.", nameof(bindings));
 
             if (binding.BundleId == 0)
-                throw new ArgumentException($"Bundle key '{binding.BundleKey}' cannot map to the reserved zero bundle ID.", nameof(bindings));
+                throw new ArgumentException($"Ontology key '{binding.BundleKey}' cannot map to the reserved zero local handle.", nameof(bindings));
 
             if (!idsByKey.TryAdd(binding.BundleKey, binding.BundleId))
-                throw new ArgumentException($"Duplicate Experience bundle key '{binding.BundleKey}'.", nameof(bindings));
+                throw new ArgumentException($"Duplicate ontology key '{binding.BundleKey}'.", nameof(bindings));
 
             if (!keysById.TryAdd(binding.BundleId, binding.BundleKey))
-                throw new ArgumentException($"Numeric MicroBundle ID '{binding.BundleId}' is assigned to more than one Experience bundle key.", nameof(bindings));
+                throw new ArgumentException($"Local MicroBundle handle '{binding.BundleId}' is assigned to more than one ontology key in this repository.", nameof(bindings));
         }
 
         return new MicroBundleIdentityMap(idsByKey, keysById);
     }
 
-    /// <summary>Resolves an exact, ordinal Experience bundle key to its canonical numeric ID.</summary>
+    /// <summary>Resolves an exact, ordinal ontology identity to its local repository handle.</summary>
     public bool TryResolve(string bundleKey, out ulong bundleId)
     {
         if (string.IsNullOrEmpty(bundleKey))
@@ -73,7 +74,7 @@ public sealed class MicroBundleIdentityMap
         return _idsByKey.TryGetValue(bundleKey, out bundleId);
     }
 
-    /// <summary>Resolves a non-zero numeric MicroBundle ID to its exact Experience bundle key.</summary>
+    /// <summary>Resolves a local repository handle to its exact canonical ontology identity.</summary>
     public bool TryGetBundleKey(ulong bundleId, out string bundleKey)
     {
         if (bundleId == 0)
@@ -86,5 +87,5 @@ public sealed class MicroBundleIdentityMap
     }
 }
 
-/// <summary>An owner-supplied binding between an authored bundle key and a numeric runtime identity.</summary>
+/// <summary>A persisted binding between a canonical string ontology identity and a repository-local handle.</summary>
 public sealed record MicroBundleIdentityBinding(string BundleKey, ulong BundleId);
