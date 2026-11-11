@@ -96,6 +96,8 @@ The existing `package` job runs on `workflow_dispatch` and has `packages: write`
 
 A dedicated validation workflow must have read-only permissions, no package publishing, no deployment, and explicit separation between trusted workflow code and the immutable candidate checkout.
 
+The current isolated pilot is `.github/workflows/minesweeper-candidate-validation.yml`. It is dispatched only from `development`, requires the exact repository and workflow path/ref, checks that the workflow-definition SHA equals the dispatch event SHA, fetches the supplied candidate branch, and requires the fetched branch tip to equal the supplied full candidate SHA before archiving and testing that exact commit. It checks out the trusted test suite from the workflow commit, copies only the candidate's `src/Minesweeper` project into the trusted workspace, and uploads a run/attempt-scoped TRX report, provenance record, and dispatch marker. It has read-only contents permission and no package/deployment step. This is an isolated Minesweeper pilot, not yet a general CODE RED executor.
+
 ## 5. Cross-repository source reproducibility
 
 The existing `source-integration` and `source-integration-tests` jobs checkout MicroBundleDomain, GUI, and Physics from their moving `development` refs. Therefore an Experiences candidate SHA alone does not fully identify the source graph used by those jobs.
