@@ -24,12 +24,17 @@ P(all reels match symbol s) = product over reels i of (count(i, s) / stopCount(i
 
 where `count(i, s)` is the number of occurrences of `s` on reel `i`, and `stopCount(i)` is that reel's stop count.
 
-The exact expected gross return per spin is:
+The exact expected RTP is represented as a reduced rational number backed by arbitrary-precision integers:
 
 ```text
-expectedGrossPayout = stake * sum over paying symbols s of (P(all reels match s) * multiplier(s))
-RTP = expectedGrossPayout / stake
+RTP = sum over paying symbols s of (
+  product over reels i of (count(i, s) / stopCount(i))
+  * exactDecimal(multiplier(s))
+)
+expectedGrossPayout = exactDecimal(stake) * RTP
 ```
+
+The `CalculateReturnToPlayerExact` and `CalculateExpectedPayoutPerSpinExact` methods preserve these ratios without rounding. The decimal-returning convenience methods convert the exact result to `decimal` for display/interoperability and therefore round to decimal precision; they are not the exact representation.
 
 The stake is included in gross return: a 5x multiplier returns five units for a one-unit stake, not six. A symbol omitted from the paytable loses even if it appears on every reel.
 
@@ -41,7 +46,7 @@ Monte Carlo runs are valuable for studying finite-session variation, player stra
 
 Use the analytical result as a baseline, then compare seeded runs against it. A mismatch can reveal a defect in the random-stop generator, the simulation loop, or the evaluator. Record the definition/version, reel strips, paytable, stake, seed, spin count, observed payout, and exact expected payout for reproducibility.
 
-The current class calculates the exact expectation for the simple matching rule; it does not yet implement a seeded random generator or an experiment runner.
+The current class calculates the exact expectation for the simple matching rule using reduced ExactRational values; it does not yet implement a seeded random generator or an experiment runner.
 
 ## 4. Accounting is a different boundary
 
