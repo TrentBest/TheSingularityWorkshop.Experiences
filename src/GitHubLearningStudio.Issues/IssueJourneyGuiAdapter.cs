@@ -25,7 +25,7 @@ public static class IssueJourneyGuiAdapter
         {
             var index = i;
             criteria.Child("Text", $"github-issues-criterion-{index + 1}", child =>
-                child.Text($"{(snapshot.AcceptanceEvidence[index] ? "[verified]" : "[not verified]")} {snapshot.AcceptanceCriteria[index]}"));
+                child.Text($"{(snapshot.AcceptanceEvidenceRecorded[index] ? (snapshot.AcceptanceEvidence[index] ? "[pass]" : "[fail]") : "[not recorded]")} {snapshot.AcceptanceCriteria[index]}"));
         }
         root.Child(criteria);
         var discussion = GuiBuilder.Create("Panel", "github-issues-discussion");
@@ -46,7 +46,8 @@ public static class IssueJourneyGuiAdapter
                 IssueJourneyCommands.CommitFix => ("github-issues-commit", "Commit focused fix", "Restore location attribution in both views"),
                 IssueJourneyCommands.OpenPullRequest => ("github-issues-open-pr", "Open linked pull request", null),
                 IssueJourneyCommands.MergePullRequest => ("github-issues-merge-pr", "Merge pull request (simulated)", null),
-                IssueJourneyCommands.VerifyAcceptance => ("github-issues-verify", "Verify acceptance criteria", null),
+                IssueJourneyCommands.RecordAcceptanceEvidence => ("github-issues-record-evidence", "Record criterion evidence (criterion:pass or criterion:fail)", "1:pass"),
+                IssueJourneyCommands.VerifyAcceptance => ("github-issues-verify", "Verify all passing acceptance criteria", null),
                 IssueJourneyCommands.CloseIssue => ("github-issues-close", "Close resolved issue", null),
                 IssueJourneyCommands.ReopenIssue => ("github-issues-reopen", "Reopen issue", null),
                 _ => throw new InvalidOperationException($"Unknown issue command '{command}'.")
