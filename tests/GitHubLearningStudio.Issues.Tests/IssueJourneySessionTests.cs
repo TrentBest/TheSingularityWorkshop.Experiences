@@ -152,6 +152,29 @@ public sealed class IssueJourneySessionTests
     }
 
     [Fact]
+    public void GuiProjectionOffersPassAndFailForEveryAcceptanceCriterion()
+    {
+        var session = PreparedIssue();
+        session.Execute(IssueJourneyCommands.ClassifyIssue, "bug");
+        session.Execute(IssueJourneyCommands.AssignIssue, "maintainer");
+        session.Execute(IssueJourneyCommands.AddClarification, "Which entry is affected and which views need the attribution?");
+        session.Execute(IssueJourneyCommands.CreateBranch);
+        session.Execute(IssueJourneyCommands.CommitFix, "Restore location attribution in both views");
+        session.Execute(IssueJourneyCommands.OpenPullRequest);
+        session.Execute(IssueJourneyCommands.MergePullRequest);
+
+        var controls = IssueJourneyGuiAdapter.Build(session.CaptureSnapshot()).Find("github-issues-controls");
+        Assert.True(controls.TryFind("github-issues-evidence-1-pass", out var firstPass));
+        Assert.True(controls.TryFind("github-issues-evidence-1-fail", out var firstFail));
+        Assert.True(controls.TryFind("github-issues-evidence-2-pass", out var secondPass));
+        Assert.True(controls.TryFind("github-issues-evidence-2-fail", out var secondFail));
+        Assert.Equal("1:pass", firstPass!.Properties["commandValue"]);
+        Assert.Equal("1:fail", firstFail!.Properties["commandValue"]);
+        Assert.Equal("2:pass", secondPass!.Properties["commandValue"]);
+        Assert.Equal("2:fail", secondFail!.Properties["commandValue"]);
+    }
+
+    [Fact]
     public void GuiDispatcherUsesCommandMetadataAndReturnsFreshSnapshot()
     {
         var session = new IssueJourneySession();
