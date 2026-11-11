@@ -16,5 +16,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/Contracts/TheSingularityWorkshop.Experiences.Contracts.csproj" />
+    <Content Include="../../docs/contracts/experience-manifest.example.json" Link="contracts/experience-manifest.example.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
