@@ -56,9 +56,23 @@ public sealed class SlotMachineDefinitionTests
         // Cherry: (2/3)*(1/3)*(1/3) * 2 = 4/27
         // Bell:   (1/3)*(2/3)*(1/3) * 4 = 8/27
         // Seven:  (0/3)*(0/3)*(1/3) * 10 = 0
-        var expectedRtp = 12m / 27m;
-        Assert.True(Math.Abs(machine.CalculateExpectedPayoutPerSpin(1m) - expectedRtp) < 0.00000000000000000000000001m);
-        Assert.True(Math.Abs(machine.CalculateReturnToPlayer(1m) - expectedRtp) < 0.00000000000000000000000001m);
+        var exactRtp = new ExactRational(4, 9);
+        Assert.Equal(exactRtp, machine.CalculateReturnToPlayerExact());
+        Assert.Equal(exactRtp, machine.CalculateExpectedPayoutPerSpinExact(1m));
+        Assert.True(Math.Abs(machine.CalculateExpectedPayoutPerSpin(1m) - exactRtp.ToDecimal()) < 0.00000000000000000000000001m);
+        Assert.True(Math.Abs(machine.CalculateReturnToPlayer(1m) - exactRtp.ToDecimal()) < 0.00000000000000000000000001m);
+    }
+
+    [Fact]
+    public void ExactRtpPreservesDecimalMultipliersWithoutDivisionRounding()
+    {
+        var machine = new SlotMachineDefinition(
+            new[] { new[] { "A", "B" }, new[] { "A", "B", "B" } },
+            new Dictionary<string, decimal> { ["A"] = 0.1m });
+
+        // P(A on both reels) = 1/2 * 1/3; multiplier 0.1 is exactly 1/10.
+        Assert.Equal(new ExactRational(1, 60), machine.CalculateReturnToPlayerExact());
+        Assert.Equal(new ExactRational(1, 20), machine.CalculateExpectedPayoutPerSpinExact(3m));
     }
 
     [Fact]
