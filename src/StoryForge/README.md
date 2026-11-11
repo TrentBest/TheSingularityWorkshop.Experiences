@@ -1,4 +1,8 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/moniker.svg)
+
 # Story Forge
+
+[![Sith Policy](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Experiences/development/assets/sith-policy.svg)](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/workflows/sith-policy.yml)
 
 ![Story Forge temporal model](../../docs/assets/story-forge-temporal-model.svg)
 
@@ -44,3 +48,8 @@ The intended rendering handoff is [StoryForge data](https://github.com/TrentBest
 **Implemented:** temporal coordinates and ranges, publication coverage and immutable edition snapshots, provenance-aware event/state records, exact-time temporal queries, entity focus, proposal filtering, and conflict reporting. Automated tests cover these invariants.
 
 **Not implemented yet:** interactive timeline and string-board manifestations, character authoring UI, temporal simulation/interpolation, camera/viewpoint optimization, extraction pipeline, persistent story graph, and end-to-end publication workflow. These should be added as separately testable capabilities and integrated into Forge through its actual manifest/MicroBundle contracts—not through a Unity-specific project.
+
+---
+
+<!-- THE SINGULARITY WORKSHOP FOOTER -->
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop" width="200" /></p>
