@@ -104,7 +104,7 @@ jobs:
       - name: Validate SVG, HTML structure, interactions, and JavaScript syntax
         run: python3 tools/validate_living_docs.py
 
-  # Generate the casino-floor proof from the actual GUI.Core and GUI.SVG APIs, not browser-authored markup.
+  # Generate a second proof from the actual GUI.Core and GUI.SVG APIs, not browser-authored markup.
   render-living-docs:
     runs-on: ubuntu-24.04
     steps:
@@ -121,7 +121,7 @@ jobs:
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 8.0.x
-      - name: Generate casino-floor scene through GUI.Core → GUI.SVG
+      - name: Generate casino and Story Forge scenes through GUI.Core → GUI.SVG
         working-directory: Experiences
         run: dotnet run --project samples/LivingDocs/LivingDocs.csproj --configuration Release -- "${RUNNER_TEMP}/living-docs"
       - name: Validate generated SVG structure and visible meaning
@@ -132,13 +132,18 @@ jobs:
           import xml.etree.ElementTree as ET
 
           paths = glob.glob(os.path.join(os.environ["RUNNER_TEMP"], "living-docs", "*.svg"))
-          if len(paths) != 1:
-              raise SystemExit(f"Expected 1 generated casino-floor SVG proof, found {len(paths)}: {paths}")
+          if len(paths) != 2:
+              raise SystemExit(f"Expected 2 generated SVG proofs, found {len(paths)}: {paths}")
 
           expectations = {
               "casino-floor.svg": [
                   "CAGE", "TABLE", "SLOT MACHINES", "BUY-IN", "WAGER",
                   "PAYOUT", "CASH-OUT", "RECONCILIATION", "Δ = 0",
+              ],
+              "story-forge-coverage.svg": [
+                  "World events", "Mira", "The Archive", "Year 0", "Day 0",
+                  "Reign I", "World collection", "Series A", "Series B",
+                  "sequence ≠ chronology",
               ],
           }
 
