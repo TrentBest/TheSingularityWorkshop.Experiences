@@ -3,7 +3,7 @@
 # The Singularity Workshop — Experiences
 
 
-[![Sith Policy](assets/sith-policy.svg)](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/workflows/sith-policy.yml)
+[![Sith Policy](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Experiences/master/assets/sith-policy.svg)](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/workflows/sith-policy.yml)
 > **A home for independently authored Workshop Experiences and publishable MicroBundle artifacts.**
 
 An Experience defines what is being experienced; WebApp, AnyApp, and VR are different manifestations of that shared experience—not separate definitions of it.
