@@ -31,15 +31,19 @@ Keep Experience semantics and artifact identity here; let hosts own presentation
 
 ## 🟢 04 See it in a minute
 
-Start with the MVP vertical slice and publication path documented below; use the listed tests and artifact checks before treating an Experience as publishable.
+### Watch the model, not a paragraph
 
-### A living economy prototype
+![Living casino economy: cage, table, slots, and auditable ledger](docs/assets/casino-floor.svg)
 
-![A living casino floor with an inspectable virtual economy](docs/assets/casino-floor.svg)
+[Open the interactive casino-floor demo source](docs/demos/casino-floor.html) · [Casino ledger contracts](docs/GAMES_CASINO_LEDGER_DESIGN.md)
 
-[Open the interactive casino-floor demonstration](docs/demos/casino-floor.html)
+![Story Forge: parallel timelines connected to book coverage](docs/assets/story-forge-coverage.svg)
 
-This browser-side teaching model makes buy-in, wagers, returns, cash-out, the event journal, and reconciliation visible. It uses illustrative virtual data; it is not connected to the C# ledger and does not handle real-money redemption.
+[Open the interactive Story Forge demo source](docs/demos/story-forge.html) · [Story Forge domain](src/StoryForge/README.md)
+
+The HTML demos are self-contained: download each file and open it locally to interact with the prototype. They use illustrative browser-side data, not the C# ledger or StoryForge domain. CI also builds the C# scene proof against the actual GUI.Core and GUI.SVG source and uploads both generated SVGs as artifacts. The sample uses StoryForge domain values for its timeline and publication-coverage scene; the browser demo remains an illustrative interaction prototype, not the runtime.
+
+The next integration step is to replace authored snapshots with reviewed generated outputs, then connect domain-derived scene data through [Visualize](https://github.com/TrentBest/TheSingularityWorkshop.Visualize) and the [GUI.Core model](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/GUI_MODEL.md) → [GUI.SVG adapter](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/SVG_ADAPTER.md) path, with [Renderer](https://github.com/TrentBest/TheSingularityWorkshop.Renderer) selecting observer-appropriate representation.
 
 ## 🟪 05 Documentation and theory
 
@@ -271,6 +275,7 @@ The first independently buildable Experience payloads now live here rather than 
 - `TheSingularityWorkshop.Experiences.Forge` — Forge MicroBundle, Experience 3201.
 - `TheSingularityWorkshop.Experiences.Moniker` — static Moniker content MicroBundle, Bundle 3101, and the shared motion contract.
 - `TheSingularityWorkshop.Experiences.Moniker.Motion.Wave` — independent wave presentation MicroBundle, Bundle 3102, composed by a Moniker Experience when desired.
+- `TheSingularityWorkshop.Experiences.StoryForge` — renderer-independent story-time, temporal facts, publication coverage, and immutable edition foundations; built as a separate Experience package.
 - `TheSingularityWorkshop.Games.Slots` — host-neutral single-line slot outcome evaluator with exact rational RTP for its documented rule set; simulation-only and not yet a MicroBundle artifact. See [slot contracts and probability](docs/GAMES_SLOTS_DESIGN.md).
 - `TheSingularityWorkshop.Games.CasinoLedger` — host-neutral simulation ledger with atomic balanced postings, per-currency reconciliation, and tested buy-in/cash-out/wager-settlement builders; not yet an `IMicroBundle` artifact.
 

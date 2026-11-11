@@ -75,8 +75,11 @@ def parse_demo(name: str) -> tuple[str, DocumentProbe]:
 
 
 casino_svg = parse_svg("casino-floor.svg")
+story_svg = parse_svg("story-forge-coverage.svg")
 require("RECONCILIATION" in casino_svg and "BUY-IN" in casino_svg and "CASH-OUT" in casino_svg,
         "casino SVG must show accounting and distinct value flows")
+require("World collection" in story_svg and "Series A" in story_svg and "Series B" in story_svg,
+        "Story Forge SVG must show a collection containing multiple series")
 
 casino, casino_probe = parse_demo("casino-floor.html")
 require({"cashBalance", "cageCash", "cageInventory", "chips", "wagers", "returns", "reconcile", "journal"}.issubset(casino_probe.ids),
@@ -85,15 +88,24 @@ require({"buyin", "wager", "payout", "cashout", "reset"}.issubset(
     {button.get("data-kind", "") for button in casino_probe.buttons}),
     "casino demo must expose buy-in, wager, payout, cash-out, and reset controls")
 
+story, story_probe = parse_demo("story-forge.html")
+require({"timeline", "scope", "reset", "timelineSvg", "books"}.issubset(story_probe.ids),
+        "Story Forge demo is missing timeline/scope controls or visual regions")
+require({"timeline", "scope"}.issubset(set(story_probe.select_ids)),
+        "Story Forge demo must expose both timeline and publication-scope selectors")
+require("blockCenter" in story_probe.scripts[0] and "stroke-dasharray" in story_probe.scripts[0],
+        "Story Forge demo must draw colored range-to-sequence threads")
+
 readme = (ROOT / "README.md").read_text(encoding="utf-8")
-require("docs/assets/casino-floor.svg" in readme and "docs/demos/casino-floor.html" in readme,
-        "README must link the living casino visual and interactive demonstration")
+require("docs/assets/casino-floor.svg" in readme and "docs/assets/story-forge-coverage.svg" in readme,
+        "README must embed both living visual proofs")
 
 node = subprocess.run(["node", "--version"], capture_output=True, text=True)
-require(node.returncode == 0, "Node.js is required to syntax-check the interactive demo script")
-with tempfile.TemporaryDirectory() as directory:
-    js_path = Path(directory) / "casino-floor.js"
-    js_path.write_text(casino_probe.scripts[0], encoding="utf-8")
-    subprocess.run(["node", "--check", str(js_path)], check=True)
+require(node.returncode == 0, "Node.js is required to syntax-check the interactive demo scripts")
+for name, probe in (("casino-floor.html", casino_probe), ("story-forge.html", story_probe)):
+    with tempfile.TemporaryDirectory() as directory:
+        js_path = Path(directory) / (name + ".js")
+        js_path.write_text(probe.scripts[0], encoding="utf-8")
+        subprocess.run(["node", "--check", str(js_path)], check=True)
 
-print("Living casino documentation checks passed: SVG XML/accessibility, demo structure, controls, and JavaScript syntax.")
+print("Living documentation checks passed: SVG XML/accessibility, demo structure, controls, and JavaScript syntax.")
