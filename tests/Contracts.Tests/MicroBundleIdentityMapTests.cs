@@ -6,7 +6,7 @@ namespace TheSingularityWorkshop.Experiences.Contracts.Tests;
 public sealed class MicroBundleIdentityMapTests
 {
     [Fact]
-    public void ResolvesExplicitBindingsInBothDirections()
+    public void ResolvesExplicitOntologyBindingsInBothDirections()
     {
         var map = MicroBundleIdentityMap.Create(
         [
@@ -15,24 +15,24 @@ public sealed class MicroBundleIdentityMapTests
         ]);
 
         Assert.Equal(2, map.Count);
-        Assert.True(map.TryResolve("workshop-minesweeper-rules", out var id));
-        Assert.Equal(73001UL, id);
-        Assert.True(map.TryGetBundleKey(73002, out var key));
-        Assert.Equal("workshop-minesweeper-presentation", key);
+        Assert.True(map.TryResolveLocalHandle("workshop-minesweeper-rules", out var handle));
+        Assert.Equal(73001UL, handle);
+        Assert.True(map.TryGetOntologyIdentity(73002, out var ontology));
+        Assert.Equal("workshop-minesweeper-presentation", ontology);
     }
 
     [Fact]
-    public void DoesNotInferOrNormalizeUnknownKeys()
+    public void DoesNotInferOrNormalizeUnknownOntologyIdentities()
     {
         var map = MicroBundleIdentityMap.Create([new("Minesweeper.Rules", 73001)]);
 
-        Assert.False(map.TryResolve("minesweeper.rules", out var id));
-        Assert.Equal(0UL, id);
-        Assert.False(map.TryResolve(" Minesweeper.Rules ", out _));
+        Assert.False(map.TryResolveLocalHandle("minesweeper.rules", out var handle));
+        Assert.Equal(0UL, handle);
+        Assert.False(map.TryResolveLocalHandle(" Minesweeper.Rules ", out _));
     }
 
     [Fact]
-    public void RejectsZeroNumericIdentity()
+    public void RejectsZeroLocalHandle()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
             MicroBundleIdentityMap.Create([new("rules", 0)]));
@@ -41,7 +41,7 @@ public sealed class MicroBundleIdentityMapTests
     }
 
     [Fact]
-    public void RejectsDuplicateAuthoredKeys()
+    public void RejectsDuplicateOntologyIdentities()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
             MicroBundleIdentityMap.Create(
@@ -50,11 +50,11 @@ public sealed class MicroBundleIdentityMapTests
                 new("rules", 73002)
             ]));
 
-        Assert.Contains("Duplicate Experience bundle key", exception.Message);
+        Assert.Contains("Duplicate ontology identity", exception.Message);
     }
 
     [Fact]
-    public void RejectsNumericIdentityAliasing()
+    public void RejectsLocalHandleAliasing()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
             MicroBundleIdentityMap.Create(
@@ -72,10 +72,10 @@ public sealed class MicroBundleIdentityMapTests
     [InlineData(" rules")]
     [InlineData("rules ")]
     [InlineData("rules\n")]
-    public void RejectsInvalidAuthoredKeys(string key)
+    public void RejectsInvalidOntologyIdentities(string ontology)
     {
         Assert.Throws<ArgumentException>(() =>
-            MicroBundleIdentityMap.Create([new(key, 73001)]));
+            MicroBundleIdentityMap.Create([new(ontology, 73001)]));
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public sealed class MicroBundleIdentityMapTests
     {
         var map = MicroBundleIdentityMap.Create([new("rules", 73001)]);
 
-        Assert.False(map.TryGetBundleKey(0, out var key));
-        Assert.Equal(string.Empty, key);
+        Assert.False(map.TryGetOntologyIdentity(0, out var ontology));
+        Assert.Equal(string.Empty, ontology);
     }
 }
