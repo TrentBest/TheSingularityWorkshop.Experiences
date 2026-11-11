@@ -3,14 +3,21 @@ using System.Numerics;
 namespace TheSingularityWorkshop.Games.Slots;
 
 /// <summary>An exact, reduced rational number backed by arbitrary-precision integers.</summary>
+/// <summary>An immutable reduced fraction whose arithmetic is exact and uses arbitrary precision.</summary>
 public readonly struct ExactRational : IEquatable<ExactRational>
 {
     private readonly BigInteger _numerator;
     private readonly BigInteger _denominator;
 
+    /// <summary>Gets the signed numerator in the reduced fraction.</summary>
     public BigInteger Numerator => _numerator;
+    /// <summary>Gets the positive denominator in the reduced fraction.</summary>
     public BigInteger Denominator => _denominator.IsZero ? BigInteger.One : _denominator;
 
+    /// <summary>Creates a reduced rational number.</summary>
+    /// <param name="numerator">The signed numerator.</param>
+    /// <param name="denominator">The non-zero denominator.</param>
+    /// <exception cref="DivideByZeroException">The denominator is zero.</exception>
     public ExactRational(BigInteger numerator, BigInteger denominator)
     {
         if (denominator.IsZero)
@@ -27,7 +34,9 @@ public readonly struct ExactRational : IEquatable<ExactRational>
         _denominator = denominator / divisor;
     }
 
+    /// <summary>Gets the exact rational value zero.</summary>
     public static ExactRational Zero => new(BigInteger.Zero, BigInteger.One);
+    /// <summary>Gets the exact rational value one.</summary>
     public static ExactRational One => new(BigInteger.One, BigInteger.One);
 
     /// <summary>Converts a decimal to its exact integer-ratio representation.</summary>
@@ -84,20 +93,28 @@ public readonly struct ExactRational : IEquatable<ExactRational>
         return negative ? -result : result;
     }
 
+    /// <summary>Adds two exact rational values.</summary>
     public static ExactRational operator +(ExactRational left, ExactRational right) =>
         new(
             left.Numerator * right.Denominator + right.Numerator * left.Denominator,
             left.Denominator * right.Denominator);
 
+    /// <summary>Multiplies two exact rational values.</summary>
     public static ExactRational operator *(ExactRational left, ExactRational right) =>
         new(left.Numerator * right.Numerator, left.Denominator * right.Denominator);
 
+    /// <summary>Determines whether two reduced rational values are equal.</summary>
     public bool Equals(ExactRational other) =>
         Numerator == other.Numerator && Denominator == other.Denominator;
 
+    /// <inheritdoc />
     public override bool Equals(object? obj) => obj is ExactRational other && Equals(other);
+    /// <inheritdoc />
     public override int GetHashCode() => HashCode.Combine(Numerator, Denominator);
+    /// <inheritdoc />
     public override string ToString() => $"{Numerator}/{Denominator}";
+    /// <summary>Determines whether two exact rational values are equal.</summary>
     public static bool operator ==(ExactRational left, ExactRational right) => left.Equals(right);
+    /// <summary>Determines whether two exact rational values are not equal.</summary>
     public static bool operator !=(ExactRational left, ExactRational right) => !left.Equals(right);
 }
