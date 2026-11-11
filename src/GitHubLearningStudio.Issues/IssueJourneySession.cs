@@ -11,6 +11,7 @@ public static class IssueJourneyCommands
     public const string CommitFix = "issues.commit-fix";
     public const string OpenPullRequest = "issues.open-pull-request";
     public const string MergePullRequest = "issues.merge-pull-request";
+    public const string RecordAcceptanceEvidence = "issues.record-acceptance-evidence";
     public const string VerifyAcceptance = "issues.verify-acceptance";
     public const string CloseIssue = "issues.close";
     public const string ReopenIssue = "issues.reopen";
@@ -30,6 +31,7 @@ public sealed record IssueJourneySnapshot(
     string Context,
     IReadOnlyList<string> AcceptanceCriteria,
     IReadOnlyList<bool> AcceptanceEvidence,
+    IReadOnlyList<bool> AcceptanceEvidenceRecorded,
     IssueKind Kind,
     string? Label,
     string? Assignee,
@@ -63,6 +65,7 @@ public sealed class IssueJourneySession
     private readonly List<IssueDiscussionEntry> _discussion = [];
     private readonly List<string> _commits = [];
     private readonly bool[] _evidence = new bool[2];
+    private readonly bool[] _evidenceRecorded = new bool[2];
     private bool _created;
     private string? _title;
     private bool _branchCreated;
@@ -88,7 +91,12 @@ public sealed class IssueJourneySession
             if (_branchCreated && _commits.Count == 0) commands.Add(IssueJourneyCommands.CommitFix);
             if (_commits.Count > 0 && !_pullRequestOpened) commands.Add(IssueJourneyCommands.OpenPullRequest);
             if (_pullRequestOpened && !_pullRequestMerged) commands.Add(IssueJourneyCommands.MergePullRequest);
-            if (_pullRequestMerged && !_acceptanceVerified) commands.Add(IssueJourneyCommands.VerifyAcceptance);
+            if (_pullRequestMerged && !_acceptanceVerified)
+            {
+                commands.Add(IssueJourneyCommands.RecordAcceptanceEvidence);
+                if (Enumerable.Range(0, _evidence.Length).All(i => _evidenceRecorded[i] && _evidence[i]))
+                    commands.Add(IssueJourneyCommands.VerifyAcceptance);
+            }
             if (_acceptanceVerified) commands.Add(IssueJourneyCommands.CloseIssue);
         }
         if (_lifecycle == IssueLifecycle.Closed) commands.Add(IssueJourneyCommands.ReopenIssue);
@@ -103,6 +111,7 @@ public sealed class IssueJourneySession
             _created ? CorrectContext : "A visitor reported the problem but gave little context.",
             Array.AsReadOnly(Criteria),
             Array.AsReadOnly(_evidence.ToArray()),
+            Array.AsReadOnly(_evidenceRecorded.ToArray()),
             _kind, _label, _assignee,
             Array.AsReadOnly(_discussion.ToArray()),
             _branchCreated ? "work/issue-14-location-attribution" : null,
@@ -129,6 +138,7 @@ public sealed class IssueJourneySession
             IssueJourneyCommands.CommitFix => Commit(value),
             IssueJourneyCommands.OpenPullRequest => OpenPullRequest(),
             IssueJourneyCommands.MergePullRequest => MergePullRequest(),
+            IssueJourneyCommands.RecordAcceptanceEvidence => RecordAcceptanceEvidence(value),
             IssueJourneyCommands.VerifyAcceptance => VerifyAcceptance(),
             IssueJourneyCommands.CloseIssue => CloseIssue(),
             IssueJourneyCommands.ReopenIssue => ReopenIssue(),
@@ -213,10 +223,28 @@ public sealed class IssueJourneySession
         return true;
     }
 
+    private bool RecordAcceptanceEvidence(string? value)
+    {
+        if (!_pullRequestMerged || _acceptanceVerified || _lifecycle != IssueLifecycle.Open ||
+            string.IsNullOrWhiteSpace(value)) return false;
+
+        var parts = value.Split(':', StringSplitOptions.TrimEntries);
+        if (parts.Length != 2 || !int.TryParse(parts[0], out var criterion) ||
+            criterion < 1 || criterion > _evidence.Length ||
+            (parts[1] != "pass" && parts[1] != "fail")) return false;
+
+        var index = criterion - 1;
+        _evidence[index] = parts[1] == "pass";
+        _evidenceRecorded[index] = true;
+        return true;
+    }
+
     private bool VerifyAcceptance()
     {
-        if (!_pullRequestMerged || _acceptanceVerified || _lifecycle != IssueLifecycle.Open) return false;
-        Array.Fill(_evidence, true);
+        if (!_pullRequestMerged || _acceptanceVerified || _lifecycle != IssueLifecycle.Open ||
+            !Enumerable.Range(0, _evidence.Length).All(i => _evidenceRecorded[i] && _evidence[i]))
+            return false;
+
         _acceptanceVerified = true;
         return true;
     }
@@ -234,14 +262,16 @@ public sealed class IssueJourneySession
         _lifecycle = IssueLifecycle.Open;
         _acceptanceVerified = false;
         Array.Fill(_evidence, false);
+        Array.Fill(_evidenceRecorded, false);
         return true;
     }
 
     private string Explain() => _lifecycle switch
     {
         IssueLifecycle.NotCreated => "An issue begins as a shared record of a problem. Improve the vague report before treating it as actionable.",
-        IssueLifecycle.Closed => "The simulated issue is closed because the pull request was merged and both acceptance criteria were checked. Reopen it if the defect returns or evidence is no longer valid.",
-        _ when (_pullRequestMerged && !_acceptanceVerified) => "The pull request was merged, but merge alone does not prove the issue is resolved. Verify each acceptance criterion.",
+        IssueLifecycle.Closed => "The simulated issue is closed because the pull request was merged and every acceptance criterion has recorded passing evidence. Reopen it if the defect returns or evidence is no longer valid.",
+        _ when (_pullRequestMerged && !_acceptanceVerified && _evidenceRecorded.Where((recorded, index) => recorded && !_evidence[index]).Any()) => "At least one recorded acceptance check failed. The issue remains open; correct the work or collect new evidence before verification.",
+        _ when (_pullRequestMerged && !_acceptanceVerified) => "The pull request was merged, but merge alone does not prove the issue is resolved. Record a pass or fail for each acceptance criterion, then verify only when all criteria pass.",
         _ when _pullRequestOpened => "The issue remains the why; the pull request is the proposal for how. Linking them creates traceability, not automatic completion.",
         _ when _branchCreated => "The issue is still open. A branch and commit record implementation work; neither closes the issue.",
         _ when _discussion.Count > 0 => "Discussion preserves clarification. It improves the issue record but does not implement the change.",
