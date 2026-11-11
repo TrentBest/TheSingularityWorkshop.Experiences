@@ -36,6 +36,23 @@ public static class IssueJourneyGuiAdapter
         var controls = GuiBuilder.Create("Panel", "github-issues-controls");
         foreach (var command in snapshot.AvailableCommands)
         {
+            if (command == IssueJourneyCommands.RecordAcceptanceEvidence)
+            {
+                for (var i = 0; i < snapshot.AcceptanceCriteria.Count; i++)
+                {
+                    var criterion = i + 1;
+                    controls.Child("Button", $"github-issues-evidence-{criterion}-pass", child =>
+                        child.Text($"Record criterion {criterion}: pass")
+                            .Property("onClickCommand", command)
+                            .Property("commandValue", $"{criterion}:pass"));
+                    controls.Child("Button", $"github-issues-evidence-{criterion}-fail", child =>
+                        child.Text($"Record criterion {criterion}: fail")
+                            .Property("onClickCommand", command)
+                            .Property("commandValue", $"{criterion}:fail"));
+                }
+                continue;
+            }
+
             var (id, label, value) = command switch
             {
                 IssueJourneyCommands.CreateIssue => ("github-issues-create", "Create useful issue", "Restore missing location attribution on field notes"),
