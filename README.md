@@ -1,8 +1,9 @@
-![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/moniker.svg)
 
 # The Singularity Workshop — Experiences
 
 
+[![Sith Policy](assets/sith-policy.svg)](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/workflows/sith-policy.yml)
 > **A home for independently authored Workshop Experiences and publishable MicroBundle artifacts.**
 
 An Experience defines what is being experienced; WebApp, AnyApp, and VR are different manifestations of that shared experience—not separate definitions of it.
@@ -38,23 +39,45 @@ Keep Experience semantics and artifact identity here; let hosts own presentation
 
 ![Story Forge: parallel timelines connected to book coverage](docs/assets/story-forge-coverage.svg)
 
-[Open the interactive Story Forge demo source](docs/demos/story-forge.html) · [Story Forge domain](src/StoryForge/README.md)
+[Open the interactive Story Forge demo source](docs/demos/story-forge.html) · [Story Forge domain concept](src/StoryForge/README.md)
 
-The HTML demos are self-contained: download each file and open it locally to interact with the prototype. They currently use illustrative browser-side data, not the C# ledger or StoryForge domain. The polished README illustrations are authored visual prototypes; CI now also builds [the C# scene proof](samples/LivingDocs/Program.cs) against the actual GUI.Core and GUI.SVG source and uploads the generated SVGs as an artifact. This verifies the real manifestation path without claiming the browser mock is the runtime.
+The HTML demos are self-contained: download each file and open it locally to interact with the prototype. They use illustrative browser-side data, not the C# ledger or a canonical StoryForge domain. The C# scene sample generates the casino floor through GUI.Core → GUI.SVG; Story Forge remains a standalone visual prototype until its canonical domain implementation exists.
 
-The next integration step is to replace the authored snapshots with reviewed generated outputs, then connect domain-derived scene data through [Visualize](https://github.com/TrentBest/TheSingularityWorkshop.Visualize) and the [GUI.Core model](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/GUI_MODEL.md) → [GUI.SVG adapter](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/SVG_ADAPTER.md) path, with [Renderer](https://github.com/TrentBest/TheSingularityWorkshop.Renderer) selecting observer-appropriate representation.
+The next integration step is to replace authored snapshots with reviewed generated outputs, then connect domain-derived scene data through [Visualize](https://github.com/TrentBest/TheSingularityWorkshop.Visualize) and the [GUI.Core model](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/GUI_MODEL.md) → [GUI.SVG adapter](https://github.com/TrentBest/TheSingularityWorkshop.GUI/blob/development/docs/SVG_ADAPTER.md) path, with [Renderer](https://github.com/TrentBest/TheSingularityWorkshop.Renderer) selecting observer-appropriate representation.
 
 ## 🟪 05 Documentation and theory
 
-[MVP vertical slice](#the-mvp-vertical-slice) · [Publication](#publication) · [Artifact identity](#artifact-identity) · [Architectural rules](#architectural-rules)
+[Read Little Lenny and the Big Ocean Problem](experiences/Lenny/README.md) · [Chemistry Laboratory — department floor and experiment journey](experiences/ChemistryLaboratory/README.md) · [Fluid Dynamics Laboratory — water, waves, terrain, and coupled-world roadmap](experiences/FluidDynamicsLaboratory/README.md) · [Singularity Exploratorium — playful discovery and first exhibits](experiences/SingularityExploratorium/README.md) · [Exploratorium exhibit directory](experiences/EXPERIENCE_DIRECTORY.md) · [Singularity University learning philosophy](docs/SINGULARITY_UNIVERSITY_LEARNING_PHILOSOPHY.md) · [GitHub Learning Studio](experiences/GitHubLearningStudio/README.md) · [Experiences theory learning path](docs/THEORY/README.md) · [Build to Illuminate](docs/BUILD_TO_ILLUMINATE.md) · [MVP vertical slice](#the-mvp-vertical-slice) · [Diegetic institutions and war games](experiences/DIEGETIC_INSTITUTIONS_DESIGN.md) · [History Museum preforge](experiences/HistoryMuseum/README.md) · [Siege Wing design](experiences/HistoryMuseum/SIEGE_WING_DESIGN.md) · [Castle Sieges booth design](experiences/HistoryMuseum/exhibits/CastleSieges/EXHIBIT_DESIGN.md) · [Castle Siege preforge home](experiences/CastleSiege/README.md) · [Galactic War — far-future science-fantasy Experience preforge](experiences/GalacticWar/README.md) · [Sound Experiences and MicroBundles](experiences/Sound/README.md) · [Castle Siege Experience](experiences/CastleSiege/design/EXPERIENCE.md) · [Tabletop siege vertical slice](experiences/CastleSiege/design/TABLETOP_VERTICAL_SLICE.md) · [Castle Siege manifest](experiences/CastleSiege/manifest/MANIFEST.md) · [Celestial Mechanics Laboratory](experiences/CelestialMechanics/README.md) · [Drone Construction](experiences/DroneConstruction/README.md) · [Marble Run](experiences/MarbleRun/README.md) · [Capsule Clinic](experiences/CapsuleClinic/README.md) · [Capsule Clinic contract](experiences/CapsuleClinic/design/EXPERIENCE.md) · [Semantic interaction requirements contract](docs/contracts/SEMANTIC_INTERACTION_REQUIREMENTS.md) · [Generic Experience manifest contract](docs/contracts/experience-manifest.schema.json) · [Domino Studio](experiences/DominoStudio/README.md) · [Physics/MicroBundle boundary](docs/MARBLE_RUN_AND_DOMINO_MICROBUNDLE_BOUNDARY.md) · [Publication](#publication) · [Artifact identity](#artifact-identity) · [Architectural rules](#architectural-rules) · [Engineering quality standard](docs/ENGINEERING_QUALITY_STANDARD.md)
 
 ---
 
 ## Detailed guide
 
-This repository contains independent, publishable Experiences and MicroBundle artifacts for The Singularity Workshop.
+This repository contains preforge Experience definitions, independent publishable Experiences, and MicroBundle artifacts for The Singularity Workshop. Each substantial Experience starts with its own authored home under `experiences/`; buildable projects under `src/` are implementation artifacts, not the Experience's source of truth.
 
 It is deliberately separate from WebApp/WebPage, AnyApp, FSM_COS, MicroBundleRepository, GUI, and FSM_API.
+
+## StoryBuilder authors; Experiences define; AnyApp hosts
+
+[StoryBuilder](https://github.com/TrentBest/StoryBuilder) is the authoring workbench for constructing an Experience's story: characters, world claims, scenes, timeline branches, event placement, observer knowledge, and manuscript portrayals. It coordinates those authoring records and compiles a validated composition package; it does not replace the Experience domain or the host runtime.
+
+The ownership path is:
+
+```mermaid
+flowchart TD
+  SB[StoryBuilder authoring and plot composition] --> PK[Validated composition package]
+  PK --> EX[Experience identity and MicroBundle artifacts]
+  EX --> MF[Manifest and resolved configuration]
+  MF --> COS[FSM_COS composition at host boundary]
+  COS --> AA[AnyApp native manifestation]
+  COS --> WA[WebApp / WebPage manifestation]
+```
+
+An Experience remains host-independent, while each domain capability belongs in its proper repository. StoryBuilder owns story semantics and Story Forge (including temporal queries, chronology, provenance, and publication coverage); this repository owns reusable Experience definitions, MicroBundle lifecycle/CRUD, manifests, and publishable artifacts. AnyApp is a host that can run a selected Experience. The source-mode StoryBuilder launch in AnyApp is an early authoring integration proof, not yet proof that the complete package-to-manifest-to-FSM_COS path is finished. The former `src/StoryForge` implementation and tests have been removed from this repository; the directory contains only a migration pointer.
+
+Do not make the Experiences repository depend on StoryBuilder, and do not move the general composition kernel into either project. Connect them through stable domain/package contracts and the existing MicroBundle manifest conventions.
+
+See [StoryBuilder → Experiences → AnyApp: first runnable milestone](docs/STORYBUILDER_ANYAPP_FIRST_RUN.md) for the vertical-slice contract and the verified gaps between authoring, captured package, manifest, artifact resolution, FSM_COS composition, and native presentation.
 
 ## The central idea
 
@@ -63,6 +86,14 @@ It is deliberately separate from WebApp/WebPage, AnyApp, FSM_COS, MicroBundleRep
 An Experience is not a WebApp, not a desktop window, and not a VR scene.
 
 An Experience can have multiple manifestations.
+
+## Digitens populate the universe
+
+Digitens are the Workshop's digital citizens and belong to the world across institutions and experiences—not to one isolated page or demo. They arrive and depart, occupy roles, work at places, and provide the familiar human-scale interactions through which visitors use the world: a bank teller at a bank, a shopkeeper at a store, a technician in a laboratory, or a guide in the Exploratorium.
+
+Treat citizen identity, role, lifecycle, workplace/service association, and interaction contracts as meaningful state. Browser, desktop, and VR hosts may render the same citizen differently, but must not invent unrelated populations for each manifestation. A role is not a functioning service until its underlying capability exists and is verified; design previews and current population visuals must be labelled honestly.
+
+The Experience layer describes the citizen and authored intent; FSM_COS composes the needed capabilities; domain systems own authoritative work and state; hosts present the encounter. Digitens should make the universe feel inhabited everywhere, while their actual jobs give the visitor a reason to engage.
 
     EXPERIENCE
         |
@@ -231,6 +262,12 @@ The semantic layer describes what is observable and interactive. The renderer de
 
 See [`docs/PUBLICATION.md`](docs/PUBLICATION.md) for the artifact boundary from Experience build output to repository-backed composition.
 
+## Workshop Showcase — WebApp-hosted Experience
+
+The initial repository-owned showcase definition lives in [`experiences/WorkshopShowcase`](experiences/WorkshopShowcase/README.md). It contains the versioned Experience manifest and the complete current six-entry demonstration catalog. This is the start of migrating showcase content out of WebPage; the WebPage host does not yet load these files through the repository at runtime.
+
+The intended boundary is Experience-owned identity, journeys, content, and MicroBundle requirements, resolved by the host through the repository path and composed by FSM_COS. WebPage remains responsible for browser lifecycle, host manifest selection, and presentation adapters.
+
 ## Independent package seeds
 
 The first independently buildable Experience payloads now live here rather than inside a host:
@@ -240,6 +277,10 @@ The first independently buildable Experience payloads now live here rather than 
 - `TheSingularityWorkshop.Experiences.Moniker.Motion.Wave` — independent wave presentation MicroBundle, Bundle 3102, composed by a Moniker Experience when desired.
 
 They reference the published domain/composition/GUI contracts; they do not reference AnyApp source. AnyApp remains a host and consumer of published Experience artifacts.
+
+## Game Economy MicroBundles
+
+The temporary source plan for reusable RPG shops, card games, blackjack, slots, prize wheels, race markets, competitions, and tournaments is documented in [Game Economy MicroBundles](docs/GAME_ECONOMY_MICROBUNDLES.md). These remain independent, simulation-first capabilities; Economy provides neutral economic primitives, and Forge is the intended long-term authoring/publication surface.
 
 ## Atomic ontology corpus
 
@@ -251,17 +292,19 @@ The next test corpus is intentionally made from small semantic things:
 
 The repository should let these atoms remain independent while larger Experiences compose them. See issue #3 for the working extraction and test plan.
 
-## Story Forge — temporal story authoring
+## Castle Siege — physical experiment and competitive play
+
+Castle Siege is the planned physics-based build-and-destroy Experience: first a single-player, inspectable siege experiment, then an equal-kit construction duel with locked builds and alternating attacks. Its design contract assigns Experience identity and match rules here, physical outcomes to Physics, and scene/input/presentation to WebPage. The design is documented; a playable Castle Siege artifact and complete Physics-backed trajectory/impact loop are **not yet implemented**.
+
+See [Castle Siege Experience design and implementation contract](experiences/CastleSiege/design/EXPERIENCE.md) and the [Physics experiment catalog](https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/docs/CASTLE_SIEGE_EXPERIMENT_CATALOG.md).
+
+## Story Forge — StoryBuilder-owned capability
 
 ![Story Forge temporal model](docs/assets/story-forge-temporal-model.svg)
 
-Story Forge is being developed as a capability inside the Forge Experience. Its first domain library defines named story timelines, event markers, story-time ranges, publication coverage, and immutable published-edition snapshots.
+Story Forge belongs to [StoryBuilder](https://github.com/TrentBest/StoryBuilder), where its renderer-independent temporal model and query engine project from canonical StoryBuilder workspace records. Experiences does not own or build the story-domain engine. This repository may still contain Experience-authored content or MicroBundles that StoryBuilder authors against, but it must not duplicate story facts, timelines, provenance, or publication semantics.
 
-The key distinction is between **when something happens in the story world** and **where a chapter or book chooses to present it**. Multiple timelines and coverage bands will let authors add flashbacks or earlier-discovered events without silently rewriting published editions.
-
-The planned diegetic tools include a hashed 2D timeline, clickable event markers, chapter/book coverage lanes, a character workshop, an evidence/string board, temporal queries, and scene playback. The current code includes a renderer-independent temporal model and first temporal query engine with provenance-aware events, time-bounded entity state, proposal filtering, and explicit conflict reporting. The interactive timeline, character workshop, evidence/string board, scene planner, and host integration remain the next milestones.
-
-See [Story Forge architecture](docs/STORY_FORGE_ARCHITECTURE.md) and [the project README](src/StoryForge/README.md).
+The temporal-model concept art and historical architecture notes remain here as reference material; active implementation and tests are maintained in StoryBuilder. See the [StoryBuilder Story Forge project](https://github.com/TrentBest/StoryBuilder/tree/development/src/StoryBuilder.StoryForge) and [ownership/migration record](https://github.com/TrentBest/StoryBuilder/blob/development/docs/STORY_FORGE_OWNERSHIP_AND_MIGRATION.md).
 
 ## What belongs here?
 
@@ -372,3 +415,8 @@ See:
 - docs/SECURITY_MODEL.md
 - docs/ROADMAP.md
 - docs/STORY_FORGE_ARCHITECTURE.md
+
+---
+
+<!-- THE SINGULARITY WORKSHOP FOOTER -->
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop" width="200" /></p>
