@@ -87,3 +87,11 @@ jobs:
           grep -q '"lastAcceptedSequence":1' /tmp/capsule-clinic-state-after.json
           status=$(curl --silent --show-error -H 'content-type: application/json' -d '{"key":"NotAKey"}' http://127.0.0.1:5088/api/key --output /dev/null --write-out "%{http_code}")
           test "$status" = "400"
+          curl --silent --show-error --fail -H 'content-type: application/json' -d '{"intentId":"capsule.move-left"}' http://127.0.0.1:5088/api/intent > /tmp/capsule-clinic-semantic-command.json
+          jq -e '.intentRecognized == true and .accepted == true and .lastAcceptedSequence == 2' /tmp/capsule-clinic-semantic-command.json
+          curl --silent --show-error --fail http://127.0.0.1:5088/api/state > /tmp/capsule-clinic-state-after-semantic.json
+          jq -e '.lastAcceptedSequence == 2' /tmp/capsule-clinic-state-after-semantic.json
+          curl --silent --show-error --fail -H 'content-type: application/json' -d '{"intentId":"capsule.set-score"}' http://127.0.0.1:5088/api/intent > /tmp/capsule-clinic-rejected-intent.json
+          jq -e '.intentRecognized == false and .accepted == false and .rejection == "InvalidAction" and .lastAcceptedSequence == 2' /tmp/capsule-clinic-rejected-intent.json
+          curl --silent --show-error --fail http://127.0.0.1:5088/api/state > /tmp/capsule-clinic-state-after-rejection.json
+          jq -e '.lastAcceptedSequence == 2' /tmp/capsule-clinic-state-after-rejection.json
