@@ -70,10 +70,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          [[ "$REPOSITORY" == "TrentBest/TheSingularityWorkshop.Experiences" ]]
           [[ "$EVENT_NAME" == "workflow_dispatch" ]]
           [[ "$EVENT_REF" == "refs/heads/development" ]]
           [[ "$WORKFLOW_REF" == "$REPOSITORY/.github/workflows/minesweeper-candidate-validation.yml@refs/heads/development" ]]
           [[ "$WORKFLOW_SHA" =~ ^[0-9a-f]{40}$ && "$EVENT_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$WORKFLOW_SHA" == "$EVENT_SHA" ]]
           [[ "$CANDIDATE_REF" == refs/heads/feature/* ]]
           git check-ref-format "$CANDIDATE_REF"
           [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]]
@@ -82,7 +84,8 @@ jobs:
           done
           git fetch --no-tags origin "$CANDIDATE_REF:refs/remotes/origin/candidate-validation"
           git cat-file -e "${CANDIDATE_SHA}^{commit}"
-          git merge-base --is-ancestor "$CANDIDATE_SHA" refs/remotes/origin/candidate-validation
+          fetched_candidate_sha="$(git rev-parse "refs/remotes/origin/candidate-validation^{commit}")"
+          [[ "$fetched_candidate_sha" == "$CANDIDATE_SHA" ]]
           tested_sha="$(git rev-parse "$CANDIDATE_SHA^{commit}")"
           [[ "$tested_sha" == "$CANDIDATE_SHA" ]]
           mkdir -p candidate
