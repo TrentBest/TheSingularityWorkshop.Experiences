@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "experienceId": 4201,
+  "experienceKey": "minesweeper",
+  "version": "0.1.0",
+  "title": "Minesweeper",
+  "artifacts": [
+    {
+      "bundleId": "workshop-minesweeper-rules",
+      "version": "0.1.0",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "requirements": [
+    {
+      "capabilityId": "workshop.input.pointer",
+      "contractVersions": {
+        "minimumInclusive": { "major": 1, "minor": 0, "patch": 0 },
+        "maximumExclusive": { "major": 2, "minor": 0, "patch": 0 }
+      },
+      "required": true,
+      "rationale": "The initial desktop manifestation requires pointer-based cell selection."
+    },
+    {
+      "capabilityId": "workshop.presentation.grid",
+      "contractVersions": {
+        "minimumInclusive": { "major": 1, "minor": 0, "patch": 0 },
+        "maximumExclusive": null
+      },
+      "required": true,
+      "rationale": "The initial manifestation requires a grid presentation capability."
+    }
+  ]
+}
