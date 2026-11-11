@@ -137,7 +137,11 @@ public sealed class IssueJourneySessionTests
         Assert.False(reopened.AcceptanceVerified);
         Assert.All(reopened.AcceptanceEvidence, Assert.False);
         Assert.All(reopened.AcceptanceEvidenceRecorded, Assert.False);
-        Assert.Contains(IssueJourneyCommands.VerifyAcceptance, reopened.AvailableCommands);
+        Assert.Contains(IssueJourneyCommands.RecordAcceptanceEvidence, reopened.AvailableCommands);
+        Assert.DoesNotContain(IssueJourneyCommands.VerifyAcceptance, reopened.AvailableCommands);
+        Assert.True(session.Execute(IssueJourneyCommands.RecordAcceptanceEvidence, "1:pass").Accepted);
+        Assert.True(session.Execute(IssueJourneyCommands.RecordAcceptanceEvidence, "2:pass").Accepted);
+        Assert.Contains(IssueJourneyCommands.VerifyAcceptance, session.CaptureSnapshot().AvailableCommands);
     }
 
     [Fact]
