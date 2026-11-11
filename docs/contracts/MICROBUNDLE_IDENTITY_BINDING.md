@@ -1,84 +1,67 @@
-# Experience-to-MicroBundle Identity Binding
+# Experience Ontology, Repository Handles, and Runtime Manifest
 
-## Status
+## Core rule
 
-This document defines the Experiences-side contract boundary for resolving authored manifest bundle keys to the numeric identities required by MicroBundleDomain, MicroBundleRepository, and FSM_COS.
+**The string ontology is the identity. The numeric ID is a repository-local address.**
 
-The contract is implemented as a validated in-memory mapping primitive in `TheSingularityWorkshop.Experiences.Contracts`. It does **not** establish an ID allocation authority, publish a registry, or make a manifest loadable by itself.
+These values have different jobs and must never be conflated:
 
-## The two identities are intentionally different
+- **Ontology identity (string):** says what the MicroBundle is. This is the canonical, portable identity returned by the endpoint and preserved by every repository that stores the artifact.
+- **Repository-local handle (non-zero `ulong`):** says where that repository stored the artifact in its local blob data. It is an efficient lookup/address, not a global identity. Another repository may assign a different handle to the same ontology identity.
+- **Version and content hash:** identify the exact artifact revision and verify the bytes associated with that revision.
 
-An Experience manifest uses a readable string key for each artifact root:
+The ontology string is not replaced when a local numeric handle is assigned. The repository must retain the string-to-handle mapping.
 
-```json
-{
-  "bundleId": "workshop-minesweeper-rules",
-  "version": "1.0.0",
-  "sha256": "<64 hexadecimal characters>"
-}
-```
+## Intended lifecycle
 
-The string is an Experience-authored lookup key. It is not the runtime MicroBundle ID.
+1. **Resolve from the endpoint.** The endpoint returns the artifact together with its canonical string ontology identity and the version/integrity information required by the artifact contract.
+2. **Ingest into the local repository.** Store the artifact in the repository's blob data. Preserve the ontology string as its canonical identity.
+3. **Assign or recover the local handle.** The local repository maintains a mapping from ontology string to its own numeric handle. The mapping is persisted with repository metadata so it survives restarts. Handle allocation belongs to the repository, not to the Experience manifest and not to a global ontology authority.
+4. **Build the runtime manifest.** Resolve each ontology identity to the local handle and produce the numeric references required by the prime/runtime manifest. Preserve the ontology identity and the manifest's version/integrity requirements as the portable source of truth.
+5. **Load locally.** Runtime resolution uses the local handle to locate the cached blob. Normal execution should load from the local repository/cache rather than repeatedly downloading the artifact.
+6. **Check version and integrity.** Compare the runtime manifest's requested version (and content hash where specified) with the locally stored artifact metadata. Reuse a matching cached artifact; otherwise retrieve/update it through the endpoint, verify it, store it, and refresh the local mapping/runtime manifest as needed.
 
-The platform contracts use a non-zero `ulong` MicroBundle identity. The immutable repository address is the tuple:
+A local handle is meaningful only in the repository namespace that assigned it. It must not be copied to another repository and assumed to address the same blob. On transfer, restore, or synchronization, preserve ontology identity and rebuild or restore that repository's own mapping.
+
+## Manifest contract boundary
+
+The current Experience manifest schema represents `artifacts[].bundleId` as a string. In this authored manifest, that field is the ontology identity despite the historical field name. It is not the local numeric handle.
+
+The local integration step resolves that string through the repository's persisted ontology-to-handle map. The generated prime/runtime manifest may then carry the local numeric handle required by FSM_COS, alongside the version/integrity metadata needed to validate the cached artifact.
+
+Keep the authored/source manifest distinct from the repository-local runtime manifest. Do not rewrite the canonical ontology string into a machine-specific number in the source manifest.
+
+## Mapping contract
+
+`MicroBundleIdentityMap` is a validated in-memory view of one repository's persisted bindings:
 
 ```text
-(BundleId: ulong, Version: string, ContentHash: SHA-256)
+canonical ontology string -> repository-local non-zero ulong handle
 ```
 
-Do not conflate any of these with the Experience's own numeric identity or the hash of its serialized manifest/artifact.
+It enforces:
 
-## Binding contract
+- Exact ordinal, case-sensitive ontology strings; no trimming, case folding, hashing, or normalization is performed.
+- Ontology strings are non-empty, already trimmed, and contain no control characters.
+- Local handles are non-zero.
+- Each ontology identity maps to one local handle in this repository.
+- Each local handle maps to at most one ontology identity in this repository.
+- Forward and reverse lookups agree.
+- Unknown ontology strings and unknown handles remain unresolved.
 
-Before a manifest artifact can be translated into a MicroBundle repository address, the host/integration boundary must supply an explicit binding:
+The map does not allocate handles or persist repository metadata itself. The repository owns durable allocation, persistence, blob placement, and mapping recovery.
 
-```text
-Experience bundle key -> canonical non-zero MicroBundle ulong ID
-```
+## Ownership boundaries
 
-The mapping primitive enforces these invariants:
+- **Ontology / endpoint:** canonical string identity and artifact publication/version information.
+- **Experience:** authored manifest and its ontology references.
+- **Local MicroBundle repository:** blob storage, repository-local handle allocation, durable string-to-handle mapping, cache lookup, and artifact integrity verification.
+- **Manifest integration / host:** resolves source ontology references into a local prime/runtime manifest.
+- **FSM_COS:** consumes the runtime manifest and local numeric references for composition and execution.
+- **Foundry:** executes the composed experience through its established runtime boundary.
 
-- Keys are exact, ordinal, case-sensitive identifiers. No trimming, case folding, hashing, or normalization is performed.
-- Keys must be non-empty, already trimmed, and free of control characters.
-- Numeric IDs must be non-zero.
-- Each key maps to exactly one numeric ID.
-- Each numeric ID maps to at most one key in the same mapping. Aliases are rejected.
-- Forward and reverse lookups must agree.
-- Unknown keys and unknown numeric IDs remain unresolved; no ID is inferred or allocated.
+## Explicit non-goals and evidence limits
 
-A caller must obtain the numeric ID from an authoritative owner-controlled source and pass it as an explicit binding. This library deliberately does not define that source or assign values.
+This mapping primitive does not define endpoint transport, allocate or persist repository handles, implement blob storage/cache policy, define a new artifact envelope, materialize executable bytes, or prove that FSM_COS/Foundry can load or run an Experience.
 
-## Resolution sequence
-
-For each manifest artifact, the integration layer must:
-
-1. Validate the Experience manifest using the existing manifest contract.
-2. Resolve its exact string `bundleId` through an explicitly supplied identity map.
-3. Combine the resolved numeric ID with the manifest's exact version and SHA-256 to form the immutable MicroBundle artifact address.
-4. Retrieve the artifact through the existing repository contract, which verifies the content hash.
-5. Hand verified opaque bytes to a host-owned materializer/catalog implementation.
-6. Allow FSM_COS to compose the resulting `IMicroBundle` instances through its existing numeric-ID runtime manifest.
-
-Experiences owns steps 1–3 as authored identity and resolution semantics. Repository retrieval, byte verification, executable interpretation/materialization, composition, execution, and presentation remain owned by their existing platform/host boundaries.
-
-## Deliberate non-goals
-
-This contract does not:
-
-- derive numeric IDs from strings, hashes, project names, or assembly metadata;
-- reserve or allocate numeric IDs;
-- change the current manifest schema's string-valued `artifacts[].bundleId`;
-- define a universal executable bundle envelope or serialization format;
-- deserialize assemblies or implement an `IMicroBundleArtifactMaterializer`;
-- create a repository catalog, FSM_COS loader, Foundry executor, or local game host;
-- prove that a manifest's referenced artifact exists, is loadable, or is playable.
-
-The existing AnyApp assembly materializer is a host-owned reference, not a format or implementation to copy into Experiences. The repository's opaque-byte boundary remains authoritative until a host explicitly supplies a supported materializer contract.
-
-## Validation and evidence
-
-The mapping primitive's unit tests cover bidirectional resolution, exact-key behavior, unknown values, zero IDs, duplicate keys, duplicate numeric IDs, and malformed keys.
-
-A successful mapping test is only evidence that the identity binding is internally valid. It is not evidence that the bundle artifact exists, that its SHA-256 matches, that it can be materialized, that FSM_COS can compose it, or that Foundry can execute it.
-
-Those are separate gates and must be reported separately in the CODE RED pilot evidence.
+Passing the map's unit tests proves only that one supplied mapping is internally consistent. It does not prove endpoint retrieval, durable repository behavior, hash verification, runtime-manifest generation, local cache activation, composition, execution, or playability. Those remain distinct implementation and validation gates in the CODE RED pilot.
