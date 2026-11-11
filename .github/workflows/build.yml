@@ -28,6 +28,7 @@ jobs:
           - src/MarbleRun/TheSingularityWorkshop.Experiences.MarbleRun.csproj
           - src/DroneConstruction/TheSingularityWorkshop.Experiences.DroneConstruction.csproj
           - src/DroneConstruction.MicroBundles/TheSingularityWorkshop.Experiences.DroneConstruction.MicroBundles.csproj
+          - src/Minesweeper/TheSingularityWorkshop.Experiences.Minesweeper.csproj
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
@@ -85,6 +86,27 @@ jobs:
           dotnet-version: 8.0.x
       - name: Run chemistry conservation tests
         run: dotnet test tests/Chemistry.Tests/TheSingularityWorkshop.Experiences.Chemistry.Tests.csproj --configuration Release
+
+  # Minesweeper rules are deterministic and independent of any manifestation or renderer.
+  test-minesweeper-domain:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore Minesweeper domain tests
+        run: dotnet restore tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj
+      - name: Run deterministic Minesweeper rules tests
+        run: dotnet test tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj --configuration Release --logger "trx;LogFileName=minesweeper.trx" --results-directory ./TestResults/minesweeper
+      - name: Upload Minesweeper test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: minesweeper-test-results
+          path: TestResults/minesweeper/
+          if-no-files-found: warn
+          retention-days: 14
 
   package:
     if: github.event_name == 'workflow_dispatch'
