@@ -1,5 +1,6 @@
 using TheSingularityWorkshop.Workshop.Gui;
 using TheSingularityWorkshop.Workshop.Gui.Svg;
+using TheSingularityWorkshop.Experiences.StoryForge;
 
 var outputDirectory = args.Length > 0
     ? Path.GetFullPath(args[0])
@@ -8,7 +9,8 @@ Directory.CreateDirectory(outputDirectory);
 
 var renderer = new SvgGuiRenderer();
 Write("casino-floor.svg", renderer.Render(CasinoFloor(), width: 1200, height: 760));
-Console.WriteLine($"Generated casino-floor Experience scene through GUI.Core → GUI.SVG: {outputDirectory}");
+Write("story-forge-coverage.svg", renderer.Render(StoryForgeCoverage(), width: 1200, height: 800));
+Console.WriteLine($"Generated two Experience scenes through GUI.Core → GUI.SVG: {outputDirectory}");
 
 void Write(string name, string svg)
 {
@@ -52,6 +54,68 @@ static GuiNode CasinoFloor()
     Text(root, "reconciliation-zero", "Δ = 0", 876, 637, "#64e5bf", 27, 800);
     Text(root, "reconciliation-caption", "invariant · all currencies", 876, 657, "#64e5bf", 11);
     Text(root, "boundary", "Illustrative visual proof · no real-money handling or redemption", 48, 741, "#aebbd5", 11);
+    return root.Build();
+}
+
+static GuiNode StoryForgeCoverage()
+{
+    var root = Scene("story-forge-scene",
+        "The world has time. The book has order.",
+        "Parallel world, character, and archive timelines. Colored story-time ranges connect by string lines to matching colored sequence blocks in books and series.");
+    Rect(root, "background", 0, 0, 1200, 800, "#111629", 0);
+    Text(root, "eyebrow", "THE SINGULARITY WORKSHOP · STORY FORGE", 42, 48, "#62d8ff", 12, 800);
+    Text(root, "title", "The world has time. The book has order.", 42, 88, "#f5f6ff", 32, 800);
+    Text(root, "subtitle", "Follow a moment through parallel timelines into the exact place a reader encounters it.", 42, 116, "#aab7d3", 15);
+    Rect(root, "timeline-panel", 40, 143, 1120, 344, "#121b30", 18, "#39496b");
+    Text(root, "timeline-label", "STORY TIME · EACH TIMELINE HAS ITS OWN DOMAIN AND SCALE", 64, 173, "#aab7d3", 12, 700);
+
+    // These ranges are real StoryForge domain values. Their distinct units and domain extents
+    // are mapped to the same drawing width only for display; the source coordinates stay independent.
+    var world = new StoryTimeline("world", "World events", "years", 5m);
+    var worldCoverage = new PublicationCoverage("book-one", "signal", "chapter", 0,
+        new StoryTimeRange(world.At(2m), world.At(7m)));
+    var mira = new StoryTimeline("mira", "Mira", "days", 25m);
+    var miraCoverage = new PublicationCoverage("book-two", "disappearance", "chapter", 0,
+        new StoryTimeRange(mira.At(42m), mira.At(73m)));
+    var archive = new StoryTimeline("archive", "The Archive", "reigns", 1m);
+    var archiveCoverage = new PublicationCoverage("book-one", "fragment", "chapter", 1,
+        new StoryTimeRange(archive.At(1.3m), archive.At(3.2m)));
+
+    Timeline(root, world, worldCoverage, 20m, "world timeline", 217, "#62d8ff", "First signal");
+    Timeline(root, mira, miraCoverage, 100m, "character arc", 297, "#ff8cc8", "Disappearance");
+    Timeline(root, archive, archiveCoverage, 5m, "institutional record", 377, "#ffd36a", "Hidden record");
+    AddTicks(root, "world-years", new[] { "Year 0", "Year 5", "Year 10", "Year 15", "Year 20" }, 198);
+    AddTicks(root, "mira-days", new[] { "Day 0", "Day 25", "Day 50", "Day 75", "Day 100" }, 278);
+    AddTicks(root, "archive-reigns", new[] { "Reign I", "Reign II", "Reign III", "Reign IV", "Reign V" }, 358);
+
+    Rect(root, "publication-panel", 40, 505, 1120, 226, "#121b30", 18, "#39496b");
+    Text(root, "publication-label", "PUBLICATION ORDER · SERIES CONTAIN BOOKS; COLLECTIONS CONTAIN SERIES", 64, 535, "#aab7d3", 12, 700);
+
+    // Reserve the cards first, then draw string lines, then place blocks on top of their termini.
+    BookPanel(root, "book-one", 72);
+    BookPanel(root, "book-two", 382);
+    // The archive interval is represented by the gold "Fragment" block in Book 1.
+    var worldCenter = RangeCenter(worldCoverage, 20m);
+    var miraCenter = RangeCenter(miraCoverage, 100m);
+    var archiveCenter = RangeCenter(archiveCoverage, 5m);
+    Flow(root, "world-to-book", $"M{F(worldCenter)} 217 C{F(worldCenter)} 455 124 478 124 548 L124 613", "#62d8ff");
+    Flow(root, "mira-to-book", $"M{F(miraCenter)} 297 C{F(miraCenter)} 455 434 478 434 548 L434 613", "#ff8cc8");
+    Flow(root, "archive-to-book", $"M{F(archiveCenter)} 377 C{F(archiveCenter)} 455 204 478 204 548 L204 613", "#ffd36a");
+
+    BookContent(root, "book-one", 72, "Series A", "Book 1 · Ashes",
+        new[] { ("Signal", "#62d8ff"), ("Fragment", "#ffd36a"), ("Memory", "#ff8cc8") });
+    BookContent(root, "book-two", 382, "Series A", "Book 2 · Echoes",
+        new[] { ("Disappearance", "#ff8cc8"), ("Hidden record", "#ffd36a"), ("Aftermath", "#62d8ff") });
+    Rect(root, "collection-card", 692, 555, 424, 146, "#1b2b45", 12, "#62d8ff");
+    Text(root, "collection-title", "World collection", 708, 580, "#f5f6ff", 17, 800);
+    Text(root, "collection-subtitle", "Optional container · multiple series", 708, 600, "#aab7d3", 12);
+    Rect(root, "series-a-card", 708, 614, 180, 58, "#121b30", 8, "#506184");
+    Text(root, "series-a-title", "Series A", 720, 638, "#f5f6ff", 12, 700);
+    Text(root, "series-a-books", "2 books · shared canon", 720, 657, "#aab7d3", 11);
+    Rect(root, "series-b-card", 900, 614, 200, 58, "#121b30", 8, "#506184");
+    Text(root, "series-b-title", "Series B", 912, 638, "#f5f6ff", 12, 700);
+    Text(root, "series-b-books", "parallel story · own order", 912, 657, "#aab7d3", 11);
+    Text(root, "boundary", "Concept model · generated through GUI.Core → GUI.SVG; StoryForge remains the canonical data owner", 42, 765, "#aab7d3", 11);
     return root.Build();
 }
 
