@@ -105,10 +105,11 @@ The deterministic session now models this sequence:
 5. Ask and answer a clarifying question.
 6. Create a linked working branch and record a focused change.
 7. Open a linked pull request proposal and inspect its review/check/merge states.
-8. Evaluate the acceptance criteria before closing the issue.
-9. Reopen the issue in an alternate path where the evidence is incomplete or the defect returns.
+8. Record a pass or fail for each acceptance criterion independently; a missing check or any failed check keeps the issue open.
+9. Correct failed evidence only after the relevant outcome changes, then verify and close only when every criterion has recorded passing evidence.
+10. Reopen the issue in an alternate path where evidence must be collected again or the defect returns.
 
-The learner should be able to explore both a successful resolution and a responsible non-resolution. A false green ending teaches the wrong lesson.
+The learner can record either pass or fail for each criterion. A failed result remains visible and blocks verification and closure; the learner can revise that result after correcting the work. Verification is a separate action available only after every criterion has recorded a pass. Reopening clears the recorded evidence so it must be collected again. A false green ending teaches the wrong lesson.
 
 ## Simulation and integration boundary
 
