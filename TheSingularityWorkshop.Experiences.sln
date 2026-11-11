@@ -56,6 +56,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Expe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.Minesweeper.Tests", "tests\Minesweeper.Tests\TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj", "{D0A11000-0000-4000-8000-000000000017}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Games.Slots", "src\Games.Slots\TheSingularityWorkshop.Games.Slots.csproj", "{E480A1C0-6A41-4C87-9E4D-202611020052}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Games.Slots.Tests", "tests\Games.Slots.Tests\TheSingularityWorkshop.Games.Slots.Tests.csproj", "{E480A1C0-6A41-4C87-9E4D-202611020053}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Games.CasinoLedger", "src\Games.CasinoLedger\TheSingularityWorkshop.Games.CasinoLedger.csproj", "{E480A1C0-6A41-4C87-9E4D-202611020054}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Games.CasinoLedger.Tests", "tests\Games.CasinoLedger.Tests\TheSingularityWorkshop.Games.CasinoLedger.Tests.csproj", "{E480A1C0-6A41-4C87-9E4D-202611020055}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -170,5 +178,21 @@ Global
 		{D0A11000-0000-4000-8000-000000000017}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0A11000-0000-4000-8000-000000000017}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0A11000-0000-4000-8000-000000000017}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020052}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020052}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020052}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020052}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020053}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020053}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020053}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020053}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020054}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020054}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020054}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020054}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020055}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020055}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020055}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020055}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
