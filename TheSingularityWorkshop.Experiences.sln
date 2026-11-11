@@ -64,6 +64,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Game
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Games.CasinoLedger.Tests", "tests\Games.CasinoLedger.Tests\TheSingularityWorkshop.Games.CasinoLedger.Tests.csproj", "{E480A1C0-6A41-4C87-9E4D-202611020055}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.GitHubLearningStudio", "src\GitHubLearningStudio\TheSingularityWorkshop.Experiences.GitHubLearningStudio.csproj", "{E480A1C0-6A41-4C87-9E4D-202611020050}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.GitHubLearningStudio.Tests", "tests\GitHubLearningStudio.Tests\TheSingularityWorkshop.Experiences.GitHubLearningStudio.Tests.csproj", "{E480A1C0-6A41-4C87-9E4D-202611020051}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.GitHubLearningStudio.PullRequests", "src\GitHubLearningStudio.PullRequests\TheSingularityWorkshop.Experiences.GitHubLearningStudio.PullRequests.csproj", "{E480A1C0-6A41-4C87-9E4D-202611020046}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.GitHubLearningStudio.PullRequests.Tests", "tests\GitHubLearningStudio.PullRequests.Tests\TheSingularityWorkshop.Experiences.GitHubLearningStudio.PullRequests.Tests.csproj", "{E480A1C0-6A41-4C87-9E4D-202611020047}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.GitHubLearningStudio.Issues", "src\GitHubLearningStudio.Issues\TheSingularityWorkshop.Experiences.GitHubLearningStudio.Issues.csproj", "{E480A1C0-6A41-4C87-9E4D-202611020048}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.GitHubLearningStudio.Issues.Tests", "tests\GitHubLearningStudio.Issues.Tests\TheSingularityWorkshop.Experiences.GitHubLearningStudio.Issues.Tests.csproj", "{E480A1C0-6A41-4C87-9E4D-202611020049}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -194,5 +206,29 @@ Global
 		{E480A1C0-6A41-4C87-9E4D-202611020055}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E480A1C0-6A41-4C87-9E4D-202611020055}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E480A1C0-6A41-4C87-9E4D-202611020055}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020050}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020050}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020050}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020050}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020051}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020051}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020051}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020051}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020046}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020046}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020046}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020046}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020047}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020047}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020047}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020047}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020048}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020048}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020048}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020048}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020049}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020049}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020049}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020049}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
