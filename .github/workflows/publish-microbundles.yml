@@ -188,6 +188,6 @@ jobs:
                   "version": os.environ["BUNDLE_VERSION"],
                   "contentHash": os.environ["CONTENT_HASH"],
               }, output, indent=2)
-              output.write("\\n")
+              output.write("\n")
           PY
           cat "artifacts/publication.json"
