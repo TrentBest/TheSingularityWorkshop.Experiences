@@ -1,6 +1,8 @@
 using TheSingularityWorkshop.Experiences.GalacticWar;
 
 var runtime = new StationMediaRuntime("vesper-reach");
+using var stationSession = new StationSessionLifecycle("vesper-reach-visitor-session");
+stationSession.MarkArrived();
 var signalId = Guid.Parse("10000000-0000-0000-0000-000000000001");
 var initialIssueId = Guid.Parse("20000000-0000-0000-0000-000000000001");
 var correctionIssueId = Guid.Parse("20000000-0000-0000-0000-000000000002");
@@ -16,6 +18,7 @@ runtime.RecordPresentation(new PlayerPresentation(Guid.NewGuid(), "player", init
 runtime.RecordPlayerChoice(new StationStoryDecision(Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(43)));
 
 Console.WriteLine("Vesper Reach — station shift");
+Console.WriteLine($"Station session FSM state: {stationSession.CurrentState}.");
 Console.WriteLine("T+10  Signal occurrence recorded at the frontier observatory.");
 Console.WriteLine("T+20  Official bulletin issued.");
 Console.WriteLine("T+30  Lounge display makes the bulletin available.");
