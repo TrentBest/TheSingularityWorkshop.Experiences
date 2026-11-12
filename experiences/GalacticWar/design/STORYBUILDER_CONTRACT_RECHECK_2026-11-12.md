@@ -2,67 +2,76 @@
 
 **Checked:** 2026-11-12  
 **Target:** StoryBuilder `development`  
-**Scope:** The Signal Nobody Owns; this is a source-level recheck, not a claim that Galactic War runtime behavior exists.
+**Scope:** The Signal Nobody Owns. This is a source-level contract review, not a claim that Galactic War runtime behavior exists.
 
-## What changed in the evidence
+## Current StoryBuilder primitives confirmed in source
 
-The earlier Galactic War crosswalk correctly identified the core authoring primitives, but StoryBuilder `development` has continued to evolve. Its current README reports workspace format 16, immutable publication snapshots, persisted planning-point promotion, append-only visual-asset revisions and review decisions, page-composition layouts, and optional discovery-interaction settings. The branch also describes a local Blazor workbench with host-filesystem workspace persistence. These are development-branch capabilities, not a statement about released packages.
+The current `StoryWorkspace` owns collections for timelines, planning points, observer knowledge, manuscripts, published editions, characters, places, scenes, historical claims, events, campaigns, participant actions, sources, and continuity issues.
 
-Relevant source contracts inspected:
+- `StoryEvent`: stable event identity, title/summary, optional in-world date/period, timeline placement, participants, cause/consequence IDs, source IDs, and canon status.
+- `SourceRecord`: title, source type, location/URI, perspective, and reliability note.
+- `HistoricalClaim`: statement, optional in-world date/period, attribution, confidence, canon status, source IDs, and `RelatedEntityIds`.
+- `ObserverKnowledgeRecord`: `EventId`, knowledge kind, optional `AcquiredAtEventId`, optional `SourceId`, attribution, note, confidence, review status, and `CreatedAtUtc`. **There is no dedicated observer/character identity field in this record.**
+- `ManuscriptEdition` / `ManuscriptSection`: editable ordered prose; sections can reference scenes and events.
+- `PublishedBookEdition`: immutable Markdown snapshot with content hash, publication timestamp, source-update timestamp, predecessor edition ID, correction notes, and section/scene/event provenance.
 
-- `StoryWorkspace` contains `StoryEvent`, `SourceRecord`, `HistoricalClaim`, `ObserverKnowledgeRecord`, `ManuscriptEdition`, and `PublishedBookEdition`.
-- `StoryEvent` carries stable identity, title/summary, optional in-world date/period, timeline placement, participants, cause/consequence IDs, source IDs, and canon status.
-- `SourceRecord` carries title, source type, location/URI, perspective, and reliability note.
-- `HistoricalClaim` carries statement, optional in-world date/period, attribution, confidence, canon status, source IDs, and related entity IDs.
-- `ObserverKnowledgeRecord` carries observer/event IDs, knowledge kind, optional acquisition-event ID, source ID, attribution, note, confidence, review status, and a UTC record-creation timestamp.
-- `ManuscriptEdition` is the editable structured book draft. `PublishedBookEdition` is an immutable Markdown snapshot with content hash, publication timestamp, source-update timestamp, predecessor edition ID, correction notes, and section/scene/event provenance.
+## Corrections and important distinctions
 
-## Important refinement: publication lineage is not broadcast lineage
+The previous pass incorrectly described `HistoricalClaim` as lacking a direct event association. The source shows that its `RelatedEntityIds` can reference the event ID, and `StoryWorkspaceValidator` verifies those IDs against all known workspace records. Use that supported relationship; do not invent an `EventId` property on the claim.
 
-StoryBuilder now has an explicit immutable **book publication** record and correction chain. This is valuable and should be reused for actual manuscript/book output. It is not automatically a news bulletin or broadcast edition.
+The more significant gap is observer identity: `ObserverKnowledgeRecord` has an `EventId` and acquisition-event reference, but no `ObserverId` or `CharacterId`. Attribution and note are text, not stable observer identity. The existing evaluator and projection may apply a host-level observer context, but the record itself does not persist a first-class observer key. Inspect those APIs before deciding whether the first proof can represent multiple named NPC knowledge states without an external mapping.
 
-A broadcast still needs its own semantics if the first proof demonstrates the need: outlet/channel, in-world publication time, intended audience, distribution scope, claims/evidence included in that specific issue, and append-only correction/supersession links between issues. Do not overload `PublishedBookEdition` merely because it already has a predecessor link and a publication timestamp.
-
-Likewise, a `SourceRecord` identifies provenance and perspective; it does not itself prove that a particular observer received a specific broadcast.
+StoryBuilder's immutable `PublishedBookEdition` is a book publication snapshot. It is not automatically a news bulletin or broadcast issue. A broadcast needs explicit outlet/channel, in-world publication time, intended audience, distribution scope, issue-specific claim/evidence snapshot, and append-only correction/supersession lineage. A `SourceRecord` describes provenance and perspective; it does not prove that a specific observer received a particular issue.
 
 ## Contract-level constraints for the first proof
 
-1. **Keep one event identity.** The signal event remains one `StoryEvent`; accounts and portrayals reference it rather than cloning it.
-2. **Keep claims attributed.** Claims carry source IDs and related entity IDs. The current `HistoricalClaim` shape does not expose a dedicated `EventId` property, so the authoring proof must verify the intended event association through the supported related-entity/source references and validator behavior. Do not invent a direct event-link API.
-3. **Keep observer acquisition causal.** `ObserverKnowledgeRecord.AcquiredAtEventId` is an event reference, not a publication or receipt timestamp. Its `CreatedAtUtc` is record metadata, not an in-world clock.
-4. **Keep manuscript portrayal separate.** `ManuscriptSection.EventIds` links a passage to event identities. Manuscript reading order is not a broadcast schedule or an observer-delivery ledger.
-5. **Use book snapshots only for books.** `PublishedBookEdition` proves immutable manuscript publication and correction lineage. It does not prove distribution to a station display, ship feed, or individual resident.
-6. **Preserve author review.** Proposed records remain proposed; existence is not acceptance. Observer narration continues to fail closed when accepted knowledge or causal availability cannot be established.
-7. **Keep runtime occurrence outside authoring possibility.** StoryBuilder's authored event and campaign proposals do not establish what happened in a particular running campaign.
+1. **One event identity:** the signal event remains one `StoryEvent`; reports and portrayals reference it rather than cloning it.
+2. **Attributed claims:** `HistoricalClaim.RelatedEntityIds` links the claim to the event; `SourceIds` identifies supporting accounts. Validator checks both source and related-record references.
+3. **Observer knowledge:** `ObserverKnowledgeRecord.EventId` identifies the subject event; `AcquiredAtEventId` identifies a causal acquisition event; `SourceId` identifies the account. It does not currently store a stable observer ID or an in-world receipt timestamp.
+4. **Causal availability:** StoryBuilder's observer evaluator requires accepted knowledge and checks acquisition-event reachability through cause links. Proposed knowledge remains unresolved; missing knowledge fails closed.
+5. **Separate portrayal:** `ManuscriptSection.EventIds` and `SceneBeat.EventIds` link prose/scene beats to the event. Neither is a broadcast schedule or receipt ledger.
+6. **Book snapshots stay books:** use `PublishedBookEdition` for immutable manuscript publication and correction lineage only.
+7. **Authored possibility is not runtime occurrence:** StoryBuilder records and campaign proposals do not establish what happened in a particular running Galactic War campaign.
 
-## Updated four-clock interpretation
+## Four clocks: what is and is not represented
 
-For Galactic War, retain these distinct clocks:
-
-| Clock | Current StoryBuilder support | Remaining boundary |
+| Clock | Current support | Remaining boundary |
 |---|---|---|
-| World-event time | Event timeline and optional in-world date/period | May be approximate or unresolved |
-| Account publication time | `PublishedBookEdition.PublishedAtUtc` for book snapshots | No equivalent in-world broadcast issue timestamp on `SourceRecord` or `HistoricalClaim` |
-| Observer acquisition | `AcquiredAtEventId` and causal-history evaluation | Event-scoped causality exists; a dedicated in-world receipt timestamp/receipt record is not shown by this contract |
-| Player presentation | Manuscript section sequence and scene ordering | Runtime media scheduling and actual player presentation remain Experience responsibilities |
+| World-event time | `StoryEvent.InWorldDateOrPeriod`, timeline placement, and causal links | Date may be approximate or unresolved |
+| Account publication time | `PublishedBookEdition.PublishedAtUtc` for a book snapshot | No in-world publication timestamp for a broadcast issue |
+| Observer acquisition | `AcquiredAtEventId` plus causal-history evaluation | No first-class observer key or dedicated in-world receipt timestamp on `ObserverKnowledgeRecord` |
+| Player presentation | Manuscript section sequence and scene/beat order | Runtime media scheduling and actual player presentation remain Experience responsibilities |
 
-The table deliberately distinguishes a real timestamp on a book publication snapshot from the still-missing in-world publication time of a broadcast. Do not treat UTC authoring metadata as a fictional-world clock.
+Do not treat UTC record-creation metadata as a fictional-world clock.
+
+## First proof: use existing records, expose friction honestly
+
+The first StoryBuilder workspace should contain:
+
+- one timeline and one proposed/accepted world event for the anomalous signal;
+- source records for the official bulletin, independent survey account, and later correction;
+- separate historical claims, each linked to the same event through `RelatedEntityIds` and to its account through `SourceIds`;
+- observer-knowledge records for the knowledge states the current API can genuinely express, with acquisition events linked causally;
+- a scene showing two NPCs interpreting the reports differently;
+- manuscript sections that portray the initial bulletin and later correction while referencing the same event ID;
+- a continuity issue documenting any observer identity or publication/delivery semantics that cannot be represented faithfully.
+
+The proof must not fake named-observer identity by stuffing names into free text and then claiming the domain has stable observer identity. If the current host projection supports explicit observer context, demonstrate that separately and record the limitation.
 
 ## Decision
 
-**Proceed with the first proof using current StoryBuilder primitives, but treat broadcast publication and delivery as an explicit gap—not as a solved feature.** The first proof should create the world event, source perspectives, competing claims, observer knowledge, and scene/manuscript portrayals. It should record the missing broadcast semantics as concrete friction if the author cannot represent the four clocks and correction history without ambiguity.
+**Proceed with the first proof using current StoryBuilder primitives for events, sources, claims, causal knowledge, scenes, and manuscript portrayal.** Treat stable observer identity and broadcast publication/delivery as explicit gaps to validate in the host/API workflow. Only propose narrow StoryBuilder extensions after concrete proof friction is recorded.
 
-Only after that proof should StoryBuilder receive a narrow domain extension proposal. Galactic War must not grow a parallel StoryBuilder-like narrative database, and it must not claim the book publication model is a news distribution model.
+Do not add a Galactic War-specific parallel narrative database. Do not overload book publication records into broadcast issues.
 
 ## Sources inspected on StoryBuilder `development`
 
-- [README and current development capability summary](https://github.com/TrentBest/StoryBuilder/blob/development/README.md)
 - [Story domain contract](https://github.com/TrentBest/StoryBuilder/blob/development/docs/STORY_DOMAIN_CONTRACT.md)
 - [Timeline authoring and observer model](https://github.com/TrentBest/StoryBuilder/blob/development/docs/TIMELINE_AUTHORING_MODEL.md)
-- [StoryWorkspace and domain records](https://github.com/TrentBest/StoryBuilder/blob/development/src/StoryBuilder.Core/Models/StoryWorkspace.cs)
-- [Manuscript edition](https://github.com/TrentBest/StoryBuilder/blob/development/src/StoryBuilder.Core/Models/ManuscriptEdition.cs)
-- [Published book edition](https://github.com/TrentBest/StoryBuilder/blob/development/src/StoryBuilder.Core/Models/PublishedBookEdition.cs)
+- [StoryWorkspace and records](https://github.com/TrentBest/StoryBuilder/blob/development/src/StoryBuilder.Core/Models/StoryWorkspace.cs)
 - [Observer knowledge record](https://github.com/TrentBest/StoryBuilder/blob/development/src/StoryBuilder.Core/Models/ObserverKnowledgeRecord.cs)
+- [Manuscript edition](https://github.com/TrentBest/StoryBuilder/blob/development/src/StoryBuilder.Core/Models/ManuscriptEdition.cs)
 - [Timeline planning point](https://github.com/TrentBest/StoryBuilder/blob/development/src/StoryBuilder.Core/Models/TimelinePlanningPoint.cs)
+- [Workspace validator](https://github.com/TrentBest/StoryBuilder/blob/development/src/StoryBuilder.Core/Services/StoryWorkspaceValidator.cs)
 
-Branch state can change. Re-verify these contracts before implementing against them or describing them as released behavior.
+Re-verify branch state before implementing against these contracts or describing them as released behavior.
