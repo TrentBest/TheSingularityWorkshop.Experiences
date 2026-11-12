@@ -12,6 +12,7 @@ runtime.IssueBroadcast(new BroadcastIssue(initialIssueId, signalId, "story-artif
 runtime.ScheduleDelivery(new MediaDelivery(initialDeliveryId, initialIssueId, "lounge-display", "vesper-reach", new CampaignInstant(30)));
 runtime.RecordReceipt(new ObserverReceipt(Guid.Parse("50000000-0000-0000-0000-000000000001"), initialDeliveryId, "mara-quill", new CampaignInstant(32), AcquisitionMode.Heard));
 runtime.RecordReceipt(new ObserverReceipt(Guid.Parse("50000000-0000-0000-0000-000000000002"), initialDeliveryId, "player", new CampaignInstant(40), AcquisitionMode.Viewed));
+runtime.RecordPlayerChoice(new StationStoryDecision(Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(40)));
 
 Console.WriteLine("Vesper Reach — station shift");
 Console.WriteLine("T+10  Signal occurrence recorded at the frontier observatory.");
