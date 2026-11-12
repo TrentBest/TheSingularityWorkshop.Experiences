@@ -15,6 +15,8 @@ public sealed class StationSessionLifecycle : IStateContext, IDisposable
     private readonly FSMHandle _handle;
     private bool _disposed;
 
+    /// <summary>Creates a station visit in its initial Arriving state.</summary>
+    /// <param name="name">Caller-defined identity for this visit.</param>
     public StationSessionLifecycle(string name)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
@@ -27,9 +29,13 @@ public sealed class StationSessionLifecycle : IStateContext, IDisposable
         }
     }
 
+    /// <summary>Gets or sets the caller-owned context name.</summary>
     public string Name { get; set; }
+    /// <summary>Gets or sets whether this caller-owned context is valid.</summary>
     public bool IsValid { get; set; }
+    /// <summary>Gets the current FSM_API lifecycle state for this visit.</summary>
     public string CurrentState => _handle.CurrentState;
+    /// <summary>Gets whether this visit's FSM handle has been explicitly destroyed.</summary>
     public bool IsDisposed => _disposed;
 
     /// <summary>Moves this visit from Arriving to Active using its own FSM handle.</summary>
