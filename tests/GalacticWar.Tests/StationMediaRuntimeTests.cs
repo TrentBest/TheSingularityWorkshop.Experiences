@@ -142,6 +142,42 @@ public sealed class StationMediaRuntimeTests
     }
 
     [Fact]
+    public void StationSessionUsesItsOwnFsmHandleForArrivalAndDeparture()
+    {
+        using var session = new StationSessionLifecycle("vesper-shift-one");
+        Assert.Equal("Arriving", session.CurrentState);
+
+        session.MarkArrived();
+        Assert.Equal("Active", session.CurrentState);
+
+        session.Depart();
+        Assert.Equal("Departed", session.CurrentState);
+    }
+
+    [Fact]
+    public void StationSessionFsmInstancesDoNotShareLifecycleState()
+    {
+        using var first = new StationSessionLifecycle("vesper-shift-first");
+        using var second = new StationSessionLifecycle("vesper-shift-second");
+
+        first.MarkArrived();
+
+        Assert.Equal("Active", first.CurrentState);
+        Assert.Equal("Arriving", second.CurrentState);
+    }
+
+    [Fact]
+    public void StationSessionRejectsInvalidLifecycleTransitions()
+    {
+        using var session = new StationSessionLifecycle("vesper-shift-invalid");
+
+        Assert.Throws<InvalidOperationException>(() => session.Depart());
+        session.MarkArrived();
+        session.Depart();
+        Assert.Throws<InvalidOperationException>(() => session.MarkArrived());
+    }
+
+    [Fact]
     public void DuplicateReceiptForSameObserverAndDeliveryIsRejected()
     {
         var runtime = CreateRuntime();
