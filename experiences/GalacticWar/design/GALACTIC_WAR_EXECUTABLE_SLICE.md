@@ -129,6 +129,8 @@ It records:
 
 The runtime deliberately stores references to authored content rather than duplicating StoryBuilder's event, source, claim, chronology, or observer-knowledge records. It does not yet consume a real exported StoryBuilder composition artifact; the first-contact sample uses clearly marked placeholder artifact identifiers.
 
+A useful integration discovery: StoryBuilder `development` already implements a versioned **Composition Package Contract** with separate binary manifest, per-MicroBundle configuration, and content payload; the manifest captures workspace/content revision, SHA-256 hashes, selected bundle requirements, and the Workshop arbitration record. Its `CompositionPackageReader` validates and restores the package without rerunning arbitration. The documented remaining proof is real AnyApp host selection/dispatch and validation before execution. Galactic War should consume that validated host artifact reference, not invent another manifest or reference StoryBuilder implementation projects. See [StoryBuilder Composition Package Contract](https://github.com/TrentBest/StoryBuilder/blob/development/docs/COMPOSITION_PACKAGE_CONTRACT.md).
+
 **Current proof boundary:** this is an in-memory deterministic kernel, not durable campaign storage, a networked broadcast service, a complete NPC dialogue system, a GUI, or a playable station. A player Watch choice requires an actual Viewed receipt. Asking, ignoring, and leaving are recorded as choices and do not manufacture receipt evidence.
 
 The first CI gate builds the library, runs its invariant tests, and executes the sample trace. The station visit lifecycle is now backed by one FSM_API handle per session:
