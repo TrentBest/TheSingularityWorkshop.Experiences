@@ -29,7 +29,7 @@ public sealed record MediaDelivery(Guid DeliveryId, Guid IssueId, string Channel
 public sealed record ObserverReceipt(Guid ReceiptId, Guid DeliveryId, string ObserverId, CampaignInstant ReceivedAt, AcquisitionMode Mode);
 
 /// <summary>How the observer acquired channel content; this does not prove its claims are true.</summary>
-public enum AcquisitionMode { Viewed, Heard, Read, Retold }
+public enum AcquisitionMode { Viewed, Heard, Read }
 
 /// <summary>A player's deliberate response to a station story opportunity.</summary>
 public enum StationStoryChoice
