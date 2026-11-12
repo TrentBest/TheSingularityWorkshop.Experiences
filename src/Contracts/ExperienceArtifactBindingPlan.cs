@@ -45,10 +45,11 @@ public sealed record ExperienceArtifactBindingPlan(
 
         foreach (var descriptor in resolution.OrderedArtifacts)
         {
-            if (descriptor?.Identity is not { IsValid: true } artifact)
+            if (descriptor is null || descriptor.Identity is null || !descriptor.Identity.IsValid)
                 return Failure(new("binding.invalid-artifact",
                     "The resolved dependency closure contains an artifact with an invalid identity."));
 
+            var artifact = descriptor.Identity;
             if (!artifactKeys.Add(artifact.StableKey))
                 return Failure(new("binding.duplicate-artifact",
                     $"The resolved dependency closure contains duplicate artifact identity '{artifact.BundleId}@{artifact.Version}'."));
