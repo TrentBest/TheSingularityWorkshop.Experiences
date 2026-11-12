@@ -113,3 +113,55 @@ This is a concrete cross-repository integration gap, but the existing StoryBuild
 - [AnyApp FSM_COS composition entry point](https://github.com/TrentBest/AnyApp/blob/development/AnyAppRuntime.cs)
 - [AnyApp semantic surface contract](https://github.com/TrentBest/AnyApp/blob/development/IAnyAppSurface.cs)
 - [AnyApp host adapter contract](https://github.com/TrentBest/AnyApp/blob/development/docs/EXPERIENCE_HOST_ADAPTER_CONTRACT.md)
+
+### Exact binary reader API and test boundary
+
+The current StoryBuilder `development` `CompositionPackageBinaryArtifacts.cs` implements these concrete public contracts:
+
+```csharp
+public sealed record CompositionPackageArtifact(
+    byte[] ManifestPayload,
+    byte[] ConfigurationPayload,
+    byte[] ContentPayload);
+
+public sealed class CompositionPackageCompiler
+{
+    public CompositionPackageArtifact Compile(
+        StoryBuilderSession session,
+        string contentRevision,
+        string outputProfile,
+        Guid arbitrationRecordId,
+        IEnumerable<MicroBundleRequirement> bundleRequirements,
+        IEnumerable<MicroBundleRuntimeConfiguration> bundleConfigurations);
+}
+
+public sealed class CompositionPackageReader
+{
+    public CompositionPackageLoadResult ValidateAndRestore(
+        CompositionPackageArtifact artifact,
+        IEnumerable<ulong> availableBundleIds,
+        IEnumerable<string> availableCapabilities);
+}
+
+public sealed record CompositionPackageLoadResult(
+    bool IsValid,
+    IReadOnlyList<string> Errors,
+    CompositionPackageManifest? Manifest,
+    CompositionPackageConfiguration? Configuration,
+    StoryBuilderSession? Session);
+```
+
+The compiler requires a non-empty arbitration record ID and captures a package ID, workspace ID, content revision, output profile, exact content/configuration SHA-256 hashes, MicroBundle requirements, and per-bundle configuration. The reader validates the decoded manifest/configuration, both payload hashes, available bundle IDs/capabilities, and the restored workspace ID. A failed validation returns diagnostics and a null session; callers must gate all mapping on `IsValid` and a non-null `Session`.
+
+The persistence project currently targets `net8.0`, references `StoryBuilder.Core`, and consumes `TheSingularityWorkshop.FSM_Serialization` 1.0.0. Galactic War also targets `net8.0`, so there is no target-framework mismatch, but a direct runtime reference would still violate the intended ownership boundary and pull persistence concerns into the Experience.
+
+**Placement decision:** keep the binary reader in StoryBuilder.Persistence. Put any AnyApp package-loading adapter in the host integration layer, and keep Galactic War's input contract typed and host-neutral. A cross-repository integration test should live with the host adapter (or a dedicated integration test project that explicitly checks out/references StoryBuilder); the Experiences CI must not pretend its standalone build has that dependency. The narrow Galactic War mapping can then be unit-tested using validated domain inputs without knowing how the package was serialized.
+
+The minimum reader test matrix is:
+- valid artifact + complete required bundle/capability set → valid restored session with the same workspace identity;
+- altered content or configuration bytes → invalid result, no session;
+- absent required bundle or capability → invalid result, no session;
+- restored content workspace ID inconsistent with manifest → invalid result, no session;
+- malformed manifest/configuration/content → diagnostic failure, no session.
+
+This exact API check narrows the remaining work: the open gap is not a missing StoryBuilder compiler or reader. It is a real host adapter and an integration test that proves the validated restored session is mapped into Galactic War without leaking serialization into the runtime.
