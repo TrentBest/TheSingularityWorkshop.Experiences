@@ -93,6 +93,7 @@ This repository currently captures authored intent and design boundaries. It doe
 - [Learning and the living social galaxy](design/LEARNING_AND_SOCIAL_GALAXY.md)
 - [Learning progression and professional qualification](design/LEARNING_PROGRESSION_AND_QUALIFICATION.md)
 - [Style, identity, and provenance](design/STYLE_IDENTITY_AND_PROVENANCE.md)
+- [Finite provenance, trophy objects, and ownership](design/FINITE_PROVENANCE_AND_TROPHY_OWNERSHIP.md)
 - [Lived-in ships and viewports](design/LIVED_IN_SHIPS_AND_VIEWPORTS.md)
 - [Space stations and docking](design/STATIONS_AND_DOCKING.md)
 - [Station life and background activity](design/STATION_LIFE_AND_BACKGROUND_ACTIVITY.md)
