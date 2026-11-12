@@ -126,6 +126,89 @@ Do not expose private information or reveal hidden holders and locations when th
 
 Do not create a parallel game-specific identity system if the existing FSM/API primitives can supply stable instance identity. Verify actual contracts before implementation.
 
+## Lifecycle contract and invariants
+
+The issue and each instance have separate lifecycles. Do not represent both with one generic "rarity" or "owned" flag.
+
+### Issue-level lifecycle
+
+| State | Meaning | Permitted next states |
+|---|---|---|
+| Draft | Proposed, not authorized for creation | Authorized, Cancelled |
+| Authorized | Rules, cap, and issuing authority are recorded; no implication that every instance exists | Open, Closed |
+| Open | Authorized instances may be minted up to the current cap | Exhausted, Closed |
+| Exhausted | The full authorized cap has been minted | Closed |
+| Closed | No further minting under this issue revision | — |
+| Cancelled | Issue was never opened; no instances may have been minted | — |
+
+Closing an issue does not destroy, revoke, or invalidate already minted instances. Exhausted and Closed are not synonyms: an issue can close early with some authorized instances never minted. A cancelled issue must have zero minted instances.
+
+If the authorized cap is ever changed, that is a separately authorized, auditable issue amendment with its own effective time and reason. It must not rewrite the original cap or make previously invalid instances appear legitimate. The default policy should be that a finite issue's cap never increases after opening; any exception must be visible to players and historical records.
+
+### Instance lifecycle
+
+An instance's physical condition and legal ownership are orthogonal to whether it is in circulation. Use explicit events to move between lifecycle states:
+
+| State | Meaning | Example event that may enter it |
+|---|---|---|
+| Minted | Legitimately created, not yet assigned | Authorized issuance |
+| In circulation | Available to be held, displayed, stored, or transferred under its policy | Initial assignment or release |
+| Secured | Held in validated escrow, institutional custody, or a protected objective | Deposit or seizure |
+| Lost | No current custodian is known; last-known location/evidence remains | Confirmed loss |
+| Destroyed | The instance no longer exists as a usable object | Validated destruction |
+| Retired | Permanently removed from circulation but retained in the historical record | Authorized retirement |
+
+"Lost" is not "destroyed"; recovery may return a lost instance to circulation through a recorded recovery event. "Retired" is not a hidden deletion. Destruction and retirement are terminal unless a separately defined restoration rule exists; restoration must preserve the original instance identity and record the restoration rather than minting a replacement.
+
+### Transition acceptance
+
+Every state-changing command should be evaluated against the current authoritative version of the instance and issue. A transition is accepted only if all of these are true:
+
+1. The instance identity exists and was minted under a valid issue.
+2. The requested transition is permitted by the object's class and current state.
+3. The actor or issuing authority is authorized for this transition.
+4. Required encounter, custody, consent, transaction, or evidence conditions are satisfied.
+5. The expected prior state/version still matches the authoritative state.
+6. The transition has a unique operation/event identity, so retries are idempotent.
+7. The event can be appended without violating the issue cap or creating conflicting ownership/custody.
+
+If any check fails, the authoritative state remains unchanged and the rejection is explainable. A retry of the same accepted operation returns the prior result; it does not append a second transfer. Two competing claims against the same prior version cannot both succeed. The losing claimant receives a conflict result and must re-evaluate against the new state.
+
+### Minimum invariant suite
+
+These are testable invariants, not UI conventions:
+
+- **Identity:** one instance ID identifies at most one legitimate instance for its entire lifetime.
+- **Cap:** minted count never exceeds the issue's authorized cap at the time of minting.
+- **No resurrection by duplication:** destruction, loss, or retirement never authorizes a second instance with the same identity.
+- **Single authoritative title:** at most one current owner exists when the item's policy defines ownership.
+- **Single physical custody:** at most one authoritative custodian exists at a time, except for explicitly modeled shared custody.
+- **Custody/title separation:** moving an object into a museum or escrow does not silently change title.
+- **Transfer policy:** bound awards reject transfer even when an encounter is won.
+- **Trophy conditions:** a transfer occurs only after the configured victory, recovery, and claim conditions are all met.
+- **Append-only history:** corrections append a compensating or superseding event; they do not erase the original event.
+- **Projection consistency:** current owner, custodian, location, and condition can be rebuilt from accepted history and agree with the authoritative projection.
+- **Privacy:** public provenance views reveal only fields the disclosure policy permits; hidden custody does not become public through a UI projection.
+
+### Adversarial test cases
+
+| Test | Setup | Expected result |
+|---|---|---|
+| Cap race | Two issuance requests compete for the final authorized instance | Exactly one succeeds |
+| Duplicate retry | Same transfer operation is submitted twice | One transfer event and one resulting state |
+| Competing capture | Two actors claim the same trophy from the same encounter state | At most one claim succeeds |
+| Disconnect at claim | Holder disconnects between defeat and secured recovery | No ownership change until the declared claim conditions complete |
+| Temporary disarm | Holder is disarmed but retains encounter control or recovers the item | No transfer unless the rule explicitly treats disarmament as final |
+| Bound award capture | A bound award holder is defeated | Transfer rejected; award remains bound |
+| Escrow deposit | Owner deposits trophy with a neutral custodian | Custody changes; title does not |
+| Lost-item recovery | Lost item is found by a new actor | Recovery/custody event recorded; title follows the declared recovery rule |
+| Destruction replay | Destruction event is delivered repeatedly | One terminal transition; no replacement instance |
+| History correction | An administrator corrects a mistaken transfer | Original event remains; correction is auditable |
+| Unauthorized mint | Actor attempts issuance outside the authorized issue | Rejected; minted count unchanged |
+| Closed issue mint | Mint request arrives after closure | Rejected, even if the nominal cap has unused capacity |
+
+A test harness should assert both the resulting projection and the event history. Testing only the current-owner field would miss provenance corruption.
+
 ## First proof
 
 The smallest useful proof is a finite issue of three visibly distinct trophy insignia, each with a stable instance identity.
