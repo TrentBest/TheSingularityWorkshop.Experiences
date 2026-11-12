@@ -131,4 +131,10 @@ The runtime deliberately stores references to authored content rather than dupli
 
 **Current proof boundary:** this is an in-memory deterministic kernel, not durable campaign storage, a networked broadcast service, a complete NPC dialogue system, a GUI, or a playable station. A player Watch choice requires an actual Viewed receipt. Asking, ignoring, and leaving are recorded as choices and do not manufacture receipt evidence.
 
-The first CI gate builds the library, runs its invariant tests, and executes the sample trace. FSM_API station-session lifecycle integration and the exact development-source dependency proof remain subsequent work; no claim is made that this kernel has yet exercised FSM_API development.
+The first CI gate builds the library, runs its invariant tests, and executes the sample trace. The station visit lifecycle is now backed by one FSM_API handle per session:
+- `Arriving → Active → Departed` is a real FSM definition, not a parallel enum-based state machine.
+- The visit context remains caller-owned; FSM_API owns only the registered handle.
+- The host advances the specific session handle. One visitor's transition does not tick every station session.
+- Disposal explicitly unregisters the handle before marking the context invalid.
+
+The project uses released FSM_API `1.0.13` for ordinary CI and supports a coordinated source checkout through `WorkshopUseRepositorySources=true`, which switches to a project reference at `../../../FSM_API/FSM_API/FSM_API.csproj`. The FSM_API development branch was inspected at commit `e6aae0ff46086be9f2ebc84363d83a118da9a2ee` on 2026-11-12. The local source-mode proof must use that exact checkout (or a later explicitly re-verified commit); the current GitHub CI run is still the released-package path. The implementation avoids relying on the changed invalid-context suspension semantics, so the package fallback and source mode share the explicit handle lifecycle used here.
