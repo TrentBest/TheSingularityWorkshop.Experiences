@@ -74,7 +74,7 @@ See [Space Stations and Docking](design/STATIONS_AND_DOCKING.md) for the arrival
 
 Learning begins early as exploration of a complex and wondrous civilization. People discover sciences, crafts, institutions, vehicles, social responsibilities, and possible vocations. Advanced training is a later, deliberate choice with prerequisites and meaningful qualifications.
 
-The galaxy must also contain ordinary life: friendships, families, work, trade, culture, recreation, disagreement, institutions, and communities. These are not decorative downtime between battles; they give conflict something real to affect and give the visitor reasons to care about the outcome.
+The galaxy must also contain ordinary life: friendships, families, work, trade, culture, recreation, disagreement, institutions, and communities. These are not decorative downtime between missions; they give conflict something real to affect and give the visitor reasons to care about the outcome.
 
 ## Design status and truth
 
@@ -98,6 +98,7 @@ This repository currently captures authored intent and design boundaries. It doe
 - [Station life and background activity](design/STATION_LIFE_AND_BACKGROUND_ACTIVITY.md)
 - [First station candidate: Vesper Reach](design/FIRST_STATION_CANDIDATE.md)
 - [Civilization interface and perception](design/CIVILIZATION_INTERFACE_AND_PERCEPTION.md)
+- [First contact and diplomacy](design/FIRST_CONTACT_AND_DIPLOMACY.md)
 
 ## Architecture boundaries
 
