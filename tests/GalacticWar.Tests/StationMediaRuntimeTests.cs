@@ -109,6 +109,27 @@ public sealed class StationMediaRuntimeTests
     }
 
     [Fact]
+    public void PlayerPresentationHasItsOwnClockAndRequiresViewedReceipt()
+    {
+        var runtime = CreateRuntime();
+        var presentationId = Guid.NewGuid();
+        Assert.Throws<InvalidOperationException>(() => runtime.RecordPresentation(new PlayerPresentation(
+            presentationId, "player", InitialIssueId, new CampaignInstant(42))));
+
+        runtime.RecordReceipt(new ObserverReceipt(
+            Guid.NewGuid(), InitialDeliveryId, "player", new CampaignInstant(40), AcquisitionMode.Viewed));
+        Assert.Empty(runtime.GetPresentedIssues("player", new CampaignInstant(41)));
+
+        runtime.RecordPresentation(new PlayerPresentation(
+            presentationId, "player", InitialIssueId, new CampaignInstant(42)));
+        Assert.Empty(runtime.GetPresentedIssues("player", new CampaignInstant(41)));
+        Assert.Single(runtime.GetPresentedIssues("player", new CampaignInstant(42)));
+        runtime.RecordPlayerChoice(new StationStoryDecision(
+            Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(43)));
+        Assert.Single(runtime.Decisions);
+    }
+
+    [Fact]
     public void AskingAnObserverIsRecordedAsChoiceNotAsAcquiredKnowledge()
     {
         var runtime = CreateRuntime();
