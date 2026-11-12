@@ -91,6 +91,31 @@ public sealed class StationMediaRuntimeTests
     }
 
     [Fact]
+    public void WatchingRequiresAPlayerReceiptButIgnoringDoesNotCreateOne()
+    {
+        var runtime = CreateRuntime();
+        Assert.Throws<InvalidOperationException>(() => runtime.RecordPlayerChoice(new StationStoryDecision(
+            Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(30))));
+
+        runtime.RecordPlayerChoice(new StationStoryDecision(
+            Guid.NewGuid(), "player", StationStoryChoice.Ignore, new CampaignInstant(30)));
+        Assert.Empty(runtime.GetReceivedIssues("player", new CampaignInstant(30)));
+        Assert.Single(runtime.Decisions);
+    }
+
+    [Fact]
+    public void AskingAnObserverIsRecordedAsChoiceNotAsAcquiredKnowledge()
+    {
+        var runtime = CreateRuntime();
+        runtime.RecordPlayerChoice(new StationStoryDecision(
+            Guid.NewGuid(), "player", StationStoryChoice.Ask, new CampaignInstant(25), "teren"));
+
+        Assert.Single(runtime.Decisions);
+        Assert.Equal(StationStoryChoice.Ask, runtime.Decisions.Single().Choice);
+        Assert.Empty(runtime.GetReceivedIssues("player", new CampaignInstant(25)));
+    }
+
+    [Fact]
     public void DuplicateReceiptForSameObserverAndDeliveryIsRejected()
     {
         var runtime = CreateRuntime();
