@@ -47,3 +47,10 @@ public sealed record StationStoryDecision(
     StationStoryChoice Choice,
     CampaignInstant ChosenAt,
     string? TargetObserverId = null);
+
+/// <summary>A recorded moment when an acquired issue was actually presented to the player.</summary>
+public sealed record PlayerPresentation(
+    Guid PresentationId,
+    string PlayerId,
+    Guid IssueId,
+    CampaignInstant PresentedAt);
