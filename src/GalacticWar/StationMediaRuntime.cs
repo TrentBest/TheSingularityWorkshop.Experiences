@@ -10,6 +10,7 @@ public sealed class StationMediaRuntime
     private readonly Dictionary<Guid, BroadcastIssue> _issues = [];
     private readonly Dictionary<Guid, MediaDelivery> _deliveries = [];
     private readonly Dictionary<Guid, ObserverReceipt> _receipts = [];
+    private readonly Dictionary<Guid, StationStoryDecision> _decisions = [];
 
     public StationMediaRuntime(string stationId)
     {
@@ -22,6 +23,7 @@ public sealed class StationMediaRuntime
     public IReadOnlyCollection<BroadcastIssue> Issues => _issues.Values;
     public IReadOnlyCollection<MediaDelivery> Deliveries => _deliveries.Values;
     public IReadOnlyCollection<ObserverReceipt> Receipts => _receipts.Values;
+    public IReadOnlyCollection<StationStoryDecision> Decisions => _decisions.Values;
 
     /// <summary>Records an actual campaign occurrence without promoting an authored possibility by implication.</summary>
     public void RecordOccurrence(SignalOccurrence occurrence)
@@ -117,6 +119,30 @@ public sealed class StationMediaRuntime
             .OrderBy(delivery => delivery.AvailableAt)
             .Select(delivery => _issues[delivery.IssueId])
             .ToArray();
+    }
+
+    /// <summary>Records a player choice without forcing a quest or manufacturing observer knowledge.</summary>
+    public void RecordPlayerChoice(StationStoryDecision decision)
+    {
+        ArgumentNullException.ThrowIfNull(decision);
+        if (decision.DecisionId == Guid.Empty)
+            throw new ArgumentException("Decision identity is required.", nameof(decision));
+        ArgumentException.ThrowIfNullOrWhiteSpace(decision.PlayerId);
+        if (!Enum.IsDefined(decision.Choice))
+            throw new ArgumentOutOfRangeException(nameof(decision), "Story choice is not defined.");
+
+        if (decision.Choice == StationStoryChoice.Watch &&
+            !_receipts.Values.Any(receipt =>
+                string.Equals(receipt.ObserverId, decision.PlayerId, StringComparison.Ordinal) &&
+                receipt.ReceivedAt <= decision.ChosenAt))
+            throw new InvalidOperationException("Watching a report requires an actual player receipt by that time.");
+
+        if (decision.Choice == StationStoryChoice.Ask)
+            ArgumentException.ThrowIfNullOrWhiteSpace(decision.TargetObserverId);
+        else if (decision.TargetObserverId is not null)
+            throw new ArgumentException("Only an Ask choice may name an observer.", nameof(decision));
+
+        AddUnique(_decisions, decision.DecisionId, decision, "player story decision");
     }
 
     private static void AddUnique<T>(Dictionary<Guid, T> target, Guid id, T value, string kind)
