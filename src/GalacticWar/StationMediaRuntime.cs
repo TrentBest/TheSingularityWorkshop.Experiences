@@ -11,6 +11,7 @@ public sealed class StationMediaRuntime
     private readonly Dictionary<Guid, MediaDelivery> _deliveries = [];
     private readonly Dictionary<Guid, ObserverReceipt> _receipts = [];
     private readonly Dictionary<Guid, StationStoryDecision> _decisions = [];
+    private readonly Dictionary<Guid, PlayerPresentation> _presentations = [];
 
     public StationMediaRuntime(string stationId)
     {
@@ -24,6 +25,7 @@ public sealed class StationMediaRuntime
     public IReadOnlyCollection<MediaDelivery> Deliveries => _deliveries.Values;
     public IReadOnlyCollection<ObserverReceipt> Receipts => _receipts.Values;
     public IReadOnlyCollection<StationStoryDecision> Decisions => _decisions.Values;
+    public IReadOnlyCollection<PlayerPresentation> Presentations => _presentations.Values;
 
     /// <summary>Records an actual campaign occurrence without promoting an authored possibility by implication.</summary>
     public void RecordOccurrence(SignalOccurrence occurrence)
@@ -121,6 +123,38 @@ public sealed class StationMediaRuntime
             .ToArray();
     }
 
+    /// <summary>Records player-facing presentation after that player has acquired the referenced issue.</summary>
+    public void RecordPresentation(PlayerPresentation presentation)
+    {
+        ArgumentNullException.ThrowIfNull(presentation);
+        if (presentation.PresentationId == Guid.Empty || presentation.IssueId == Guid.Empty)
+            throw new ArgumentException("Presentation and issue identities are required.", nameof(presentation));
+        ArgumentException.ThrowIfNullOrWhiteSpace(presentation.PlayerId);
+        if (presentation.PresentedAt.Value < 0)
+            throw new ArgumentOutOfRangeException(nameof(presentation), "Campaign time cannot be negative.");
+
+        var hasViewedReceipt = _receipts.Values.Any(receipt =>
+            string.Equals(receipt.ObserverId, presentation.PlayerId, StringComparison.Ordinal) &&
+            receipt.Mode == AcquisitionMode.Viewed &&
+            receipt.ReceivedAt <= presentation.PresentedAt &&
+            _deliveries[receipt.DeliveryId].IssueId == presentation.IssueId);
+        if (!hasViewedReceipt)
+            throw new InvalidOperationException("A player presentation requires a prior Viewed receipt for that issue.");
+
+        AddUnique(_presentations, presentation.PresentationId, presentation, "player presentation");
+    }
+
+    /// <summary>Returns issues actually presented to the player by the requested campaign instant.</summary>
+    public IReadOnlyList<BroadcastIssue> GetPresentedIssues(string playerId, CampaignInstant asOf)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(playerId);
+        return _presentations.Values
+            .Where(item => string.Equals(item.PlayerId, playerId, StringComparison.Ordinal) && item.PresentedAt <= asOf)
+            .OrderBy(item => item.PresentedAt)
+            .Select(item => _issues[item.IssueId])
+            .ToArray();
+    }
+
     /// <summary>Records a player choice without forcing a quest or manufacturing observer knowledge.</summary>
     public void RecordPlayerChoice(StationStoryDecision decision)
     {
@@ -134,11 +168,10 @@ public sealed class StationMediaRuntime
             throw new ArgumentOutOfRangeException(nameof(decision), "Campaign time cannot be negative.");
 
         if (decision.Choice == StationStoryChoice.Watch &&
-            !_receipts.Values.Any(receipt =>
-                string.Equals(receipt.ObserverId, decision.PlayerId, StringComparison.Ordinal) &&
-                receipt.Mode == AcquisitionMode.Viewed &&
-                receipt.ReceivedAt <= decision.ChosenAt))
-            throw new InvalidOperationException("Watching a report requires an actual player receipt by that time.");
+            !_presentations.Values.Any(item =>
+                string.Equals(item.PlayerId, decision.PlayerId, StringComparison.Ordinal) &&
+                item.PresentedAt <= decision.ChosenAt))
+            throw new InvalidOperationException("Watching a report requires an actual player presentation by that time.");
 
         if (decision.Choice == StationStoryChoice.Ask)
             ArgumentException.ThrowIfNullOrWhiteSpace(decision.TargetObserverId);
