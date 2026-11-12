@@ -17,12 +17,61 @@ on:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
+  sith-policy:
+    name: Require canonical master + development branches
+    # Publication must run from the released baseline, never an arbitrary feature ref.
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Verify live remote branch inventory
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch_file="$(mktemp)"
+          trap 'rm -f "$branch_file"' EXIT
+
+          if ! gh api --paginate "repos/$GH_REPO/branches?per_page=100" --jq '.[].name' > "$branch_file"; then
+            echo "::error::Unable to verify the remote branch inventory; publication is blocked."
+            exit 1
+          fi
+
+          sort -u "$branch_file" -o "$branch_file"
+          mapfile -t branches < "$branch_file"
+
+          {
+            echo "## Sith publication gate"
+            echo
+            echo "- Required inventory: `master`, `development`"
+            echo "- Observed branch count: ${#branches[@]}"
+            echo "- Observed branches:"
+            for branch in "${branches[@]}"; do
+              echo "  - `$branch`"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [[ "${#branches[@]}" -ne 2 ||
+                "${branches[0]:-}" != "development" ||
+                "${branches[1]:-}" != "master" ]]; then
+            echo "::error::Sith policy requires exactly master and development. Publication is blocked."
+            exit 1
+          fi
+
   publish:
+    name: Build and publish selected MicroBundle
+    needs: sith-policy
+    if: needs.sith-policy.result == 'success'
     runs-on: ubuntu-24.04
     environment: microbundle-publication
+    permissions:
+      contents: read
+      id-token: write
     env:
       STORAGE_ACCOUNT_URI: ${{ secrets.MICROBUNDLE_STORAGE_ACCOUNT_URI }}
       CONTAINER_NAME: ${{ secrets.MICROBUNDLE_CONTAINER_NAME }}
