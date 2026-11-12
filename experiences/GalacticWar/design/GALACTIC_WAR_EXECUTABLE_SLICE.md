@@ -62,28 +62,31 @@ This is a dependency orchestration issue, not yet evidence that FSM_API needs a 
 
 ## Proposed Experience project shape
 
-Follow the existing Experiences pattern of a focused implementation project and a focused test project:
+Follow the existing Experiences pattern only after the ownership seam is explicit:
 
-- `src/GalacticWar/` — domain meaning and runtime-facing contracts owned by Galactic War.
-- `tests/GalacticWar.Tests/` — deterministic tests for story/event rules and observer boundaries.
-- `samples/GalacticWar.FirstContact/` — a small host that can run the station scene and advance the FSM processing group.
+- `src/GalacticWar/` — Galactic War-specific campaign rules, world simulation adapters, station/media behavior, and host-facing runtime contracts. It must not become a second story-domain engine.
+- `tests/GalacticWar.Tests/` — deterministic tests for campaign rules, actual event occurrence, media delivery, player agency, and integration boundaries.
+- `samples/GalacticWar.FirstContact/` — a small host that runs the station encounter and emits an inspectable trace.
 
-Keep the domain model independent from rendering. The sample host should be able to print a meaningful scene transcript before a GUI surface exists. Later, GUI.Core can present the same state, and Renderer/Visualization can manifest it as MicroBundles. A visual output must never become the authority for what a character knows or what happened.
+The Experiences repository's current architecture guide is explicit: StoryBuilder owns story-domain records and Story Forge (including chronology, provenance, and temporal queries); Experiences must not depend directly on StoryBuilder or duplicate those domains. Therefore, StoryBuilder's authored workspace and validated composition/package contract remain upstream. Galactic War consumes the resulting stable artifact/contract through its host boundary; it does not reference StoryBuilder implementation projects or copy its records into a competing database.
 
-Do not add a parallel StoryBuilder model. Use StoryBuilder's existing events, sources, claims, characters, observer-knowledge records, scenes, and manuscript sections for authored material. Keep actual campaign occurrence and station delivery/presentation behavior in the Galactic War runtime boundary.
+Keep runtime campaign occurrence distinct from authored possibility. Galactic War owns whether a campaign-specific event actually occurs, which runtime actors participate, and what the game world does. StoryBuilder owns authoring, story records, chronology/provenance, and authored observer-knowledge constraints. The integration must preserve those responsibilities without creating a second observer-knowledge authoring system. Actual media scheduling, station delivery, player presentation, and runtime receipt evidence are Galactic War/host concerns unless a proven contract gap requires a narrow upstream extension.
+
+Keep the sample host independent from rendering. It should emit a meaningful scene transcript before a GUI surface exists. Later, GUI.Core can present the same state, and Renderer/Visualization can manifest it as MicroBundles. A visual output must never become the authority for what happened.
 
 ## First runtime responsibilities
 
 The first runtime proof needs only a few explicit responsibilities:
 
 1. **Station session:** create a stable session identity and establish the visitor's arrival at Vesper Reach.
-2. **Signal bulletin:** record a publication/announcement occurrence distinct from the distant signal event.
-3. **Observer knowledge:** maintain separate knowledge for Ilyan, Mara, and Teren. The narrator and presentation layer must query the relevant observer rather than read a global omniscient summary.
-4. **Player choice:** allow watching, asking, ignoring, or leaving without forcing a quest state.
-5. **Later correction:** publish a new account linked to the same signal event; preserve the original report and each character's acquisition history.
-6. **Observable trace:** emit a transcript or structured trace that can be inspected and tested. The trace is evidence of runtime behavior, not a substitute for authoritative state.
+2. **Signal occurrence and bulletin:** keep the campaign's actual signal occurrence distinct from the later in-world publication/announcement occurrence.
+3. **Media delivery:** model which station channels carry an issued report, when it is available, and what receipt evidence the host can establish. Do not infer receipt merely because a report exists.
+4. **Observer-constrained presentation:** use the authored observer constraints and the runtime's actual acquisition/delivery evidence. Never give Ilyan, Mara, Teren, the narrator, or the UI a global omniscient summary as a shortcut. Do not create a parallel StoryBuilder observer-knowledge authoring model.
+5. **Player choice:** allow watching, asking, ignoring, or leaving without forcing a quest state.
+6. **Later correction:** issue a new account linked to the same world event; preserve the original edition and the actual delivery/acquisition history.
+7. **Observable trace:** emit a transcript or structured trace that can be inspected and tested. The trace is evidence of runtime behavior, not a substitute for authoritative state.
 
-FSM_API should be used where an entity has a real lifecycle worth modeling. It should not be added to every object merely to increase the number of state machines. A station-session FSM and explicit observer/character state machines are candidates; the actual boundary should be confirmed by the first implementation rather than assumed here.
+FSM_API should be used where an entity has a real lifecycle worth modeling. It should not be added to every object merely to increase the number of state machines. A station-session FSM or a media-channel lifecycle may be candidates; observer knowledge should not be represented by duplicate FSM state until the StoryBuilder/runtime integration boundary proves that is the correct owner.
 
 ## Acceptance gates
 
@@ -104,8 +107,8 @@ The first vertical slice is ready to call executable only when tests and a repro
 
 1. Preserve the current first-contact story and three-observer proof as the content baseline.
 2. Establish the development dependency path for FSM_API without publishing a package.
-3. Implement the smallest Experience-owned station/event/observer runtime contracts.
-4. Prove the observer boundaries and player independence with deterministic tests.
+3. Establish the StoryBuilder composition/artifact boundary and the Experience host adapter without a direct project dependency or duplicate story-domain records.
+4. Implement the smallest Galactic War-owned station/media/campaign runtime contracts; prove delivery, observer-constrained presentation, and player independence with deterministic tests.
 5. Add a runnable console host and trace.
 6. Only then connect GUI.Core and MicroBundle presentation.
 7. Reassess whether StoryBuilder needs any extension based on actual authoring friction; coordinate any request with its owner through GitHub.
