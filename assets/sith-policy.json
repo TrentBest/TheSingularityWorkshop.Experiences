@@ -7,14 +7,17 @@
   ],
   "actual_branches": [
     "codex/capsule-clinic-intent-smoke",
+    "codex/experiences-branch-reconciliation-2026-11-12",
     "development",
+    "feature/ciai-v1-provenance-producer",
     "feature/experience-microbundle-identity-map",
+    "feature/galactic-war-perception-and-perspective",
     "feature/minesweeper-playable-2d",
     "master"
   ],
-  "branch_count": 5,
+  "branch_count": 8,
   "status": "NON-COMPLIANT",
-  "evaluated_at": "2026-11-11T11:51:37Z",
-  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/43015396551",
-  "triggering_commit": "c1d2c7faf111d7058cc25ca052767ab7a65eaffa"
+  "evaluated_at": "2026-11-12T09:21:11Z",
+  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/43189689542",
+  "triggering_commit": "c74a7de7c5e575fa0d4c119c625402bed885cbd0"
 }
