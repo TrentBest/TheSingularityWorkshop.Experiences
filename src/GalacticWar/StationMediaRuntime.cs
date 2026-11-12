@@ -13,18 +13,27 @@ public sealed class StationMediaRuntime
     private readonly Dictionary<Guid, StationStoryDecision> _decisions = [];
     private readonly Dictionary<Guid, PlayerPresentation> _presentations = [];
 
+    /// <summary>Creates an empty media ledger for the specified station.</summary>
+    /// <param name="stationId">Stable station identity.</param>
     public StationMediaRuntime(string stationId)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(stationId);
         StationId = stationId;
     }
 
+    /// <summary>Gets the station identity owned by this ledger.</summary>
     public string StationId { get; }
+    /// <summary>Gets recorded campaign signal occurrences.</summary>
     public IReadOnlyCollection<SignalOccurrence> SignalOccurrences => _occurrences.Values;
+    /// <summary>Gets immutable broadcast issues.</summary>
     public IReadOnlyCollection<BroadcastIssue> Issues => _issues.Values;
+    /// <summary>Gets scheduled station-channel deliveries.</summary>
     public IReadOnlyCollection<MediaDelivery> Deliveries => _deliveries.Values;
+    /// <summary>Gets evidence of observer acquisitions.</summary>
     public IReadOnlyCollection<ObserverReceipt> Receipts => _receipts.Values;
+    /// <summary>Gets recorded player story decisions.</summary>
     public IReadOnlyCollection<StationStoryDecision> Decisions => _decisions.Values;
+    /// <summary>Gets recorded player-facing presentations.</summary>
     public IReadOnlyCollection<PlayerPresentation> Presentations => _presentations.Values;
 
     /// <summary>Records an actual campaign occurrence without promoting an authored possibility by implication.</summary>
