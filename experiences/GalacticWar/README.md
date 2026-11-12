@@ -99,6 +99,7 @@ This repository currently captures authored intent and design boundaries. It doe
 - [First station candidate: Vesper Reach](design/FIRST_STATION_CANDIDATE.md)
 - [Civilization interface and perception](design/CIVILIZATION_INTERFACE_AND_PERCEPTION.md)
 - [First contact and diplomacy](design/FIRST_CONTACT_AND_DIPLOMACY.md)
+- [Game design foundation: living events, first contact, and space archaeology](design/GAME_DESIGN_FOUNDATION_AND_LIVING_EVENTS.md)
 
 ## Architecture boundaries
 
