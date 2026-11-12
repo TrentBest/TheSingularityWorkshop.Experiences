@@ -32,4 +32,18 @@ public sealed record ObserverReceipt(Guid ReceiptId, Guid DeliveryId, string Obs
 public enum AcquisitionMode { Viewed, Heard, Read, Retold }
 
 /// <summary>A player's deliberate response to a station story opportunity.</summary>
-public enum StationStoryChoice { Watch, Ask, Ignore, Leave }
+public enum StationStoryChoice
+{
+    Watch,
+    Ask,
+    Ignore,
+    Leave
+}
+
+/// <summary>A player decision made during a station story opportunity.</summary>
+public sealed record StationStoryDecision(
+    Guid DecisionId,
+    string PlayerId,
+    StationStoryChoice Choice,
+    CampaignInstant ChosenAt,
+    string? TargetObserverId = null);
