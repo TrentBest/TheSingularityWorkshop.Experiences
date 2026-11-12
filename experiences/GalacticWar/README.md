@@ -101,6 +101,7 @@ This repository currently captures authored intent and design boundaries. It doe
 - [First contact and diplomacy](design/FIRST_CONTACT_AND_DIPLOMACY.md)
 - [Game design foundation: living events, first contact, and space archaeology](design/GAME_DESIGN_FOUNDATION_AND_LIVING_EVENTS.md)
 - [StoryBuilder capability crosswalk: existing authoring contracts and the first news-event proof](design/STORYBUILDER_CAPABILITY_CROSSWALK.md)
+- [First playable proof: The Signal Nobody Owns](design/FIRST_PLAYABLE_PROOF_THE_SIGNAL_NOBODY_OWNS.md)
 
 ## Architecture boundaries
 
