@@ -32,7 +32,7 @@ public sealed record ExperienceArtifactBindingPlan(
                 ? resolution.Issues.ToArray()
                 : [new ContractIssue("binding.resolution-failed",
                     "The Experience resolution did not succeed; no local binding plan can be created.")];
-            return Failure(issues);
+            return FailureMany(issues);
         }
 
         if (resolution.OrderedArtifacts is null)
@@ -76,8 +76,8 @@ public sealed record ExperienceArtifactBindingPlan(
     }
 
     private static ExperienceArtifactBindingPlan Failure(ContractIssue issue) =>
-        Failure([issue]);
+        FailureMany([issue]);
 
-    private static ExperienceArtifactBindingPlan Failure(IReadOnlyList<ContractIssue> issues) =>
+    private static ExperienceArtifactBindingPlan FailureMany(IReadOnlyList<ContractIssue> issues) =>
         new(false, Array.Empty<ExperienceArtifactBinding>(), issues);
 }
