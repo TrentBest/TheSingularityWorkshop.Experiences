@@ -12,14 +12,17 @@ runtime.IssueBroadcast(new BroadcastIssue(initialIssueId, signalId, "story-artif
 runtime.ScheduleDelivery(new MediaDelivery(initialDeliveryId, initialIssueId, "lounge-display", "vesper-reach", new CampaignInstant(30)));
 runtime.RecordReceipt(new ObserverReceipt(Guid.Parse("50000000-0000-0000-0000-000000000001"), initialDeliveryId, "mara-quill", new CampaignInstant(32), AcquisitionMode.Heard));
 runtime.RecordReceipt(new ObserverReceipt(Guid.Parse("50000000-0000-0000-0000-000000000002"), initialDeliveryId, "player", new CampaignInstant(40), AcquisitionMode.Viewed));
-runtime.RecordPlayerChoice(new StationStoryDecision(Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(40)));
+runtime.RecordPresentation(new PlayerPresentation(Guid.NewGuid(), "player", initialIssueId, new CampaignInstant(42)));
+runtime.RecordPlayerChoice(new StationStoryDecision(Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(43)));
 
 Console.WriteLine("Vesper Reach — station shift");
 Console.WriteLine("T+10  Signal occurrence recorded at the frontier observatory.");
 Console.WriteLine("T+20  Official bulletin issued.");
 Console.WriteLine("T+30  Lounge display makes the bulletin available.");
 Console.WriteLine("T+32  Mara acquires the bulletin by hearing it.");
-Console.WriteLine("T+40  Player watches the lounge display.");
+Console.WriteLine("T+40  Player acquires the lounge display delivery.");
+Console.WriteLine("T+42  The bulletin is presented to the player.");
+Console.WriteLine("T+43  Player chooses to watch.");
 Console.WriteLine($"T+40  Mara knows {runtime.GetReceivedIssues("mara-quill", new CampaignInstant(40)).Count} issue; Teren knows {runtime.GetReceivedIssues("teren", new CampaignInstant(40)).Count}; player has {runtime.GetReceivedIssues("player", new CampaignInstant(40)).Count}.");
 
 runtime.IssueBroadcast(new BroadcastIssue(correctionIssueId, signalId, "story-artifact:official-bulletin-v2", "source:frontier-observatory", new CampaignInstant(60), initialIssueId));
