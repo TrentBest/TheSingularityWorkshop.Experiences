@@ -20,8 +20,11 @@ public sealed class StationSessionLifecycle : IStateContext, IDisposable
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         Name = name;
         IsValid = true;
-        EnsureDefinition();
-        _handle = FsmRuntime.Create.CreateInstance(DefinitionName, this, ProcessingGroup);
+        lock (DefinitionGate)
+        {
+            EnsureDefinition();
+            _handle = FsmRuntime.Create.CreateInstance(DefinitionName, this, ProcessingGroup);
+        }
     }
 
     public string Name { get; set; }
@@ -77,7 +80,8 @@ public sealed class StationSessionLifecycle : IStateContext, IDisposable
         if (_disposed)
             return;
 
-        FsmRuntime.Interaction.DestroyInstance(_handle);
+        lock (DefinitionGate)
+            FsmRuntime.Interaction.DestroyInstance(_handle);
         IsValid = false;
         _disposed = true;
     }
