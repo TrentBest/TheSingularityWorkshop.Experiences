@@ -103,6 +103,7 @@ This repository currently captures authored intent and design boundaries. It doe
 - [StoryBuilder capability crosswalk: existing authoring contracts and the first news-event proof](design/STORYBUILDER_CAPABILITY_CROSSWALK.md)
 - [StoryBuilder contract recheck: current development records, immutable book editions, and the broadcast gap](design/STORYBUILDER_CONTRACT_RECHECK_2026-11-12.md)
 - [First playable proof: The Signal Nobody Owns](design/FIRST_PLAYABLE_PROOF_THE_SIGNAL_NOBODY_OWNS.md)
+- [Observer knowledge proof: two NPCs, one signal](design/OBSERVER_KNOWLEDGE_TWO_NPC_PROOF.md)
 
 ## Architecture boundaries
 
