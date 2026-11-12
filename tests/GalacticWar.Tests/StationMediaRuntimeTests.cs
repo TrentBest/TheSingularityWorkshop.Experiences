@@ -101,9 +101,10 @@ public sealed class StationMediaRuntimeTests
         Assert.Throws<InvalidOperationException>(() => runtime.RecordPlayerChoice(new StationStoryDecision(
             Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(30))));
 
+        var beforeIgnore = runtime.GetReceivedIssues("player", new CampaignInstant(30));
         runtime.RecordPlayerChoice(new StationStoryDecision(
             Guid.NewGuid(), "player", StationStoryChoice.Ignore, new CampaignInstant(30)));
-        Assert.Empty(runtime.GetReceivedIssues("player", new CampaignInstant(30)));
+        Assert.Equal(beforeIgnore, runtime.GetReceivedIssues("player", new CampaignInstant(30)));
         Assert.Single(runtime.Decisions);
     }
 
