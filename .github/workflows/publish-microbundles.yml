@@ -102,9 +102,14 @@ jobs:
           }
 
       - name: Build selected MicroBundle
+        env:
+          INPUT_PROJECT: ${{ inputs.project }}
+        shell: bash
         run: |
-          dotnet restore "src/${{ inputs.project }}/TheSingularityWorkshop.Experiences.${{ inputs.project }}.csproj"
-          dotnet build "src/${{ inputs.project }}/TheSingularityWorkshop.Experiences.${{ inputs.project }}.csproj" \
+          set -euo pipefail
+          project_file="src/$INPUT_PROJECT/TheSingularityWorkshop.Experiences.$INPUT_PROJECT.csproj"
+          dotnet restore "$project_file"
+          dotnet build "$project_file" \
             --configuration Release \
             --no-restore \
             /p:ContinuousIntegrationBuild=true \
@@ -112,11 +117,23 @@ jobs:
 
       - name: Read publication identity
         id: identity
+        env:
+          INPUT_PROJECT: ${{ inputs.project }}
+          INPUT_VERSION: ${{ inputs.version }}
         shell: bash
         run: |
-          bundle_id="$(python3 -c 'import json; print(json.load(open("src/'"${{ inputs.project }}"'/microbundle.json"))["bundleId"])')"
+          set -euo pipefail
+          if [[ ! "$INPUT_VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Version must be a valid SemVer version."
+            exit 1
+          fi
+          bundle_id="$(python3 -c 'import json, os; print(json.load(open("src/" + os.environ["INPUT_PROJECT"] + "/microbundle.json"))["bundleId"])')"
+          if [[ ! "$bundle_id" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
+            echo "::error::MicroBundle bundleId contains unsupported characters."
+            exit 1
+          fi
           echo "bundle_id=$bundle_id" >> "$GITHUB_OUTPUT"
-          echo "version=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          echo "version=$INPUT_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Pack immutable repository artifact
         run: |
@@ -156,12 +173,21 @@ jobs:
             "${{ github.workspace }}/artifacts/${{ steps.identity.outputs.bundle_id }}.bundle"
 
       - name: Publish artifact identity
+        env:
+          BUNDLE_ID: ${{ steps.identity.outputs.bundle_id }}
+          BUNDLE_VERSION: ${{ steps.identity.outputs.version }}
+          CONTENT_HASH: ${{ steps.artifact.outputs.sha256 }}
         run: |
-          cat > "artifacts/publication.json" <<EOF
-          {
-            "bundleId": ${{ steps.identity.outputs.bundle_id }},
-            "version": "${{ steps.identity.outputs.version }}",
-            "contentHash": "${{ steps.artifact.outputs.sha256 }}"
-          }
-          EOF
+          python3 - <<'PY'
+          import json
+          import os
+
+          with open("artifacts/publication.json", "w", encoding="utf-8") as output:
+              json.dump({
+                  "bundleId": os.environ["BUNDLE_ID"],
+                  "version": os.environ["BUNDLE_VERSION"],
+                  "contentHash": os.environ["CONTENT_HASH"],
+              }, output, indent=2)
+              output.write("\\n")
+          PY
           cat "artifacts/publication.json"
