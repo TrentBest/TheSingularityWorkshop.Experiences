@@ -90,6 +90,7 @@ This repository currently captures authored intent and design boundaries. It doe
 The first runtime proof now models the Vesper Reach signal as a campaign occurrence, the bulletin as an immutable issued reference to authored StoryBuilder content, channel availability as distinct from observer receipt, and later corrections as new issues. It deliberately does not duplicate StoryBuilder's authored story records or claim that the complete station is playable.
 
 - [Station-media runtime project](../../src/GalacticWar/TheSingularityWorkshop.Experiences.GalacticWar.csproj)
+- [FSM_API-backed station session lifecycle](../../src/GalacticWar/StationSessionLifecycle.cs)
 - [Station-media invariants](../../tests/GalacticWar.Tests/StationMediaRuntimeTests.cs)
 - [First-contact console trace](../../samples/GalacticWar.FirstContact/README.md)
 - [Executable-slice ownership and next steps](design/GALACTIC_WAR_EXECUTABLE_SLICE.md)
