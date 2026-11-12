@@ -77,3 +77,39 @@ Do not add a Galactic War-specific parallel narrative database. Do not overload 
 - [Workspace validator](https://github.com/TrentBest/StoryBuilder/blob/development/src/StoryBuilder.Core/Services/StoryWorkspaceValidator.cs)
 
 Re-verify branch state before implementing against these contracts or describing them as released behavior.
+
+
+## Host and binary-package integration recheck
+
+A second source pass checked StoryBuilder and AnyApp `development` on 2026-11-12. It clarifies three separate paths that must not be conflated:
+
+1. **StoryBuilder authoring composition:** `StoryBuilderExperienceMicroBundle` in `src/StoryBuilder.FSM_COS` creates a named authoring session and composes the `StoryBuilderAuthoringBundle`. `StoryBuilderAuthoringSurface` projects that mutable workspace to a semantic `GuiNode` and dispatches authoring commands. This is the authoring workbench, not a Galactic War content-package importer.
+2. **Captured composition package:** `CompositionPackageCompiler` and `CompositionPackageReader` in `src/StoryBuilder.Persistence/CompositionPackageBinaryArtifacts.cs` compile an already-arbitrated session into manifest, configuration, and content byte arrays, then validate hashes, requirements, capabilities, and restored workspace identity. The reader returns a restored `StoryBuilderSession` only on successful validation. It does not itself expose a Galactic War runtime contract.
+3. **AnyApp host composition:** `ExperienceManifest` is the launch/composition request converted to an FSM_COS `RuntimeManifest`; `AnyAppRuntime.Compose/ComposeAsync` produces the `RuntimeAssembly`. The current `IAnyAppSurface` exposes only a semantic GUI root. AnyApp's conditional StoryBuilder catalog registration proves the authoring bundle can be composed in that build, not that a captured StoryBuilder package is loaded and handed to another Experience.
+
+### Integration consequence
+
+The first real content integration needs an explicit, host-neutral handoff between a successfully validated StoryBuilder package and the Galactic War Experience. Keep the responsibilities in this order:
+
+- StoryBuilder owns its binary format, package validation, workspace restoration, and authored record semantics.
+- The host or a dedicated adapter owns invoking the StoryBuilder reader and rejecting invalid packages before use.
+- Galactic War owns mapping validated authored identities/records into campaign-specific runtime references, signal occurrences, broadcasts, observer receipts, and player presentation.
+- AnyApp owns composition and native presentation; it must not implement Galactic War rules or become the package's semantic authority.
+
+Do not add a StoryBuilder.Persistence project reference to the Galactic War runtime merely to read package bytes. Do not deserialize the package independently, duplicate its manifest, treat a mutable authoring session as an immutable captured package, or infer that a composed authoring bundle means a package has been validated.
+
+### Remaining proof
+
+The next integration proof should pass a real `CompositionPackageArtifact` through StoryBuilder's existing reader with the required MicroBundle/capability set, then pass the resulting validated content through a narrow adapter into Galactic War. The adapter must preserve stable StoryBuilder IDs and provenance while leaving campaign occurrence and delivery identities Experience-owned. Test invalid hashes, missing required capabilities, workspace identity mismatch, and valid round-trip before attempting a full AnyApp launch.
+
+This is a concrete cross-repository integration gap, but the existing StoryBuilder contract already describes the unfinished real-host package-consumption proof. No duplicate StoryBuilder issue or speculative schema change is warranted yet.
+
+### Additional source paths inspected
+
+- [Composition package compiler and reader](https://github.com/TrentBest/StoryBuilder/blob/development/src/StoryBuilder.Persistence/CompositionPackageBinaryArtifacts.cs)
+- [StoryBuilder authoring Experience bundle](https://github.com/TrentBest/StoryBuilder/blob/development/src/StoryBuilder.FSM_COS/StoryBuilderExperienceMicroBundle.cs)
+- [StoryBuilder authoring surface](https://github.com/TrentBest/StoryBuilder/blob/development/src/StoryBuilder.MicroBundle/StoryBuilderAuthoringSurface.cs)
+- [AnyApp Experience manifest](https://github.com/TrentBest/AnyApp/blob/development/ExperienceManifest.cs)
+- [AnyApp FSM_COS composition entry point](https://github.com/TrentBest/AnyApp/blob/development/AnyAppRuntime.cs)
+- [AnyApp semantic surface contract](https://github.com/TrentBest/AnyApp/blob/development/IAnyAppSurface.cs)
+- [AnyApp host adapter contract](https://github.com/TrentBest/AnyApp/blob/development/docs/EXPERIENCE_HOST_ADAPTER_CONTRACT.md)
