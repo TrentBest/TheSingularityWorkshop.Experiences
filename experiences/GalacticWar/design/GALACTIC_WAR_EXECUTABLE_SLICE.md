@@ -114,3 +114,21 @@ The first vertical slice is ready to call executable only when tests and a repro
 7. Reassess whether StoryBuilder needs any extension based on actual authoring friction; coordinate any request with its owner through GitHub.
 
 The trophy lifecycle proof remains a separate domain slice. Its FSM_API mapping is useful groundwork, but it should not displace the first-contact story as the first visitor-facing Galactic War experience.
+
+## Implemented runtime kernel — first proof, not complete station
+
+The first Experience-owned runtime kernel now exists under `src/GalacticWar/`, with deterministic tests and a console trace.
+
+It records:
+- an actual campaign signal occurrence linked by opaque identity to its authored StoryBuilder event;
+- immutable broadcast issue references to authored content and source artifacts;
+- channel availability at Vesper Reach separately from any individual observer's receipt;
+- observer receipts with acquisition mode and fictional campaign instant;
+- correction issues that point to the prior issue without rewriting it;
+- player choices to watch, ask, ignore, or leave, without turning an ignored story into player knowledge or a forced quest.
+
+The runtime deliberately stores references to authored content rather than duplicating StoryBuilder's event, source, claim, chronology, or observer-knowledge records. It does not yet consume a real exported StoryBuilder composition artifact; the first-contact sample uses clearly marked placeholder artifact identifiers.
+
+**Current proof boundary:** this is an in-memory deterministic kernel, not durable campaign storage, a networked broadcast service, a complete NPC dialogue system, a GUI, or a playable station. A player Watch choice requires an actual Viewed receipt. Asking, ignoring, and leaving are recorded as choices and do not manufacture receipt evidence.
+
+The first CI gate builds the library, runs its invariant tests, and executes the sample trace. FSM_API station-session lifecycle integration and the exact development-source dependency proof remain subsequent work; no claim is made that this kernel has yet exercised FSM_API development.
