@@ -65,8 +65,8 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
-      - name: Validate provenance and stage exact candidate source
-        id: verify
+      - name: Resolve exact candidate commit
+        id: resolve
         shell: bash
         run: |
           set -euo pipefail
@@ -86,15 +86,26 @@ jobs:
           git cat-file -e "${CANDIDATE_SHA}^{commit}"
           fetched_candidate_sha="$(git rev-parse "refs/remotes/origin/candidate-validation^{commit}")"
           [[ "$fetched_candidate_sha" == "$CANDIDATE_SHA" ]]
-          tested_sha="$(git rev-parse "$CANDIDATE_SHA^{commit}")"
-          [[ "$tested_sha" == "$CANDIDATE_SHA" ]]
+          resolved_sha="$(git rev-parse "$CANDIDATE_SHA^{commit}")"
+          [[ "$resolved_sha" == "$CANDIDATE_SHA" ]]
+          echo "candidate_sha=$resolved_sha" >> "$GITHUB_OUTPUT"
+      - name: Verify and stage exact candidate source
+        id: verify
+        if: success()
+        env:
+          RESOLVED_CANDIDATE_SHA: ${{ steps.resolve.outputs.candidate_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RESOLVED_CANDIDATE_SHA" == "$CANDIDATE_SHA" ]]
+          git cat-file -e "${RESOLVED_CANDIDATE_SHA}^{commit}"
           mkdir -p candidate
-          git archive "$tested_sha" src/Minesweeper | tar -x -C candidate
+          git archive "$RESOLVED_CANDIDATE_SHA" src/Minesweeper | tar -x -C candidate
           test -d candidate/src/Minesweeper
           test -f tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj
           rm -rf src/Minesweeper
           cp -a candidate/src/Minesweeper src/Minesweeper
-          echo "tested_sha=$tested_sha" >> "$GITHUB_OUTPUT"
+          echo "tested_sha=$RESOLVED_CANDIDATE_SHA" >> "$GITHUB_OUTPUT"
       - name: Set up .NET
         if: success()
         uses: actions/setup-dotnet@v6
@@ -125,23 +136,14 @@ jobs:
           from pathlib import Path
           run_id, attempt = int(os.environ["RUN_ID"]), int(os.environ["RUN_ATTEMPT"])
           provenance = {
-            "contract":"foundry.ciai-candidate-validation-provenance.v1",
-            "repository":os.environ["REPOSITORY"],"requestId":os.environ["REQUEST_ID"],
-            "operationId":os.environ["OPERATION_ID"],"idempotencyKey":os.environ["IDEMPOTENCY_KEY"],
-            "taskId":os.environ["TASK_ID"],"correlationId":os.environ["CORRELATION_ID"],
-            "candidateRef":os.environ["CANDIDATE_REF"],"candidateSha":os.environ["CANDIDATE_SHA"],
-            "testedSha":os.environ.get("TESTED_SHA",""),
-            "workflowPath":".github/workflows/minesweeper-candidate-validation.yml",
-            "workflowRef":os.environ["WORKFLOW_REF"],"workflowDefinitionRef":"refs/heads/development",
-            "workflowDefinitionSha":os.environ["WORKFLOW_SHA"],"eventName":os.environ["EVENT_NAME"],
-            "eventRef":os.environ["EVENT_REF"],"eventSha":os.environ["EVENT_SHA"],
-            "runId":run_id,"runAttempt":attempt,"jobKey":"test-minesweeper","jobName":"test-minesweeper",
-            "artifactName":f"ciai-test-results-{run_id}-{attempt}-test-minesweeper",
-            "testFramework":".NET","testFormat":"trx",
-            "testProject":"tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj",
-            "testResultPath":"TestResults/minesweeper/minesweeper.trx",
-            "verificationOutcome":os.environ.get("VERIFY_OUTCOME","unknown"),
-            "testOutcome":os.environ.get("TEST_OUTCOME","unknown")}
+            "schema":"ciai.workflow-provenance.v1",
+            "repository":os.environ["REPOSITORY"],
+            "runId":run_id,
+            "runAttempt":attempt,
+            "workflow":{"ref":os.environ["WORKFLOW_REF"],"sha":os.environ["WORKFLOW_SHA"]},
+            "event":{"name":os.environ["EVENT_NAME"],"ref":os.environ["EVENT_REF"],
+              "sha":os.environ["EVENT_SHA"],"pullRequest":None},
+            "checkout":{"ref":os.environ["CANDIDATE_REF"],"sha":os.environ["CANDIDATE_SHA"]}}
           marker = {"contract":"foundry.ciai-dispatch-marker.v1","requestId":os.environ["REQUEST_ID"],
             "operationId":os.environ["OPERATION_ID"],"idempotencyKey":os.environ["IDEMPOTENCY_KEY"],
             "runId":run_id,"runAttempt":attempt}
@@ -154,17 +156,36 @@ jobs:
         shell: bash
         run: |
           test -s TestResults/minesweeper/minesweeper.trx || { echo "::error::Required TRX report missing"; exit 1; }
-      - name: Upload exact-run CiAi evidence
+      - name: Stage canonical CiAi report archive entries
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p artifacts/test-results
+          if [[ -s TestResults/minesweeper/minesweeper.trx ]]; then
+            cp TestResults/minesweeper/minesweeper.trx artifacts/test-results/results.trx
+          fi
+          if [[ -s artifacts/provenance.json ]]; then
+            cp artifacts/provenance.json artifacts/test-results/provenance.json
+          fi
+      - name: Upload exact-run CiAi test-result archive
         id: upload
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ciai-test-results-${{ github.run_id }}-${{ github.run_attempt }}-test-minesweeper
           path: |
-            TestResults/minesweeper/minesweeper.trx
-            artifacts/provenance.json
-            artifacts/dispatch-marker.json
-          if-no-files-found: warn
+            artifacts/test-results/results.trx
+            artifacts/test-results/provenance.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload Foundry dispatch marker
+        id: upload-marker
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: foundry-dispatch-marker-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/dispatch-marker.json
+          if-no-files-found: error
           retention-days: 14
       - name: Require all validation and evidence stages to succeed
         if: always()
@@ -173,9 +194,10 @@ jobs:
           TEST_OUTCOME: ${{ steps.tests.outcome }}
           REPORT_OUTCOME: ${{ steps.report.outcome }}
           UPLOAD_OUTCOME: ${{ steps.upload.outcome }}
+          MARKER_UPLOAD_OUTCOME: ${{ steps.upload-marker.outcome }}
         shell: bash
         run: |
-          if [[ "$VERIFY_OUTCOME" != success || "$TEST_OUTCOME" != success || "$REPORT_OUTCOME" != success || "$UPLOAD_OUTCOME" != success ]]; then
+          if [[ "$VERIFY_OUTCOME" != success || "$TEST_OUTCOME" != success || "$REPORT_OUTCOME" != success || "$UPLOAD_OUTCOME" != success || "$MARKER_UPLOAD_OUTCOME" != success ]]; then
             echo "Candidate validation or evidence capture did not complete successfully."
             exit 1
           fi
