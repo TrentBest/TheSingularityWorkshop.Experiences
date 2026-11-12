@@ -130,10 +130,13 @@ public sealed class StationMediaRuntime
         ArgumentException.ThrowIfNullOrWhiteSpace(decision.PlayerId);
         if (!Enum.IsDefined(decision.Choice))
             throw new ArgumentOutOfRangeException(nameof(decision), "Story choice is not defined.");
+        if (decision.ChosenAt.Value < 0)
+            throw new ArgumentOutOfRangeException(nameof(decision), "Campaign time cannot be negative.");
 
         if (decision.Choice == StationStoryChoice.Watch &&
             !_receipts.Values.Any(receipt =>
                 string.Equals(receipt.ObserverId, decision.PlayerId, StringComparison.Ordinal) &&
+                receipt.Mode == AcquisitionMode.Viewed &&
                 receipt.ReceivedAt <= decision.ChosenAt))
             throw new InvalidOperationException("Watching a report requires an actual player receipt by that time.");
 
