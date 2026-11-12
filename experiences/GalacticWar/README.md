@@ -97,6 +97,7 @@ This repository currently captures authored intent and design boundaries. It doe
 - [Space stations and docking](design/STATIONS_AND_DOCKING.md)
 - [Station life and background activity](design/STATION_LIFE_AND_BACKGROUND_ACTIVITY.md)
 - [First station candidate: Vesper Reach](design/FIRST_STATION_CANDIDATE.md)
+- [Civilization interface and perception](design/CIVILIZATION_INTERFACE_AND_PERCEPTION.md)
 
 ## Architecture boundaries
 
