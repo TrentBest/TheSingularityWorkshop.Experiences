@@ -60,6 +60,40 @@ public sealed class StationMediaRuntimeTests
     }
 
     [Fact]
+    public void IndependentAccountReferencesTheSameOccurrenceWithoutSharingItsAudience()
+    {
+        var runtime = CreateRuntime();
+        var independentIssueId = Guid.NewGuid();
+        var independentDeliveryId = Guid.NewGuid();
+
+        runtime.IssueBroadcast(new BroadcastIssue(
+            independentIssueId,
+            SignalOccurrenceId,
+            "story-artifact:independent-account-v1",
+            "source:independent-survey-ship",
+            new CampaignInstant(34)));
+        runtime.ScheduleDelivery(new MediaDelivery(
+            independentDeliveryId,
+            independentIssueId,
+            "analyst-terminal",
+            "vesper-reach",
+            new CampaignInstant(35)));
+        runtime.RecordReceipt(new ObserverReceipt(
+            Guid.NewGuid(),
+            independentDeliveryId,
+            "ilyan-voss",
+            new CampaignInstant(36),
+            AcquisitionMode.Read));
+
+        var independentAccount = Assert.Single(runtime.GetReceivedIssues("ilyan-voss", new CampaignInstant(36)));
+        Assert.Equal(SignalOccurrenceId, independentAccount.SignalOccurrenceId);
+        Assert.Equal("source:independent-survey-ship", independentAccount.AuthoredSourceId);
+        Assert.NotEqual(runtime.Issues.Single(issue => issue.IssueId == InitialIssueId).AuthoredSourceId, independentAccount.AuthoredSourceId);
+        Assert.Empty(runtime.GetReceivedIssues("mara-quill", new CampaignInstant(36)));
+        Assert.Empty(runtime.GetReceivedIssues("teren", new CampaignInstant(36)));
+    }
+
+    [Fact]
     public void ReceiptBeforeChannelAvailabilityIsRejected()
     {
         var runtime = CreateRuntime();
