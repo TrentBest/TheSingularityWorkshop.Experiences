@@ -98,6 +98,8 @@ The current StoryBuilder model provides enough primitives to author and review t
 
 These are not reasons to build a parallel system in Galactic War. First prove the initial scenario with existing records. If the authoring workflow demonstrates friction, propose a narrowly scoped StoryBuilder extension with migration and tests. Keep the runtime's actual signal distribution, media scheduling, and observer delivery in Galactic War's host/runtime boundary.
 
+The concrete authoring gap has now been recorded for cross-repository coordination: [StoryBuilder #9 — Add a genre-neutral immutable in-world publication edition contract](https://github.com/TrentBest/StoryBuilder/issues/9). The issue deliberately limits StoryBuilder to authored publication snapshots, provenance, and correction lineage; it leaves channel distribution and actual receipt in Galactic War.
+
 ## Workshop ownership
 
 - **StoryBuilder** owns authoring records, provenance, proposal/review, timeline and manuscript relationships.
