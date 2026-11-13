@@ -15,13 +15,12 @@ runtime.RecordOccurrence(new SignalOccurrence(signalId, Guid.Parse("40000000-000
 runtime.IssueBroadcast(new BroadcastIssue(initialIssueId, signalId, "story-artifact:official-bulletin-v1", "source:frontier-observatory", new CampaignInstant(20)));
 runtime.ScheduleDelivery(new MediaDelivery(initialDeliveryId, initialIssueId, "lounge-display", "vesper-reach", new CampaignInstant(30)));
 runtime.RecordReceipt(new ObserverReceipt(Guid.Parse("50000000-0000-0000-0000-000000000001"), initialDeliveryId, "mara-quill", new CampaignInstant(32), AcquisitionMode.Heard));
-runtime.RecordReceipt(new ObserverReceipt(Guid.Parse("50000000-0000-0000-0000-000000000002"), initialDeliveryId, "player", new CampaignInstant(40), AcquisitionMode.Viewed));
-runtime.RecordPresentation(new PlayerPresentation(Guid.NewGuid(), "player", initialIssueId, new CampaignInstant(42)));
-runtime.RecordPlayerChoice(new StationStoryDecision(Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(43)));
-
 runtime.IssueBroadcast(new BroadcastIssue(independentIssueId, signalId, "story-artifact:independent-account-v1", "source:independent-survey-ship", new CampaignInstant(34)));
 runtime.ScheduleDelivery(new MediaDelivery(independentDeliveryId, independentIssueId, "analyst-terminal", "vesper-reach", new CampaignInstant(35)));
 runtime.RecordReceipt(new ObserverReceipt(Guid.Parse("50000000-0000-0000-0000-000000000004"), independentDeliveryId, "ilyan-voss", new CampaignInstant(36), AcquisitionMode.Read));
+runtime.RecordReceipt(new ObserverReceipt(Guid.Parse("50000000-0000-0000-0000-000000000002"), initialDeliveryId, "player", new CampaignInstant(40), AcquisitionMode.Viewed));
+runtime.RecordPresentation(new PlayerPresentation(Guid.NewGuid(), "player", initialIssueId, new CampaignInstant(42)));
+runtime.RecordPlayerChoice(new StationStoryDecision(Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(43)));
 
 Console.WriteLine("Vesper Reach — station shift");
 Console.WriteLine($"Station session FSM state: {stationSession.CurrentState}.");
