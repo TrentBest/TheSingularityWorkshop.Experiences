@@ -16,6 +16,8 @@ The sample demonstrates the runtime boundary only:
 - a correction is a second official issue with an explicit predecessor, not a destructive rewrite;
 - Mara acquires the correction, while the player and Teren do not acquire it merely because it exists.
 
+**Important knowledge boundary:** the media runtime's receipt proves that Ilyan acquired the independent account; it does not prove that he witnessed the signal or that the account's claims are true. Ilyan's direct examination of station instrument evidence is represented separately by StoryBuilder's observer-knowledge fixture. The two records answer different questions and must not be collapsed.
+
 The deterministic test suite verifies that the independent account references the same signal occurrence, preserves a distinct source, and does not leak into Mara's or Teren's receipt history.
 
 The story-artifact and source identifiers stand in for stable references supplied by a validated authored composition. This sample does not implement StoryBuilder authoring, NPC dialogue, a GUI, or a complete playable station.
