@@ -165,3 +165,50 @@ The minimum reader test matrix is:
 - malformed manifest/configuration/content → diagnostic failure, no session.
 
 This exact API check narrows the remaining work: the open gap is not a missing StoryBuilder compiler or reader. It is a real host adapter and an integration test that proves the validated restored session is mapped into Galactic War without leaking serialization into the runtime.
+
+## Arbitration provenance handoff — rechecked 2026-11-13
+
+A further source pass checked the current FSM_COS composition contract and the Workshop MicroBundle.
+
+### What FSM_COS actually returns
+
+The documented `RuntimeAssembly` snapshot exposes:
+- `RuntimeId`;
+- the loaded MicroBundle references;
+- `ArbitrationRounds`, the zero-based index of the round that reported convergence;
+- optional semantic intent carried from the runtime manifest.
+
+FSM_COS returns no persistent arbitration-record ID, serialized arbitration transcript, manifest/configuration digest, or durable provenance object. Its guarantee is bounded convergence as reported by the loaded participants. The result is a runtime handoff, not a persisted Workshop decision record.
+
+### What the Workshop MicroBundle currently does
+
+The current `TrentBest/Workshop` implementation is the zeroth MicroBundle (ID 2110). Its `Arbitrate` implementation validates the context and returns `false`; it does not create or persist an arbitration record. This is consistent with its documented role as a small identity/composition-root bundle, not a Workshop orchestration or decision store.
+
+### Why this blocks an honest StoryBuilder package
+
+StoryBuilder's `CompositionPackageCompiler.Compile` requires a non-empty `Guid arbitrationRecordId`. The compiler captures that identity in the package manifest, but it does not run arbitration or establish the provenance represented by that ID.
+
+Therefore these statements must remain distinct:
+
+1. FSM_COS successfully returned a converged `RuntimeAssembly`.
+2. A Workshop/host-side component persisted an immutable record of the composition decision and its evidence.
+3. StoryBuilder compiled a package carrying the identity of that real record.
+
+The first does not imply the second, and a caller-supplied GUID does not prove either one.
+
+### Required upstream handoff
+
+The Workshop/host orchestration boundary must own the durable arbitration record. At minimum, its producer needs to bind the record to the exact composition request and successful result: runtime identity, requested and resolved MicroBundle identities/versions (and immutable artifact hashes where available), configuration identity/digest, convergence result/round index, and the relevant schema/version. It must persist the record before its stable identity is supplied to StoryBuilder's compiler.
+
+This is a proposed evidence boundary, not a claim that those fields or a persistence API already exist. Do not add persistence or a parallel arbitration engine to Galactic War, and do not treat `RuntimeAssembly.RuntimeId`, `ArbitrationRounds`, or a random GUID as a substitute for the missing record.
+
+### Current disposition
+
+- [x] Confirmed FSM_COS convergence and handoff semantics from its current documentation.
+- [x] Confirmed the current Workshop MicroBundle does not create an arbitration record.
+- [x] Confirmed StoryBuilder requires a caller-supplied arbitration record identity when compiling.
+- [ ] Identify or implement the Workshop/host-side durable arbitration-record producer and its validation contract.
+- [ ] Prove that a real record identity is passed into StoryBuilder package compilation.
+- [ ] Pass the validated package through the host adapter and into Galactic War without a direct StoryBuilder.Persistence dependency.
+
+Until those gates have evidence, the Vesper Reach sample's placeholder StoryBuilder artifact references remain explicitly illustrative, and no validated composition package should be claimed.
