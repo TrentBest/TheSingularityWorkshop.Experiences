@@ -125,21 +125,35 @@ public sealed class StationMediaRuntimeTests
     }
 
     [Fact]
-    public void WatchingRequiresAPlayerReceiptButIgnoringDoesNotCreateOne()
+    public void WatchingRequiresTheExactPriorPlayerPresentationButIgnoringDoesNotCreateOne()
     {
         var runtime = CreateRuntime();
-        Assert.Throws<InvalidOperationException>(() => runtime.RecordPlayerChoice(new StationStoryDecision(
+        var presentationId = Guid.NewGuid();
+
+        Assert.Throws<ArgumentException>(() => runtime.RecordPlayerChoice(new StationStoryDecision(
             Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(30))));
         runtime.RecordReceipt(new ObserverReceipt(
             Guid.NewGuid(), InitialDeliveryId, "player", new CampaignInstant(30), AcquisitionMode.Heard));
         Assert.Throws<InvalidOperationException>(() => runtime.RecordPlayerChoice(new StationStoryDecision(
-            Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(30))));
+            Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(30), PresentationId: presentationId)));
 
-        var beforeIgnore = runtime.GetReceivedIssues("player", new CampaignInstant(30));
+        runtime.RecordReceipt(new ObserverReceipt(
+            Guid.NewGuid(), InitialDeliveryId, "player", new CampaignInstant(31), AcquisitionMode.Viewed));
+        runtime.RecordPresentation(new PlayerPresentation(presentationId, "player", InitialIssueId, new CampaignInstant(32)));
+
+        Assert.Throws<InvalidOperationException>(() => runtime.RecordPlayerChoice(new StationStoryDecision(
+            Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(31), PresentationId: presentationId)));
+        Assert.Throws<InvalidOperationException>(() => runtime.RecordPlayerChoice(new StationStoryDecision(
+            Guid.NewGuid(), "another-player", StationStoryChoice.Watch, new CampaignInstant(33), PresentationId: presentationId)));
+
         runtime.RecordPlayerChoice(new StationStoryDecision(
-            Guid.NewGuid(), "player", StationStoryChoice.Ignore, new CampaignInstant(30)));
-        Assert.Equal(beforeIgnore, runtime.GetReceivedIssues("player", new CampaignInstant(30)));
-        Assert.Single(runtime.Decisions);
+            Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(33), PresentationId: presentationId));
+
+        var beforeIgnore = runtime.GetReceivedIssues("player", new CampaignInstant(33));
+        runtime.RecordPlayerChoice(new StationStoryDecision(
+            Guid.NewGuid(), "player", StationStoryChoice.Ignore, new CampaignInstant(34)));
+        Assert.Equal(beforeIgnore, runtime.GetReceivedIssues("player", new CampaignInstant(34)));
+        Assert.Equal(2, runtime.Decisions.Count);
     }
 
     [Fact]
