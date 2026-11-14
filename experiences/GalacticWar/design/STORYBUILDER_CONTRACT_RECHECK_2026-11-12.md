@@ -212,3 +212,69 @@ This is a proposed evidence boundary, not a claim that those fields or a persist
 - [ ] Pass the validated package through the host adapter and into Galactic War without a direct StoryBuilder.Persistence dependency.
 
 Until those gates have evidence, the Vesper Reach sample's placeholder StoryBuilder artifact references remain explicitly illustrative, and no validated composition package should be claimed.
+
+
+## Host orchestration and publication-path recheck — 2026-11-14
+
+A further repository pass traced the concrete runtime hosts and the published-Experience path. This pass searched AnyApp, WebPage, ServerApp, FSM_Foundry, WebApp, and MicroBundleRepository for StoryBuilder package/compiler and arbitration-provenance integration.
+
+### AnyApp is a runtime consumer, not the provenance producer
+
+On AnyApp `development`:
+
+- `AnyAppRuntime.Compose(RuntimeManifest)` creates `FsmCos` with `AnyAppMicroBundleCatalog` and returns `cos.Execute(manifest)`.
+- `MainWindow.LaunchManifestAsync` validates the host semantic intent, composes the manifest, and renders the returned `RuntimeAssembly`.
+- The published-Experience client retrieves a versioned manifest artifact, checks its publication identity and SHA-256 content hash, parses it as an `ExperienceManifest`, and verifies its Experience ID/version.
+- The inspected AnyApp launch and publication-client paths do not invoke `CompositionPackageReader`, `CompositionPackageCompiler`, or a StoryBuilder arbitration-record service. The downloaded publication is an Experience manifest, not evidence of a validated StoryBuilder composition package.
+
+This confirms that AnyApp currently composes and manifests runtime bundles. It does not currently bridge StoryBuilder's captured package into the runtime, nor persist the arbitration provenance needed by StoryBuilder's compiler.
+
+### WebPage contains an older in-memory audit model, not the required durable record
+
+The current WebPage tree contains a `SingularityHub` subsystem with `IArbitrationAudit` and `ArbitrationEvent`. Its `ArbitrationAudit` stores events in a process-local `List<ArbitrationEvent>`; `SingularityHub.ExecuteArbitrationPipeline` records structural mutation events in that list.
+
+However:
+
+- this audit contract is from the WebPage-local SingularityHub subsystem, not the current FSM_COS `RuntimeAssembly` contract;
+- the inspected `WebPageCosRuntime.LoadAsync` uses FSM_COS directly and stores the resulting `RuntimeAssembly`;
+- no StoryBuilder package compiler/reader or durable arbitration-record persistence/handoff was found in the inspected WebPage runtime path.
+
+The in-memory audit is useful historical evidence that arbitration events were once observed, but it is not a durable, composition-bound record and must not be repurposed as proof of StoryBuilder package provenance without a deliberate contract and persistence design.
+
+### Other host candidates
+
+Searches in ServerApp, FSM_Foundry, WebApp, and MicroBundleRepository did not surface StoryBuilder package compilation or arbitration-record handoff call sites. This is a bounded source-search result, not proof that no related implementation exists anywhere in those repositories or in unindexed branches.
+
+### Updated ownership conclusion
+
+The likely integration seam remains the host/orchestration layer that owns authoring-to-publication workflow, rather than Galactic War or an individual MicroBundle. The current evidence does not identify an existing producer.
+
+Before implementing, establish which host owns the authoring-to-publication transaction. That owner should:
+1. invoke FSM_COS and retain the exact composition request/result;
+2. persist a durable, immutable arbitration decision record bound to that composition and its evidence;
+3. pass the persisted record identity to StoryBuilder's compiler;
+4. retain and publish the resulting StoryBuilder package artifacts with their exact hashes;
+5. ensure the consumer validates the StoryBuilder package before Galactic War maps its authored identities into campaign references.
+
+The existing AnyApp Experience manifest publication flow is a separate format and must not be silently treated as the StoryBuilder package format. Keep Galactic War's campaign occurrence, observer receipt, and player presentation responsibilities unchanged.
+
+### Rechecked source paths
+
+- [AnyApp runtime composition entry point](https://github.com/TrentBest/AnyApp/blob/development/AnyAppRuntime.cs)
+- [AnyApp host launch and manifestation](https://github.com/TrentBest/AnyApp/blob/development/MainWindow.xaml.cs)
+- [AnyApp publication client and manifest hash validation](https://github.com/TrentBest/AnyApp/blob/development/ExperienceCatalogClient.cs)
+- [AnyApp published Experience manifest contract](https://github.com/TrentBest/AnyApp/blob/development/ExperienceManifest.cs)
+- [WebPage FSM_COS runtime loader](https://github.com/TrentBest/WebPage/blob/master/TheSingularityWorkshop/Infrastructure/FsmCos/WebPageCosRuntime.cs)
+- [WebPage local arbitration audit contract](https://github.com/TrentBest/WebPage/blob/master/SingularityHub.Abstractions/HubContracts.cs)
+- [WebPage local arbitration audit implementation](https://github.com/TrentBest/WebPage/blob/master/SingularityHub/SingularityHub.cs)
+
+### Disposition
+
+- [x] Trace AnyApp's current manifest-to-FSM_COS-to-RuntimeAssembly path.
+- [x] Confirm AnyApp's published Experience artifact is a hash-checked Experience manifest, not a StoryBuilder package.
+- [x] Inspect WebPage's local audit and distinguish its in-memory events from durable StoryBuilder provenance.
+- [x] Search the additional host/runtime candidates for package and arbitration-record call sites.
+- [ ] Identify the authoritative host owner for authoring-to-publication.
+- [ ] Define and persist the immutable arbitration-record contract at that owner.
+- [ ] Prove StoryBuilder compilation receives the persisted record identity.
+- [ ] Prove package validation and Galactic War mapping end-to-end.
