@@ -171,7 +171,7 @@ public sealed class StationMediaRuntimeTests
         Assert.Empty(runtime.GetPresentedIssues("player", new CampaignInstant(41)));
         Assert.Single(runtime.GetPresentedIssues("player", new CampaignInstant(42)));
         runtime.RecordPlayerChoice(new StationStoryDecision(
-            Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(43)));
+            Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(43), PresentationId: presentationId));
         Assert.Single(runtime.Decisions);
     }
 
