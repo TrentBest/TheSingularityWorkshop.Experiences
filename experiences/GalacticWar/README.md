@@ -74,7 +74,7 @@ See [Space Stations and Docking](design/STATIONS_AND_DOCKING.md) for the arrival
 
 Learning begins early as exploration of a complex and wondrous civilization. People discover sciences, crafts, institutions, vehicles, social responsibilities, and possible vocations. Advanced training is a later, deliberate choice with prerequisites and meaningful qualifications.
 
-The galaxy must also contain ordinary life: friendships, families, work, trade, culture, recreation, disagreement, institutions, and communities. These are not decorative downtime between battles; they give conflict something real to affect and give the visitor reasons to care about the outcome.
+The galaxy must also contain ordinary life: friendships, families, work, trade, culture, recreation, disagreement, institutions, and communities. These are not decorative downtime between missions; they give conflict something real to affect and give the visitor reasons to care about the outcome.
 
 ## Design status and truth
 
@@ -85,6 +85,16 @@ This repository currently captures authored intent and design boundaries. It doe
 - **Experiment:** a testable proposal whose result may change the design.
 - **Illumination needed:** an unresolved question that must not be silently treated as settled.
 
+## First executable slice
+
+The first runtime proof now models the Vesper Reach signal as a campaign occurrence, the bulletin as an immutable issued reference to authored StoryBuilder content, channel availability as distinct from observer receipt, and later corrections as new issues. It deliberately does not duplicate StoryBuilder's authored story records or claim that the complete station is playable.
+
+- [Station-media runtime project](../../src/GalacticWar/TheSingularityWorkshop.Experiences.GalacticWar.csproj)
+- [FSM_API-backed station session lifecycle](../../src/GalacticWar/StationSessionLifecycle.cs)
+- [Station-media invariants](../../tests/GalacticWar.Tests/StationMediaRuntimeTests.cs)
+- [First-contact console trace](../../samples/GalacticWar.FirstContact/README.md)
+- [Executable-slice ownership and next steps](design/GALACTIC_WAR_EXECUTABLE_SLICE.md)
+
 ## Design documents
 
 - [Experience vision and world principles](design/EXPERIENCE_VISION.md)
@@ -93,10 +103,21 @@ This repository currently captures authored intent and design boundaries. It doe
 - [Learning and the living social galaxy](design/LEARNING_AND_SOCIAL_GALAXY.md)
 - [Learning progression and professional qualification](design/LEARNING_PROGRESSION_AND_QUALIFICATION.md)
 - [Style, identity, and provenance](design/STYLE_IDENTITY_AND_PROVENANCE.md)
+- [Finite provenance, trophy objects, and ownership](design/FINITE_PROVENANCE_AND_TROPHY_OWNERSHIP.md)
+- [FSM_API mapping: finite trophy lifecycle](design/FSM_API_TROPHY_LIFECYCLE_MAPPING.md)
 - [Lived-in ships and viewports](design/LIVED_IN_SHIPS_AND_VIEWPORTS.md)
 - [Space stations and docking](design/STATIONS_AND_DOCKING.md)
 - [Station life and background activity](design/STATION_LIFE_AND_BACKGROUND_ACTIVITY.md)
 - [First station candidate: Vesper Reach](design/FIRST_STATION_CANDIDATE.md)
+- [Civilization interface and perception](design/CIVILIZATION_INTERFACE_AND_PERCEPTION.md)
+- [First contact and diplomacy](design/FIRST_CONTACT_AND_DIPLOMACY.md)
+- [Game design foundation: living events, first contact, and space archaeology](design/GAME_DESIGN_FOUNDATION_AND_LIVING_EVENTS.md)
+- [First-contact concept art: First Contact at the Fringe](design/FIRST_CONTACT_AT_THE_FRINGE.svg)
+- [StoryBuilder capability crosswalk: existing authoring contracts and the first news-event proof](design/STORYBUILDER_CAPABILITY_CROSSWALK.md)
+- [StoryBuilder contract recheck: current development records, immutable book editions, and the broadcast gap](design/STORYBUILDER_CONTRACT_RECHECK_2026-11-12.md)
+- [First playable proof: The Signal Nobody Owns](design/FIRST_PLAYABLE_PROOF_THE_SIGNAL_NOBODY_OWNS.md)
+- [Observer knowledge proof: two NPCs, one signal](design/OBSERVER_KNOWLEDGE_TWO_NPC_PROOF.md)
+- [Executable slice: story first, real state](design/GALACTIC_WAR_EXECUTABLE_SLICE.md)
 
 ## Architecture boundaries
 
