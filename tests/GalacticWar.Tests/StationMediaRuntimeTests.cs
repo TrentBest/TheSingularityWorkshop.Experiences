@@ -132,8 +132,6 @@ public sealed class StationMediaRuntimeTests
 
         Assert.Throws<ArgumentException>(() => runtime.RecordPlayerChoice(new StationStoryDecision(
             Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(30))));
-        runtime.RecordReceipt(new ObserverReceipt(
-            Guid.NewGuid(), InitialDeliveryId, "player", new CampaignInstant(30), AcquisitionMode.Heard));
         Assert.Throws<InvalidOperationException>(() => runtime.RecordPlayerChoice(new StationStoryDecision(
             Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(30), PresentationId: presentationId)));
 
