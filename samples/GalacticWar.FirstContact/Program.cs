@@ -19,8 +19,10 @@ runtime.IssueBroadcast(new BroadcastIssue(independentIssueId, signalId, "story-a
 runtime.ScheduleDelivery(new MediaDelivery(independentDeliveryId, independentIssueId, "analyst-terminal", "vesper-reach", new CampaignInstant(35)));
 runtime.RecordReceipt(new ObserverReceipt(Guid.Parse("50000000-0000-0000-0000-000000000004"), independentDeliveryId, "ilyan-voss", new CampaignInstant(36), AcquisitionMode.Read));
 runtime.RecordReceipt(new ObserverReceipt(Guid.Parse("50000000-0000-0000-0000-000000000002"), initialDeliveryId, "player", new CampaignInstant(40), AcquisitionMode.Viewed));
-runtime.RecordPresentation(new PlayerPresentation(Guid.NewGuid(), "player", initialIssueId, new CampaignInstant(42)));
-runtime.RecordPlayerChoice(new StationStoryDecision(Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(43)));
+var initialPresentationId = Guid.NewGuid();
+runtime.RecordPresentation(new PlayerPresentation(initialPresentationId, "player", initialIssueId, new CampaignInstant(42)));
+runtime.RecordPlayerChoice(new StationStoryDecision(
+    Guid.NewGuid(), "player", StationStoryChoice.Watch, new CampaignInstant(43), PresentationId: initialPresentationId));
 
 Console.WriteLine("Vesper Reach — station shift");
 Console.WriteLine($"Station session FSM state: {stationSession.CurrentState}.");
