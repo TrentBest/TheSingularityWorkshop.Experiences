@@ -176,11 +176,19 @@ public sealed class StationMediaRuntime
         if (decision.ChosenAt.Value < 0)
             throw new ArgumentOutOfRangeException(nameof(decision), "Campaign time cannot be negative.");
 
-        if (decision.Choice == StationStoryChoice.Watch &&
-            !_presentations.Values.Any(item =>
-                string.Equals(item.PlayerId, decision.PlayerId, StringComparison.Ordinal) &&
-                item.PresentedAt <= decision.ChosenAt))
-            throw new InvalidOperationException("Watching a report requires an actual player presentation by that time.");
+        if (decision.Choice == StationStoryChoice.Watch)
+        {
+            if (decision.PresentationId is not { } presentationId || presentationId == Guid.Empty)
+                throw new ArgumentException("A Watch choice must identify the presentation being watched.", nameof(decision));
+            if (!_presentations.TryGetValue(presentationId, out var presentation) ||
+                !string.Equals(presentation.PlayerId, decision.PlayerId, StringComparison.Ordinal) ||
+                presentation.PresentedAt > decision.ChosenAt)
+                throw new InvalidOperationException("Watching requires this player's identified presentation to have occurred by the choice time.");
+        }
+        else if (decision.PresentationId is not null)
+        {
+            throw new ArgumentException("Only a Watch choice may identify a presentation.", nameof(decision));
+        }
 
         if (decision.Choice == StationStoryChoice.Ask)
             ArgumentException.ThrowIfNullOrWhiteSpace(decision.TargetObserverId);
