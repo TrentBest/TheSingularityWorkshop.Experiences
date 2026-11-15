@@ -50,7 +50,7 @@ jobs:
           path: VisualizeSource/integrations/GuiSvg/GuiSource
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore Capsule Clinic tests
         run: dotnet restore tests/CapsuleClinic.Tests/TheSingularityWorkshop.Experiences.CapsuleClinic.Tests.csproj
       - name: Run Capsule Clinic tests
