@@ -72,6 +72,20 @@ Open the [provisional turning-point presentation study](turning-point-study.html
 
 The previous illustrations were not the author's artwork and were only rough communication aids. They are intentionally excluded from this project. The book's new visual identity will be developed from the author's story through StoryBuilder. Character appearance, environment design, palette, rendering approach, and page compositions are new proposals; nothing becomes continuity canon until the author approves it. See [VisualStoryPlan.md](VisualStoryPlan.md).
 
+## Living-world interaction foundation
+
+The next presentation layer is being developed as an optional living world: characters are authored actors with behaviors and responses, not decorative hotspots. The Experience-owned [living-world model](living-world.json) records stable actor/scene identities, manuscript anchors, interaction ownership, accessibility requirements, and the beach-to-dolphin progression. It deliberately leaves artwork-relative litter placements pending author-approved art.
+
+The renderer-neutral [cleanup state machine](living-world.mjs) defines the pickup → carry → receptacle → deposit sequence. The deposited counter is derived from unique deposited item IDs and changes only when a matching deposit-completion event arrives. Selection, pickup, stale animation callbacks, interruption, and story navigation cannot increment it. The extra pages can consume this Experience-owned count without making reading progress depend on cleanup.
+
+Run the domain tests with Node.js:
+
+```bash
+node --test experiences/Lenny/living-world.test.mjs
+```
+
+This is a domain foundation, not yet a visible interactive scene. The existing illustrations remain provisional; no unapproved litter targets, character designs, or hit regions have been added to the reader. The next integration step is to bind this model to approved scene artwork and the reader's presentation lifecycle.
+
 ## Ownership boundary
 
 This Experience owns the story's presentation identity, authored sequence, and reader journey.
