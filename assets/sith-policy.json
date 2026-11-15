@@ -12,12 +12,13 @@
     "feature/ciai-v1-provenance-producer",
     "feature/experience-microbundle-identity-map",
     "feature/galactic-war-perception-and-perspective",
+    "feature/lenny-living-world",
     "feature/minesweeper-playable-2d",
     "master"
   ],
-  "branch_count": 8,
+  "branch_count": 9,
   "status": "NON-COMPLIANT",
-  "evaluated_at": "2026-11-14T11:26:43Z",
-  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/43590040638",
-  "triggering_commit": "29d2ed51e0d0a61b7a9ac5a7ebd515cd1fea7c80"
+  "evaluated_at": "2026-11-15T11:56:20Z",
+  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/43711309353",
+  "triggering_commit": "4b9f1aef86fdd37446bbc3ce6524f628f455eaf8"
 }
