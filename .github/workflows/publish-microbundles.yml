@@ -38,7 +38,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
 
       - name: Validate repository configuration
         shell: bash
@@ -71,7 +71,7 @@ jobs:
 
       - name: Pack immutable repository artifact
         run: |
-          assembly="src/${{ inputs.project }}/bin/Release/net8.0/TheSingularityWorkshop.Experiences.${{ inputs.project }}.dll"
+          assembly="src/${{ inputs.project }}/bin/Release/net10.0/TheSingularityWorkshop.Experiences.${{ inputs.project }}.dll"
           mkdir -p artifacts
           bash tools/publish-microbundle.sh \
             "$assembly" \
