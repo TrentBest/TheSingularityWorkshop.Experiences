@@ -38,7 +38,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore
         run: dotnet restore "${{ matrix.project }}"
       - name: Build
@@ -51,7 +51,7 @@ jobs:
           project="${{ matrix.project }}"
           assembly="$(basename "${project}" .csproj).dll"
           mkdir -p "./artifacts/assemblies/${{ matrix.project }}"
-          cp "$(dirname "${project}")/bin/Release/net8.0/${assembly}" "./artifacts/assemblies/${{ matrix.project }}/${assembly}"
+          cp "$(dirname "${project}")/bin/Release/net10.0/${assembly}" "./artifacts/assemblies/${{ matrix.project }}/${assembly}"
 
 
   drone-construction-showcase:
@@ -60,7 +60,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Run the deterministic browser showcase
         run: dotnet run --project samples/DroneConstructionShowcase/DroneConstructionShowcase.csproj --configuration Release -- ./artifacts/drone-construction-showcase.html
       - name: Upload generated browser showcase
@@ -76,7 +76,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore semantic contract tests
         run: dotnet restore tests/Contracts.Tests/TheSingularityWorkshop.Experiences.Contracts.Tests.csproj
       - name: Run semantic contract tests
@@ -88,7 +88,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Run deterministic Pages lesson tests
         run: dotnet test tests/GitHubLearningStudio.Tests/TheSingularityWorkshop.Experiences.GitHubLearningStudio.Tests.csproj --configuration Release
 
@@ -98,7 +98,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Run pull-request collaboration journey tests
         run: dotnet test tests/GitHubLearningStudio.PullRequests.Tests/TheSingularityWorkshop.Experiences.GitHubLearningStudio.PullRequests.Tests.csproj --configuration Release
 
@@ -108,7 +108,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore issue journey tests
         run: dotnet restore tests/GitHubLearningStudio.Issues.Tests/TheSingularityWorkshop.Experiences.GitHubLearningStudio.Issues.Tests.csproj
       - name: Run issue journey tests
@@ -120,7 +120,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Run chemistry conservation tests
         run: dotnet test tests/Chemistry.Tests/TheSingularityWorkshop.Experiences.Chemistry.Tests.csproj --configuration Release
 
@@ -131,7 +131,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore Minesweeper domain tests
         run: dotnet restore tests/Minesweeper.Tests/TheSingularityWorkshop.Experiences.Minesweeper.Tests.csproj
       - name: Run deterministic Minesweeper rules tests
@@ -155,7 +155,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore and pack
         run: |
           dotnet restore src/Forge/TheSingularityWorkshop.Experiences.Forge.csproj
@@ -196,7 +196,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore card tests
         run: dotnet restore tests/Games.Cards.Tests/TheSingularityWorkshop.Games.Cards.Tests.csproj
       - name: Run card capability tests
@@ -209,7 +209,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore slot tests
         run: dotnet restore tests/Games.Slots.Tests/TheSingularityWorkshop.Games.Slots.Tests.csproj
       - name: Run slot rule and probability tests
@@ -222,7 +222,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore casino ledger tests
         run: dotnet restore tests/Games.CasinoLedger.Tests/TheSingularityWorkshop.Games.CasinoLedger.Tests.csproj
       - name: Run ledger invariant tests
@@ -236,7 +236,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore Capsule Clinic tests
         run: dotnet restore tests/CapsuleClinic.Tests/TheSingularityWorkshop.Experiences.CapsuleClinic.Tests.csproj
       - name: Run Capsule Clinic rules and deterministic-loop tests
@@ -248,7 +248,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore Castle Siege tests
         run: dotnet restore tests/CastleSiege.Tests/TheSingularityWorkshop.Experiences.CastleSiege.Tests.csproj
       - name: Run Castle Siege contract tests
@@ -303,7 +303,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore layout tests
         run: dotnet restore tests/DominoStudio.Tests/TheSingularityWorkshop.Experiences.DominoStudio.Tests.csproj
       - name: Run layout and scene contract tests
@@ -315,7 +315,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore Marble Run tests
         run: dotnet restore tests/MarbleRun.Tests/TheSingularityWorkshop.Experiences.MarbleRun.Tests.csproj
       - name: Run Marble Run scene contract tests
@@ -328,7 +328,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore motion tests
         run: dotnet restore tests/Moniker.Motion.Wave.Tests/TheSingularityWorkshop.Experiences.Moniker.Motion.Wave.Tests.csproj
       - name: Run motion contract tests
@@ -377,7 +377,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
 
       - name: Restore source graph
         working-directory: Experiences
@@ -419,7 +419,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
 
       - name: Test Moniker.Motion.Wave against source graph
         working-directory: Experiences
@@ -449,7 +449,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
       - name: Restore Drone Construction tests
         run: dotnet restore tests/DroneConstruction.Tests/TheSingularityWorkshop.Experiences.DroneConstruction.Tests.csproj
       - name: Run construction, occupancy, transition, and inventory invariants
@@ -550,7 +550,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
 
       - name: Run quadrotor population benchmark
         working-directory: Experiences
