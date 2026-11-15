@@ -105,3 +105,10 @@ The host owns browser/application lifecycle and navigation transport. Shared ren
 - The dedication and ending are included.
 - The experience remains readable without illustrations.
 - No placeholder is represented as approved artwork or a live simulation.
+
+
+## Physics integration boundary
+
+Lenny's living-world movement is being designed against the Workshop's Physics domain, not a parallel JavaScript motion engine. See [PHYSICS_INTEGRATION.md](PHYSICS_INTEGRATION.md) for the concrete source-level mapping to Physics spatial poses, rigid-body state, fixed logical stepping, and the motion-driven interaction pipeline.
+
+The current Physics source provides reusable spatial and free-body primitives, but it does not yet expose a character locomotion/controller-target provider through the current MicroBundle adapters. The static browser reader also cannot call the C# assembly directly. Accordingly, the present cleanup reducer is only Experience-owned interaction state; its animation callbacks are not Physics observations. A host/Physics movement provider and adapter are explicit gates before any scene is described as Physics-backed. No duplicate kinematics, wall-clock simulation, or projectile-solver misuse will be introduced to make the demo appear connected.
