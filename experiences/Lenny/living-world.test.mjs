@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createCleanupState, reduceCleanupState, getDepositedCount } from "./living-world.js";
+import { createCleanupState, reduceCleanupState, getDepositedCount } from "./living-world.mjs";
 
 const send = (state, type, extra = {}) => reduceCleanupState(state, { type, ...extra });
 
