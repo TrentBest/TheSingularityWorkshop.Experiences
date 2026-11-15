@@ -65,6 +65,13 @@
         "polite-listening",
         "continuing-beach-activity",
         "shushing"
+      ],
+      "ambientBehaviors": [
+        "relaxing-on-the-beach",
+        "surfing",
+        "building-sandcastles",
+        "picnicking",
+        "sunbathing"
       ]
     },
     {
