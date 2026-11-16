@@ -12,7 +12,7 @@ The reader is published from the `development` branch by the **Publish Lenny rea
 
 Present the author's story as a clear, page-by-page reading experience. Keep the story itself at the center: a child, a parent, a beach, and a conversation about caring for ocean life.
 
-This is a story presentation, not a game, ocean simulator, or environmental data visualization.
+The story remains the primary experience. Optional character and cleanup interactions are being developed as a living-world layer; this is not a score-driven game or a full ocean simulator.
 
 ## Source material
 
@@ -52,7 +52,11 @@ The page reads its content from `story.json`; it does not embed a second copy of
 
 Open the [guided author-review path](review.html) to move through the provisional presentation studies in story order: Lenny's beach-wide realization (page 8), the first discouragement (pages 9–10), the second discouragement and transition (pages 15–20), the dolphin reveal (page 21), and the underwater discovery and empathy (pages 26–30). It links to the existing text-only studies and provides focused questions for author feedback. No approach is treated as approved until the author says so. This page does not change the manuscript, structured story data, or reading experience.
 
-## Author feedback template\n\nUse the [author feedback template](AuthorFeedbackTemplate.md) to capture one page-range or study review at a time, including what works, what feels wrong or missing, proposed changes, and any explicit author decision. A preferred approach is not approval; record approval only when the author explicitly gives it. The template is offline documentation and does not submit or store feedback.\n\n## Page 8 beach-discovery study
+## Author feedback template
+
+Use the [author feedback template](AuthorFeedbackTemplate.md) to capture one page-range or study review at a time, including what works, what feels wrong or missing, proposed changes, and any explicit author decision. A preferred approach is not approval; record approval only when the author explicitly gives it. The template is offline documentation and does not submit or store feedback.
+
+## Page 8 beach-discovery study
 
 Open the [provisional beach-discovery camera study](beach-discovery-study.html) to compare three text-only approaches to Lenny noticing that the beach is littered again: a measured discovery, camera movement following Lenny's gaze, and a restrained wide reveal. The study loads the exact page 8 paragraphs from `story.json`, preserves their wording, and introduces no artwork or invented litter details. It is separate from the reader and does not alter the manuscript.
 
@@ -72,6 +76,17 @@ Open the [provisional turning-point presentation study](turning-point-study.html
 
 The previous illustrations were not the author's artwork and were only rough communication aids. They are intentionally excluded from this project. The book's new visual identity will be developed from the author's story through StoryBuilder. Character appearance, environment design, palette, rendering approach, and page compositions are new proposals; nothing becomes continuity canon until the author approves it. See [VisualStoryPlan.md](VisualStoryPlan.md).
 
+## Living-world foundation
+
+The Lenny living-world model is now present on `development` as a separate, renderer-neutral Experience layer:
+
+- [Living-world authoring model](living-world.json) defines story-anchored actors, scenes, optional interactions, and the cleanup lifecycle without changing manuscript prose.
+- [Cleanup state reducer](living-world.mjs) owns the held-item and deposited-item transaction. The counter changes only after a matching deposit-completion event, and duplicate/stale completion events cannot double-count.
+- [Reducer tests](living-world.test.mjs) run in the repository's build workflow.
+- [Physics integration boundary](PHYSICS_INTEGRATION.md) documents the Physics provider, host ownership, and remaining browser/runtime bridge.
+
+This is a foundation, not yet a visible interactive scene. The reader does not currently animate Lenny, beachgoers, or the dolphin from this model; no artwork-relative litter hit regions have been authored or approved. The existing provisional illustrations remain provisional. The browser reader stays navigable independently of the optional interaction model, and `story.json` remains the canonical manuscript source.
+
 ## Ownership boundary
 
 This Experience owns the story's presentation identity, authored sequence, and reader journey.
@@ -80,7 +95,7 @@ The host owns browser/application lifecycle and navigation transport. Shared ren
 
 ## Current maturity
 
-**Runnable illustrated reading preview; original visual development is in progress.** The manuscript transcription and structured page sequence are committed, and a browser reader can be served locally. The new vector illustrations are an initial visual pass made for author review. They are not approved canon and can be freely revised or replaced. The earlier concept illustrations remain excluded from the reader and production pipeline. This is not yet integrated into the Workshop WebPage host or a runtime-loaded Experience manifest.
+**Runnable illustrated reading preview; living-world foundation in progress.** The manuscript transcription and structured page sequence are committed, and a browser reader can be served locally. The optional actor/cleanup model and its deterministic reducer tests are present, but are not yet wired into visible browser interactions. The new vector illustrations are an initial visual pass made for author review. They are not approved canon and can be freely revised or replaced. The earlier concept illustrations remain excluded from the reader and production pipeline. This is not yet integrated into the Workshop WebPage host or a runtime-loaded Experience manifest.
 
 ## Acceptance criteria for this slice
 
