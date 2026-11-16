@@ -570,3 +570,13 @@ jobs:
           node-version: "22"
       - name: Validate living casino SVG, HTML controls, and JavaScript
         run: python tools/validate_living_docs.py
+
+  test-lenny-living-world:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run deterministic Lenny living-world state tests
+        run: node --test experiences/Lenny/living-world.test.mjs
