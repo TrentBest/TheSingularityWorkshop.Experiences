@@ -1,6 +1,6 @@
 # Lenny — Physics integration contract
 
-**Status:** the Physics prescribed-kinematic provider is implemented and CI-validated. The Experience-owned cleanup reducer is present and tested. No browser/runtime bridge or Physics-driven browser animation is wired yet.
+**Status:** the Physics prescribed-kinematic provider is implemented and CI-validated. The Experience-owned cleanup reducer is present and tested. A C# host-composition sample resolves the typed provider and validates fixed-step commits. No browser/runtime bridge or Physics-driven browser animation is wired yet.
 
 This contract prevents a second Lenny-specific kinematics implementation from appearing in JavaScript. The Experience authors what should happen; Physics evaluates declared root motion; the host owns provider resolution and authoritative commits; Renderer/Visualization present achieved observations.
 
@@ -47,6 +47,12 @@ For a first beach slice:
 
 The Physics profile provides root translation/orientation only. It does not provide gait, foot placement, limb articulation, balance, contact resolution, collision avoidance, friction, obstacle avoidance, or environmental-medium response. Do not describe those capabilities as implemented. If the scene requires Lenny to route around beachgoers or avoid collisions, that requires a separate tested capability and cannot be faked by the prescribed trajectory.
 
+## Host composition proof
+
+[The Lenny Motion Host sample](../../samples/Lenny.MotionHost/README.md) loads the Physics MicroBundle, resolves `IPrescribedKinematicMotionProvider` from the loaded instance, evaluates a fixed-step quintic motion, supplies the host's achieved state separately, and verifies the destination commit.
+
+Its 1 m path is a synthetic contract fixture, not a Lenny scene placement or approved artwork coordinate. The sample host has no obstacles or contacts and explicitly accepts the prescribed kinematic sample as achieved. A production host must supply its own authoritative achieved state and enforce its own commit ordering/cancellation policy.
+
 ## Browser/runtime boundary
 
 The current Lenny reader is static HTML/JavaScript published through GitHub Pages. It cannot directly call the C# Physics assembly in its current hosting model. A real integration therefore needs an explicit runtime bridge, such as a browser WebAssembly host or an application/server host that exposes committed observations to the reader.
@@ -78,13 +84,13 @@ The current illustrations are provisional. Do not add visible collectible litter
 ## Integration gates
 
 1. **Experience model:** keep actor/scene/interactable definitions and cleanup state Experience-owned; preserve the canonical manuscript.
-2. **Host provider binding:** load the Physics MicroBundle and explicitly bind `IPrescribedKinematicMotionProvider`.
-3. **World commit:** supply achieved snapshots, enforce monotonic commit ordering, and preserve the last committed state on cancellation.
+2. **Host provider binding:** implemented as a C# composition sample; production host lifecycle and provider resolution remain to be connected.
+3. **World commit:** the sample proves the contract with a no-contact host policy; a production host must supply achieved snapshots, enforce monotonic commit ordering, and preserve the last committed state on cancellation.
 4. **Runtime bridge:** expose those observations to the static reader through an explicit supported host/runtime; do not add a parallel JavaScript solver.
 5. **Browser presentation:** animate Lenny from achieved observations; keep litter targets hidden until author-approved artwork/placements exist.
 6. **Evidence:** test deterministic replay, fixed-step behavior under different browser frame rates, pickup/deposit interruption, navigation while carrying, arrival tolerances, reduced motion, keyboard/touch access, and exactly-once deposit commits.
 
-Until gates 2–4 are complete, the reader remains an illustrated reading preview with a tested Experience interaction model. It must not advertise Physics-backed animation or simulation.
+Until the production host commit policy and runtime/browser bridge are complete, the reader remains an illustrated reading preview with a tested Experience interaction model and a separate C# provider sample. It must not advertise Physics-backed browser animation or simulation.
 
 ## Source references
 
