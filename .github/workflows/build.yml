@@ -580,3 +580,24 @@ jobs:
           node-version: 22
       - name: Run deterministic Lenny living-world state tests
         run: node --test experiences/Lenny/living-world.test.mjs
+
+  lenny-physics-host:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out Experiences
+        uses: actions/checkout@v7
+        with:
+          path: Experiences
+      - name: Check out Physics source
+        uses: actions/checkout@v7
+        with:
+          repository: TrentBest/TheSingularityWorkshop.Physics
+          ref: development
+          path: TheSingularityWorkshop.Physics
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Run Lenny Physics provider host composition sample
+        working-directory: Experiences
+        run: dotnet run --project samples/Lenny.MotionHost/Lenny.MotionHost.csproj --configuration Release
