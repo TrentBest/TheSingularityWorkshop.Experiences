@@ -76,6 +76,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Expe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.GitHubLearningStudio.Issues.Tests", "tests\GitHubLearningStudio.Issues.Tests\TheSingularityWorkshop.Experiences.GitHubLearningStudio.Issues.Tests.csproj", "{E480A1C0-6A41-4C87-9E4D-202611020049}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.GalacticWar", "src\GalacticWar\TheSingularityWorkshop.Experiences.GalacticWar.csproj", "{B51F0A01-6C3B-4D9B-A8E4-202611120001}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.GalacticWar.Tests", "tests\GalacticWar.Tests\TheSingularityWorkshop.Experiences.GalacticWar.Tests.csproj", "{B51F0A02-6C3B-4D9B-A8E4-202611120002}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalacticWar.FirstContact", "samples\GalacticWar.FirstContact\GalacticWar.FirstContact.csproj", "{B51F0A03-6C3B-4D9B-A8E4-202611120003}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -230,5 +236,17 @@ Global
 		{E480A1C0-6A41-4C87-9E4D-202611020049}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E480A1C0-6A41-4C87-9E4D-202611020049}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E480A1C0-6A41-4C87-9E4D-202611020049}.Release|Any CPU.Build.0 = Release|Any CPU
+        {B51F0A01-6C3B-4D9B-A8E4-202611120001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {B51F0A01-6C3B-4D9B-A8E4-202611120001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {B51F0A01-6C3B-4D9B-A8E4-202611120001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {B51F0A01-6C3B-4D9B-A8E4-202611120001}.Release|Any CPU.Build.0 = Release|Any CPU
+        {B51F0A02-6C3B-4D9B-A8E4-202611120002}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {B51F0A02-6C3B-4D9B-A8E4-202611120002}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {B51F0A02-6C3B-4D9B-A8E4-202611120002}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {B51F0A02-6C3B-4D9B-A8E4-202611120002}.Release|Any CPU.Build.0 = Release|Any CPU
+        {B51F0A03-6C3B-4D9B-A8E4-202611120003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {B51F0A03-6C3B-4D9B-A8E4-202611120003}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {B51F0A03-6C3B-4D9B-A8E4-202611120003}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {B51F0A03-6C3B-4D9B-A8E4-202611120003}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
