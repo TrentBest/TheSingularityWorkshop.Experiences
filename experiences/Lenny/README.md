@@ -84,6 +84,7 @@ The Lenny living-world model is now present on `development` as a separate, rend
 - [Cleanup state reducer](living-world.mjs) owns the held-item and deposited-item transaction. The counter changes only after a matching deposit-completion event, and duplicate/stale completion events cannot double-count.
 - [Reducer tests](living-world.test.mjs) run in the repository's build workflow.
 - [Physics integration boundary](PHYSICS_INTEGRATION.md) documents the Physics provider, host ownership, and remaining browser/runtime bridge.
+- [C# host-composition sample](../../samples/Lenny.MotionHost/README.md) resolves the typed Physics provider and verifies fixed-step commits using a synthetic, non-artwork path.
 
 This is a foundation, not yet a visible interactive scene. The reader does not currently animate Lenny, beachgoers, or the dolphin from this model; no artwork-relative litter hit regions have been authored or approved. The existing provisional illustrations remain provisional. The browser reader stays navigable independently of the optional interaction model, and `story.json` remains the canonical manuscript source.
 
