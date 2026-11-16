@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "experience": "lenny",
+  "status": "provisional-authored-interaction-model",
+  "sourceOfTruth": "experiences/Lenny/story.json",
+  "rules": {
+    "preserveStoryText": true,
+    "optionalInteractions": true,
+    "readingNeverWaitsForInteraction": true,
+    "onlyApprovedArtworkPlacementsBecomeVisibleTargets": true,
+    "noInventedLitterTypesOrQuantities": true,
+    "counterCommitEvent": "deposit-completed",
+    "countSelectionOrPickup": false
+  },
+  "actors": [
+    {
+      "id": "lenny",
+      "kind": "character",
+      "role": "reader-directed-protagonist",
+      "sourcePages": [
+        6,
+        7,
+        8,
+        12,
+        19,
+        20,
+        21,
+        22,
+        33
+      ]
+    },
+    {
+      "id": "dad",
+      "kind": "character",
+      "role": "supporting-character-and-bag-holder",
+      "sourcePages": [
+        3,
+        6,
+        9,
+        10,
+        12,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        25,
+        31
+      ]
+    },
+    {
+      "id": "beachgoers",
+      "kind": "character-group",
+      "role": "ambient-and-interactable-beach-community",
+      "sourcePages": [
+        8,
+        12,
+        13,
+        14,
+        15
+      ],
+      "authoredResponses": [
+        "polite-listening",
+        "continuing-beach-activity",
+        "shushing"
+      ],
+      "ambientBehaviors": [
+        "relaxing-on-the-beach",
+        "surfing",
+        "building-sandcastles",
+        "picnicking",
+        "sunbathing"
+      ]
+    },
+    {
+      "id": "lead-dolphin",
+      "kind": "character",
+      "role": "interactive-litter-helper",
+      "sourcePages": [
+        21,
+        22,
+        23,
+        31,
+        32
+      ]
+    },
+    {
+      "id": "dolphin-pod",
+      "kind": "character-group",
+      "role": "guides-and-protects-lenny-and-dad",
+      "sourcePages": [
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "id": "beach-return",
+      "storyPage": 8,
+      "actors": [
+        "lenny",
+        "dad",
+        "beachgoers"
+      ],
+      "litterPlacements": "pending-author-approved-artwork",
+      "receptacle": "beach-cleanup-receptacle"
+    },
+    {
+      "id": "beach-community",
+      "storyPage": 12,
+      "actors": [
+        "lenny",
+        "dad",
+        "beachgoers"
+      ],
+      "litterPlacements": "pending-author-approved-artwork"
+    },
+    {
+      "id": "dolphin-arrival",
+      "storyPage": 21,
+      "actors": [
+        "lenny",
+        "dad",
+        "lead-dolphin"
+      ],
+      "actions": [
+        "dolphin-notices-reader",
+        "dolphin-retrieves-story-grounded-litter",
+        "dolphin-tosses-litter-into-bag"
+      ]
+    },
+    {
+      "id": "underwater-journey",
+      "storyPage": 25,
+      "actors": [
+        "lenny",
+        "dad",
+        "dolphin-pod"
+      ]
+    }
+  ],
+  "cleanup": {
+    "itemIdentity": "stable-experience-authored-id",
+    "itemType": "story-grounded-litter",
+    "artworkPlacement": "separate-normalized-artwork-relative-hit-region",
+    "states": [
+      "available",
+      "approaching",
+      "picked-up",
+      "carrying",
+      "depositing",
+      "deposited"
+    ],
+    "transitions": [
+      {
+        "from": "available",
+        "action": "reader-selects-litter",
+        "to": "approaching"
+      },
+      {
+        "from": "approaching",
+        "action": "pickup-animation-completes",
+        "to": "carrying"
+      },
+      {
+        "from": "carrying",
+        "action": "reader-selects-receptacle",
+        "to": "depositing"
+      },
+      {
+        "from": "depositing",
+        "action": "deposit-animation-completes",
+        "to": "deposited",
+        "counterEffect": "increment-exactly-once"
+      }
+    ],
+    "interruption": {
+      "beforePickupCompletes": "return-item-to-available",
+      "whileCarrying": "preserve-held-item-and-resume-carrying",
+      "beforeDepositCompletes": "preserve-held-item-and-resume-carrying",
+      "afterDepositCompletes": "remain-deposited"
+    },
+    "counter": {
+      "owner": "lenny-experience-state",
+      "source": "unique-deposited-item-ids",
+      "exposeTo": "extra-pages",
+      "persistAt": "experience-runtime-boundary"
+    }
+  },
+  "accessibility": {
+    "inputModes": [
+      "pointer",
+      "touch",
+      "keyboard",
+      "assistive-technology"
+    ],
+    "forgivingHitTargets": true,
+    "reducedMotionAlternative": true,
+    "noInteractionRequiredForNavigation": true
+  }
+}
