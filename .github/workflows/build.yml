@@ -594,10 +594,16 @@ jobs:
           repository: TrentBest/TheSingularityWorkshop.Physics
           ref: development
           path: TheSingularityWorkshop.Physics
+      - name: Check out MicroBundleDomain source
+        uses: actions/checkout@v7
+        with:
+          repository: TrentBest/TheSingularityWorkshop.MicroBundleDomain
+          ref: development
+          path: TheSingularityWorkshop.Physics/MicroBundleDomain
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
       - name: Run Lenny Physics provider host composition sample
         working-directory: Experiences
-        run: dotnet run --project samples/Lenny.MotionHost/Lenny.MotionHost.csproj --configuration Release
+        run: dotnet run --project samples/Lenny.MotionHost/Lenny.MotionHost.csproj --configuration Release -p:UseLocalMicroBundleDomain=true
