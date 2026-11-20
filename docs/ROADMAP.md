@@ -64,7 +64,8 @@ The Warlords preforge and host-independent rules project live under [experiences
 - [x] Implement seeded combat, territory capture, three-stronghold victory, immutable snapshots, and ordered event evidence.
 - [x] Add focused tests for map invariants, movement, combat, turn/recruitment, determinism, and invalid actions.
 - [x] Document domain ownership and explicit integration gaps.
-- [ ] Verify the Warlords test project in repository CI.
+- [x] Add a local console match shell that drives the C# domain directly.
+- [ ] Verify the Warlords domain tests and scripted console match in repository CI.
 - [ ] Build a minimal browser board that consumes the exact C# domain API; do not duplicate rules in JavaScript.
 - [ ] Allocate MicroBundle identity, define the runtime manifest, and create the first immutable bundle artifact.
 - [ ] Compose through FSM_COS and integrate lifecycle through FSM_API; keep FSM_Foundry in the orchestration role.
