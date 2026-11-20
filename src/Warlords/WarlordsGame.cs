@@ -1,15 +1,21 @@
 namespace TheSingularityWorkshop.Experiences.Warlords;
 
+/// <summary>Whether a match accepts commands or has reached a terminal state.</summary>
 public enum WarlordsPhase { Command, Finished }
+
+/// <summary>Outcome of one territory battle.</summary>
 public enum WarlordsBattleOutcome { NoBattle, AttackerVictory, DefenderVictory }
 
 /// <summary>Current authoritative state of one territory.</summary>
+/// <summary>Current authoritative ownership and army count for one territory.</summary>
 public sealed record WarlordsTerritoryState(string TerritoryId, WarlordsKingdom? Owner, int ArmyCount, bool IsStronghold);
 
 /// <summary>One legal march command from a source territory to an adjacent destination.</summary>
+/// <summary>Requested movement of a positive number of armies across one map edge.</summary>
 public sealed record WarlordsMarch(string SourceTerritoryId, string DestinationTerritoryId, int ArmyCount);
 
 /// <summary>Canonical, ordered record of one accepted game action.</summary>
+/// <summary>Immutable evidence for one accepted march and its resolved battle.</summary>
 public sealed record WarlordsEvent(
     int Sequence,
     int Round,
@@ -26,6 +32,7 @@ public sealed record WarlordsEvent(
     string RuleId);
 
 /// <summary>Immutable inspection snapshot for a host, replay, or presentation adapter.</summary>
+/// <summary>Detached point-in-time snapshot of match identity, state, and accepted events.</summary>
 public sealed record WarlordsGameSnapshot(
     string MapKey,
     int MapVersion,
@@ -60,6 +67,9 @@ public sealed class WarlordsGame
     private int _kingdomIndex;
     private bool _hasMarchedThisTurn;
 
+    /// <summary>Starts a new match with the supplied validated map and reproducible combat seed.</summary>
+    /// <param name="map">The authored scenario map.</param>
+    /// <param name="seed">Seed for the match's deterministic combat roll stream.</param>
     public WarlordsGame(WarlordsMap map, int seed)
     {
         ArgumentNullException.ThrowIfNull(map);
@@ -76,13 +86,20 @@ public sealed class WarlordsGame
         RecruitAtStrongholds(ActiveKingdom);
     }
 
+    /// <summary>Gets the match seed used by the combat random stream.</summary>
     public int Seed { get; }
+    /// <summary>Gets the current round, starting at one.</summary>
     public int Round { get; private set; } = 1;
+    /// <summary>Gets the kingdom currently allowed to issue commands.</summary>
     public WarlordsKingdom ActiveKingdom { get; private set; }
+    /// <summary>Gets the current match phase.</summary>
     public WarlordsPhase Phase { get; private set; } = WarlordsPhase.Command;
+    /// <summary>Gets the winning kingdom after the victory condition is met.</summary>
     public WarlordsKingdom? Winner { get; private set; }
+    /// <summary>Gets accepted events in append order.</summary>
     public IReadOnlyList<WarlordsEvent> Events => _events.AsReadOnly();
 
+    /// <summary>Lists every currently legal one-turn march choice for the active kingdom.</summary>
     public IReadOnlyList<WarlordsMarch> GetLegalMarches()
     {
         if (Phase != WarlordsPhase.Command || _hasMarchedThisTurn) return [];
@@ -183,6 +200,7 @@ public sealed class WarlordsGame
         RecruitAtStrongholds(ActiveKingdom);
     }
 
+    /// <summary>Captures a detached snapshot suitable for presentation or later serialization.</summary>
     public WarlordsGameSnapshot Capture() => new(
         _map.Key, _map.Version, Seed, Round, ActiveKingdom, Phase, Winner,
         Array.AsReadOnly(_territories.Values.OrderBy(t => t.TerritoryId, StringComparer.Ordinal).ToArray()),
