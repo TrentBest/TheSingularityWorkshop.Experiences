@@ -1,6 +1,5 @@
 namespace TheSingularityWorkshop.Experiences.Warlords;
 
-/// <summary>Playable kingdoms in the starter Warlords scenario.</summary>
 /// <summary>Playable kingdoms in the four-kingdom starter scenario.</summary>
 public enum WarlordsKingdom { Azure, Crimson, Verdant, Amber }
 
@@ -88,7 +87,7 @@ public sealed class WarlordsMap
     /// <summary>Gets the authored scenario version.</summary>
     public int Version { get; }
     /// <summary>Gets the immutable territory definitions.</summary>
-    public IReadOnlyCollection<WarlordsTerritoryDefinition> Territories => _territories.Values;
+    public IReadOnlyCollection<WarlordsTerritoryDefinition> Territories => _territories.Values.ToArray();
     /// <summary>Gets one territory definition by stable ID.</summary>
     /// <param name="id">Stable territory ID.</param>
     public WarlordsTerritoryDefinition GetTerritory(string id) =>
