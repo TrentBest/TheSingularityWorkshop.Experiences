@@ -69,9 +69,6 @@ public sealed class WarlordsGame
             t => new WarlordsTerritoryState(t.Id, t.StartingOwner, t.StartingGarrison, t.IsStronghold),
             StringComparer.Ordinal);
 
-        if (_kingdomOrder.Any(k => !_territories.Values.Any(t => t.IsStronghold && t.Owner == k)))
-            throw new ArgumentException("Every playable kingdom must have a starting stronghold.", nameof(map));
-
         ActiveKingdom = _kingdomOrder[0];
         RecruitAtStrongholds(ActiveKingdom);
     }
@@ -147,12 +144,6 @@ public sealed class WarlordsGame
             Winner = ActiveKingdom;
             Phase = WarlordsPhase.Finished;
         }
-        else if (!HasTerritories(destination.Owner) && destination.Owner is { } eliminated)
-        {
-            // Elimination is represented by territory ownership; no separate mutable player roster is needed.
-            _ = eliminated;
-        }
-
         var entry = new WarlordsEvent(
             _events.Count + 1, Round, ActiveKingdom, "march",
             source.TerritoryId, destination.TerritoryId, march.ArmyCount,
