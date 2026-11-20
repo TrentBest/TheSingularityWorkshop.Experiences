@@ -79,7 +79,8 @@ public sealed class WarlordsGameTests
         var second = new WarlordsGame(map, seed: 1234);
         var march = new WarlordsMarch("azure-keep", "frostmarch", 3);
         Assert.Equal(first.March(march), second.March(march));
-        Assert.Equal(first.Capture(), second.Capture());
+        Assert.Equal(first.Events, second.Events);
+        Assert.Equal(first.Capture().Territories, second.Capture().Territories);
     }
 
     [Fact]
