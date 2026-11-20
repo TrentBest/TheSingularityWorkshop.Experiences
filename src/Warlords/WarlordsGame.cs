@@ -90,7 +90,11 @@ public sealed class WarlordsGame
         {
             var definition = _map.GetTerritory(source.TerritoryId);
             foreach (var destinationId in definition.Neighbors)
-                legal.Add(new WarlordsMarch(source.TerritoryId, destinationId, 1));
+            {
+                if (_territories[destinationId].Owner == ActiveKingdom) continue;
+                for (var armyCount = 1; armyCount < source.ArmyCount; armyCount++)
+                    legal.Add(new WarlordsMarch(source.TerritoryId, destinationId, armyCount));
+            }
         }
         return legal.AsReadOnly();
     }
