@@ -128,7 +128,9 @@ public sealed class WarlordsGameTests
         {
             new WarlordsTerritoryDefinition("a", "A", ["b"], WarlordsKingdom.Azure, true, 3),
             new WarlordsTerritoryDefinition("b", "B", ["c"], WarlordsKingdom.Crimson, true, 3),
-            new WarlordsTerritoryDefinition("c", "C", ["a"])
+            new WarlordsTerritoryDefinition("c", "C", ["a"], WarlordsKingdom.Verdant, true, 3),
+            new WarlordsTerritoryDefinition("d", "D", ["a"], WarlordsKingdom.Amber, true, 3),
+            new WarlordsTerritoryDefinition("e", "E", ["a"])
         };
         Assert.Throws<ArgumentException>(() => new WarlordsMap("invalid", 1, territories));
     }
