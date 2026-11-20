@@ -167,6 +167,19 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+  sample-warlords-console:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Run a scripted local Warlords match
+        shell: bash
+        run: |
+          printf 'march azure-keep frostmarch 4\nquit\n' | dotnet run --project samples/WarlordsConsole/WarlordsConsole.csproj --configuration Release | tee ./warlords-console.log
+          grep -q 'Azure, 3 armies' ./warlords-console.log
+
   package:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
