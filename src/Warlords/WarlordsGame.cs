@@ -29,6 +29,7 @@ public sealed record WarlordsEvent(
 public sealed record WarlordsGameSnapshot(
     string MapKey,
     int MapVersion,
+    int Seed,
     int Round,
     WarlordsKingdom ActiveKingdom,
     WarlordsPhase Phase,
@@ -57,11 +58,13 @@ public sealed class WarlordsGame
     private readonly Random _random;
     private readonly WarlordsKingdom[] _kingdomOrder;
     private int _kingdomIndex;
+    private bool _hasMarchedThisTurn;
 
     public WarlordsGame(WarlordsMap map, int seed)
     {
         ArgumentNullException.ThrowIfNull(map);
         _map = map;
+        Seed = seed;
         _random = new Random(seed);
         _kingdomOrder = Enum.GetValues<WarlordsKingdom>();
         _territories = map.Territories.ToDictionary(
@@ -73,6 +76,7 @@ public sealed class WarlordsGame
         RecruitAtStrongholds(ActiveKingdom);
     }
 
+    public int Seed { get; }
     public int Round { get; private set; } = 1;
     public WarlordsKingdom ActiveKingdom { get; private set; }
     public WarlordsPhase Phase { get; private set; } = WarlordsPhase.Command;
@@ -81,7 +85,7 @@ public sealed class WarlordsGame
 
     public IReadOnlyList<WarlordsMarch> GetLegalMarches()
     {
-        if (Phase != WarlordsPhase.Command) return [];
+        if (Phase != WarlordsPhase.Command || _hasMarchedThisTurn) return [];
         var legal = new List<WarlordsMarch>();
         foreach (var source in _territories.Values.Where(t => t.Owner == ActiveKingdom && t.ArmyCount > 1))
         {
@@ -101,6 +105,8 @@ public sealed class WarlordsGame
     {
         ArgumentNullException.ThrowIfNull(march);
         EnsureActive();
+        if (_hasMarchedThisTurn)
+            throw new InvalidOperationException("Only one march is allowed per kingdom turn in rules version 1.");
 
         if (march.ArmyCount <= 0) throw new ArgumentOutOfRangeException(nameof(march), "A march must commit at least one army.");
         if (!_territories.TryGetValue(march.SourceTerritoryId, out var source))
@@ -138,6 +144,7 @@ public sealed class WarlordsGame
 
         _territories[source.TerritoryId] = sourceAfter;
         _territories[destination.TerritoryId] = destinationAfter;
+        _hasMarchedThisTurn = true;
 
         if (CountStrongholds(ActiveKingdom) >= VictoryStrongholds)
         {
@@ -172,11 +179,12 @@ public sealed class WarlordsGame
             return;
         }
 
+        _hasMarchedThisTurn = false;
         RecruitAtStrongholds(ActiveKingdom);
     }
 
     public WarlordsGameSnapshot Capture() => new(
-        _map.Key, _map.Version, Round, ActiveKingdom, Phase, Winner,
+        _map.Key, _map.Version, Seed, Round, ActiveKingdom, Phase, Winner,
         Array.AsReadOnly(_territories.Values.OrderBy(t => t.TerritoryId, StringComparer.Ordinal).ToArray()),
         Array.AsReadOnly(_events.ToArray()));
 
