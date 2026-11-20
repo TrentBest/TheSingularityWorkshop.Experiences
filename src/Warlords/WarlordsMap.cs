@@ -37,6 +37,10 @@ public sealed class WarlordsMap
         {
             if (territory.Neighbors.Count == 0)
                 throw new ArgumentException($"Territory '{territory.Id}' has no neighbors.", nameof(territories));
+            if (territory.Neighbors.Contains(territory.Id, StringComparer.Ordinal))
+                throw new ArgumentException($"Territory '{territory.Id}' cannot neighbor itself.", nameof(territories));
+            if (territory.Neighbors.Distinct(StringComparer.Ordinal).Count() != territory.Neighbors.Count)
+                throw new ArgumentException($"Territory '{territory.Id}' contains duplicate neighbors.", nameof(territories));
             foreach (var neighborId in territory.Neighbors)
             {
                 if (!byId.TryGetValue(neighborId, out var neighbor))
@@ -48,8 +52,22 @@ public sealed class WarlordsMap
                 throw new ArgumentException($"Stronghold '{territory.Id}' needs a starting kingdom.", nameof(territories));
         }
 
-        if (entries.Where(t => t.IsStronghold).Select(t => t.StartingOwner).Distinct().Count() < 2)
-            throw new ArgumentException("The map needs strongholds for at least two kingdoms.", nameof(territories));
+        var strongholdOwners = entries.Where(t => t.IsStronghold).Select(t => t.StartingOwner).ToHashSet();
+        if (Enum.GetValues<WarlordsKingdom>().Any(kingdom => !strongholdOwners.Contains(kingdom)))
+            throw new ArgumentException("Every playable kingdom needs a starting stronghold.", nameof(territories));
+
+        var visited = new HashSet<string>(StringComparer.Ordinal);
+        var pending = new Stack<string>();
+        pending.Push(entries[0].Id);
+        while (pending.Count > 0)
+        {
+            var current = pending.Pop();
+            if (!visited.Add(current)) continue;
+            foreach (var neighbor in byId[current].Neighbors)
+                if (!visited.Contains(neighbor)) pending.Push(neighbor);
+        }
+        if (visited.Count != entries.Length)
+            throw new ArgumentException("All territories must belong to one connected map.", nameof(territories));
 
         Key = key;
         Version = version;
