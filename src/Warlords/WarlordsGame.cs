@@ -118,7 +118,7 @@ public sealed class WarlordsGame
         var sourceAfter = source with { ArmyCount = source.ArmyCount - march.ArmyCount };
         var attackerRoll = _random.Next(1, 7);
         var defenderRoll = _random.Next(1, 7);
-        var attackerWins = march.ArmyCount + attackerRoll > destination.ArmyCount + defenderRoll;
+        var attackerWins = (march.ArmyCount * 2) + attackerRoll > (destination.ArmyCount * 2) + defenderRoll;
         WarlordsBattleOutcome outcome;
         WarlordsTerritoryState destinationAfter;
 
