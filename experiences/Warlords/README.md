@@ -74,11 +74,12 @@ The domain does not reference WebPage, AnyApp, GUI, Visualize, FSM_COS, or a gam
 
 - No playable browser or desktop board yet.
 - No `IMicroBundle` adapter, artifact hash, or published MicroBundle yet. We must allocate stable bundle identity through the Workshop's ID policy before creating one.
+- Package policy for future adapters: treat FSM_API and FSM_Serialization as the only stable Workshop package exceptions (verify their current versions); use prerelease package versions for other Workshop dependencies, or repository source references during coordinated development.
 - No FSM_COS composition or FSM_Foundry workflow integration yet.
 - No FSM_API lifecycle integration yet; the rules currently expose explicit, synchronous transitions.
 - No FSM_Serialization save/load adapter yet.
 - No AI opponent, diplomacy, economy, supply, fog of war, alliances, multiplayer authority, or network protocol.
 - The four-kingdom map is currently authored in the C# starter-map factory; moving it to a versioned content artifact is a follow-up.
-- CI and a complete host-level playthrough remain to be verified.
+- The console match is a local developer shell, not the intended visitor-facing board. CI and a complete host-level playthrough remain to be verified.
 
 Do not present a domain test as proof of a playable WebPage experience. The next milestone is a tiny visible board that consumes this exact domain API—no JavaScript copy of the rules and no UI-owned game state.
