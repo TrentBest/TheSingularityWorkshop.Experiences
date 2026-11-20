@@ -83,6 +83,31 @@ public sealed class WarlordsGameTests
     }
 
     [Fact]
+    public void LegalMarchesExcludeFriendlyTerritoriesAndPreserveOneArmy()
+    {
+        var game = new WarlordsGame(WarlordsMap.CreateStarterMap(), seed: 17);
+        var marches = game.GetLegalMarches();
+        Assert.Contains(marches, move => move.SourceTerritoryId == "azure-keep" &&
+            move.DestinationTerritoryId == "frostmarch" && move.ArmyCount == 4);
+        Assert.DoesNotContain(marches, move => move.DestinationTerritoryId == "crimson-hold");
+        Assert.DoesNotContain(marches, move => move.ArmyCount >= 5);
+    }
+
+    [Fact]
+    public void MapRejectsDisconnectedTerritoryGraph()
+    {
+        var territories = new[]
+        {
+            new WarlordsTerritoryDefinition("a", "A", ["b"], WarlordsKingdom.Azure, true, 3),
+            new WarlordsTerritoryDefinition("b", "B", ["a"], WarlordsKingdom.Crimson, true, 3),
+            new WarlordsTerritoryDefinition("c", "C", ["d"]),
+            new WarlordsTerritoryDefinition("d", "D", ["c"]),
+            new WarlordsTerritoryDefinition("e", "E", ["a", "b"])
+        };
+        Assert.Throws<ArgumentException>(() => new WarlordsMap("disconnected", 1, territories));
+    }
+
+    [Fact]
     public void MapRejectsAsymmetricAdjacency()
     {
         var territories = new[]
