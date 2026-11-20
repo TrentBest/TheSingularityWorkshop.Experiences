@@ -55,7 +55,7 @@ Castle Siege is being authored as a preforge construct under [`experiences/Castl
 - [ ] Add structural failure/debris only when supported by Physics contracts.
 - [ ] Add online match authority, reconnect behavior, and anti-duplicate command handling only after deterministic local matches work.
 
-## Phase 2 — Immutable Experience manifests## Warlords — first playable kingdom strategy Experience
+## Warlords — first playable kingdom strategy Experience
 
 The Warlords preforge and host-independent rules project live under [experiences/Warlords](../experiences/Warlords/README.md) and [src/Warlords](../src/Warlords/). This is a separate strategy-game Experience from Castle Siege: it uses territory control and turn-based armies, not physics-based construction or siege simulation.
 
@@ -72,6 +72,7 @@ The Warlords preforge and host-independent rules project live under [experiences
 - [ ] Add a simple computer opponent through the same legal-command boundary.
 
 
+## Phase 2 — Immutable Experience manifests
 
 - [ ] Extend Experience bundle requests with artifact version and content hash.
 - [ ] Define canonical serialized representation.
