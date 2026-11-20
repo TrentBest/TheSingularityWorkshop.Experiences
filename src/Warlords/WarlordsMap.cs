@@ -23,7 +23,10 @@ public sealed class WarlordsMap
         if (version <= 0) throw new ArgumentOutOfRangeException(nameof(version));
         ArgumentNullException.ThrowIfNull(territories);
 
-        var entries = territories.ToArray();
+        var supplied = territories.ToArray();
+        if (supplied.Any(t => t is null || t.Neighbors is null))
+            throw new ArgumentException("Territory definitions and neighbor lists are required.", nameof(territories));
+        var entries = supplied.Select(t => t with { Neighbors = Array.AsReadOnly(t.Neighbors.ToArray()) }).ToArray();
         if (entries.Length < 5) throw new ArgumentException("A map needs at least five territories.", nameof(territories));
         if (entries.Any(t => string.IsNullOrWhiteSpace(t.Id) || string.IsNullOrWhiteSpace(t.Name)))
             throw new ArgumentException("Territory IDs and names are required.", nameof(territories));
