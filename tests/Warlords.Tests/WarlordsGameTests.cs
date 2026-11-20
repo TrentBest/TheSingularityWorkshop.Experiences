@@ -98,11 +98,12 @@ public sealed class WarlordsGameTests
     {
         var territories = new[]
         {
-            new WarlordsTerritoryDefinition("a", "A", ["b"], WarlordsKingdom.Azure, true, 3),
-            new WarlordsTerritoryDefinition("b", "B", ["a"], WarlordsKingdom.Crimson, true, 3),
-            new WarlordsTerritoryDefinition("c", "C", ["d"]),
-            new WarlordsTerritoryDefinition("d", "D", ["c"]),
-            new WarlordsTerritoryDefinition("e", "E", ["a", "b"])
+            new WarlordsTerritoryDefinition("a", "A", ["b", "d"], WarlordsKingdom.Azure, true, 3),
+            new WarlordsTerritoryDefinition("b", "B", ["a", "c"], WarlordsKingdom.Crimson, true, 3),
+            new WarlordsTerritoryDefinition("c", "C", ["b", "d"], WarlordsKingdom.Verdant, true, 3),
+            new WarlordsTerritoryDefinition("d", "D", ["a", "c"], WarlordsKingdom.Amber, true, 3),
+            new WarlordsTerritoryDefinition("e", "E", ["f"]),
+            new WarlordsTerritoryDefinition("f", "F", ["e"])
         };
         Assert.Throws<ArgumentException>(() => new WarlordsMap("disconnected", 1, territories));
     }
