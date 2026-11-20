@@ -30,6 +30,16 @@ dotnet test tests/Warlords.Tests/TheSingularityWorkshop.Experiences.Warlords.Tes
 
 The library targets .NET 10 and currently uses only the .NET base class library. It does not add a stable NuGet dependency or publish anything.
 
+## Play a local match
+
+A small console shell lets you exercise the same C# domain without a browser or a second rules implementation:
+
+```powershell
+dotnet run --project samples/WarlordsConsole/WarlordsConsole.csproj
+```
+
+Use `status` to inspect the board and legal marches, `march azure-keep frostmarch 4` to test a first expansion, and `end` to advance the turn. All four kingdoms are human-controlled in this initial local proof; AI and a graphical board are follow-up work.
+
 ## Architecture: use the Workshop, don't bypass it
 
 | Concern | Owner / technology | First-slice status |
