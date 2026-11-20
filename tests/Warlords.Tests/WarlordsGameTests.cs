@@ -23,6 +23,7 @@ public sealed class WarlordsGameTests
         var snapshot = game.Capture();
         Assert.Equal(WarlordsKingdom.Azure, snapshot.ActiveKingdom);
         Assert.Equal(1, snapshot.Round);
+        Assert.Equal(17, snapshot.Seed);
         Assert.Equal(5, snapshot.Territories.Single(t => t.TerritoryId == "azure-keep").ArmyCount);
         Assert.Equal(WarlordsPhase.Command, snapshot.Phase);
     }
@@ -59,6 +60,17 @@ public sealed class WarlordsGameTests
         Assert.Throws<InvalidOperationException>(() =>
             game.March(new WarlordsMarch("azure-keep", "sunfield", 1)));
         Assert.Empty(game.Events);
+    }
+
+    [Fact]
+    public void OnlyOneMarchIsAcceptedPerTurn()
+    {
+        var game = new WarlordsGame(WarlordsMap.CreateStarterMap(), seed: 17);
+        game.March(new WarlordsMarch("azure-keep", "frostmarch", 4));
+        Assert.Empty(game.GetLegalMarches());
+        Assert.Throws<InvalidOperationException>(() =>
+            game.March(new WarlordsMarch("frostmarch", "heartland", 1)));
+        Assert.Single(game.Events);
     }
 
     [Fact]
