@@ -31,10 +31,11 @@ public sealed class WarlordsGameTests
     public void MarchCapturesAdjacentNeutralTerritoryAndRecordsCombatEvidence()
     {
         var game = new WarlordsGame(WarlordsMap.CreateStarterMap(), seed: 17);
-        var entry = game.March(new WarlordsMarch("azure-keep", "frostmarch", 3));
+        var entry = game.March(new WarlordsMarch("azure-keep", "frostmarch", 4));
         Assert.Equal(WarlordsBattleOutcome.AttackerVictory, entry.BattleOutcome);
         Assert.Equal(WarlordsKingdom.Azure, entry.DestinationAfter.Owner);
-        Assert.Equal(2, entry.SourceAfter.ArmyCount);
+        Assert.Equal(3, entry.DestinationAfter.ArmyCount);
+        Assert.Equal(1, entry.SourceAfter.ArmyCount);
         Assert.Equal(1, entry.Sequence);
         Assert.Equal("combat.seeded-d6-strength-comparison", entry.RuleId);
     }
