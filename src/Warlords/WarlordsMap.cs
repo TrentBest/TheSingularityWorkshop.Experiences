@@ -1,9 +1,11 @@
 namespace TheSingularityWorkshop.Experiences.Warlords;
 
 /// <summary>Playable kingdoms in the starter Warlords scenario.</summary>
+/// <summary>Playable kingdoms in the four-kingdom starter scenario.</summary>
 public enum WarlordsKingdom { Azure, Crimson, Verdant, Amber }
 
 /// <summary>Immutable authored definition of one territory.</summary>
+/// <summary>Stable, immutable territory identity and authored map adjacency.</summary>
 public sealed record WarlordsTerritoryDefinition(
     string Id,
     string Name,
@@ -17,6 +19,10 @@ public sealed class WarlordsMap
 {
     private readonly IReadOnlyDictionary<string, WarlordsTerritoryDefinition> _territories;
 
+    /// <summary>Creates and validates an immutable connected territory graph.</summary>
+    /// <param name="key">Stable scenario key.</param>
+    /// <param name="version">Positive scenario version.</param>
+    /// <param name="territories">Territory definitions with symmetric adjacency.</param>
     public WarlordsMap(string key, int version, IEnumerable<WarlordsTerritoryDefinition> territories)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
@@ -77,9 +83,14 @@ public sealed class WarlordsMap
         _territories = new System.Collections.ObjectModel.ReadOnlyDictionary<string, WarlordsTerritoryDefinition>(byId);
     }
 
+    /// <summary>Gets the stable scenario key.</summary>
     public string Key { get; }
+    /// <summary>Gets the authored scenario version.</summary>
     public int Version { get; }
+    /// <summary>Gets the immutable territory definitions.</summary>
     public IReadOnlyCollection<WarlordsTerritoryDefinition> Territories => _territories.Values;
+    /// <summary>Gets one territory definition by stable ID.</summary>
+    /// <param name="id">Stable territory ID.</param>
     public WarlordsTerritoryDefinition GetTerritory(string id) =>
         _territories.TryGetValue(id, out var territory)
             ? territory
