@@ -76,7 +76,31 @@ The WebApp is the intended distribution and discovery surface; the Experiences r
 - [Game and networking contract](CapsuleClinic/design/EXPERIENCE.md)
 - [Implementation milestones](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/issues/22)
 
+### Warlords — kingdom strategy
+
+**Try:** lead one of four kingdoms from its stronghold, march armies across connected territories, resolve seeded battles, and capture three strongholds.
+
+**Why visit:** a compact, understandable strategy game gives visitors a direct way to test the Workshop's Experience/domain/host boundaries.
+
+**Current truth:** the host-independent .NET 10 rules domain and focused tests are implemented on the Warlords feature branch. No browser/desktop board, MicroBundle composition, AI opponent, or multiplayer host is connected yet.
+
+- [Experience home](Warlords/README.md)
+- [Rules and ownership contract](Warlords/design/EXPERIENCE.md)
+- [Implementation roadmap](Warlords/design/IMPLEMENTATION_ROADMAP.md)
+
 ## The exhibit pattern
+
+**Try:** lead one of four kingdoms from its stronghold, march armies across connected territories, resolve seeded battles, and capture three strongholds.
+
+**Why visit:** a compact, understandable strategy game gives visitors a direct way to test the Workshop's Experience/domain/host boundaries.
+
+**Current truth:** the host-independent .NET 10 rules domain and focused tests are implemented on the Warlords feature branch. No browser/desktop board, MicroBundle composition, AI opponent, or multiplayer host is connected yet.
+
+- [Experience home](Warlords/README.md)
+- [Rules and ownership contract](Warlords/design/EXPERIENCE.md)
+- [Implementation roadmap](Warlords/design/IMPLEMENTATION_ROADMAP.md)
+
+
 
 Give every exhibit the same approachable loop:
 

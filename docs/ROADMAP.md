@@ -55,6 +55,24 @@ Castle Siege is being authored as a preforge construct under [`experiences/Castl
 - [ ] Add structural failure/debris only when supported by Physics contracts.
 - [ ] Add online match authority, reconnect behavior, and anti-duplicate command handling only after deterministic local matches work.
 
+## Warlords — first playable kingdom strategy Experience
+
+The Warlords preforge and host-independent rules project live under [experiences/Warlords](../experiences/Warlords/README.md) and [src/Warlords](../src/Warlords/). This is a separate strategy-game Experience from Castle Siege: it uses territory control and turn-based armies, not physics-based construction or siege simulation.
+
+- [x] Define a four-kingdom starter map with stable territory IDs and validated symmetric adjacency.
+- [x] Implement strongholds, neutral garrisons, automatic recruitment, turn progression, and legal march discovery.
+- [x] Implement seeded combat, territory capture, three-stronghold victory, immutable snapshots, and ordered event evidence.
+- [x] Add focused tests for map invariants, movement, combat, turn/recruitment, determinism, and invalid actions.
+- [x] Document domain ownership and explicit integration gaps.
+- [x] Add a local console match shell that drives the C# domain directly.
+- [ ] Verify the Warlords domain tests and scripted console match in repository CI.
+- [ ] Build a minimal browser board that consumes the exact C# domain API; do not duplicate rules in JavaScript.
+- [ ] Allocate MicroBundle identity, define the runtime manifest, and create the first immutable bundle artifact.
+- [ ] Compose through FSM_COS and integrate lifecycle through FSM_API; keep FSM_Foundry in the orchestration role.
+- [ ] Add FSM_Serialization save/load and deterministic replay verification.
+- [ ] Add a simple computer opponent through the same legal-command boundary.
+
+
 ## Phase 2 — Immutable Experience manifests
 
 - [ ] Extend Experience bundle requests with artifact version and content hash.
