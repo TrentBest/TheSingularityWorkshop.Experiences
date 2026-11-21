@@ -91,6 +91,72 @@ public sealed class VerifiedExperienceArtifactBindingPlanTests
     }
 
     [Fact]
+    public async Task MissingArtifactBytesFailClosedEvenWhenIdentityWasPreviouslyPersisted()
+    {
+        var root = NewRepositoryRoot();
+        try
+        {
+            var repository = new FileSystemMicroBundleRepository(root);
+            var binding = await repository.PutAsync(
+                "workshop/missing/bytes", "1.0.0", Encoding.UTF8.GetBytes("original bytes"));
+            var artifact = ToArtifactIdentity(binding);
+            var sourcePlan = CreateSourcePlan(artifact, binding.Address.BundleId);
+            var artifactPath = Path.Combine(
+                root,
+                binding.Address.BundleId.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                binding.Address.Version,
+                binding.Address.ContentHash + ".bundle");
+            File.Delete(artifactPath);
+
+            var result = await VerifiedExperienceArtifactBindingPlan.CreateAsync(
+                sourcePlan, repository);
+
+            Assert.False(result.Success);
+            Assert.Empty(result.OrderedBindings);
+            Assert.Contains(result.Issues, issue =>
+                issue.Code == "repository-binding.artifact-missing");
+        }
+        finally
+        {
+            if (Directory.Exists(root))
+                Directory.Delete(root, recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task CorruptArtifactBytesFailClosedDuringRepositoryResolution()
+    {
+        var root = NewRepositoryRoot();
+        try
+        {
+            var repository = new FileSystemMicroBundleRepository(root);
+            var binding = await repository.PutAsync(
+                "workshop/corrupt/bytes", "1.0.0", Encoding.UTF8.GetBytes("original bytes"));
+            var artifact = ToArtifactIdentity(binding);
+            var sourcePlan = CreateSourcePlan(artifact, binding.Address.BundleId);
+            var artifactPath = Path.Combine(
+                root,
+                binding.Address.BundleId.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                binding.Address.Version,
+                binding.Address.ContentHash + ".bundle");
+            await File.WriteAllTextAsync(artifactPath, "tampered bytes");
+
+            var result = await VerifiedExperienceArtifactBindingPlan.CreateAsync(
+                sourcePlan, repository);
+
+            Assert.False(result.Success);
+            Assert.Empty(result.OrderedBindings);
+            Assert.Contains(result.Issues, issue =>
+                issue.Code == "repository-binding.artifact-integrity-failed");
+        }
+        finally
+        {
+            if (Directory.Exists(root))
+                Directory.Delete(root, recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task AliasedLocalHandlesFailBeforeRepositoryResolution()
     {
         var first = new ArtifactIdentity(
