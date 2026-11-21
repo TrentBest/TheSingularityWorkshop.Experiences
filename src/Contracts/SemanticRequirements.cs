@@ -43,9 +43,13 @@ public sealed record SemanticInteractionRequirement(
 /// <summary>The immutable identity of one published MicroBundle artifact.</summary>
 public sealed record ArtifactIdentity(string BundleId, string Version, string Sha256)
 {
+    /// <summary>
+    /// Validates the portable ontology and storage-safe version using the same canonical
+    /// constraints as MicroBundleRepository's MicroBundleArtifactIdentity/address contract.
+    /// </summary>
     public bool IsValid =>
-        IsValidIdentityPart(BundleId) &&
-        IsValidIdentityPart(Version) &&
+        IsValidOntology(BundleId) &&
+        IsValidVersion(Version) &&
         !string.IsNullOrWhiteSpace(Sha256) &&
         Sha256.Length == 64 &&
         Sha256.All(Uri.IsHexDigit);
@@ -54,10 +58,23 @@ public sealed record ArtifactIdentity(string BundleId, string Version, string Sh
     public string StableKey =>
         $"{BundleId.Length}:{BundleId}{Version.Length}:{Version}{Sha256.ToLowerInvariant()}";
 
-    private static bool IsValidIdentityPart(string value) =>
+    private static bool IsValidOntology(string value) =>
         !string.IsNullOrWhiteSpace(value) &&
-        string.Equals(value, value.Trim(), StringComparison.Ordinal) &&
-        !value.Any(char.IsControl);
+        string.Equals(value, value.Normalize(System.Text.NormalizationForm.FormC), StringComparison.Ordinal) &&
+        !value.Any(char.IsControl) &&
+        !value.Any(char.IsWhiteSpace) &&
+        value.IndexOfAny(['\\', '?', '#', '%']) < 0 &&
+        !value.StartsWith("/", StringComparison.Ordinal) &&
+        !value.EndsWith("/", StringComparison.Ordinal) &&
+        !value.Contains("//", StringComparison.Ordinal) &&
+        value.Split('/').All(segment => segment is not ("" or "." or ".."));
+
+    private static bool IsValidVersion(string value) =>
+        !string.IsNullOrWhiteSpace(value) &&
+        value is not ("." or "..") &&
+        !value.Any(char.IsControl) &&
+        !value.Any(char.IsWhiteSpace) &&
+        value.IndexOfAny(['<', '>', ':', '"', '/', '\\', '|', '?', '*', '%']) < 0;
 }
 
 /// <summary>A provider's declared semantic contract support and the immutable artifact implementing it.</summary>
