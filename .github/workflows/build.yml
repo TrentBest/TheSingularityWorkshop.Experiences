@@ -374,13 +374,6 @@ jobs:
           ref: development
           path: TheSingularityWorkshop.Physics
 
-      - name: Checkout MicroBundleRepository source
-        uses: actions/checkout@v7
-        with:
-          repository: TrentBest/TheSingularityWorkshop.MicroBundleRepository
-          ref: development
-          path: TheSingularityWorkshop.MicroBundleRepository
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
@@ -422,6 +415,13 @@ jobs:
           repository: TrentBest/TheSingularityWorkshop.Physics
           ref: development
           path: TheSingularityWorkshop.Physics
+
+      - name: Checkout MicroBundleRepository source
+        uses: actions/checkout@v7
+        with:
+          repository: TrentBest/TheSingularityWorkshop.MicroBundleRepository
+          ref: development
+          path: TheSingularityWorkshop.MicroBundleRepository
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
