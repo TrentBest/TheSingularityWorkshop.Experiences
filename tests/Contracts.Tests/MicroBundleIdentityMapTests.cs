@@ -123,7 +123,7 @@ public sealed class MicroBundleIdentityMapTests
     [Fact]
     public void RejectsNonNormalizedUnicodeOntology()
     {
-        var decomposed = "cafe\\u0301";
+        var decomposed = "cafe\u0301";
         var artifact = Artifact(decomposed);
 
         Assert.False(artifact.IsValid);
