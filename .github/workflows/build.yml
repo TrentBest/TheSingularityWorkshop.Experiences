@@ -374,6 +374,13 @@ jobs:
           ref: development
           path: TheSingularityWorkshop.Physics
 
+      - name: Checkout MicroBundleRepository source
+        uses: actions/checkout@v7
+        with:
+          repository: TrentBest/TheSingularityWorkshop.MicroBundleRepository
+          ref: development
+          path: TheSingularityWorkshop.MicroBundleRepository
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
@@ -420,6 +427,10 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
+
+      - name: Test verified Experience artifact bindings against filesystem repository
+        working-directory: Experiences
+        run: dotnet test tests/RepositoryIntegration.Tests/TheSingularityWorkshop.Experiences.RepositoryIntegration.Tests.csproj --configuration Release
 
       - name: Test Moniker.Motion.Wave against source graph
         working-directory: Experiences
