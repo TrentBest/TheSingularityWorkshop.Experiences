@@ -157,6 +157,34 @@ public sealed class VerifiedExperienceArtifactBindingPlanTests
     }
 
     [Fact]
+    public async Task PersistedAddressMustMatchTheSourcePlanLocalHandle()
+    {
+        var root = NewRepositoryRoot();
+        try
+        {
+            var repository = new FileSystemMicroBundleRepository(root);
+            var binding = await repository.PutAsync(
+                "workshop/address/mismatch", "1.0.0", Encoding.UTF8.GetBytes("address-bound bytes"));
+            var artifact = ToArtifactIdentity(binding);
+            var incorrectHandle = binding.Address.BundleId == 1 ? 2UL : 1UL;
+            var sourcePlan = CreateSourcePlan(artifact, incorrectHandle);
+
+            var result = await VerifiedExperienceArtifactBindingPlan.CreateAsync(
+                sourcePlan, repository);
+
+            Assert.False(result.Success);
+            Assert.Empty(result.OrderedBindings);
+            Assert.Contains(result.Issues, issue =>
+                issue.Code == "repository-binding.identity-mismatch");
+        }
+        finally
+        {
+            if (Directory.Exists(root))
+                Directory.Delete(root, recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task AliasedLocalHandlesFailBeforeRepositoryResolution()
     {
         var first = new ArtifactIdentity(
