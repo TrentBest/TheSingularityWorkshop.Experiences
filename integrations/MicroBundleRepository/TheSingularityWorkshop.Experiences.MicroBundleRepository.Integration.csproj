@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(WorkshopUseRepositorySources)' != 'true'">
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(WorkshopUseRepositorySources)' == 'true'">
+    <ProjectReference Include="../../src/Contracts/TheSingularityWorkshop.Experiences.Contracts.csproj" />
+    <ProjectReference Include="../../TheSingularityWorkshop.MicroBundleRepository/src/Core/TheSingularityWorkshop.MicroBundleRepository.Core/TheSingularityWorkshop.MicroBundleRepository.Core.csproj" />
+    <ProjectReference Include="../../TheSingularityWorkshop.MicroBundleRepository/src/Local/TheSingularityWorkshop.MicroBundleRepository.Local/TheSingularityWorkshop.MicroBundleRepository.Local.csproj" />
+  </ItemGroup>
+</Project>
