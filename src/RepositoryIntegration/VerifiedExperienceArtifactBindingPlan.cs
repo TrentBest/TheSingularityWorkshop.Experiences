@@ -48,7 +48,9 @@ public sealed record VerifiedExperienceArtifactBindingPlan(
             return Failure(new("repository-binding.empty-plan",
                 "A successful source binding plan must contain at least one artifact."));
 
-        var verified = new List<VerifiedExperienceArtifactBinding>(bindingPlan.OrderedBindings.Count);
+        // Validate the entire source plan before performing any repository I/O. This ensures
+        // duplicate/aliased local handles fail deterministically without partially resolving
+        // an earlier artifact first.
         var artifactKeys = new HashSet<string>(StringComparer.Ordinal);
         var localHandles = new HashSet<ulong>();
 
@@ -72,6 +74,13 @@ public sealed record VerifiedExperienceArtifactBindingPlan(
             if (!localHandles.Add(source.LocalHandle))
                 return Failure(new("repository-binding.aliased-handle",
                     $"Repository-local handle '{source.LocalHandle}' is assigned to multiple artifacts."));
+        }
+
+        var verified = new List<VerifiedExperienceArtifactBinding>(bindingPlan.OrderedBindings.Count);
+        foreach (var source in bindingPlan.OrderedBindings)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var artifact = source.Artifact;
 
             RepositoryIdentityBinding? persisted;
             try
