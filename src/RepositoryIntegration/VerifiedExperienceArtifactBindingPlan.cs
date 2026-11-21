@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using TheSingularityWorkshop.Experiences.Contracts;
 using TheSingularityWorkshop.MicroBundleRepository.Core;
+using RepositoryIdentityBinding = TheSingularityWorkshop.MicroBundleRepository.Core.MicroBundleIdentityBinding;
 
 namespace TheSingularityWorkshop.Experiences.RepositoryIntegration;
 
@@ -40,7 +41,7 @@ public sealed record VerifiedExperienceArtifactBindingPlan(
                 ? bindingPlan.Issues.ToArray()
                 : [new ContractIssue("repository-binding.source-plan-failed",
                     "The source Experience binding plan failed; repository resolution was not attempted.")];
-            return Failure(issues);
+            return FailureMany(issues);
         }
 
         if (bindingPlan.OrderedBindings is null || bindingPlan.OrderedBindings.Count == 0)
@@ -72,7 +73,7 @@ public sealed record VerifiedExperienceArtifactBindingPlan(
                 return Failure(new("repository-binding.aliased-handle",
                     $"Repository-local handle '{source.LocalHandle}' is assigned to multiple artifacts."));
 
-            MicroBundleIdentityBinding? persisted;
+            RepositoryIdentityBinding? persisted;
             try
             {
                 var identity = new MicroBundleArtifactIdentity(
@@ -154,8 +155,8 @@ public sealed record VerifiedExperienceArtifactBindingPlan(
     }
 
     private static VerifiedExperienceArtifactBindingPlan Failure(ContractIssue issue) =>
-        Failure([issue]);
+        FailureMany([issue]);
 
-    private static VerifiedExperienceArtifactBindingPlan Failure(IReadOnlyList<ContractIssue> issues) =>
+    private static VerifiedExperienceArtifactBindingPlan FailureMany(IReadOnlyList<ContractIssue> issues) =>
         new(false, Array.Empty<VerifiedExperienceArtifactBinding>(), issues);
 }
