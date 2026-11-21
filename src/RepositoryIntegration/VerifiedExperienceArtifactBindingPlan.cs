@@ -83,6 +83,16 @@ public sealed record VerifiedExperienceArtifactBindingPlan(
             {
                 throw;
             }
+            catch (InvalidDataException exception)
+            {
+                return Failure(new("repository-binding.artifact-missing",
+                    $"The repository identity index could not resolve verified bytes for '{artifact.BundleId}@{artifact.Version}': {exception.Message}"));
+            }
+            catch (ArgumentException exception)
+            {
+                return Failure(new("repository-binding.artifact-integrity-failed",
+                    $"The repository artifact bytes failed integrity validation for '{artifact.BundleId}@{artifact.Version}': {exception.Message}"));
+            }
             catch (Exception exception)
             {
                 return Failure(new("repository-binding.resolve-failed",
