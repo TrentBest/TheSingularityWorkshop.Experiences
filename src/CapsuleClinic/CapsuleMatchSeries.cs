@@ -1,6 +1,9 @@
-using System.Threading;
-using TheSingularityWorkshop.FSM_API;
+#if WORKSHOP_USE_FSM_API_REPOSITORY_SOURCE
+using WorkshopFsmApi = FSM_API.FsmApi;
+#else
 using FsmRuntime = TheSingularityWorkshop.FSM_API.FSM_API;
+#endif
+using TheSingularityWorkshop.FSM_API;
 
 namespace TheSingularityWorkshop.Experiences.CapsuleClinic;
 
@@ -177,7 +180,11 @@ public sealed class CapsuleMatchSeries : IStateContext, IDisposable
     private static void EnsureFsmDefinition()
     {
         CapsuleClinicFsmRuntime.EnsureDefinition(FsmDefinitionName, () =>
+#if WORKSHOP_USE_FSM_API_REPOSITORY_SOURCE
+            WorkshopFsmApi.Create.CreateFiniteStateMachine(FsmDefinitionName, -1, ProcessingGroup)
+#else
             FsmRuntime.Create.CreateFiniteStateMachine(FsmDefinitionName, -1, ProcessingGroup)
+#endif
                 .State("WaitingForPlayers", null, null, null)
                 .State("InRound", null, null, null)
                 .State("RoundComplete", null, null, null)
