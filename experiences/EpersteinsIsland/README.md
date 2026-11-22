@@ -1,14 +1,22 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Renderer/development/docs/assets/moniker.svg)
+
 # Eperstein's Island
 
 > A documentary-inspired, fictional investigative Experience about power, institutional failure, evidence, and accountability.
 
 **Status:** Concept / preforge  
-**Implementation status:** Not yet playable  
+**Implementation status:** First browser interaction prototype added; not yet integrated with Workshop runtime  
 **Working title:** Eperstein's Island
 
 Eperstein's Island explores how a complicated public-record archive can become an accessible, navigable investigation without turning real survivors' experiences into spectacle or presenting fictional scenes as historical fact.
 
 The Experience uses a fictional setting, fictional characters, and fictional connective events. Public records may inform the questions and systems explored, but the initial prototype does not reproduce real people as game characters or imply that a person's appearance in a record establishes wrongdoing.
+
+## First visual prototype
+
+[Open The Closed Ledger — browser prototype](../../docs/demos/epersteins-island.html)
+
+The prototype demonstrates a fictional island map, inspectable locations, three synthetic clues, evidence-to-claim linking, editorial classifications, and a finding workflow that requires an unresolved question. Every name, institution, record, date, and event in the demo is invented. The demo is a standalone browser-side interaction proof, not yet connected to FSM_COS, FSM_Foundry, Ontology, DataWarehouse, Renderer, or Visualization.
 
 ## The central promise
 
@@ -64,7 +72,7 @@ This is an Experience definition, not a new host or a replacement for existing W
 
 - **Ontology:** fictional characters, institutions, locations, events, claims, relationships, and evidence classifications.
 - **DataWarehouse / source store:** documentary records, provenance, redaction state, and source-to-claim links, subject to a separately approved ingestion design.
-- **StoryBuilder:** authoring and chronology where its stable contracts apply; do not duplicate Story Forge ownership here.
+- **StoryBuilder:** authoring and chronology where its stable contracts apply; do not duplicate Story Forge ownership.
 - **FSM_COS:** composition of the Experience's required capabilities.
 - **FSM_Foundry:** execution and stepping.
 - **Renderer / Visualization:** evidence boards, maps, timelines, scenes, and inspectable environments as MicroBundles.
