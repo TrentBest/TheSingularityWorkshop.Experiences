@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <WorkshopUseFsmApiRepositorySource Condition="'$(WorkshopUseFsmApiRepositorySource)' == ''">false</WorkshopUseFsmApiRepositorySource>
+    <WorkshopSourceRoot Condition="'$(WorkshopSourceRoot)' == ''">$(MSBuildThisFileDirectory)../../../</WorkshopSourceRoot>
     <PackageId>TheSingularityWorkshop.Experiences.CapsuleClinic</PackageId>
     <Version>0.1.0-alpha.1</Version>
     <Authors>The Singularity Workshop</Authors>
@@ -18,7 +20,8 @@
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="TheSingularityWorkshop.FSM_API" Version="1.0.13" />
+    <PackageReference Include="TheSingularityWorkshop.FSM_API" Version="1.0.13" Condition="'$(WorkshopUseFsmApiRepositorySource)' != 'true'" />
+    <ProjectReference Include="$(WorkshopSourceRoot)/FSM_API/FSM_API/FSM_API.csproj" Condition="'$(WorkshopUseFsmApiRepositorySource)' == 'true'" />
     <PackageReference Include="TheSingularityWorkshop.GUI.Core" Version="0.1.0-alpha.4" Condition="'$(WorkshopUseRepositorySources)' != 'true'" />
     <ProjectReference Include="..\\..\\..\\TheSingularityWorkshop.GUI\\src\\Core\\TheSingularityWorkshop.GUI.Core.csproj" Condition="'$(WorkshopUseRepositorySources)' == 'true'" />
     <None Include="../../experiences/CapsuleClinic/README.md" Pack="true" PackagePath="README.md" Link="README.md" />
