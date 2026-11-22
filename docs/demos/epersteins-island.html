@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eperstein's Island — The Closed Ledger</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1119;--panel:#141f2b;--panel2:#1b2a37;--line:#344958;--ink:#edf3f2;--muted:#9aadb2;--sea:#102b37;--mint:#a8d8c7;--gold:#d8b77b;--red:#d78b83;--blue:#8fb9cb}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 70% 0%,#1c3540 0,#0b1119 58%);color:var(--ink);font:15px/1.55 system-ui,Segoe UI,sans-serif}
+header,main,footer{max-width:1260px;margin:auto;padding:22px}header{padding-top:34px}.eyebrow{font-size:.72rem;letter-spacing:.18em;color:var(--mint);font-weight:800}.fiction{display:inline-block;border:1px solid #a67f4a;color:#f0d4a4;border-radius:4px;padding:3px 8px;font-size:.7rem;letter-spacing:.1em;font-weight:800}
+h1{font-size:clamp(2rem,5vw,3.7rem);line-height:1.02;letter-spacing:-.04em;margin:12px 0}h2{font-size:1.1rem;margin:0 0 12px}h3{font-size:1rem;margin:0 0 7px}p{color:var(--muted);margin:.4rem 0 1rem}.lede{max-width:760px;font-size:1.06rem}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 0}nav a{color:var(--muted);text-decoration:none;padding:7px 11px;border:1px solid var(--line);border-radius:6px;font-size:.85rem}
+.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}.panel{background:linear-gradient(145deg,#182632f2,#101923f5);border:1px solid var(--line);border-radius:13px;padding:18px;min-width:0;box-shadow:0 18px 50px #0003}
+.map{background:linear-gradient(145deg,#102a35,#0c202b);border:1px solid #34505a;border-radius:9px;overflow:hidden}.map svg{display:block;width:100%;height:auto}.map-note{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:9px 12px;color:var(--muted);font-size:.76rem;border-top:1px solid #34505a}
+.place{cursor:pointer}.place .pin{fill:#d7bc88;stroke:#13212a;stroke-width:3}.place text{fill:#edf3f2;font:12px system-ui;paint-order:stroke;stroke:#10232c;stroke-width:3px;stroke-linejoin:round}.place:focus .pin,.place:hover .pin,.place.active .pin{fill:#a8d8c7;stroke:#fff;stroke-width:4}
+.place:focus{outline:none}.locations{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.loc{border:1px solid var(--line);background:#111c26;color:var(--ink);border-radius:7px;padding:10px;text-align:left;cursor:pointer}.loc small{display:block;color:var(--muted);font-size:.73rem}.loc[aria-pressed=true]{border-color:var(--mint);background:#1a302f}
+.clues{display:grid;gap:9px}.clue{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;text-align:left;width:100%;border:1px solid var(--line);background:#101a24;color:var(--ink);border-radius:8px;padding:11px;cursor:pointer}.clue[aria-pressed=true]{border-color:var(--gold);background:#252a28}.clue .num{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#263b43;color:var(--mint);font-weight:800}.clue small{display:block;color:var(--muted)}.tag{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+.detail{border-left:2px solid var(--gold);padding:2px 0 2px 14px;margin:15px 0}.meta{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}.pill{border:1px solid var(--line);border-radius:99px;padding:3px 8px;color:var(--muted);font-size:.7rem}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.actions button,.submit{border:1px solid #55736f;background:#1d3a38;color:#e8f5ee;border-radius:7px;padding:9px 12px;font:inherit;cursor:pointer}.actions button.secondary{background:#182632;border-color:var(--line);color:var(--ink)}button:focus-visible,a:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+.board{display:grid;gap:9px}.claim{border:1px solid var(--line);border-radius:8px;padding:12px;background:#101a24}.claim p{margin:4px 0 8px;font-size:.9rem}.claim select{background:#0b141c;color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:6px}.support{font-size:.78rem;color:var(--mint)}.finding{background:#0e1921;border:1px solid #48645d;border-radius:9px;padding:14px}.finding textarea{width:100%;min-height:88px;background:#0a131a;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:10px;font:inherit}.finding label{display:block;color:var(--muted);font-size:.8rem;margin:10px 0 5px}
+.notice{border-left:3px solid var(--gold);padding:8px 12px;background:#29271f;color:#e8d9bc;font-size:.82rem;margin:14px 0}.status{color:var(--mint);font-size:.82rem;min-height:1.4em}.foot{border-top:1px solid var(--line);margin-top:25px;padding-top:16px;font-size:.78rem;color:var(--muted)}
+@media(max-width:850px){.grid{grid-template-columns:1fr}}@media(max-width:540px){header,main,footer{padding:15px}.locations{grid-template-columns:1fr}.clue{grid-template-columns:30px 1fr}.clue .tag{grid-column:2}}
+</style>
+</head>
+<body>
+<header>
+<div class="eyebrow">THE SINGULARITY WORKSHOP · EXPERIENCE PREFORGE</div>
+<div style="margin-top:13px"><span class="fiction">FICTIONAL PROTOTYPE · ALL MATERIALS INVENTED</span></div>
+<h1>Eperstein's Island</h1>
+<p class="lede">The Closed Ledger — an investigative experience about records, institutional responsibility, and the discipline of knowing what the evidence can actually support.</p>
+<nav aria-label="Experience layers"><a href="#island">01 · The Island</a><a href="#reckoning">02 · The Reckoning</a><a href="#archive">03 · The Archive</a></nav>
+</header>
+<main>
+<div class="notice"><strong>Fiction boundary:</strong> This is a wholly invented demonstration. The island, institutions, people, documents, dates, and events below are fictional. Nothing here is a historical allegation or a representation of a real person.</div>
+<div class="grid">
+<section class="panel" id="island">
+<h2>01 / The Island</h2><p>Choose a place to inspect. The map is a narrative navigation surface, not a real-world map.</p>
+<div class="map">
+<svg viewBox="0 0 640 360" role="group" aria-label="Fictional island map with three inspectable locations">
+<defs><pattern id="waves" width="32" height="22" patternUnits="userSpaceOnUse"><path d="M0 11 Q8 4 16 11 T32 11" fill="none" stroke="#31505a" stroke-width="1" opacity=".55"/></pattern></defs>
+<rect width="640" height="360" fill="url(#waves)"/>
+<path d="M70 203 C83 145 137 124 181 91 C226 57 275 77 312 92 C359 111 400 83 449 119 C493 151 551 174 545 225 C538 276 477 286 423 278 C372 271 334 310 282 291 C235 274 206 305 155 276 C111 251 58 252 70 203Z" fill="#53685b" stroke="#a3b6a0" stroke-width="2"/>
+<path d="M102 202 C147 176 163 139 213 130 C255 122 284 143 318 137 C362 129 394 123 435 157 C475 190 506 198 504 226 C468 252 431 245 397 240 C354 233 327 275 283 258 C243 242 214 274 177 248 C145 228 118 238 102 202Z" fill="#71806a" opacity=".55"/>
+<path d="M112 212 Q180 193 234 206 T353 207 T488 211" fill="none" stroke="#d0c29a" stroke-width="2" stroke-dasharray="5 7" opacity=".8"/>
+<g class="place active" data-place="admin" tabindex="0" role="button" aria-label="Administrative House"><circle class="pin" cx="282" cy="145" r="9"/><text x="297" y="149">Administrative House</text></g>
+<g class="place" data-place="records" tabindex="0" role="button" aria-label="Records Annex"><circle class="pin" cx="404" cy="218" r="9"/><text x="418" y="222">Records Annex</text></g>
+<g class="place" data-place="harbor" tabindex="0" role="button" aria-label="North Harbor"><circle class="pin" cx="177" cy="228" r="9"/><text x="190" y="232">North Harbor</text></g>
+<text x="26" y="32" fill="#8fb9cb" font-size="11" letter-spacing="2">THE GREY CURRENT · FICTIONAL ISLAND</text>
+</svg>
+<div class="map-note"><span>SELECT A MARKER TO INSPECT A LOCATION</span><span>SCHEMATIC · NOT TO SCALE</span></div>
+</div>
+<div class="locations">
+<button class="loc" data-place="admin" aria-pressed="true">Administrative House<small>Public-facing institution</small></button>
+<button class="loc" data-place="records" aria-pressed="false">Records Annex<small>Archive and filing room</small></button>
+<button class="loc" data-place="harbor" aria-pressed="false">North Harbor<small>Arrival and departure records</small></button>
+</div>
+<div class="detail"><h3 id="placeTitle">Administrative House</h3><p id="placeText">A polished reception hall displays the institution's public charter. A locked cabinet is labelled “Annual Reconciliation.” No one has explained why the latest summary is missing.</p></div>
+</section>
+<section class="panel" id="reckoning">
+<h2>02 / The Reckoning</h2><p>Three invented clues form the first investigation. Inspect each item, then decide what it supports—and what it cannot prove.</p>
+<div class="clues" id="clueList">
+<button class="clue" data-clue="ledger" aria-pressed="true"><span class="num">01</span><span><strong>Ledger fragment</strong><small>Fictional internal accounting sheet · 14 May</small></span><span class="tag">Documented*</span></button>
+<button class="clue" data-clue="memo" aria-pressed="false"><span class="num">02</span><span><strong>Reconciliation memo</strong><small>Fictional office memorandum · 16 May</small></span><span class="tag">Documented*</span></button>
+<button class="clue" data-clue="minutes" aria-pressed="false"><span class="num">03</span><span><strong>Review minutes</strong><small>Fictional committee record · 21 May</small></span><span class="tag">Documented*</span></button>
+</div>
+<div class="detail" aria-live="polite"><div class="meta"><span class="pill" id="clueDate">14 May · Year 20XX</span><span class="pill">Synthetic sample</span></div><h3 id="clueTitle">Ledger fragment</h3><p id="clueBody">“Transfer batch 04 — 12 entries received; 9 reconciled; 3 carried forward pending authorization.” The fragment contains no names, beneficiary details, or explanation for the carry-forward.</p><p id="clueLimit"><strong>Limit:</strong> This page establishes only what the fictional ledger records. It does not establish misconduct, motive, or who approved the entries.</p>
+<div class="actions"><button id="addEvidence">Link clue to finding</button><button class="secondary" id="markUnresolved">Keep question open</button></div><p class="status" id="actionStatus" aria-live="polite"></p></div>
+</section>
+<section class="panel" id="archive">
+<h2>03 / The Archive</h2><p>Evidence is not a verdict. Build a narrow claim, preserve uncertainty, and keep the provenance visible.</p>
+<div class="board">
+<div class="claim"><h3>Claim A · A reconciliation gap existed</h3><p>The fictional ledger records three entries carried forward pending authorization.</p><div class="support" id="supportA">Linked evidence: none</div><label for="classA">Editorial status</label><select id="classA"><option>Documented</option><option>Alleged</option><option>Established</option><option>Disputed</option><option>Reconstructed</option><option>Unknown</option></select></div>
+<div class="claim"><h3>Claim B · The gap was later reviewed</h3><p>The fictional committee minutes refer to an unresolved reconciliation item.</p><div class="support" id="supportB">Linked evidence: none</div><label for="classB">Editorial status</label><select id="classB"><option>Documented</option><option>Alleged</option><option>Established</option><option>Disputed</option><option>Reconstructed</option><option>Unknown</option></select></div>
+<div class="finding"><h3>Your finding</h3><p>State only what the evidence supports. A careful finding may remain incomplete.</p><label for="findingText">Finding statement</label><textarea id="findingText" placeholder="The records show… They do not establish…"></textarea><label for="openQuestion">Unresolved question</label><textarea id="openQuestion" placeholder="What remains unknown?"></textarea><div class="actions"><button class="submit" id="submitFinding">Submit finding</button><button class="secondary" id="clearFinding">Clear</button></div><p class="status" id="findingStatus" aria-live="polite"></p></div>
+</div>
+</section>
+<section class="panel">
+<h2>Source context / sample provenance</h2>
+<div class="meta"><span class="pill">Source IDs: FICTION-001–003</span><span class="pill">Issuer: invented</span><span class="pill">Access: local sample only</span></div>
+<p><strong>FICTION-001</strong> — Ledger fragment, invented by the prototype author. Supports the narrow statement that three entries were carried forward.</p>
+<p><strong>FICTION-002</strong> — Reconciliation memo, invented by the prototype author. States that the three entries were awaiting a second review; it does not identify a responsible person.</p>
+<p><strong>FICTION-003</strong> — Review minutes, invented by the prototype author. Records that the committee deferred a decision pending supporting material. This complicates any claim that the issue was simply ignored.</p>
+<div class="notice">The asterisk on “Documented*” means documented within this fictional sample world only. It has no bearing on any real-world record.</div>
+</section>
+</div>
+<div class="foot">Prototype boundary: no external data, no real-person identities, no survivor information, and no historical source ingestion. This page demonstrates interaction and editorial semantics only; it is not yet wired to FSM_COS, FSM_Foundry, Ontology, DataWarehouse, Renderer, or Visualization MicroBundles.</div>
+</main>
+<script>
+(()=>{'use strict';
+const places={
+admin:{title:'Administrative House',text:'A polished reception hall displays the institution’s public charter. A locked cabinet is labelled “Annual Reconciliation.” No one has explained why the latest summary is missing.'},
+records:{title:'Records Annex',text:'A quiet filing room contains the fictional ledger fragment and a memorandum. The dates do not line up neatly; the discrepancy calls for another source, not a conclusion.'},
+harbor:{title:'North Harbor',text:'A noticeboard lists scheduled arrivals for the fictional island. It contains no passenger identities. In this slice, the harbor is context—not evidence of wrongdoing.'}
+};
+const clues={
+ledger:{date:'14 May · Year 20XX',title:'Ledger fragment',body:'“Transfer batch 04 — 12 entries received; 9 reconciled; 3 carried forward pending authorization.” The fragment contains no names, beneficiary details, or explanation for the carry-forward.',limit:'This page establishes only what the fictional ledger records. It does not establish misconduct, motive, or who approved the entries.',claim:'A'},
+memo:{date:'16 May · Year 20XX',title:'Reconciliation memo',body:'“The three carried-forward entries remain open pending a second review. The summary should not be marked complete until the supporting schedule is attached.”',limit:'The memo indicates a review process was requested. It does not establish whether the review occurred or whether the entries were improper.',claim:'A'},
+minutes:{date:'21 May · Year 20XX',title:'Review minutes',body:'“The committee reviewed the open reconciliation item and deferred closure until the supporting schedule could be located. Follow-up assigned to the records office.”',limit:'This later record complicates the idea that the matter was simply ignored. It documents deferral, not the eventual outcome or the quality of the review.',claim:'B'}
+};
+let selected='ledger';const linked=new Set();let unresolved=false;
+const $=id=>document.getElementById(id);
+function selectPlace(id){document.querySelectorAll('[data-place]').forEach(e=>{const active=e.dataset.place===id;if(e.classList.contains('place'))e.classList.toggle('active',active);else e.setAttribute('aria-pressed',String(active))});$('placeTitle').textContent=places[id].title;$('placeText').textContent=places[id].text}
+function selectClue(id){selected=id;document.querySelectorAll('[data-clue]').forEach(e=>e.setAttribute('aria-pressed',String(e.dataset.clue===id)));const c=clues[id];$('clueDate').textContent=c.date;$('clueTitle').textContent=c.title;$('clueBody').textContent=c.body;$('clueLimit').innerHTML='<strong>Limit:</strong> '+c.limit;$('actionStatus').textContent=''}
+function renderLinks(){const a=[...linked].filter(id=>clues[id].claim==='A');const b=[...linked].filter(id=>clues[id].claim==='B');$('supportA').textContent='Linked evidence: '+(a.length?a.map(x=>'FICTION-'+({ledger:'001',memo:'002'}[x])).join(', '):'none');$('supportB').textContent='Linked evidence: '+(b.length?'FICTION-003':'none')}
+document.querySelectorAll('[data-place]').forEach(e=>{const fn=()=>selectPlace(e.dataset.place);e.addEventListener('click',fn);e.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();fn()}})});
+document.querySelectorAll('[data-clue]').forEach(e=>e.addEventListener('click',()=>selectClue(e.dataset.clue)));
+$('addEvidence').addEventListener('click',()=>{linked.add(selected);renderLinks();$('actionStatus').textContent='Linked '+clues[selected].title+' to the relevant narrow claim.'});
+$('markUnresolved').addEventListener('click',()=>{unresolved=true;$('openQuestion').value=$('openQuestion').value||'What happened after the committee deferred closure?';$('actionStatus').textContent='Question preserved as unresolved.'});
+$('submitFinding').addEventListener('click',()=>{const statement=$('findingText').value.trim(),question=$('openQuestion').value.trim();if(!statement||!question){$('findingStatus').textContent='Add both a finding and an unresolved question before submitting.';return}if(!linked.size){$('findingStatus').textContent='Link at least one clue so the finding has an evidence trail.';return}$('findingStatus').textContent='Finding saved in this page session. Evidence linked: '+linked.size+'. Unresolved question preserved: yes.'});
+$('clearFinding').addEventListener('click',()=>{$('findingText').value='';$('openQuestion').value='';linked.clear();unresolved=false;renderLinks();$('findingStatus').textContent='Local finding cleared.'});
+selectPlace('admin');selectClue('ledger');renderLinks();
+})();
+</script>
+</body></html>
