@@ -298,7 +298,7 @@ The first proof should be a single news event with multiple source accounts, a t
 - **StoryBuilder** is the authoring workbench for the linked build record and fictional record.
 - **FSM_API** can represent persistent identities and state transitions for world entities and events.
 - **FSM_COS** composes capabilities for observers, instruments, ships, sites, and actors.
-- **FSM_Foundry** executes composed behavior; authoring a possible event is not executing it.
+- **FSM_Execution** executes composed behavior; authoring a possible event is not executing it.
 - **Physics** owns reusable physical models and mathematics. Experiences should not create a parallel physics library.
 - **Economy** supplies shared economic vocabulary and simulation capabilities; Galactic War defines its civilization-specific policies and consequences.
 - **GUI.Core** supplies reusable visual meaning and interaction structures.
