@@ -4,7 +4,7 @@
 
 ## The story remains the product
 
-We are making Galactic War. StoryBuilder, FSM_API, GUI, Renderer, Visualization, FSM_COS, FSM_Foundry, and DataWarehouse are tools and capabilities used to make that universe coherent and playable. Their current shapes are evidence about what we can implement today, not permission to shrink the fiction to fit a tool.
+We are making Galactic War. StoryBuilder, FSM_API, GUI, Renderer, Visualization, FSM_COS, FSM_Execution, and DataWarehouse are tools and capabilities used to make that universe coherent and playable. Their current shapes are evidence about what we can implement today, not permission to shrink the fiction to fit a tool.
 
 When a real story requirement exposes a tool gap:
 1. preserve the story requirement and its meaning;
