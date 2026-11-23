@@ -68,7 +68,7 @@ The Warlords preforge and host-independent rules project live under [experiences
 - [ ] Verify the Warlords domain tests and scripted console match in repository CI.
 - [ ] Build a minimal browser board that consumes the exact C# domain API; do not duplicate rules in JavaScript.
 - [ ] Allocate MicroBundle identity, define the runtime manifest, and create the first immutable bundle artifact.
-- [ ] Compose through FSM_COS and integrate lifecycle through FSM_API; keep FSM_Foundry in the orchestration role.
+- [ ] Compose through FSM_COS and integrate lifecycle through FSM_API; keep FSM_Execution in the orchestration role.
 - [ ] Add FSM_Serialization save/load and deterministic replay verification.
 - [ ] Add a simple computer opponent through the same legal-command boundary.
 
