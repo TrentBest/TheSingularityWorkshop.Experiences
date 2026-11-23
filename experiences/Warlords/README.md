@@ -48,7 +48,7 @@ Use `status` to inspect the board and legal marches, `march azure-keep frostmarc
 | Core lifecycle and state-machine primitives | FSM_API | Available technology; integration not yet added |
 | MicroBundle definitions, providers, dependencies | MicroBundleDomain | Planned adapter boundary; no Warlords bundle identity assigned yet |
 | Capability composition and dependency closure | FSM_COS | Intended composition path; not yet wired |
-| Host-authored execution lifecycle | FSM_Foundry | Future orchestration boundary; not the game rules owner |
+| Host-authored execution lifecycle | FSM_Execution | Future orchestration boundary; not the game rules owner |
 | Semantic interaction and intent | FSM_UserIO | Future host-neutral command vocabulary |
 | Semantic controls and board interaction | GUI | Future manifestation surface |
 | Map visualization and rendering | Visualize / Renderer | Future manifestation surface; cannot decide ownership or combat |
@@ -75,7 +75,7 @@ The domain does not reference WebPage, AnyApp, GUI, Visualize, FSM_COS, or a gam
 - No playable browser or desktop board yet.
 - No `IMicroBundle` adapter, artifact hash, or published MicroBundle yet. We must allocate stable bundle identity through the Workshop's ID policy before creating one.
 - Package policy for future adapters: treat FSM_API and FSM_Serialization as the only stable Workshop package exceptions (verify their current versions); use prerelease package versions for other Workshop dependencies, or repository source references during coordinated development.
-- No FSM_COS composition or FSM_Foundry workflow integration yet.
+- No FSM_COS composition or FSM_Execution workflow integration yet.
 - No FSM_API lifecycle integration yet; the rules currently expose explicit, synchronous transitions.
 - No FSM_Serialization save/load adapter yet.
 - No AI opponent, diplomacy, economy, supply, fog of war, alliances, multiplayer authority, or network protocol.
