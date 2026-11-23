@@ -106,7 +106,7 @@ The concrete authoring gap has now been recorded for cross-repository coordinati
 - **Experiences / Galactic War** owns the fictional semantics of news, discoveries, archaeological evidence, factions, campaign rules, and diegetic media.
 - **FSM_API** owns explicit state identity and transitions where appropriate.
 - **FSM_COS** composes capabilities at the host boundary.
-- **FSM_Foundry** executes composed behavior; it does not decide authorial canon.
+- **FSM_Execution** executes composed behavior; it does not decide authorial canon.
 - **GUI.Core / GUI.SVG** can expose the same records through authoring and review surfaces.
 - **Renderer / Visualization** are optional MicroBundle manifestations, not alternate story databases.
 - **DataWarehouse** may preserve runtime observations and evidence within its own boundary; it does not replace StoryBuilder's authoring model.
