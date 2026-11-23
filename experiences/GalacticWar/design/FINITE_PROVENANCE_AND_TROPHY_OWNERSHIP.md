@@ -119,7 +119,7 @@ Do not expose private information or reveal hidden holders and locations when th
 
 - **Galactic War / Experiences** owns object meaning, scarcity classes, transfer policy, trophy rules, and the narrative consequences of possession.
 - **FSM_API** can provide stable identity and state-transition primitives for tracked instances; it does not decide what counts as a legitimate victory or transfer.
-- **FSM_COS** composes the capabilities needed by the Experience; **FSM_Foundry** executes the composed behavior.
+- **FSM_COS** composes the capabilities needed by the Experience; **FSM_Execution** executes the composed behavior.
 - **Economy** can supply reusable valuation, trade, and transaction capabilities where appropriate. Market price is not proof of ownership.
 - **DataWarehouse** can retain and query provenance history as internal memory; a derived view must not become an alternate authority for ownership.
 - **Renderer / Visualization** can present identity and provenance as MicroBundle experiences. A badge, icon, or rendered display is not authoritative ownership state.
