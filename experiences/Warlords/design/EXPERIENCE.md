@@ -13,7 +13,7 @@ The initial slice deliberately favors a complete, testable loop over a broad fea
 - Experiences owns scenario identity, map semantics, kingdom identity, turn rules, movement legality, recruitment, combat rules, victory conditions, and canonical game events.
 - FSM_API supplies lifecycle/state-machine primitives when the Experience needs explicit context lifecycle and coordinated update semantics. It does not replace the Warlords domain rules.
 - FSM_COS composes verified MicroBundles from the Experience manifest. It does not own the game loop.
-- FSM_Foundry executes host-authored workflows and orchestration. It does not decide who owns a territory.
+- FSM_Execution executes host-authored workflows and orchestration. It does not decide who owns a territory.
 - MicroBundleDomain defines generic bundle/provider/dependency contracts. It must remain game-neutral.
 - FSM_UserIO expresses semantic player intent. The Warlords domain validates every command; an intent is not authorization.
 - GUI owns semantic controls and dispatch. WebPage and AnyApp adapt those controls to their respective hosts.
@@ -79,7 +79,7 @@ A host may map stable territory IDs to screen/world coordinates and render any s
 1. **First rules slice:** territory graph, turns, recruitment, movement, seeded combat, capture, victory, event history, and tests.
 2. **First playable manifestation:** render the starter map; select source/destination; choose army count; display legal moves; end turn; show battle result and ownership from the domain snapshot.
 3. **MicroBundle composition:** allocate IDs, define the Experience manifest and semantic requirements, package the Warlords capabilities, and verify immutable artifact identity.
-4. **FSM integration:** connect lifecycle through FSM_API and compose through FSM_COS; keep FSM_Foundry as orchestration, not rules.
+4. **FSM integration:** connect lifecycle through FSM_API and compose through FSM_COS; keep FSM_Execution as orchestration, not rules.
 5. **Serialization and replay:** use FSM_Serialization for versioned canonical save/load and verify that replaying a seeded command sequence reproduces the same state.
 6. **Opponents:** add deterministic computer opponents as command producers using the same legal-action API; they receive no privileged state beyond the declared information model.
 7. **Strategic depth:** add friendly army movement, recruitment choices, resources, supply, diplomacy, alliances, fog of war, and additional map scenarios as separate tested capabilities.
