@@ -216,7 +216,7 @@ Until those gates have evidence, the Vesper Reach sample's placeholder StoryBuil
 
 ## Host orchestration and publication-path recheck — 2026-11-14
 
-A further repository pass traced the concrete runtime hosts and the published-Experience path. This pass searched AnyApp, WebPage, ServerApp, FSM_Foundry, WebApp, and MicroBundleRepository for StoryBuilder package/compiler and arbitration-provenance integration.
+A further repository pass traced the concrete runtime hosts and the published-Experience path. This pass searched AnyApp, WebPage, ServerApp, FSM_Execution, WebApp, and MicroBundleRepository for StoryBuilder package/compiler and arbitration-provenance integration.
 
 ### AnyApp is a runtime consumer, not the provenance producer
 
@@ -243,7 +243,7 @@ The in-memory audit is useful historical evidence that arbitration events were o
 
 ### Other host candidates
 
-Searches in ServerApp, FSM_Foundry, WebApp, and MicroBundleRepository did not surface StoryBuilder package compilation or arbitration-record handoff call sites. This is a bounded source-search result, not proof that no related implementation exists anywhere in those repositories or in unindexed branches.
+Searches in ServerApp, FSM_Execution, WebApp, and MicroBundleRepository did not surface StoryBuilder package compilation or arbitration-record handoff call sites. This is a bounded source-search result, not proof that no related implementation exists anywhere in those repositories or in unindexed branches.
 
 ### Updated ownership conclusion
 
