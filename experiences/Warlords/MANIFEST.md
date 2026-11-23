@@ -25,4 +25,4 @@ The first rules project is a plain .NET 10 library with no external package depe
 | `gui.semantic-board` | GUI | Required for the planned interactive board manifestation |
 | `visualize.map-presentation` | Visualize / Renderer | Optional presentation capability |
 
-These are proposed semantic requirements, not evidence that the corresponding artifacts have already been composed. FSM_COS remains the composition authority; FSM_Foundry remains the workflow executor. Neither is a Warlords rules dependency.
+These are proposed semantic requirements, not evidence that the corresponding artifacts have already been composed. FSM_COS remains the composition authority; FSM_Execution remains the workflow executor. Neither is a Warlords rules dependency.
