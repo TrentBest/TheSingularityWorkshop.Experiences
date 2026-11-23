@@ -116,7 +116,7 @@ Every test must assert both the current projection and the append-only event his
 3. Use the current string-backed API first; keep the proof independent of the unreleased integer-backed path.
 4. Run the proof and capture the exact dependency commit, build/test result, and assertions.
 5. Only then decide whether a narrowly scoped FSM_API gap exists. Do not request a new API based on hypothetical convenience.
-6. Compose persistence and execution through FSM_COS / FSM_Foundry when the vertical slice requires them; do not make the FSM handle itself the persistent world.
+6. Compose persistence and execution through FSM_COS / FSM_Execution when the vertical slice requires them; do not make the FSM handle itself the persistent world.
 
 ## Contract references
 
