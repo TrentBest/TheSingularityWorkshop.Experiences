@@ -213,7 +213,7 @@ First contact is an Experience-level domain, composed from shared Workshop capab
 - **Experiences** owns the encounter, its fictional entities, interpretations, diplomacy rules, and consequences.
 - **FSM_API** can represent persistent participants, contact states, commitments, and transitions. It does not decide what a signal means.
 - **FSM_COS** composes the capabilities available to observers, translators, instruments, and representatives.
-- **FSM_Foundry** executes the composed processes. Authorization to propose an action remains distinct from execution of that action.
+- **FSM_Execution** executes the composed processes. Authorization to propose an action remains distinct from execution of that action.
 - **Physics** owns reusable physical models for channels and environmental effects. Fictional signals must not be passed off as validated physics.
 - **GUI.Core** can compose observation, evidence, uncertainty, translation, and negotiation interfaces. A view must not grant knowledge unavailable to its observer.
 - **Renderer** and **Visualization** remain MicroBundle-consumed manifestations, not authoritative diplomatic state.
