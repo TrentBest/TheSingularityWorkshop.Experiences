@@ -12,23 +12,23 @@ on:
         required: true
         type: string
       request_id:
-        description: "Persisted Foundry/CiAi request ID"
+        description: "Persisted FSM_Execution/CiAi request ID"
         required: true
         type: string
       operation_id:
-        description: "Persisted Foundry/CiAi operation ID"
+        description: "Persisted FSM_Execution/CiAi operation ID"
         required: true
         type: string
       idempotency_key:
-        description: "Persisted Foundry/CiAi idempotency key"
+        description: "Persisted FSM_Execution/CiAi idempotency key"
         required: true
         type: string
       task_id:
-        description: "Foundry task identity"
+        description: "FSM_Execution task identity"
         required: true
         type: string
       correlation_id:
-        description: "Foundry task correlation identity"
+        description: "FSM_Execution task correlation identity"
         required: true
         type: string
 
@@ -178,7 +178,7 @@ jobs:
             artifacts/test-results/provenance.json
           if-no-files-found: error
           retention-days: 14
-      - name: Upload Foundry dispatch marker
+      - name: Upload FSM_Execution dispatch marker
         id: upload-marker
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
