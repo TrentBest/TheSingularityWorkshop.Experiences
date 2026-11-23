@@ -123,7 +123,7 @@ This design should compose existing Workshop capabilities rather than create a p
 - **Experiences** owns Galactic War's meaning: which civilizations perceive what, what their interfaces mean, and which interpretations or rules are specific to this universe.
 - **FSM_API** can represent persistent entities, observer state, learning state, and meaningful transitions. It does not define the fictional sensory model by itself.
 - **FSM_COS** composes the capabilities required by an observer, instrument, environment, or interface.
-- **FSM_Foundry** executes composed behavior. A capability description and its execution remain distinct.
+- **FSM_Execution** executes composed behavior. A capability description and its execution remain distinct.
 - **Physics** owns reusable physical and mathematical models. Fictional sensory channels must not be presented as validated physical models until they are actually specified and implemented.
 - **GUI.Core** supplies reusable visual meaning and interaction structures. Civilization-specific views should be composed from it rather than embedded as universal assumptions in the GUI framework.
 - **Renderer** and **Visualization** are consumed as MicroBundles. They provide manifestations of state and perspective; they do not own authoritative world state.
