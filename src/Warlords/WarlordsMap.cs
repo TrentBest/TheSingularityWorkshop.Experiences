@@ -15,6 +15,7 @@ public sealed record WarlordsTerritoryDefinition(
 /// <summary>Validated, renderer-independent territory graph for a Warlords scenario.</summary>
 public sealed class WarlordsMap
 {
+    /// <summary>Maximum number of armies permitted in one territory garrison.</summary>
     public const int MaximumGarrison = 8;
 
     private readonly IReadOnlyDictionary<string, WarlordsTerritoryDefinition> _territories;
