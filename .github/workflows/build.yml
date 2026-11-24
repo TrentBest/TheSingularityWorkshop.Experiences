@@ -167,6 +167,27 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+  # The adapter delegates all rules to the domain and uses FSM_API only for match lifecycle.
+  test-warlords-runtime:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore Warlords FSM_API runtime tests
+        run: dotnet restore tests/Warlords.Runtime.Tests/TheSingularityWorkshop.Experiences.Warlords.Runtime.Tests.csproj
+      - name: Run Warlords FSM_API lifecycle tests
+        run: dotnet test tests/Warlords.Runtime.Tests/TheSingularityWorkshop.Experiences.Warlords.Runtime.Tests.csproj --configuration Release --no-restore --logger "trx;LogFileName=warlords-runtime.trx" --results-directory ./TestResults/warlords-runtime
+      - name: Upload Warlords runtime test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: warlords-runtime-test-results
+          path: TestResults/warlords-runtime/
+          if-no-files-found: warn
+          retention-days: 14
+
   sample-warlords-console:
     runs-on: ubuntu-24.04
     steps:
