@@ -56,7 +56,7 @@ The local Blazor Server sample renders the authoritative match snapshot through 
 | Kingdom rules, map identity, turns, combat, victory, event history | Experiences / Warlords domain | Implemented in this branch |
 | Core lifecycle and state-machine primitives | FSM_API 1.0.13 | Match lifecycle adapter implemented in `src/Warlords.Runtime`; domain rules remain authoritative |
 | Semantic GUI and browser manifestation | GUI.Core + GUI.Blazor 0.1.0-alpha.8 | Local `WarlordsWebApp` sample renders the semantic tree; domain remains authoritative |
-| MicroBundle definitions, providers, dependencies | MicroBundleDomain | Planned adapter boundary; no Warlords bundle identity assigned yet |
+| Portable MicroBundle identity and dependencies | MicroBundleDomain + MicroBundleRepository + FSM_COS | Blocked on Domain #28 portable ontology manifest and explicit runtime-ID/local-slot materialization contract; no numeric ID is invented |
 | Capability composition and dependency closure | FSM_COS | Intended composition path; not yet wired |
 | Host-authored execution lifecycle | FSM_Execution | Future orchestration boundary; not the game rules owner |
 | Semantic interaction and intent | FSM_UserIO | Future host-neutral command vocabulary |
