@@ -188,6 +188,26 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+  test-warlords-web:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore Warlords semantic board tests
+        run: dotnet restore tests/Warlords.Web.Tests/TheSingularityWorkshop.Experiences.Warlords.Web.Tests.csproj
+      - name: Run Warlords GUI command boundary tests
+        run: dotnet test tests/Warlords.Web.Tests/TheSingularityWorkshop.Experiences.Warlords.Web.Tests.csproj --configuration Release --no-restore --logger "trx;LogFileName=warlords-web.trx" --results-directory ./TestResults/warlords-web
+      - name: Upload Warlords GUI test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: warlords-web-test-results
+          path: TestResults/warlords-web/
+          if-no-files-found: warn
+          retention-days: 14
+
   sample-warlords-console:
     runs-on: ubuntu-24.04
     steps:
