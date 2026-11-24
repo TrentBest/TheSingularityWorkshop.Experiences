@@ -84,7 +84,7 @@ The domain does not reference WebPage, AnyApp, GUI, Visualize, FSM_API, FSM_COS,
 ## Known gaps — intentionally visible
 
 - No WebPage-hosted or desktop MicroBundle installation yet; the browser sample runs independently.
-- No `IMicroBundle` adapter, artifact hash, or published MicroBundle yet. We must allocate stable bundle identity through the Workshop's ID policy before creating one.
+- No `IMicroBundle` adapter, immutable artifact hash, or published MicroBundle yet. The portable identity is `TheSingularityWorkshop.Experiences.Warlords` + exact version + SHA-256. MicroBundleDomain #28 must define the numeric runtime-ID/platform-slot materialization boundary before an executable MicroBundle is implemented; no numeric ID is invented.
 - Package policy for future adapters: treat FSM_API and FSM_Serialization as the only stable Workshop package exceptions (verify their current versions); use prerelease package versions for other Workshop dependencies, or repository source references during coordinated development.
 - No FSM_COS composition or FSM_Execution workflow integration yet.
 - The `Warlords.Runtime` adapter now uses FSM_API 1.0.13 to own the Command → Finished match lifecycle; it does not move turn, combat, or ownership rules out of the Warlords domain.
