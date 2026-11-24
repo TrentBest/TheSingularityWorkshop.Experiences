@@ -149,6 +149,12 @@
         "owner": null,
         "armyCount": 1,
         "isStronghold": false
+      },
+      {
+        "territoryId": "verdant-citadel",
+        "owner": "Verdant",
+        "armyCount": 5,
+        "isStronghold": true
       }
     ],
     "events": [
