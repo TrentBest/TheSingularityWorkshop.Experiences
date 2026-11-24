@@ -54,7 +54,7 @@ public sealed class WarlordsGame
 {
     public const string RulesVersion = "warlords-four-kingdoms/1";
     public const int VictoryStrongholds = 3;
-    public const int MaximumGarrison = 8;
+    public const int MaximumGarrison = WarlordsMap.MaximumGarrison;
     public const string CombatAlgorithm = "combat.xorshift32-d6/v1";
 
     private readonly WarlordsMap _map;
