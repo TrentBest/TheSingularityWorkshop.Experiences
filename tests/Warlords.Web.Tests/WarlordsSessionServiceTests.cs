@@ -29,7 +29,9 @@ public sealed class WarlordsSessionServiceTests
         session.Dispatch("march|azure-keep|not-a-territory|4");
 
         Assert.Equal(0, session.Snapshot.Events.Count);
-        Assert.Equal(before.Territories, session.Snapshot.Territories);
+        Assert.Equal(
+            before.Territories.Select(territory => (territory.TerritoryId, territory.Owner, territory.ArmyCount)),
+            session.Snapshot.Territories.Select(territory => (territory.TerritoryId, territory.Owner, territory.ArmyCount)));
         Assert.StartsWith("Command rejected:", session.Message);
     }
 
