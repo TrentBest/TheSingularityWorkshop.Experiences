@@ -15,6 +15,8 @@ public sealed record WarlordsTerritoryDefinition(
 /// <summary>Validated, renderer-independent territory graph for a Warlords scenario.</summary>
 public sealed class WarlordsMap
 {
+    public const int MaximumGarrison = 8;
+
     private readonly IReadOnlyDictionary<string, WarlordsTerritoryDefinition> _territories;
 
     /// <summary>Creates and validates an immutable connected territory graph.</summary>
@@ -36,8 +38,8 @@ public sealed class WarlordsMap
             throw new ArgumentException("Territory IDs and names are required.", nameof(territories));
         if (entries.Select(t => t.Id).Distinct(StringComparer.Ordinal).Count() != entries.Length)
             throw new ArgumentException("Territory IDs must be unique.", nameof(territories));
-        if (entries.Any(t => t.StartingGarrison < 0))
-            throw new ArgumentException("Starting garrisons cannot be negative.", nameof(territories));
+        if (entries.Any(t => t.StartingGarrison < 0 || t.StartingGarrison > MaximumGarrison))
+            throw new ArgumentException($"Starting garrisons must be between zero and {MaximumGarrison}.", nameof(territories));
         if (entries.Any(t => t.StartingOwner is { } owner && !Enum.IsDefined(owner)))
             throw new ArgumentException("Starting owners must be defined Warlords kingdoms.", nameof(territories));
 
