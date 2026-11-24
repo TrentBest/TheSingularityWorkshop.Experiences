@@ -58,11 +58,12 @@ public sealed class WarlordsGame
     public const string RulesVersion = "warlords-four-kingdoms/1";
     public const int VictoryStrongholds = 3;
     public const int MaximumGarrison = 8;
+    public const string CombatAlgorithm = "combat.xorshift32-d6/v1";
 
     private readonly WarlordsMap _map;
     private readonly Dictionary<string, WarlordsTerritoryState> _territories;
     private readonly List<WarlordsEvent> _events = [];
-    private readonly Random _random;
+    private uint _randomState;
     private readonly WarlordsKingdom[] _kingdomOrder;
     private int _kingdomIndex;
     private bool _hasMarchedThisTurn;
@@ -75,7 +76,8 @@ public sealed class WarlordsGame
         ArgumentNullException.ThrowIfNull(map);
         _map = map;
         Seed = seed;
-        _random = new Random(seed);
+        _randomState = unchecked((uint)seed) ^ 0x9E3779B9u;
+        if (_randomState == 0) _randomState = 0xA341316Cu;
         _kingdomOrder = Enum.GetValues<WarlordsKingdom>();
         _territories = map.Territories.ToDictionary(
             t => t.Id,
@@ -140,8 +142,8 @@ public sealed class WarlordsGame
             throw new InvalidOperationException("Friendly territories are not valid attack destinations in this first rules slice.");
 
         var sourceAfter = source with { ArmyCount = source.ArmyCount - march.ArmyCount };
-        var attackerRoll = _random.Next(1, 7);
-        var defenderRoll = _random.Next(1, 7);
+        var attackerRoll = NextDieRoll();
+        var defenderRoll = NextDieRoll();
         var attackerWins = (march.ArmyCount * 2) + attackerRoll > (destination.ArmyCount * 2) + defenderRoll;
         WarlordsBattleOutcome outcome;
         WarlordsTerritoryState destinationAfter;
@@ -163,7 +165,8 @@ public sealed class WarlordsGame
         _territories[destination.TerritoryId] = destinationAfter;
         _hasMarchedThisTurn = true;
 
-        if (CountStrongholds(ActiveKingdom) >= VictoryStrongholds)
+        if (CountStrongholds(ActiveKingdom) >= VictoryStrongholds ||
+            _kingdomOrder.Where(kingdom => kingdom != ActiveKingdom).All(kingdom => !HasTerritories(kingdom)))
         {
             Winner = ActiveKingdom;
             Phase = WarlordsPhase.Finished;
@@ -172,7 +175,7 @@ public sealed class WarlordsGame
             _events.Count + 1, Round, ActiveKingdom, "march",
             source.TerritoryId, destination.TerritoryId, march.ArmyCount,
             attackerRoll, defenderRoll, outcome, sourceAfter, destinationAfter,
-            "combat.seeded-d6-strength-comparison");
+            CombatAlgorithm);
         _events.Add(entry);
         return entry;
     }
@@ -205,6 +208,17 @@ public sealed class WarlordsGame
         _map.Key, _map.Version, Seed, Round, ActiveKingdom, Phase, Winner,
         Array.AsReadOnly(_territories.Values.OrderBy(t => t.TerritoryId, StringComparer.Ordinal).ToArray()),
         Array.AsReadOnly(_events.ToArray()));
+
+    private int NextDieRoll()
+    {
+        // Explicit xorshift32 keeps seeded combat reproducible across .NET runtime versions.
+        var value = _randomState;
+        value ^= value << 13;
+        value ^= value >> 17;
+        value ^= value << 5;
+        _randomState = value;
+        return (int)(value % 6) + 1;
+    }
 
     private void RecruitAtStrongholds(WarlordsKingdom kingdom)
     {
