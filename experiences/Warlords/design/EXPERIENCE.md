@@ -1,6 +1,6 @@
 # Warlords — Experience and Rules Contract
 
-**Status:** first rules slice implemented; host manifestation and runtime composition are planned.
+**Status:** host-independent rules, FSM_API session lifecycle adapter, authoritative golden vector, and local GUI.Blazor browser sample are implemented; WebPage/FSM_COS runtime composition remains blocked on the portable identity contract.
 
 ## 1. Experience intent
 
@@ -16,7 +16,7 @@ The initial slice deliberately favors a complete, testable loop over a broad fea
 - FSM_Execution executes host-authored workflows and orchestration. It does not decide who owns a territory.
 - MicroBundleDomain defines generic bundle/provider/dependency contracts. It must remain game-neutral.
 - FSM_UserIO expresses semantic player intent. The Warlords domain validates every command; an intent is not authorization.
-- GUI owns semantic controls and dispatch. WebPage and AnyApp adapt those controls to their respective hosts.
+- GUI.Core owns the renderer-neutral semantic tree and GUI.Blazor manifests it. The host validates each command against current domain legal choices; the Warlords domain alone mutates authoritative game state.
 - Visualize / Renderer present the map, armies, borders, and events. A rendered animation is never evidence that a march or battle was accepted.
 - FSM_Serialization owns the future canonical save/load representation. A host must not invent a parallel save format.
 - Physics is not a dependency of this board-strategy ruleset. Use it only if a later Experience feature genuinely introduces physical simulation.
@@ -78,8 +78,8 @@ A host may map stable territory IDs to screen/world coordinates and render any s
 
 1. **First rules slice:** territory graph, turns, recruitment, movement, seeded combat, capture, victory, event history, and tests.
 2. **First playable manifestation:** render the starter map; select source/destination; choose army count; display legal moves; end turn; show battle result and ownership from the domain snapshot.
-3. **MicroBundle composition:** allocate IDs, define the Experience manifest and semantic requirements, package the Warlords capabilities, and verify immutable artifact identity.
-4. **FSM integration:** connect lifecycle through FSM_API and compose through FSM_COS; keep FSM_Execution as orchestration, not rules.
+3. **Portable artifact identity:** author the canonical ontology string + exact version + SHA-256 in the Experience manifest. Keep repository-local storage handles and FSM_COS platform slots out of the manifest; wait for MicroBundleDomain #28 to define the explicit numeric runtime-ID/local-slot adapter before implementing an executable MicroBundle.
+4. **FSM integration:** the separate FSM_API session-lifecycle adapter is implemented; compose through FSM_COS only after the portable identity/materialization contract is available. Keep FSM_Execution as orchestration, not rules.
 5. **Serialization and replay:** use FSM_Serialization for versioned canonical save/load and verify that replaying a seeded command sequence reproduces the same state.
 6. **Opponents:** add deterministic computer opponents as command producers using the same legal-action API; they receive no privileged state beyond the declared information model.
 7. **Strategic depth:** add friendly army movement, recruitment choices, resources, supply, diplomacy, alliances, fog of war, and additional map scenarios as separate tested capabilities.
@@ -93,5 +93,5 @@ A host may map stable territory IDs to screen/world coordinates and render any s
 - Same map, seed, and command sequence produce the same events and final snapshot.
 - A host renders only from domain snapshots and never invents game outcomes.
 - Tests and documentation agree with the actual rules version.
-- MicroBundle identity is allocated rather than guessed; artifacts are content-pinned before execution.
+- Never invent a numeric MicroBundleDescriptor.Id. Portable identity is ontology + exact version + digest; repository storage handles and FSM_COS runtime slots remain separate namespaces.
 - CI is green before this increment is described as verified.
