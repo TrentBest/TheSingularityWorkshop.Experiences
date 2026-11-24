@@ -66,7 +66,8 @@ The Warlords preforge and host-independent rules project live under [experiences
 - [x] Document domain ownership and explicit integration gaps.
 - [x] Add a local console match shell that drives the C# domain directly.
 - [ ] Verify the Warlords domain tests and scripted console match in repository CI.
-- [ ] Build a minimal browser board that consumes the exact C# domain API; do not duplicate rules in JavaScript.
+- [x] Build a local GUI.Blazor browser board that consumes the exact C# domain API; do not duplicate rules in JavaScript.
+- [ ] Install the Warlords board through a verified Experience/MicroBundle and compose it through FSM_COS for the WebPage host.
 - [ ] Allocate MicroBundle identity, define the runtime manifest, and create the first immutable bundle artifact.
 - [x] Add a separate FSM_API 1.0.13 session-lifecycle adapter; domain rules remain in the host-independent Warlords project.
 - [ ] Compose verified Warlords MicroBundles through FSM_COS; keep FSM_Execution in the orchestration role.
