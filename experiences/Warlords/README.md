@@ -39,7 +39,15 @@ A small console shell exercises the same C# domain through the `Warlords.Runtime
 dotnet run --project samples/WarlordsConsole/WarlordsConsole.csproj
 ```
 
-Use `status` to inspect the board and legal marches, `march azure-keep frostmarch 4` to test a first expansion, and `end` to advance the turn. All four kingdoms are human-controlled in this initial local proof; AI and a graphical board are follow-up work.
+Use `status` to inspect the board and legal marches, `march azure-keep frostmarch 4` to test a first expansion, and `end` to advance the turn. All four kingdoms are human-controlled in this initial local proof.
+
+A first browser manifestation is also available:
+
+```powershell
+dotnet run --project samples/WarlordsWebApp/WarlordsWebApp.csproj
+```
+
+The local Blazor Server sample renders the authoritative match snapshot through the neutral `GuiBuilder` tree and `BlazorGuiRenderer`. Its legal-march buttons dispatch stable command IDs back to a host allow-list, which rechecks each request against the current domain legal-march set before applying it. The server rejects non-loopback clients. This is a proving sample, not yet the WebPage/FSM_COS MicroBundle installation path.
 
 ## Architecture: use the Workshop, don't bypass it
 
@@ -47,6 +55,7 @@ Use `status` to inspect the board and legal marches, `march azure-keep frostmarc
 |---|---|---|
 | Kingdom rules, map identity, turns, combat, victory, event history | Experiences / Warlords domain | Implemented in this branch |
 | Core lifecycle and state-machine primitives | FSM_API 1.0.13 | Match lifecycle adapter implemented in `src/Warlords.Runtime`; domain rules remain authoritative |
+| Semantic GUI and browser manifestation | GUI.Core + GUI.Blazor 0.1.0-alpha.8 | Local `WarlordsWebApp` sample renders the semantic tree; domain remains authoritative |
 | MicroBundle definitions, providers, dependencies | MicroBundleDomain | Planned adapter boundary; no Warlords bundle identity assigned yet |
 | Capability composition and dependency closure | FSM_COS | Intended composition path; not yet wired |
 | Host-authored execution lifecycle | FSM_Execution | Future orchestration boundary; not the game rules owner |
