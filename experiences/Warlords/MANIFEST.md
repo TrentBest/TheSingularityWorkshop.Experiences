@@ -20,7 +20,7 @@ The first rules project is a plain .NET 10 library with no external package depe
 | `warlords.turn-rules` | Experiences | Required |
 | `warlords.combat-rules` | Experiences | Required |
 | `warlords.event-history` | Experiences | Required |
-| `fsm-api.lifecycle` | FSM_API | Preferred for host lifecycle integration |
+| `fsm-api.lifecycle` | FSM_API 1.0.13 | Implemented by the separate `Warlords.Runtime` adapter; domain rules remain outside the FSM |
 | `fsm-serialization.canonical-state` | FSM_Serialization | Preferred for save/load once contract is established |
 | `gui.semantic-board` | GUI | Required for the planned interactive board manifestation |
 | `visualize.map-presentation` | Visualize / Renderer | Optional presentation capability |
