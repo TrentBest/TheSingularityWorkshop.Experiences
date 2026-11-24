@@ -5,6 +5,7 @@ The order is chosen to get a visible, playable proof quickly without turning the
 | Stage | Deliverable | Exit evidence |
 |---|---|---|
 | 1. Rules | Host-independent territory/turn/combat domain | Deterministic unit tests and stable snapshots |
+| 1a. Campaign evidence | Experiences-authored versioned vectors | Exact event and final-snapshot replay tests; Gauntlet can consume the same fixture |
 | 2. Board | Minimal browser manifestation consuming the C# domain | Human can select and execute a legal march, end turn, and see actual resulting ownership |
 | 3. Composition | Warlords MicroBundle(s), Experience manifest, immutable artifact identities | Host resolves requirements and FSM_COS composes the verified artifacts |
 | 4. Lifecycle | FSM_API integration for Experience/session lifecycle | Lifecycle tests; domain transitions remain explicit |
