@@ -38,7 +38,9 @@ public sealed class WarlordsGameTests
         Assert.Equal(3, entry.DestinationAfter.ArmyCount);
         Assert.Equal(1, entry.SourceAfter.ArmyCount);
         Assert.Equal(1, entry.Sequence);
-        Assert.Equal("combat.seeded-d6-strength-comparison", entry.RuleId);
+        Assert.Equal(WarlordsGame.CombatAlgorithm, entry.RuleId);
+        Assert.Equal(4, entry.AttackerRoll);
+        Assert.Equal(5, entry.DefenderRoll);
     }
 
     [Fact]
@@ -81,6 +83,32 @@ public sealed class WarlordsGameTests
         var snapshot = game.Capture();
         Assert.Equal(WarlordsKingdom.Crimson, snapshot.ActiveKingdom);
         Assert.Equal(5, snapshot.Territories.Single(t => t.TerritoryId == "crimson-hold").ArmyCount);
+    }
+
+    [Fact]
+    public void MapRejectsUndefinedStartingKingdomValues()
+    {
+        var territories = new[]
+        {
+            new WarlordsTerritoryDefinition("a", "A", ["b"], (WarlordsKingdom)99, true, 3),
+            new WarlordsTerritoryDefinition("b", "B", ["a", "c"], WarlordsKingdom.Crimson, true, 3),
+            new WarlordsTerritoryDefinition("c", "C", ["b", "d"], WarlordsKingdom.Verdant, true, 3),
+            new WarlordsTerritoryDefinition("d", "D", ["a", "c"], WarlordsKingdom.Amber, true, 3),
+            new WarlordsTerritoryDefinition("e", "E", ["a"])
+        };
+
+        Assert.Throws<ArgumentException>(() => new WarlordsMap("invalid-owner", 1, territories));
+    }
+
+    [Fact]
+    public void CombatUsesTheExplicitVersionedSeedAlgorithm()
+    {
+        var game = new WarlordsGame(WarlordsMap.CreateStarterMap(), seed: 17);
+        var entry = game.March(new WarlordsMarch("azure-keep", "frostmarch", 4));
+
+        Assert.Equal("combat.xorshift32-d6/v1", entry.RuleId);
+        Assert.Equal(4, entry.AttackerRoll);
+        Assert.Equal(5, entry.DefenderRoll);
     }
 
     [Fact]
