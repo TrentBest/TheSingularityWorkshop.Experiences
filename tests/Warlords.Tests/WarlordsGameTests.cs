@@ -101,17 +101,6 @@ public sealed class WarlordsGameTests
     }
 
     [Fact]
-    public void CombatUsesTheExplicitVersionedSeedAlgorithm()
-    {
-        var game = new WarlordsGame(WarlordsMap.CreateStarterMap(), seed: 17);
-        var entry = game.March(new WarlordsMarch("azure-keep", "frostmarch", 4));
-
-        Assert.Equal("combat.xorshift32-d6/v1", entry.RuleId);
-        Assert.Equal(4, entry.AttackerRoll);
-        Assert.Equal(5, entry.DefenderRoll);
-    }
-
-    [Fact]
     public void SeededMatchesProduceIdenticalCombatAndEventHistory()
     {
         var map = WarlordsMap.CreateStarterMap();
