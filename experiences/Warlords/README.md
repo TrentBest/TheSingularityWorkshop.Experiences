@@ -1,6 +1,6 @@
 # Warlords — First Playable Strategy Experience
 
-**Status:** first host-independent rules slice implemented on this branch; browser/desktop manifestation and MicroBundle composition are not yet connected.
+**Status:** host-independent rules, FSM_API lifecycle adapter, golden vector, and a local GUI.Blazor browser sample are implemented on this branch; WebPage/FSM_COS MicroBundle composition remains open.
 
 Warlords is the working name for a Workshop-owned kingdom strategy Experience. It uses the familiar territory-control loop as a starting point: expand from a stronghold, commit armies across connected territory, resolve battles, hold castles, and pursue victory. This is an original Workshop scenario and ruleset, not a reproduction of another game's art, maps, data, or proprietary implementation.
 
@@ -60,7 +60,7 @@ The local Blazor Server sample renders the authoritative match snapshot through 
 | Capability composition and dependency closure | FSM_COS | Intended composition path; not yet wired |
 | Host-authored execution lifecycle | FSM_Execution | Future orchestration boundary; not the game rules owner |
 | Semantic interaction and intent | FSM_UserIO | Future host-neutral command vocabulary |
-| Semantic controls and board interaction | GUI | Future manifestation surface |
+| Semantic controls and board interaction | GUI.Core + GUI.Blazor | Local semantic board and legal-command buttons implemented; FSM_UserIO vocabulary remains a future integration |
 | Map visualization and rendering | Visualize / Renderer | Future manifestation surface; cannot decide ownership or combat |
 | Campaign vectors and failure evidence | Gauntlet | Consumes Experiences-authored vectors; does not own Warlords rules |
 | Canonical save/load and versioned state transfer | FSM_Serialization | Planned once the domain snapshot contract is stable |
@@ -83,7 +83,7 @@ The domain does not reference WebPage, AnyApp, GUI, Visualize, FSM_API, FSM_COS,
 
 ## Known gaps — intentionally visible
 
-- No playable browser or desktop board yet.
+- No WebPage-hosted or desktop MicroBundle installation yet; the browser sample runs independently.
 - No `IMicroBundle` adapter, artifact hash, or published MicroBundle yet. We must allocate stable bundle identity through the Workshop's ID policy before creating one.
 - Package policy for future adapters: treat FSM_API and FSM_Serialization as the only stable Workshop package exceptions (verify their current versions); use prerelease package versions for other Workshop dependencies, or repository source references during coordinated development.
 - No FSM_COS composition or FSM_Execution workflow integration yet.
@@ -91,6 +91,6 @@ The domain does not reference WebPage, AnyApp, GUI, Visualize, FSM_API, FSM_COS,
 - No FSM_Serialization save/load adapter yet.
 - No AI opponent, diplomacy, economy, supply, fog of war, alliances, multiplayer authority, or network protocol.
 - The four-kingdom map is currently authored in the C# starter-map factory; moving it to a versioned content artifact is a follow-up.
-- The console match is a local developer shell, not the intended visitor-facing board. CI and a complete host-level playthrough remain to be verified.
+- The console match remains a local developer shell. The first local browser board now exists; WebPage/FSM_COS installation and a complete host-level playthrough remain to be verified.
 
-Do not present a domain test as proof of a playable WebPage experience. The next milestone is a tiny visible board that consumes this exact domain API—no JavaScript copy of the rules and no UI-owned game state.
+Do not present the local sample as a completed WebPage Experience. The next milestone is to package the verified domain/runtime/GUI capabilities behind a stable MicroBundle identity, compose them through FSM_COS, and then install that Experience in the WebPage host.
