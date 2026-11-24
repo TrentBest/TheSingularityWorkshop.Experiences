@@ -2,7 +2,7 @@ using WarlordsWebApp.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
-builder.Services.AddSingleton<WarlordsSessionService>();
+builder.Services.AddScoped<WarlordsSessionService>();
 
 var app = builder.Build();
 app.Use(async (context, next) =>
