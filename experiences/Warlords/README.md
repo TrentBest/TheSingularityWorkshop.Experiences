@@ -45,7 +45,7 @@ Use `status` to inspect the board and legal marches, `march azure-keep frostmarc
 | Concern | Owner / technology | First-slice status |
 |---|---|---|
 | Kingdom rules, map identity, turns, combat, victory, event history | Experiences / Warlords domain | Implemented in this branch |
-| Core lifecycle and state-machine primitives | FSM_API | Available technology; integration not yet added |
+| Core lifecycle and state-machine primitives | FSM_API 1.0.13 | Match lifecycle adapter implemented in `src/Warlords.Runtime`; domain rules remain authoritative |
 | MicroBundle definitions, providers, dependencies | MicroBundleDomain | Planned adapter boundary; no Warlords bundle identity assigned yet |
 | Capability composition and dependency closure | FSM_COS | Intended composition path; not yet wired |
 | Host-authored execution lifecycle | FSM_Execution | Future orchestration boundary; not the game rules owner |
@@ -63,12 +63,12 @@ Warlords Experience definition
   -> host resolves requirements and artifact identity
   -> FSM_COS composes the verified capability set
   -> host supplies GUI / UserIO manifestation
-  -> FSM_API lifecycle advances the Experience
+  -> FSM_API lifecycle advances the match session
   -> Warlords domain validates and applies the command
   -> immutable snapshot / event record is presented or serialized
 ```
 
-The domain does not reference WebPage, AnyApp, GUI, Visualize, FSM_COS, or a game-specific renderer. This keeps the same match rules usable by browser, desktop, and VR manifestations.
+The domain does not reference WebPage, AnyApp, GUI, Visualize, FSM_API, FSM_COS, or a game-specific renderer. The separate `Warlords.Runtime` adapter is the only FSM_API boundary. This keeps the same match rules usable by browser, desktop, and VR manifestations.
 
 ## Known gaps — intentionally visible
 
@@ -76,7 +76,7 @@ The domain does not reference WebPage, AnyApp, GUI, Visualize, FSM_COS, or a gam
 - No `IMicroBundle` adapter, artifact hash, or published MicroBundle yet. We must allocate stable bundle identity through the Workshop's ID policy before creating one.
 - Package policy for future adapters: treat FSM_API and FSM_Serialization as the only stable Workshop package exceptions (verify their current versions); use prerelease package versions for other Workshop dependencies, or repository source references during coordinated development.
 - No FSM_COS composition or FSM_Execution workflow integration yet.
-- No FSM_API lifecycle integration yet; the rules currently expose explicit, synchronous transitions.
+- The `Warlords.Runtime` adapter now uses FSM_API 1.0.13 to own the Command → Finished match lifecycle; it does not move turn, combat, or ownership rules out of the Warlords domain.
 - No FSM_Serialization save/load adapter yet.
 - No AI opponent, diplomacy, economy, supply, fog of war, alliances, multiplayer authority, or network protocol.
 - The four-kingdom map is currently authored in the C# starter-map factory; moving it to a versioned content artifact is a follow-up.
