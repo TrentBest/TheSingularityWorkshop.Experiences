@@ -101,6 +101,21 @@ public sealed class WarlordsGameTests
     }
 
     [Fact]
+    public void MapRejectsStartingGarrisonsAboveTheRuleMaximum()
+    {
+        var territories = new[]
+        {
+            new WarlordsTerritoryDefinition("a", "A", ["b"], WarlordsKingdom.Azure, true, WarlordsMap.MaximumGarrison + 1),
+            new WarlordsTerritoryDefinition("b", "B", ["a", "c"], WarlordsKingdom.Crimson, true, 3),
+            new WarlordsTerritoryDefinition("c", "C", ["b", "d"], WarlordsKingdom.Verdant, true, 3),
+            new WarlordsTerritoryDefinition("d", "D", ["a", "c"], WarlordsKingdom.Amber, true, 3),
+            new WarlordsTerritoryDefinition("e", "E", ["a"])
+        };
+
+        Assert.Throws<ArgumentException>(() => new WarlordsMap("oversized-garrison", 1, territories));
+    }
+
+    [Fact]
     public void SeededMatchesProduceIdenticalCombatAndEventHistory()
     {
         var map = WarlordsMap.CreateStarterMap();
