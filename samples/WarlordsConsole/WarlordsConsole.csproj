@@ -6,6 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../src/Warlords/TheSingularityWorkshop.Experiences.Warlords.csproj" />
+    <ProjectReference Include="../../src/Warlords.Runtime/TheSingularityWorkshop.Experiences.Warlords.Runtime.csproj" />
   </ItemGroup>
 </Project>
