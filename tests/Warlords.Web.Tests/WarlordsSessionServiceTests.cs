@@ -1,3 +1,4 @@
+using TheSingularityWorkshop.Experiences.Warlords;
 using WarlordsWebApp;
 using Xunit;
 
