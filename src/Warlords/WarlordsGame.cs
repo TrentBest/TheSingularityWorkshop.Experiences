@@ -52,9 +52,13 @@ public sealed record WarlordsGameSnapshot(
 /// </remarks>
 public sealed class WarlordsGame
 {
+    /// <summary>Versioned rules contract for the first four-kingdom scenario.</summary>
     public const string RulesVersion = "warlords-four-kingdoms/1";
+    /// <summary>Number of strongholds required to win by conquest.</summary>
     public const int VictoryStrongholds = 3;
+    /// <summary>Maximum number of armies permitted in one territory garrison.</summary>
     public const int MaximumGarrison = WarlordsMap.MaximumGarrison;
+    /// <summary>Versioned deterministic pseudo-random algorithm used for combat dice.</summary>
     public const string CombatAlgorithm = "combat.xorshift32-d6/v1";
 
     private readonly WarlordsMap _map;
