@@ -13,7 +13,7 @@ The `src/Warlords` project contains a deterministic, renderer-independent game d
 - Strongholds, neutral territories, and starting garrisons.
 - One active kingdom at a time, round progression, and automatic recruitment at owned strongholds.
 - Legal march discovery and validation; a territory must retain at least one army.
-- Seeded six-sided combat, with the match seed and both rolls represented in the event history.
+- Seeded six-sided combat using the explicit `combat.xorshift32-d6/v1` algorithm, with the match seed and both rolls represented in the event history. The PRNG is implemented in the domain rather than delegated to runtime-specific `System.Random` behavior.
 - Territory capture, stronghold ownership, and an explicit three-stronghold victory condition.
 - Immutable point-in-time snapshots and ordered, explainable events.
 - Focused tests for map invariants, turns, recruitment, movement, combat, deterministic replay, and rejected actions.
