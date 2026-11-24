@@ -16,6 +16,7 @@ The `src/Warlords` project contains a deterministic, renderer-independent game d
 - Seeded six-sided combat using the explicit `combat.xorshift32-d6/v1` algorithm, with the match seed and both rolls represented in the event history. The PRNG is implemented in the domain rather than delegated to runtime-specific `System.Random` behavior.
 - Territory capture, stronghold ownership, and an explicit three-stronghold victory condition.
 - Immutable point-in-time snapshots and ordered, explainable events.
+- An authoritative opening campaign vector at `experiences/Warlords/vectors/four-kingdoms-opening-seed-17.json`, replayed in tests against exact accepted events and the final snapshot; this is the source fixture intended for the Gauntlet adapter.
 - Focused tests for map invariants, turns, recruitment, movement, combat, deterministic replay, and rejected actions.
 
 The initial combat rule is intentionally simple: each committed army contributes two strength and each side receives one seeded six-sided roll. The higher total wins; ties defend. Survivors are calculated by the versioned rule in `WarlordsGame`. This is a game rule, not a physical simulation.
@@ -52,6 +53,7 @@ Use `status` to inspect the board and legal marches, `march azure-keep frostmarc
 | Semantic interaction and intent | FSM_UserIO | Future host-neutral command vocabulary |
 | Semantic controls and board interaction | GUI | Future manifestation surface |
 | Map visualization and rendering | Visualize / Renderer | Future manifestation surface; cannot decide ownership or combat |
+| Campaign vectors and failure evidence | Gauntlet | Consumes Experiences-authored vectors; does not own Warlords rules |
 | Canonical save/load and versioned state transfer | FSM_Serialization | Planned once the domain snapshot contract is stable |
 | Browser / desktop / VR host | WebPage / AnyApp / future MyVR | Not connected by this slice |
 
