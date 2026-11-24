@@ -3,7 +3,6 @@ namespace TheSingularityWorkshop.Experiences.Warlords;
 /// <summary>Playable kingdoms in the four-kingdom starter scenario.</summary>
 public enum WarlordsKingdom { Azure, Crimson, Verdant, Amber }
 
-/// <summary>Immutable authored definition of one territory.</summary>
 /// <summary>Stable, immutable territory identity and authored map adjacency.</summary>
 public sealed record WarlordsTerritoryDefinition(
     string Id,
