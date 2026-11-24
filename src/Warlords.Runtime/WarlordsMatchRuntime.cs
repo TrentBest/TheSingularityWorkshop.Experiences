@@ -13,7 +13,9 @@ namespace TheSingularityWorkshop.Experiences.Warlords.Runtime;
 /// </remarks>
 public sealed class WarlordsMatchRuntime : IStateContext, IDisposable
 {
+    /// <summary>FSM_API state while the domain accepts match commands.</summary>
     public const string CommandState = "Command";
+    /// <summary>FSM_API terminal state after the domain declares a winner.</summary>
     public const string FinishedState = "Finished";
 
     private readonly WarlordsGame _game;
