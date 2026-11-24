@@ -6,15 +6,12 @@ public enum WarlordsPhase { Command, Finished }
 /// <summary>Outcome of one territory battle.</summary>
 public enum WarlordsBattleOutcome { NoBattle, AttackerVictory, DefenderVictory }
 
-/// <summary>Current authoritative state of one territory.</summary>
 /// <summary>Current authoritative ownership and army count for one territory.</summary>
 public sealed record WarlordsTerritoryState(string TerritoryId, WarlordsKingdom? Owner, int ArmyCount, bool IsStronghold);
 
-/// <summary>One legal march command from a source territory to an adjacent destination.</summary>
 /// <summary>Requested movement of a positive number of armies across one map edge.</summary>
 public sealed record WarlordsMarch(string SourceTerritoryId, string DestinationTerritoryId, int ArmyCount);
 
-/// <summary>Canonical, ordered record of one accepted game action.</summary>
 /// <summary>Immutable evidence for one accepted march and its resolved battle.</summary>
 public sealed record WarlordsEvent(
     int Sequence,
@@ -31,7 +28,6 @@ public sealed record WarlordsEvent(
     WarlordsTerritoryState DestinationAfter,
     string RuleId);
 
-/// <summary>Immutable inspection snapshot for a host, replay, or presentation adapter.</summary>
 /// <summary>Detached point-in-time snapshot of match identity, state, and accepted events.</summary>
 public sealed record WarlordsGameSnapshot(
     string MapKey,
@@ -50,8 +46,9 @@ public sealed record WarlordsGameSnapshot(
 /// </summary>
 /// <remarks>
 /// Combat uses a seeded pair of six-sided dice. The seed is part of the match setup and accepted
-/// events record both rolls, making the outcome reproducible and inspectable. This is an abstract
-/// strategy-game rule, not a physical simulation.
+/// events record both rolls, making the outcome reproducible and inspectable. The explicit
+/// xorshift32 algorithm is stable across .NET runtime versions. This is an abstract strategy-game
+/// rule, not a physical simulation.
 /// </remarks>
 public sealed class WarlordsGame
 {
@@ -211,13 +208,19 @@ public sealed class WarlordsGame
 
     private int NextDieRoll()
     {
-        // Explicit xorshift32 keeps seeded combat reproducible across .NET runtime versions.
-        var value = _randomState;
-        value ^= value << 13;
-        value ^= value >> 17;
-        value ^= value << 5;
-        _randomState = value;
-        return (int)(value % 6) + 1;
+        // Rejection sampling avoids modulo bias while preserving the explicit xorshift32 stream.
+        const uint bound = 6;
+        var threshold = unchecked(0u - bound) % bound;
+        while (true)
+        {
+            var value = _randomState;
+            value ^= value << 13;
+            value ^= value >> 17;
+            value ^= value << 5;
+            _randomState = value;
+            if (value >= threshold)
+                return (int)(value % bound) + 1;
+        }
     }
 
     private void RecruitAtStrongholds(WarlordsKingdom kingdom)
