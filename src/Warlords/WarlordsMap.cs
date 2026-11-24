@@ -39,6 +39,8 @@ public sealed class WarlordsMap
             throw new ArgumentException("Territory IDs must be unique.", nameof(territories));
         if (entries.Any(t => t.StartingGarrison < 0))
             throw new ArgumentException("Starting garrisons cannot be negative.", nameof(territories));
+        if (entries.Any(t => t.StartingOwner is { } owner && !Enum.IsDefined(owner)))
+            throw new ArgumentException("Starting owners must be defined Warlords kingdoms.", nameof(territories));
 
         var byId = entries.ToDictionary(t => t.Id, StringComparer.Ordinal);
         foreach (var territory in entries)
