@@ -33,7 +33,7 @@ The library targets .NET 10 and currently uses only the .NET base class library.
 
 ## Play a local match
 
-A small console shell lets you exercise the same C# domain without a browser or a second rules implementation:
+A small console shell exercises the same C# domain through the `Warlords.Runtime` adapter. The adapter uses FSM_API for the match lifecycle; the shell does not own game state or rules:
 
 ```powershell
 dotnet run --project samples/WarlordsConsole/WarlordsConsole.csproj
