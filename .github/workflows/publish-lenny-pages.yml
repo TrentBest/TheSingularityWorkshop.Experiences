@@ -50,7 +50,7 @@ jobs:
           path: _site
 
   deploy:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/development'
+    if: github.ref == 'refs/heads/development'
     needs: build
     permissions:
       pages: write
