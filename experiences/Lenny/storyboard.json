@@ -1,0 +1,842 @@
+{
+  "schemaVersion": 1,
+  "experience": "lenny",
+  "title": "Little Lenny and the Big Ocean Problem",
+  "format": "cinematic-story-sequence",
+  "sourceOfTruth": "story.json",
+  "sourcePages": 33,
+  "shotCount": 37,
+  "status": "visual-development-board",
+  "authoringRules": {
+    "manuscriptTextIsNarrationSource": true,
+    "pageBreaksAreNotRequiredInFinalCut": true,
+    "everySourcePageHasAtLeastOneShot": true,
+    "artworkMustBeOriginalAndAuthorReviewed": true,
+    "previousConceptPdfArtworkExcluded": true,
+    "noUnapprovedCharacterCanon": true,
+    "noInventedStoryEvents": true,
+    "motionMustBeContinuousAndRestrained": true,
+    "reducedMotionAlternativeRequired": true
+  },
+  "productionTargets": {
+    "reader": "interactive scene sequence with one original illustration per source page",
+    "video": "16:9 cinematic sequence with camera movement, restrained character/environment animation, narration, and sound design",
+    "youtube": "render a finished MP4 locally or in a production pipeline; publishing/upload remains a separate explicit action"
+  },
+  "shots": [
+    {
+      "id": "shot-01",
+      "sourcePage": 1,
+      "title": "Arrival at the shore",
+      "visualDirection": "Wide establishing view from behind the family as Lenny and Dad arrive at a sunlit beach; rolling surf, distant beachgoers, footprints and a clear horizon.",
+      "performance": "Slow cinematic push toward Lenny; waves break and recede; beachgoers shift naturally in the distance.",
+      "emotionalBeat": "wonder",
+      "targetSeconds": 7,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[0]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-01.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "fade-from-black"
+    },
+    {
+      "id": "shot-02",
+      "sourcePage": 1,
+      "title": "A little game in the sand",
+      "visualDirection": "Low child-height view of Lenny digging holes with his bucket and shovel while Dad is visible farther down the beach picking something up.",
+      "performance": "Lenny scoops sand and turns toward the water; bucket water sloshes; Dad bends to retrieve an object.",
+      "emotionalBeat": "curiosity",
+      "targetSeconds": 7,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[0]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-01.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-03",
+      "sourcePage": 2,
+      "title": "The curious run",
+      "visualDirection": "Tracking view beside Lenny as he runs toward Dad, water spilling from his bucket.",
+      "performance": "Camera tracks with Lenny; his steps kick up sand and the bucket swings with believable weight.",
+      "emotionalBeat": "excitement",
+      "targetSeconds": 6,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[1]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-02.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-04",
+      "sourcePage": 3,
+      "title": "What did you find?",
+      "visualDirection": "Medium two-shot: Dad smiles and holds up a discarded plastic bottle; Lenny looks from Dad to the bottle.",
+      "performance": "Dad raises the bottle into view; Lenny slows, catches his breath, and tilts his head.",
+      "emotionalBeat": "curiosity",
+      "targetSeconds": 7,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[2]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-03.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-05",
+      "sourcePage": 4,
+      "title": "A beach that looks fine",
+      "visualDirection": "Wider composition showing ordinary beach activity around the pair; Lenny scans the shoreline while Dad explains.",
+      "performance": "Camera eases outward to reveal the setting; waves and people continue in gentle background motion.",
+      "emotionalBeat": "questioning",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[3]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-04.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-06",
+      "sourcePage": 5,
+      "title": "The ocean is connected",
+      "visualDirection": "Quiet over-the-shoulder view of Dad and Lenny looking out to sea; the water and distant marine life are the visual focus.",
+      "performance": "A slow pan follows their gaze toward the horizon; sunlight glitters on moving water.",
+      "emotionalBeat": "concern",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[4]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-05.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-07",
+      "sourcePage": 6,
+      "title": "Lenny decides to help",
+      "visualDirection": "Lenny looks toward the water, then turns with determination and spots litter nearby; Dad opens the small bag.",
+      "performance": "Lenny springs into action; Dad steadies the bag; keep the action readable, not frantic.",
+      "emotionalBeat": "determination",
+      "targetSeconds": 7,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[5]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-06.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-08",
+      "sourcePage": 7,
+      "title": "A small clean patch",
+      "visualDirection": "A modest section of sand now clean; Lenny stands proudly beside Dad, with the wider beach still extending beyond them.",
+      "performance": "Gentle camera rise reveals the limited area they cleaned; Lenny's proud posture settles.",
+      "emotionalBeat": "pride",
+      "targetSeconds": 6,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[6]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-07.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-09",
+      "sourcePage": 8,
+      "title": "The next day",
+      "visualDirection": "Echo the earlier establishing beach view, but now more crowded; Lenny and his family enter the frame.",
+      "performance": "Camera glides with the family toward the sand; beachgoers recline, sit up, gesture, surf and build sandcastles.",
+      "emotionalBeat": "anticipation",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[7]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-08.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-10",
+      "sourcePage": 8,
+      "title": "The beach has changed",
+      "visualDirection": "Lenny stops as the camera reveals litter scattered across the busy beach; keep every item grounded in the manuscript's generic description.",
+      "performance": "A measured reveal: foreground litter, then wider beach, then Lenny's stunned reaction; waves keep rolling.",
+      "emotionalBeat": "shock",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[7]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-08.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-11",
+      "sourcePage": 9,
+      "title": "Too much to fix",
+      "visualDirection": "Lenny sits in the sand with bucket and shovel dropped beside him; Dad kneels at his level.",
+      "performance": "Lenny's shoulders lower; Dad moves into a kneel and leans closer; background life continues softly.",
+      "emotionalBeat": "discouragement",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[8]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-09.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-12",
+      "sourcePage": 10,
+      "title": "One small effort matters",
+      "visualDirection": "Intimate two-shot of Dad's arm around Lenny as they look toward the beach.",
+      "performance": "Dad rests his arm around Lenny; Lenny looks up, then follows Dad's gaze toward the beach.",
+      "emotionalBeat": "comfort",
+      "targetSeconds": 9,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[9]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-10.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-13",
+      "sourcePage": 11,
+      "title": "A new idea",
+      "visualDirection": "Lenny rises with renewed energy and gestures toward the beachgoers; Dad turns to follow.",
+      "performance": "Lenny springs upright and points; Dad stands and starts after him.",
+      "emotionalBeat": "hope",
+      "targetSeconds": 7,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[10]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-11.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-14",
+      "sourcePage": 12,
+      "title": "Across the busy beach",
+      "visualDirection": "Wide lively shot: Lenny hurries between a sunbather's towel and children building a sandcastle; Dad follows.",
+      "performance": "Tracking camera follows Lenny; towel sunbather lifts her head, children keep shaping sand, Dad gestures an apology.",
+      "emotionalBeat": "lively",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[11]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-12.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-15",
+      "sourcePage": 13,
+      "title": "Please listen",
+      "visualDirection": "Lenny stands before a small group holding up the bottle; the listeners look toward him.",
+      "performance": "Lenny speaks with earnest hand gestures; listeners nod politely and exchange glances.",
+      "emotionalBeat": "earnestness",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[12]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-13.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-16",
+      "sourcePage": 14,
+      "title": "Not everyone listens",
+      "visualDirection": "A woman sunbathing on a bright towel turns and shushes Lenny; keep her ordinary and human, not villainous.",
+      "performance": "She raises one finger gently; Lenny's expression falls and his gesture stops.",
+      "emotionalBeat": "hurt",
+      "targetSeconds": 7,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[13]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-14.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-17",
+      "sourcePage": 15,
+      "title": "The crowd carries on",
+      "visualDirection": "Lenny stands small in the foreground while surfers, picnickers and sandcastle builders continue in the background.",
+      "performance": "The camera slowly pulls back; beachgoers keep subtle natural movement while Lenny becomes still.",
+      "emotionalBeat": "isolation",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[14]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-15.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-18",
+      "sourcePage": 16,
+      "title": "Defeated",
+      "visualDirection": "Close, quiet view of Lenny dropping the bottle and sitting with his gaze lowered.",
+      "performance": "Bottle lands softly in the sand; Lenny folds inward; hold the shot without melodrama.",
+      "emotionalBeat": "sadness",
+      "targetSeconds": 7,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[15]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-16.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-19",
+      "sourcePage": 17,
+      "title": "Dad comes beside him",
+      "visualDirection": "Dad walks into frame and kneels next to Lenny at eye level.",
+      "performance": "Dad's approach is unhurried; he kneels and speaks gently; Lenny remains looking down.",
+      "emotionalBeat": "reassurance",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[16]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-17.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-20",
+      "sourcePage": 18,
+      "title": "A hand on his shoulder",
+      "visualDirection": "Close two-shot focused on Dad's hand resting on Lenny's shoulder as they sit together.",
+      "performance": "Dad's hand settles reassuringly; Lenny glances up briefly; ocean moves in soft focus behind them.",
+      "emotionalBeat": "tenderness",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[17]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-18.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-21",
+      "sourcePage": 19,
+      "title": "The first surprise",
+      "visualDirection": "A single aluminum can arcs into frame and lands beside them on the sand.",
+      "performance": "The can bounces once and rolls to a stop; Lenny picks it up without lifting his head much.",
+      "emotionalBeat": "surprise",
+      "targetSeconds": 6,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[18]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-19.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-22",
+      "sourcePage": 20,
+      "title": "More appears",
+      "visualDirection": "A second can and several bottles drop into the sand; Lenny and Dad turn toward the ocean.",
+      "performance": "Objects enter frame in a short sequence; camera follows their shared turn toward the waterline.",
+      "emotionalBeat": "mystery",
+      "targetSeconds": 7,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[19]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-20.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-23",
+      "sourcePage": 21,
+      "title": "A dolphin!",
+      "visualDirection": "A dolphin's head rises above the surf, framed by rolling waves; Lenny and Dad are visible in the foreground.",
+      "performance": "Dolphin bobs naturally with the swell; it dives and resurfaces with litter balanced on its head.",
+      "emotionalBeat": "wonder",
+      "targetSeconds": 9,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[20]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-21.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-24",
+      "sourcePage": 21,
+      "title": "A helping hand",
+      "visualDirection": "The dolphin tosses the litter into Lenny's bag; Lenny and Dad laugh and begin gathering nearby litter.",
+      "performance": "Follow the arc of the tossed item into the bag; cut to the family and dolphin working in rhythm.",
+      "emotionalBeat": "joy",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[20]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-21.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-25",
+      "sourcePage": 22,
+      "title": "Too close to the water",
+      "visualDirection": "Lenny runs toward a floating bottle as the waves draw it away; Dad hurries after him.",
+      "performance": "Camera tracks toward the waterline; the floating bottle drifts with the current; Dad closes the distance.",
+      "emotionalBeat": "urgency",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[21]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-22.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-26",
+      "sourcePage": 23,
+      "title": "Just in time",
+      "visualDirection": "Dad catches Lenny before a breaking wave reaches him and lifts him onto his shoulders; a dolphin looks up from the water.",
+      "performance": "Wave rises and crashes behind them; Dad's catch is clear and safe; dolphin surfaces beside them.",
+      "emotionalBeat": "relief",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[22]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-23.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-27",
+      "sourcePage": 24,
+      "title": "Pulled by the current",
+      "visualDirection": "Lenny and Dad point excitedly toward the dolphin as the water swirls around them and carries them outward.",
+      "performance": "The camera rotates gently with the current; foam and bubbles sweep past without disorienting cuts.",
+      "emotionalBeat": "astonishment",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[23]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-24.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-28",
+      "sourcePage": 25,
+      "title": "A safe bubble",
+      "visualDirection": "Underwater wide shot: a pod of dolphins surrounds a clear air bubble containing Lenny and Dad.",
+      "performance": "The pod swims in coordinated arcs; bubble shimmers; Lenny and Dad settle as they realize they can breathe.",
+      "emotionalBeat": "wonder",
+      "targetSeconds": 9,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[24]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-25.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-29",
+      "sourcePage": 26,
+      "title": "The ocean floor",
+      "visualDirection": "The pod guides them down to the seabed, where piles of trash interrupt the natural landscape.",
+      "performance": "Camera descends with the group; suspended particles drift; show environmental harm without graphic imagery.",
+      "emotionalBeat": "sadness",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[25]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-26.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-30",
+      "sourcePage": 27,
+      "title": "A damaged reef",
+      "visualDirection": "A coral reef appears with areas of dying coral and litter caught among the structure.",
+      "performance": "Slow lateral camera move across the reef; fish pass through the scene; keep the damage readable but restrained.",
+      "emotionalBeat": "concern",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[26]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-27.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-31",
+      "sourcePage": 28,
+      "title": "Sea turtles",
+      "visualDirection": "The group passes several sea turtles; some show non-graphic signs of past entanglement or injury.",
+      "performance": "Turtles swim steadily; dolphins maintain a respectful escort; avoid close-up injury spectacle.",
+      "emotionalBeat": "empathy",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[27]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-28.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-32",
+      "sourcePage": 29,
+      "title": "A struggling ecosystem",
+      "visualDirection": "A school of fish moves through a habitat crowded by trash; the fish search for space and food.",
+      "performance": "Fish school shifts direction together; debris moves subtly with the current; camera widens to show scale.",
+      "emotionalBeat": "grief",
+      "targetSeconds": 9,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[28]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-29.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-33",
+      "sourcePage": 30,
+      "title": "Shared sadness",
+      "visualDirection": "Lenny and Dad look at the damaged ocean life; the dolphins sense their sadness and stay close.",
+      "performance": "Lenny's expression softens; Dad draws him close; dolphins slow and circle gently.",
+      "emotionalBeat": "compassion",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[29]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-30.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-34",
+      "sourcePage": 31,
+      "title": "Back at the shore",
+      "visualDirection": "The pod returns Lenny and Dad to the familiar beach; Lenny looks at his small bag and asks how they can help.",
+      "performance": "Camera rises toward the surface and settles at the waterline; Lenny studies the small bag.",
+      "emotionalBeat": "resolve",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[30]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-31.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-35",
+      "sourcePage": 32,
+      "title": "A dolphin's answer",
+      "visualDirection": "The dolphin looks into Lenny's eyes, dives, then resurfaces with litter balanced on its nose.",
+      "performance": "Dolphin dips below the surface and pops back up; hold the beat for Lenny's surprised reaction.",
+      "emotionalBeat": "playfulness",
+      "targetSeconds": 8,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[31]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-32.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-36",
+      "sourcePage": 32,
+      "title": "A little hope",
+      "visualDirection": "The dolphin tosses several pieces into Lenny's bag, waves a fin and dives away; Lenny laughs with Dad.",
+      "performance": "Each piece lands in the bag in sequence; dolphin lifts a fin, then dives; Lenny and Dad share a relieved laugh.",
+      "emotionalBeat": "hope",
+      "targetSeconds": 9,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[31]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-32.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "story-motivated-cut"
+    },
+    {
+      "id": "shot-37",
+      "sourcePage": 33,
+      "title": "Leaving it better",
+      "visualDirection": "Lenny walks away with the bag over his shoulder, stopping to pick up litter as he goes; Dad walks with him.",
+      "performance": "Camera follows from behind, then moves alongside their hopeful walk as the surf rolls in.",
+      "emotionalBeat": "hopeful resolve",
+      "targetSeconds": 9,
+      "narration": {
+        "source": "story.json",
+        "selector": "pages[32]"
+      },
+      "artwork": {
+        "status": "not-created",
+        "path": "visuals/artwork/page-33.webp"
+      },
+      "camera": {
+        "aspectRatio": "16:9",
+        "movement": "slow-cinematic"
+      },
+      "transition": "fade-to-end"
+    }
+  ]
+}
