@@ -76,6 +76,10 @@ Open the [provisional turning-point presentation study](turning-point-study.html
 
 The previous illustrations were not the author's artwork and were only rough communication aids. They are intentionally excluded from this project. The book's new visual identity will be developed from the author's story through StoryBuilder. Character appearance, environment design, palette, rendering approach, and page compositions are new proposals; nothing becomes continuity canon until the author approves it. See [VisualStoryPlan.md](VisualStoryPlan.md).
 
+## Cinematic video and artwork direction
+
+The next presentation target is a cinematic retelling, not a fixed-page slideshow. [VIDEO_PRODUCTION_PLAN.md](VIDEO_PRODUCTION_PLAN.md) defines the original artwork standard, 33-page illustration requirement, beach/environment performances, shared reader/video scene model, and YouTube-ready rendering pipeline. [storyboard.json](storyboard.json) contains 37 authored shots mapped to the canonical 33 story pages. The storyboard is a production plan, not finished artwork or a rendered video; original page images and the final video renderer remain outstanding.
+
 ## Living-world foundation
 
 The Lenny living-world model is now present on `development` as a separate, renderer-neutral Experience layer:
