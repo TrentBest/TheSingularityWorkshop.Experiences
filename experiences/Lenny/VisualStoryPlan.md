@@ -4,7 +4,9 @@
 
 ## Purpose
 
-Create a distinctive, coherent illustrated children's book that serves the author's story and emotional intent. Use StoryBuilder to develop the cast, environments, page compositions, visual continuity, revision history, and eventual reading edition. Do not trace, imitate, extract, or adapt the previous concept illustrations.
+Create a distinctive, coherent visual world that serves the author's story and emotional intent across both an illustrated reader and a cinematic video retelling. Use StoryBuilder to develop the cast, environments, shot compositions, visual continuity, revision history, and reusable artwork. The film is not required to preserve the manuscript's original page breaks: shots may combine, split, hold, or transition as needed while preserving story meaning and canonical narration. Do not trace, imitate, extract, or adapt the previous concept illustrations.
+
+The current cinematic direction and 37-shot timeline are documented in [VIDEO_PRODUCTION_PLAN.md](VIDEO_PRODUCTION_PLAN.md) and [storyboard.json](storyboard.json). The table below is a set of source-page visual anchors for the 33 manuscript pages, not a mandated film edit or a requirement to make one shot per printed page.
 
 ## Source and visual authority
 
@@ -88,7 +90,7 @@ Use three levels of certainty:
 9. Compose illustrations to support the words, not replace or rewrite them. Leave readable space for text when page layout is eventually known.
 10. Distinguish confirmed facts from provisional visual choices in all reusable prompts and asset metadata.
 
-## Page-by-page illustration direction
+## Source-page visual anchors (not a fixed film edit)
 
 These are scene descriptions and composition suggestions, not final image prompts or approved art.
 
