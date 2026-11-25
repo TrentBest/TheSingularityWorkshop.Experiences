@@ -1,0 +1,37 @@
+*{box-sizing:border-box}
+:root{color-scheme:dark;font-family:Inter,Segoe UI,Arial,sans-serif;background:#050a12;color:#e8f1fb}
+body{margin:0;background:radial-gradient(ellipse at 50% -15%,rgba(0,220,255,.12),transparent 48%),#050a12;min-height:100vh}
+.warlords-shell{max-width:1180px;margin:0 auto;padding:clamp(1rem,3vw,2.5rem)}
+.warlords-header{padding:1.5rem 0 1.25rem;border-bottom:1px solid rgba(87,214,240,.2)}
+.eyebrow{font:700 .7rem Consolas,monospace;letter-spacing:.18em;color:#54d9ef}
+.warlords-header h1{font-size:clamp(2.8rem,7vw,5.4rem);line-height:.95;letter-spacing:-.055em;margin:.7rem 0;color:#fff}
+.warlords-header h1 span{display:block;font-size:clamp(1.1rem,2vw,1.6rem);letter-spacing:.12em;color:#9db9cb;margin-top:1rem}
+.warlords-header p{max-width:780px;color:#9db1c3;line-height:1.65}
+.match-status{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.7rem;margin:1.4rem 0}
+.match-status div{padding:.85rem 1rem;background:#0c1724;border:1px solid rgba(87,214,240,.18);border-radius:8px}
+.match-status span{display:block;font:700 .62rem Consolas,monospace;letter-spacing:.12em;color:#6f93a8}
+.match-status strong{display:block;margin-top:.35rem;color:#effaff;font-size:1rem}
+.session-message{padding:.85rem 1rem;background:#0b1b29;border-left:3px solid #39cce6;color:#c5d8e5;min-height:2.8rem}
+.warlords-board{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:1.2rem;margin-top:1.2rem}
+.territory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem}
+.territory-card{display:flex;flex-direction:column;gap:.45rem;min-height:132px;padding:1rem;background:#0c1724;border:1px solid rgba(105,160,190,.25);border-radius:9px}
+.territory-card.azure{border-top:3px solid #3e9df4}
+.territory-card.crimson{border-top:3px solid #e45c65}
+.territory-card.verdant{border-top:3px solid #58c889}
+.territory-card.amber{border-top:3px solid #e5b45c}
+.territory-card.neutral{border-top:3px solid #778694}
+.territory-name{font-weight:750;color:#f2f7fc}
+.territory-owner{font-size:.84rem;color:#9eb4c5}
+.territory-armies{font-size:1.15rem;font-weight:700;color:#fff}
+.territory-stronghold{font:700 .6rem Consolas,monospace;letter-spacing:.12em;color:#f1c978;margin-top:auto}
+.command-panel{display:flex;flex-direction:column;align-items:stretch;gap:.5rem;padding:1rem;background:#0a1420;border:1px solid rgba(87,214,240,.2);border-radius:9px;max-height:540px;overflow:auto}
+.command-heading{font:700 .75rem Consolas,monospace;letter-spacing:.16em;color:#58d8ed;margin-bottom:.35rem}
+.march-button,.end-turn-button{appearance:none;border:1px solid rgba(87,214,240,.32);border-radius:6px;padding:.65rem .75rem;background:#102638;color:#e6f8ff;text-align:left;font:600 .82rem Consolas,monospace;cursor:pointer;transition:background .15s,border-color .15s}
+.march-button:hover,.end-turn-button:hover{background:#17415b;border-color:#4bd7ed}
+.end-turn-button{margin-top:1rem;background:#153b38;border-color:#45bc9e;text-align:center;width:100%}
+.end-turn-button:hover{background:#1c514a;border-color:#6ce2c2}
+.empty-state{color:#9cb0c0;font-size:.9rem;line-height:1.5}
+.match-winner{grid-column:1/-1;padding:1.2rem;border:1px solid #5ecba6;background:#0c2b27;color:#9cf0d0;font-weight:800;font-size:1.2rem}
+footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.8rem;margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(87,214,240,.2);font:700 .62rem Consolas,monospace;letter-spacing:.12em;color:#63869a}
+@media(max-width:850px){.warlords-board{grid-template-columns:1fr}.command-panel{max-height:420px}}
+@media(max-width:600px){.match-status{grid-template-columns:repeat(2,minmax(0,1fr))}.territory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.warlords-shell{padding:1rem}.warlords-header h1{font-size:2.7rem}}

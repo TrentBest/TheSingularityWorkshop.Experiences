@@ -1,0 +1,213 @@
+{
+  "id": "four-kingdoms-opening-seed-17",
+  "schemaVersion": 1,
+  "scenario": {
+    "key": "four-kingdoms",
+    "version": 1
+  },
+  "rulesVersion": "warlords-four-kingdoms/1",
+  "seed": 17,
+  "commands": [
+    {
+      "sequence": 1,
+      "kind": "march",
+      "source": "azure-keep",
+      "destination": "frostmarch",
+      "armies": 4,
+      "expected": {
+        "result": "accepted",
+        "event": {
+          "sequence": 1,
+          "round": 1,
+          "actor": "Azure",
+          "action": "march",
+          "sourceTerritoryId": "azure-keep",
+          "destinationTerritoryId": "frostmarch",
+          "armiesCommitted": 4,
+          "attackerRoll": 4,
+          "defenderRoll": 5,
+          "battleOutcome": "AttackerVictory",
+          "sourceAfter": {
+            "territoryId": "azure-keep",
+            "owner": "Azure",
+            "armyCount": 1,
+            "isStronghold": true
+          },
+          "destinationAfter": {
+            "territoryId": "frostmarch",
+            "owner": "Azure",
+            "armyCount": 3,
+            "isStronghold": false
+          },
+          "ruleId": "combat.xorshift32-d6/v1"
+        }
+      }
+    },
+    {
+      "sequence": 2,
+      "kind": "endTurn",
+      "expected": {
+        "result": "accepted"
+      }
+    },
+    {
+      "sequence": 3,
+      "kind": "march",
+      "source": "crimson-hold",
+      "destination": "highplain",
+      "armies": 4,
+      "expected": {
+        "result": "accepted",
+        "event": {
+          "sequence": 2,
+          "round": 1,
+          "actor": "Crimson",
+          "action": "march",
+          "sourceTerritoryId": "crimson-hold",
+          "destinationTerritoryId": "highplain",
+          "armiesCommitted": 4,
+          "attackerRoll": 4,
+          "defenderRoll": 1,
+          "battleOutcome": "AttackerVictory",
+          "sourceAfter": {
+            "territoryId": "crimson-hold",
+            "owner": "Crimson",
+            "armyCount": 1,
+            "isStronghold": true
+          },
+          "destinationAfter": {
+            "territoryId": "highplain",
+            "owner": "Crimson",
+            "armyCount": 3,
+            "isStronghold": false
+          },
+          "ruleId": "combat.xorshift32-d6/v1"
+        }
+      }
+    },
+    {
+      "sequence": 4,
+      "kind": "endTurn",
+      "expected": {
+        "result": "accepted"
+      }
+    }
+  ],
+  "expectedFinalSnapshot": {
+    "mapKey": "four-kingdoms",
+    "mapVersion": 1,
+    "seed": 17,
+    "round": 1,
+    "activeKingdom": "Verdant",
+    "phase": "Command",
+    "winner": null,
+    "territories": [
+      {
+        "territoryId": "amber-fort",
+        "owner": "Amber",
+        "armyCount": 4,
+        "isStronghold": true
+      },
+      {
+        "territoryId": "azure-keep",
+        "owner": "Azure",
+        "armyCount": 1,
+        "isStronghold": true
+      },
+      {
+        "territoryId": "crimson-hold",
+        "owner": "Crimson",
+        "armyCount": 1,
+        "isStronghold": true
+      },
+      {
+        "territoryId": "frostmarch",
+        "owner": "Azure",
+        "armyCount": 3,
+        "isStronghold": false
+      },
+      {
+        "territoryId": "greenmarch",
+        "owner": null,
+        "armyCount": 1,
+        "isStronghold": false
+      },
+      {
+        "territoryId": "heartland",
+        "owner": null,
+        "armyCount": 2,
+        "isStronghold": false
+      },
+      {
+        "territoryId": "highplain",
+        "owner": "Crimson",
+        "armyCount": 3,
+        "isStronghold": false
+      },
+      {
+        "territoryId": "sunfield",
+        "owner": null,
+        "armyCount": 1,
+        "isStronghold": false
+      },
+      {
+        "territoryId": "verdant-citadel",
+        "owner": "Verdant",
+        "armyCount": 5,
+        "isStronghold": true
+      }
+    ],
+    "events": [
+      {
+        "sequence": 1,
+        "round": 1,
+        "actor": "Azure",
+        "action": "march",
+        "sourceTerritoryId": "azure-keep",
+        "destinationTerritoryId": "frostmarch",
+        "armiesCommitted": 4,
+        "attackerRoll": 4,
+        "defenderRoll": 5,
+        "battleOutcome": "AttackerVictory",
+        "sourceAfter": {
+          "territoryId": "azure-keep",
+          "owner": "Azure",
+          "armyCount": 1,
+          "isStronghold": true
+        },
+        "destinationAfter": {
+          "territoryId": "frostmarch",
+          "owner": "Azure",
+          "armyCount": 3,
+          "isStronghold": false
+        },
+        "ruleId": "combat.xorshift32-d6/v1"
+      },
+      {
+        "sequence": 2,
+        "round": 1,
+        "actor": "Crimson",
+        "action": "march",
+        "sourceTerritoryId": "crimson-hold",
+        "destinationTerritoryId": "highplain",
+        "armiesCommitted": 4,
+        "attackerRoll": 4,
+        "defenderRoll": 1,
+        "battleOutcome": "AttackerVictory",
+        "sourceAfter": {
+          "territoryId": "crimson-hold",
+          "owner": "Crimson",
+          "armyCount": 1,
+          "isStronghold": true
+        },
+        "destinationAfter": {
+          "territoryId": "highplain",
+          "owner": "Crimson",
+          "armyCount": 3,
+          "isStronghold": false
+        },
+        "ruleId": "combat.xorshift32-d6/v1"
+      }
+    ]
+  }
+}

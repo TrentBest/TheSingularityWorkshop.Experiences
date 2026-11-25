@@ -1,0 +1,42 @@
+@page "/"
+@rendermode InteractiveServer
+@implements IDisposable
+@inject WarlordsSessionService Session
+
+<PageTitle>Warlords // Four Kingdoms</PageTitle>
+
+<main class="warlords-shell">
+    <header class="warlords-header">
+        <div class="eyebrow">THE SINGULARITY WORKSHOP / EXPERIENCES</div>
+        <h1>WARLORDS <span>Four Kingdoms</span></h1>
+        <p>One C# rules domain. An FSM_API-owned match lifecycle. A semantic GUI tree manifested by GUI.Blazor.</p>
+    </header>
+
+    <section class="match-status" aria-label="Match status">
+        <div><span>ROUND</span><strong>@Session.Snapshot.Round</strong></div>
+        <div><span>ACTIVE KINGDOM</span><strong>@Session.Snapshot.ActiveKingdom</strong></div>
+        <div><span>DOMAIN PHASE</span><strong>@Session.Snapshot.Phase</strong></div>
+        <div><span>FSM_API LIFECYCLE</span><strong>@Session.LifecycleState</strong></div>
+        <div><span>ACCEPTED BATTLES</span><strong>@Session.Snapshot.Events.Count</strong></div>
+    </section>
+
+    <p class="session-message" role="status">@Session.Message</p>
+
+    @BlazorGuiRenderer.Render(Session.BuildTree(), Dispatch)
+
+    <footer>
+        <span>EXPERIENCES OWNS THE RULES</span>
+        <span>GUI OWNS THE SEMANTIC TREE</span>
+        <span>FSM_API OWNS SESSION LIFECYCLE</span>
+    </footer>
+</main>
+
+@code {
+    protected override void OnInitialized() => Session.Changed += OnSessionChanged;
+
+    private void Dispatch(string command) => Session.Dispatch(command);
+
+    private void OnSessionChanged() => _ = InvokeAsync(StateHasChanged);
+
+    public void Dispose() => Session.Changed -= OnSessionChanged;
+}

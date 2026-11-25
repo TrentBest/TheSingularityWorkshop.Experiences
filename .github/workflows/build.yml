@@ -34,6 +34,7 @@ jobs:
           - src/GitHubLearningStudio/TheSingularityWorkshop.Experiences.GitHubLearningStudio.csproj
           - src/GitHubLearningStudio.PullRequests/TheSingularityWorkshop.Experiences.GitHubLearningStudio.PullRequests.csproj
           - src/Minesweeper/TheSingularityWorkshop.Experiences.Minesweeper.csproj
+          - src/Warlords/TheSingularityWorkshop.Experiences.Warlords.csproj
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
@@ -142,6 +143,116 @@ jobs:
         with:
           name: minesweeper-test-results
           path: TestResults/minesweeper/
+          if-no-files-found: warn
+          retention-days: 14
+
+  # Warlords is a deterministic, host-independent strategy domain.
+  test-warlords-domain:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore Warlords domain tests
+        run: dotnet restore tests/Warlords.Tests/TheSingularityWorkshop.Experiences.Warlords.Tests.csproj
+      - name: Run deterministic Warlords rules tests
+        run: dotnet test tests/Warlords.Tests/TheSingularityWorkshop.Experiences.Warlords.Tests.csproj --configuration Release --no-restore --logger "trx;LogFileName=warlords.trx" --results-directory ./TestResults/warlords
+      - name: Upload Warlords test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: warlords-test-results
+          path: TestResults/warlords/
+          if-no-files-found: warn
+          retention-days: 14
+
+  # The adapter delegates all rules to the domain and uses FSM_API only for match lifecycle.
+  test-warlords-runtime:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore Warlords FSM_API runtime tests
+        run: dotnet restore tests/Warlords.Runtime.Tests/TheSingularityWorkshop.Experiences.Warlords.Runtime.Tests.csproj
+      - name: Run Warlords FSM_API lifecycle tests
+        run: dotnet test tests/Warlords.Runtime.Tests/TheSingularityWorkshop.Experiences.Warlords.Runtime.Tests.csproj --configuration Release --no-restore --logger "trx;LogFileName=warlords-runtime.trx" --results-directory ./TestResults/warlords-runtime
+      - name: Upload Warlords runtime test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: warlords-runtime-test-results
+          path: TestResults/warlords-runtime/
+          if-no-files-found: warn
+          retention-days: 14
+
+  test-warlords-web:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore Warlords semantic board tests
+        run: dotnet restore tests/Warlords.Web.Tests/TheSingularityWorkshop.Experiences.Warlords.Web.Tests.csproj
+      - name: Run Warlords GUI command boundary tests
+        run: dotnet test tests/Warlords.Web.Tests/TheSingularityWorkshop.Experiences.Warlords.Web.Tests.csproj --configuration Release --no-restore --logger "trx;LogFileName=warlords-web.trx" --results-directory ./TestResults/warlords-web
+      - name: Upload Warlords GUI test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: warlords-web-test-results
+          path: TestResults/warlords-web/
+          if-no-files-found: warn
+          retention-days: 14
+
+  sample-warlords-console:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Run a scripted local Warlords match
+        shell: bash
+        run: |
+          printf 'march azure-keep frostmarch 4\nquit\n' | dotnet run --project samples/WarlordsConsole/WarlordsConsole.csproj --configuration Release | tee ./warlords-console.log
+          grep -q 'Azure, 3 armies' ./warlords-console.log
+
+  sample-warlords-web:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore and build GUI.Blazor Warlords host
+        run: |
+          dotnet restore samples/WarlordsWebApp/WarlordsWebApp.csproj
+          dotnet build samples/WarlordsWebApp/WarlordsWebApp.csproj --configuration Release --no-restore
+      - name: Smoke-test the loopback browser board
+        shell: bash
+        run: |
+          ASPNETCORE_URLS=http://127.0.0.1:5078 dotnet run --project samples/WarlordsWebApp/WarlordsWebApp.csproj --configuration Release --no-build > ./warlords-web.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:5078/ -o ./warlords-web.html; then
+              break
+            fi
+            sleep 1
+          done
+          grep -q 'WARLORDS' ./warlords-web.html
+          grep -q 'Frostmarch' ./warlords-web.html
+          grep -q 'LEGAL MARCHES' ./warlords-web.html
+      - name: Upload Warlords browser host logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: warlords-web-smoke-logs
+          path: warlords-web.log
           if-no-files-found: warn
           retention-days: 14
 

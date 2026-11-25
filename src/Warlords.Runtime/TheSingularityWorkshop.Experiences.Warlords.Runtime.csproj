@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="TheSingularityWorkshop.FSM_API" Version="1.0.13" />
+    <ProjectReference Include="../Warlords/TheSingularityWorkshop.Experiences.Warlords.csproj" />
+  </ItemGroup>
+</Project>
