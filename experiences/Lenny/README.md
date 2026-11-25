@@ -86,7 +86,7 @@ The Lenny living-world model is now present on `development` as a separate, rend
 - [Physics integration boundary](PHYSICS_INTEGRATION.md) documents the Physics provider, host ownership, and remaining browser/runtime bridge.
 - [C# host-composition sample](../../samples/Lenny.MotionHost/README.md) resolves the typed Physics provider and verifies fixed-step commits using a synthetic, non-artwork path.
 
-This is a foundation, not yet a visible interactive scene. The reader does not currently animate Lenny, beachgoers, or the dolphin from this model; no artwork-relative litter hit regions have been authored or approved. The existing provisional illustrations remain provisional. The browser reader stays navigable independently of the optional interaction model, and `story.json` remains the canonical manuscript source.
+A first ambient-motion pass is now visible in the existing SVG illustrations: Lenny and Dad have subtle idle movement, birds cross the beach sky, the dolphin bobs, and underwater fish, dolphins, and bubbles drift. These are presentation-only SVG animations, not Physics observations and not actor behavior driven by living-world.json. The reader still has no interactive actor locomotion, beachgoer performances, runtime bridge, or approved artwork-relative litter hit regions. The existing provisional illustrations remain provisional. The browser reader stays navigable independently of the optional interaction model, and `story.json` remains the canonical manuscript source.
 
 ## Ownership boundary
 
