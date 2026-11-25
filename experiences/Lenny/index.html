@@ -28,7 +28,7 @@ button{border:1px solid #b8c6c2;background:#fff;color:var(--ink);border-radius:4
 button:hover:enabled{background:#edf3f0;border-color:var(--accent)}button:focus-visible{outline:3px solid #477b83;outline-offset:3px}button:disabled{opacity:.35;cursor:not-allowed}
 #progressText{font:500 .82rem/1.4 system-ui,sans-serif;color:var(--muted);font-variant-numeric:tabular-nums;text-align:center}
 .progress{height:3px;background:#dfe5e1;margin-top:16px;overflow:hidden}#progressFill{height:100%;width:0;background:var(--accent);transition:width .2s ease}
-.tools{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.tools button{padding:7px 11px;font-size:.78rem;background:transparent}
+.tools{display:flex;justify-content:flex-end;gap:8px;margin-top:12px;flex-wrap:wrap}.tools button{padding:7px 11px;font-size:.78rem;background:transparent}.shot-notes{margin:24px 0 0;padding:18px 20px;border-left:3px solid var(--accent);background:#edf2ef;border-radius:0 8px 8px 0;font:.9rem/1.6 system-ui,sans-serif}.shot-notes p{margin:0 0 10px}.shot-notes p:last-child{margin-bottom:0}.shot-notes strong{color:var(--ink)}
 .hint{font:.78rem/1.5 system-ui,sans-serif;color:var(--muted);text-align:center;margin:16px 0 0}
 .error{padding:24px;background:#fff0ee;border:1px solid #d99;color:#612}
 @media(max-width:600px){.shell{width:calc(100% - 20px);padding-top:16px}.book{min-height:calc(100svh - 180px);padding:22px}.page-content{padding:30px 0}.controls button{padding:12px}.topline{font-size:.65rem}}
@@ -52,7 +52,7 @@ button:hover:enabled{background:#edf3f0;border-color:var(--accent)}button:focus-
       <button id="next" type="button" disabled>Next →</button>
     </nav>
     <p id="pageAnnouncement" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
-    <div class="tools" aria-label="Reading comfort"><button id="smaller" type="button" aria-label="Decrease text size">A−</button><button id="larger" type="button" aria-label="Increase text size">A+</button></div>
+    <div class="tools" aria-label="Reader controls"><button id="modeToggle" type="button" aria-pressed="false">Explore film storyboard</button><button id="smaller" type="button" aria-label="Decrease text size">A−</button><button id="larger" type="button" aria-label="Increase text size">A+</button></div>
     <p class="hint">Use ← and → keys to turn pages. On touch screens, swipe to move between pages.</p>
   </main>
 </div>
@@ -62,10 +62,11 @@ button:hover:enabled{background:#edf3f0;border-color:var(--accent)}button:focus-
   const previous=document.getElementById('previous'),next=document.getElementById('next'),progressText=document.getElementById('progressText');
   const progressFill=document.getElementById('progressFill'),progress=document.getElementById('progress');
   const announcement=document.getElementById('pageAnnouncement');
-  let slides=[],index=0,fontScale=1;
+  let slides=[],readerSlides=[],filmSlides=[],index=0,fontScale=1,mode="reader";
+  const modeToggle=document.getElementById("modeToggle");
   function paragraph(text){const p=document.createElement('p');p.textContent=text;return p}
   function render(){
-    const slide=slides[index];content.replaceChildren();kind.textContent=slide.kind;number.textContent=slide.label;
+    const slide=slides[index];content.replaceChildren();kind.textContent=mode==="film"?"Cinematic storyboard":slide.kind;number.textContent=slide.label;
     if(slide.title){const k=document.createElement('p');k.className='kicker';k.textContent='A story to read together';content.append(k);const h=document.createElement('h1');h.textContent=slide.title;content.append(h)}
     if(slide.heading){const h=document.createElement('h2');h.textContent=slide.heading;content.append(h)}
     const artPath=slide.kind==='Title'?'visuals/cover.svg':slide.kind==='Story'?(slide.page===1||slide.page===6?'visuals/beach-cleanup.svg':slide.page>=21&&slide.page<=24?'visuals/dolphin-helper.svg':slide.page>=25&&slide.page<=30?'visuals/underwater-journey.svg':slide.page===32?'visuals/dolphin-helper.svg':null):null;
@@ -74,6 +75,8 @@ button:hover:enabled{background:#edf3f0;border-color:var(--accent)}button:focus-
     const copy=document.createElement('div');copy.className='copy';if(slide.kind==='Closing')copy.classList.add('closing');
     if(slide.kind==='Closing'){const mark=document.createElement('div');mark.className='endmark';mark.textContent='THE END';content.append(mark)}
     slide.paragraphs.forEach(t=>copy.append(paragraph(t)));content.append(copy);copy.style.fontSize=(1.22*fontScale)+'rem';
+    if(mode==="film"&&slide.shot){const notes=document.createElement("section");notes.className="shot-notes";const addNote=(label,value)=>{if(!value)return;const p=document.createElement("p");const strong=document.createElement("strong");strong.textContent=label+" ";p.append(strong,document.createTextNode(value));notes.append(p)};addNote("Visual direction:",slide.shot.visualDirection);addNote("Performance:",slide.shot.performance);addNote("Camera:",(slide.shot.camera?.movement||"")+" · "+(slide.shot.camera?.aspectRatio||""));addNote("Target duration:",slide.shot.targetSeconds+" seconds");content.append(notes)}
+    modeToggle.textContent=mode==="reader"?"Explore film storyboard":"Return to reading";modeToggle.setAttribute("aria-pressed",String(mode==="film"));
     previous.disabled=index===0;next.disabled=index===slides.length-1;
     progressText.textContent=(index+1)+' / '+slides.length;
     const pct=Math.round((index+1)/slides.length*100);progressFill.style.width=pct+'%';progress.setAttribute('aria-valuenow',String(pct));
@@ -83,6 +86,7 @@ button:hover:enabled{background:#edf3f0;border-color:var(--accent)}button:focus-
   }
   function move(delta){index=Math.max(0,Math.min(slides.length-1,index+delta));render()}
   previous.addEventListener('click',()=>move(-1));next.addEventListener('click',()=>move(1));
+  modeToggle.addEventListener("click",()=>{mode=mode==="reader"?"film":"reader";slides=mode==="film"?filmSlides:readerSlides;index=0;render()});
   document.getElementById('smaller').addEventListener('click',()=>{fontScale=Math.max(.85,fontScale-.1);render()});
   document.getElementById('larger').addEventListener('click',()=>{fontScale=Math.min(1.5,fontScale+.1);render()});
   document.addEventListener('keydown',e=>{
@@ -95,13 +99,14 @@ button:hover:enabled{background:#edf3f0;border-color:var(--accent)}button:focus-
   let touchX=null;document.querySelector('.book').addEventListener('touchstart',e=>{touchX=e.changedTouches[0].clientX},{passive:true});
   document.querySelector('.book').addEventListener('touchend',e=>{if(touchX===null)return;const dx=e.changedTouches[0].clientX-touchX;if(Math.abs(dx)>65)move(dx<0?1:-1);touchX=null},{passive:true});
   try{
-    const response=await fetch('./story.json');if(!response.ok)throw new Error('Could not load story.json ('+response.status+')');
-    const story=await response.json();
-    slides.push({kind:'Title',label:'Title',title:story.title,paragraphs:[]});
-    slides.push({kind:'Dedication',label:'Dedication',heading:'Dedication',paragraphs:[story.dedication]});
-    story.pages.forEach(p=>slides.push({kind:'Story',label:'Page '+p.number,page:p.number,paragraphs:p.paragraphs,artwork:p.artwork||null,artworkAlt:p.artworkAlt||''}));
-    slides.push({kind:'Closing',label:'Closing',paragraphs:story.closing.filter(t=>t!=='THE END')});
-    render();
+    const [storyResponse,storyboardResponse]=await Promise.all([fetch("./story.json"),fetch("./storyboard.json")]);if(!storyResponse.ok)throw new Error("Could not load story.json ("+storyResponse.status+")");if(!storyboardResponse.ok)throw new Error("Could not load storyboard.json ("+storyboardResponse.status+")");
+    const [story,storyboard]=await Promise.all([storyResponse.json(),storyboardResponse.json()]);
+    readerSlides.push({kind:"Title",label:"Title",title:story.title,paragraphs:[]});
+    readerSlides.push({kind:"Dedication",label:"Dedication",heading:"Dedication",paragraphs:[story.dedication]});
+    story.pages.forEach(p=>readerSlides.push({kind:"Story",label:"Page "+p.number,page:p.number,paragraphs:p.paragraphs,artwork:p.artwork||null,artworkAlt:p.artworkAlt||""}));
+    readerSlides.push({kind:"Closing",label:"Closing",paragraphs:story.closing.filter(t=>t!=="THE END")});
+    filmSlides=storyboard.shots.map((shot,i)=>({kind:"Shot",label:"Shot "+(i+1)+" · Page "+shot.sourcePage,page:shot.sourcePage,heading:shot.title,paragraphs:story.pages[shot.sourcePage-1]?.paragraphs||[],shot}));
+    slides=readerSlides;render();
   }catch(error){content.replaceChildren();const p=paragraph('The story could not be loaded. Check your connection and try again.');p.className='error';content.append(p);const retry=document.createElement('button');retry.type='button';retry.textContent='Try again';retry.addEventListener('click',()=>location.reload());content.append(retry);progressText.textContent='Unable to load story';}
 })();
 </script>
