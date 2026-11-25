@@ -45,6 +45,8 @@ The reader currently provides:
 - Swipe navigation on touch screens.
 - Reading progress and adjustable text size.
 - Responsive layout and reduced-motion handling.
+- An in-reader **Explore film storyboard** mode that switches from the 33-page reading sequence to the shared 37-shot cinematic sequence. Each shot stays linked to its canonical story page and exposes its visual direction, performance beat, camera movement, and target duration.
+- The storyboard mode currently reuses the existing provisional scene studies where available. The 33 page-specific artwork files are not yet created; the mode is a shot-by-shot production preview, not a rendered film.
 
 The page reads its content from `story.json`; it does not embed a second copy of the manuscript in the HTML. This makes the authored sequence independently inspectable and keeps presentation separate from story content.
 
@@ -78,7 +80,7 @@ The previous illustrations were not the author's artwork and were only rough com
 
 ## Cinematic video and artwork direction
 
-The next presentation target is a cinematic retelling, not a fixed-page slideshow. [VIDEO_PRODUCTION_PLAN.md](VIDEO_PRODUCTION_PLAN.md) defines the original artwork standard, 33-page illustration requirement, beach/environment performances, shared reader/video scene model, and YouTube-ready rendering pipeline. [storyboard.json](storyboard.json) contains 37 authored shots mapped to the canonical 33 story pages. The storyboard is a production plan, not finished artwork or a rendered video; original page images and the final video renderer remain outstanding.
+The next presentation target is a cinematic retelling, not a fixed-page slideshow. [VIDEO_PRODUCTION_PLAN.md](VIDEO_PRODUCTION_PLAN.md) defines the original artwork standard, 33-page illustration requirement, beach/environment performances, shared reader/video scene model, and YouTube-ready rendering pipeline. [storyboard.json](storyboard.json) contains 37 authored shots mapped to the canonical 33 story pages. The reader now includes a shot-by-shot storyboard preview driven by that same `storyboard.json`, so reading pages and cinematic shots share one canonical manuscript. The storyboard is a production plan, not finished artwork or a rendered video; original page images and the final video renderer remain outstanding.
 
 ## Living-world foundation
 
