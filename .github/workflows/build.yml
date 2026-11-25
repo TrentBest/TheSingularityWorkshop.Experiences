@@ -34,6 +34,7 @@ jobs:
           - src/GitHubLearningStudio/TheSingularityWorkshop.Experiences.GitHubLearningStudio.csproj
           - src/GitHubLearningStudio.PullRequests/TheSingularityWorkshop.Experiences.GitHubLearningStudio.PullRequests.csproj
           - src/Minesweeper/TheSingularityWorkshop.Experiences.Minesweeper.csproj
+          - src/GalacticWar/TheSingularityWorkshop.Experiences.GalacticWar.csproj
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v6
@@ -144,6 +145,21 @@ jobs:
           path: TestResults/minesweeper/
           if-no-files-found: warn
           retention-days: 14
+
+  # Galactic War's first station-media slice is deterministic and host-neutral.
+  test-galactic-war:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore Galactic War runtime tests
+        run: dotnet restore tests/GalacticWar.Tests/TheSingularityWorkshop.Experiences.GalacticWar.Tests.csproj
+      - name: Run station-media invariants
+        run: dotnet test tests/GalacticWar.Tests/TheSingularityWorkshop.Experiences.GalacticWar.Tests.csproj --configuration Release --no-restore
+      - name: Run first-contact runtime trace
+        run: dotnet run --project samples/GalacticWar.FirstContact/GalacticWar.FirstContact.csproj --configuration Release
 
   package:
     if: github.event_name == 'workflow_dispatch'
