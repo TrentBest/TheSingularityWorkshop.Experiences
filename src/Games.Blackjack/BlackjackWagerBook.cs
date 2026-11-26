@@ -141,10 +141,11 @@ public sealed class BlackjackWagerBook
             if (existing.Status != BlackjackWagerStatus.Open)
                 throw new InvalidOperationException("A settled wager cannot receive additional stake.");
 
+            var newTotal = checked(existing.Amount + amount);
             var newlyPosted = postAdditionalStake();
             _stakeIncreases.Add(transactionId, (wagerId, amount, occurredAt));
             _stakeTransactionOwners.Add(transactionId, wagerId);
-            _wagers[wagerId] = existing with { Amount = checked(existing.Amount + amount) };
+            _wagers[wagerId] = existing with { Amount = newTotal };
             return newlyPosted;
         }
     }
