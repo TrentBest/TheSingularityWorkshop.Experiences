@@ -26,12 +26,12 @@ public enum BlackjackWagerCommitmentKind
 
 /// <summary>An incremental virtual wager commitment that the host must escrow separately.</summary>
 /// <param name="Sequence">Monotonically increasing commitment sequence within the round.</param>
-/// <param name="HandIndex">Player hand receiving this wager amount.</param>
+/// <param name="HandId">Stable player hand identity receiving this wager amount.</param>
 /// <param name="Amount">Incremental amount to escrow, not the hand's cumulative wager.</param>
 /// <param name="Kind">Action that caused the commitment.</param>
 public sealed record BlackjackWagerCommitment(
     int Sequence,
-    int HandIndex,
+    int HandId,
     decimal Amount,
     BlackjackWagerCommitmentKind Kind);
 
@@ -58,6 +58,7 @@ public enum BlackjackHandOutcome
 /// <param name="GrossReturn">Total virtual chips returned, including returned stake.</param>
 public sealed record BlackjackHandResult(
     IReadOnlyList<PlayingCard> Cards,
+    int HandId,
     BlackjackHandValue Value,
     decimal Wager,
     BlackjackHandOutcome Outcome,
@@ -82,8 +83,9 @@ public sealed record BlackjackRoundResult(
 /// </remarks>
 public sealed class BlackjackRound
 {
-    private sealed class HandState(List<PlayingCard> cards, decimal wager, bool isSplit)
+    private sealed class HandState(int id, List<PlayingCard> cards, decimal wager, bool isSplit)
     {
+        public int Id { get; } = id;
         public List<PlayingCard> Cards { get; } = cards;
         public decimal Wager { get; set; } = wager;
         public bool IsSplit { get; set; } = isSplit;
@@ -98,6 +100,7 @@ public sealed class BlackjackRound
     private readonly List<BlackjackWagerCommitment> _wagerCommitments = [];
     private decimal _remainingBalance;
     private int _activeHandIndex;
+    private int _nextHandId = 1;
 
     private BlackjackRound(CardDeck deck, BlackjackRules rules, decimal wager, decimal availableBalance)
     {
@@ -110,7 +113,7 @@ public sealed class BlackjackRound
         _dealer.Add(DrawRequired());
         playerCards.Add(DrawRequired());
         _dealer.Add(DrawRequired());
-        _hands.Add(new HandState(playerCards, wager, false));
+        _hands.Add(new HandState(0, playerCards, wager, false));
         _wagerCommitments.Add(new BlackjackWagerCommitment(0, 0, wager, BlackjackWagerCommitmentKind.Initial));
         Phase = BlackjackRoundPhase.PlayerTurn;
 
@@ -190,7 +193,7 @@ public sealed class BlackjackRound
                 break;
             case BlackjackAction.DoubleDown:
                 _remainingBalance -= hand.Wager;
-                _wagerCommitments.Add(new BlackjackWagerCommitment(_wagerCommitments.Count, _activeHandIndex, hand.Wager, BlackjackWagerCommitmentKind.DoubleDown));
+                _wagerCommitments.Add(new BlackjackWagerCommitment(_wagerCommitments.Count, hand.Id, hand.Wager, BlackjackWagerCommitmentKind.DoubleDown));
                 hand.Wager *= 2m;
                 hand.Cards.Add(DrawRequired());
                 hand.HasActed = true;
@@ -240,12 +243,12 @@ public sealed class BlackjackRound
 
         var secondCards = new List<PlayingCard> { second, DrawRequired() };
         var secondValue = BlackjackRules.Evaluate(secondCards, isSplitHand: true);
-        var secondHand = new HandState(secondCards, original.Wager, true)
+        var secondHand = new HandState(_nextHandId++, secondCards, original.Wager, true)
         {
             IsComplete = splitAces || secondValue.Total >= 21
         };
         _hands.Insert(_activeHandIndex + 1, secondHand);
-        _wagerCommitments.Add(new BlackjackWagerCommitment(_wagerCommitments.Count, _activeHandIndex + 1, original.Wager, BlackjackWagerCommitmentKind.Split));
+        _wagerCommitments.Add(new BlackjackWagerCommitment(_wagerCommitments.Count, secondHand.Id, original.Wager, BlackjackWagerCommitmentKind.Split));
     }
 
     private void ResolveOpeningNaturals()
@@ -303,7 +306,7 @@ public sealed class BlackjackRound
             gross = 0m;
         }
 
-        return new BlackjackHandResult(Array.AsReadOnly(hand.Cards.ToArray()), value, hand.Wager, outcome, gross);
+        return new BlackjackHandResult(Array.AsReadOnly(hand.Cards.ToArray()), hand.Id, value, hand.Wager, outcome, gross);
     }
 
     private PlayingCard DrawRequired() =>
