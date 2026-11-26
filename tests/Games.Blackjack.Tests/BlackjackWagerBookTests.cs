@@ -26,14 +26,14 @@ public sealed class BlackjackWagerBookTests
     {
         var book = new BlackjackWagerBook();
         book.RegisterOnce("round-1:hand-0", 10m, () => true);
-        Assert.Throws<ArgumentException>(() => book.Register("round-1:hand-0", 20m));
+        Assert.Throws<ArgumentException>(() => book.RegisterOnce("round-1:hand-0", 20m, () => true));
     }
 
     [Fact]
     public void SettleOnce_posts_only_once_even_when_retried_with_a_different_call()
     {
         var book = new BlackjackWagerBook();
-        book.Register("round-1:hand-0", 10m);
+        book.RegisterOnce("round-1:hand-0", 10m, () => true);
         var postCount = 0;
 
         var posted = book.SettleOnce("round-1:hand-0", "settle-round-1-hand-0", 25m, SettledAt,
@@ -52,7 +52,7 @@ public sealed class BlackjackWagerBookTests
     public void SettleOnce_rejects_different_transaction_id_for_already_settled_wager()
     {
         var book = new BlackjackWagerBook();
-        book.Register("round-1:hand-0", 10m);
+        book.RegisterOnce("round-1:hand-0", 10m, () => true);
         book.SettleOnce("round-1:hand-0", "settlement-a", 20m, SettledAt, () => true);
 
         Assert.Throws<InvalidOperationException>(() =>
@@ -63,7 +63,7 @@ public sealed class BlackjackWagerBookTests
     public void SettleOnce_rejects_one_transaction_id_claimed_by_two_wagers()
     {
         var book = new BlackjackWagerBook();
-        book.Register("round-1:hand-0", 10m);
+        book.RegisterOnce("round-1:hand-0", 10m, () => true);
         book.RegisterOnce("round-1:hand-1", 10m, () => true);
         book.SettleOnce("round-1:hand-0", "shared-settlement", 20m, SettledAt, () => true);
 
@@ -75,7 +75,7 @@ public sealed class BlackjackWagerBookTests
     public void Failed_settlement_callback_leaves_wager_open_for_retry()
     {
         var book = new BlackjackWagerBook();
-        book.Register("round-1:hand-0", 10m);
+        book.RegisterOnce("round-1:hand-0", 10m, () => true);
 
         Assert.Throws<InvalidOperationException>(() =>
             book.SettleOnce("round-1:hand-0", "settlement-a", 20m, SettledAt,
