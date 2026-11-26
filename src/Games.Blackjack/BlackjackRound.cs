@@ -184,7 +184,12 @@ public sealed class BlackjackRound
     {
         if (Phase != BlackjackRoundPhase.DealerTurn)
             throw new InvalidOperationException("The dealer can act only after all player hands finish.");
-        while (_rules.DealerMustHit(_dealer))
+        var dealerNeedsToPlay = _hands.Any(hand =>
+        {
+            var value = BlackjackRules.Evaluate(hand.Cards, hand.IsSplit);
+            return !value.IsBust && !value.IsNatural;
+        });
+        while (dealerNeedsToPlay && _rules.DealerMustHit(_dealer))
             _dealer.Add(DrawRequired());
 
         var dealerValue = BlackjackRules.Evaluate(_dealer);
@@ -204,11 +209,13 @@ public sealed class BlackjackRound
         original.Cards.Add(DrawRequired());
         original.HasActed = false;
         original.IsSplit = true;
-        original.IsComplete = splitAces;
+        original.IsComplete = splitAces || BlackjackRules.Evaluate(original.Cards, isSplitHand: true).Total >= 21;
 
-        var secondHand = new HandState([second, DrawRequired()], original.Wager, true)
+        var secondCards = new List<PlayingCard> { second, DrawRequired() };
+        var secondValue = BlackjackRules.Evaluate(secondCards, isSplitHand: true);
+        var secondHand = new HandState(secondCards, original.Wager, true)
         {
-            IsComplete = splitAces
+            IsComplete = splitAces || secondValue.Total >= 21
         };
         _hands.Insert(_activeHandIndex + 1, secondHand);
     }
