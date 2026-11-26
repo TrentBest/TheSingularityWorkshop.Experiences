@@ -4,8 +4,8 @@ An explicit adapter between the host-neutral Blackjack domain and the simulation
 
 ## Responsibilities
 
-- Place a Blackjack wager into a caller-configured table escrow account.
-- Use the Blackjack domain's stable logical wager ID to prevent duplicate placement in one process.
+- Place an initial Blackjack wager or an additional double-down stake into a caller-configured table escrow account.
+- Use the Blackjack domain's stable logical wager ID to prevent duplicate initial/additional stake placement in one process.
 - Settle a registered wager using the final gross virtual return from a Blackjack hand result.
 - Route the settlement through `BlackjackWagerBook.SettleOnce` so a second transaction ID cannot settle the same logical wager again.
 - Preserve ledger balancing and reconciliation through the existing `CasinoLedgerOperations` contract.
