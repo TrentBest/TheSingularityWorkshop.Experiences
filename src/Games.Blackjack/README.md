@@ -7,9 +7,9 @@ A deterministic, host-neutral Blackjack rules and single-round coordination capa
 - Hand valuation with ace softening, face-card values, bust detection, and natural Blackjack detection.
 - Configurable dealer soft-17 policy, natural payout, double-after-split policy, and maximum hand count.
 - Legal-action calculation for hit, stand, double down, and split eligibility.
-- A caller-deck-driven round coordinator with alternating initial deal, dealer hole-card concealment, player turns, multiple split hands, split-ace one-card completion, dealer progression, and immutable result records.
+- A caller-deck-driven round coordinator with alternating initial deal, dealer hole-card concealment, player turns, multiple split hands, split-ace one-card completion, dealer progression, stable hand IDs, incremental initial/split/double wager commitments, and immutable result records.
 - Gross virtual return calculation, including returned stake, kept separate from actual ledger posting.
-- An in-memory, thread-safe logical wager book with stable wager IDs, one accepted settlement per wager, and protection against reusing a settlement transaction ID across wagers.
+- An in-memory, thread-safe logical wager book with stable wager IDs, idempotent initial/additional stake placement, one accepted settlement per wager, and protection against reusing a settlement transaction ID across wagers.
 
 ## Deterministic round example
 
@@ -44,7 +44,8 @@ var result = round.PlayDealerAndComplete();
 - The round is an in-memory, single-session coordinator. It is not thread-safe.
 - The caller owns the deck and its shuffle/randomness policy.
 - The coordinator tracks a supplied virtual balance for action eligibility; it does not own an account or post accounting entries.
-- The wager book is process-local and not durable; it serializes settlement callbacks only within one process. Durable recovery and cross-process concurrency remain future work.
+- The wager book is process-local and not durable; it serializes placement/additional-stake/settlement callbacks only within one process. Durable recovery and cross-process concurrency remain future work.
+- Hosts should consume `BlackjackRound.WagerCommitments` in sequence order: place the initial wager, create a new logical wager for each split hand, and add stake to the existing hand wager for double down.
 - Insurance, surrender, side bets, table/seat management, persistence, UI, and background NPC play are not implemented.
 - The game does not process real money, payments, or cash redemption.
 - The library is host-neutral and has no invented MicroBundle ID or publication claim.
