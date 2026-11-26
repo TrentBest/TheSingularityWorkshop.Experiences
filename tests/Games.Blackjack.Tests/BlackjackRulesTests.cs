@@ -41,6 +41,16 @@ public sealed class BlackjackRulesTests
         Assert.True(value.IsNatural);
     }
 
+    [Fact]
+    public void Evaluate_does_not_classify_a_split_ace_and_ten_as_natural()
+    {
+        var value = BlackjackRules.Evaluate([
+            new PlayingCard(CardSuit.Spades, CardRank.Ace),
+            new PlayingCard(CardSuit.Hearts, CardRank.King)], isSplitHand: true);
+        Assert.Equal(21, value.Total);
+        Assert.False(value.IsNatural);
+    }
+
     [Theory]
     [InlineData(true, true)]
     [InlineData(false, false)]
