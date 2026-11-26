@@ -12,17 +12,20 @@ public sealed class BlackjackWagerBookTests
     public void Register_is_idempotent_for_same_identity_and_amount()
     {
         var book = new BlackjackWagerBook();
-        var first = book.Register("round-1:hand-0", 10m);
-        var second = book.Register("round-1:hand-0", 10m);
-        Assert.Equal(first, second);
-        Assert.Equal(BlackjackWagerStatus.Open, second.Status);
+        var callbackCount = 0;
+        var first = book.RegisterOnce("round-1:hand-0", 10m, () => { callbackCount++; return true; });
+        var second = book.RegisterOnce("round-1:hand-0", 10m, () => { callbackCount++; return true; });
+        Assert.True(first);
+        Assert.False(second);
+        Assert.Equal(1, callbackCount);
+        Assert.Equal(BlackjackWagerStatus.Open, book.Get("round-1:hand-0")!.Status);
     }
 
     [Fact]
     public void Register_rejects_reuse_of_identity_with_different_amount()
     {
         var book = new BlackjackWagerBook();
-        book.Register("round-1:hand-0", 10m);
+        book.RegisterOnce("round-1:hand-0", 10m, () => true);
         Assert.Throws<ArgumentException>(() => book.Register("round-1:hand-0", 20m));
     }
 
@@ -61,7 +64,7 @@ public sealed class BlackjackWagerBookTests
     {
         var book = new BlackjackWagerBook();
         book.Register("round-1:hand-0", 10m);
-        book.Register("round-1:hand-1", 10m);
+        book.RegisterOnce("round-1:hand-1", 10m, () => true);
         book.SettleOnce("round-1:hand-0", "shared-settlement", 20m, SettledAt, () => true);
 
         Assert.Throws<InvalidOperationException>(() =>
@@ -85,7 +88,7 @@ public sealed class BlackjackWagerBookTests
     public void IncreaseStakeOnce_updates_total_once_and_rejects_increases_after_settlement()
     {
         var book = new BlackjackWagerBook();
-        book.Register("round-5:hand-0", 10m);
+        book.RegisterOnce("round-5:hand-0", 10m, () => true);
         var postCount = 0;
         Assert.True(book.IncreaseStakeOnce("round-5:hand-0", "double-5", 10m, SettledAt,
             () => { postCount++; return true; }));
