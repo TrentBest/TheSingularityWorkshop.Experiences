@@ -116,4 +116,41 @@ public sealed class BlackjackCasinoLedgerAdapterTests
         Assert.True(ledger.Reconcile().IsBalanced);
     }
 
+    [Fact]
+    public void ApplyCommitment_maps_initial_and_double_down_to_same_stable_hand_wager()
+    {
+        var (ledger, book, adapter) = CreateSystem();
+        var initial = new BlackjackWagerCommitment(0, 0, 10m, BlackjackWagerCommitmentKind.Initial);
+        var doubled = new BlackjackWagerCommitment(1, 0, 10m, BlackjackWagerCommitmentKind.DoubleDown);
+
+        Assert.True(adapter.ApplyCommitment(ledger, book, "round-6", initial, Now,
+            "player", "table-escrow"));
+        Assert.True(adapter.ApplyCommitment(ledger, book, "round-6", doubled, Now,
+            "player", "table-escrow"));
+        Assert.False(adapter.ApplyCommitment(ledger, book, "round-6", doubled, Now,
+            "player", "table-escrow"));
+
+        Assert.Equal(20m, book.Get("blackjack:round-6:hand:0")!.Amount);
+        Assert.Equal(20m, ledger.GetBalance("table-escrow", "CHIP"));
+        Assert.True(adapter.SettleWager(ledger, book, "blackjack:round-6:hand:0", "settle-round-6", Now,
+            "table-escrow", "player", "house-reserve", "house-revenue", 40m));
+        Assert.True(ledger.Reconcile().IsBalanced);
+    }
+
+    [Fact]
+    public void ApplyCommitment_creates_a_separate_logical_wager_for_split_hand()
+    {
+        var (ledger, book, adapter) = CreateSystem();
+        var initial = new BlackjackWagerCommitment(0, 0, 10m, BlackjackWagerCommitmentKind.Initial);
+        var split = new BlackjackWagerCommitment(1, 1, 10m, BlackjackWagerCommitmentKind.Split);
+
+        adapter.ApplyCommitment(ledger, book, "round-7", initial, Now, "player", "table-escrow");
+        adapter.ApplyCommitment(ledger, book, "round-7", split, Now, "player", "table-escrow");
+
+        Assert.Equal(10m, book.Get("blackjack:round-7:hand:0")!.Amount);
+        Assert.Equal(10m, book.Get("blackjack:round-7:hand:1")!.Amount);
+        Assert.Equal(20m, ledger.GetBalance("table-escrow", "CHIP"));
+        Assert.True(ledger.Reconcile().IsBalanced);
+    }
+
 }
