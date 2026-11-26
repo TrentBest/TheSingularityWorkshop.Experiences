@@ -122,6 +122,7 @@ public sealed class BlackjackRulesTests
             new PlayingCard(CardSuit.Diamonds, CardRank.Six),
             new PlayingCard(CardSuit.Clubs, CardRank.Eight));
         var round = BlackjackRound.Start(deck, new BlackjackRules(), 5m, 10m);
+        Assert.Single(round.DealerCards);
         round.Act(BlackjackAction.Stand);
         Assert.Equal(BlackjackRoundPhase.DealerTurn, round.Phase);
 
