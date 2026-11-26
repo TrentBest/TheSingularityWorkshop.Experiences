@@ -42,31 +42,6 @@ public sealed class BlackjackWagerBook
     private readonly Dictionary<string, (string WagerId, decimal Amount, DateTimeOffset OccurredAt)> _stakeIncreases = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _stakeTransactionOwners = new(StringComparer.Ordinal);
 
-    /// <summary>Registers a wager identity. Re-registering the same ID and amount is idempotent.</summary>
-    /// <exception cref="ArgumentException">The ID is blank or already exists with a different amount.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">The amount is not positive.</exception>
-    public BlackjackWagerRecord Register(string wagerId, decimal amount)
-    {
-        if (string.IsNullOrWhiteSpace(wagerId))
-            throw new ArgumentException("Wager ID cannot be blank.", nameof(wagerId));
-        if (amount <= 0m)
-            throw new ArgumentOutOfRangeException(nameof(amount), "Wager amount must be positive.");
-
-        lock (_gate)
-        {
-            if (_wagers.TryGetValue(wagerId, out var existing))
-            {
-                if (existing.Amount != amount)
-                    throw new ArgumentException("Wager ID is already registered with a different amount.", nameof(wagerId));
-                return existing;
-            }
-
-            var record = new BlackjackWagerRecord(wagerId, amount, BlackjackWagerStatus.Open);
-            _wagers.Add(wagerId, record);
-            return record;
-        }
-    }
-
     /// <summary>
     /// Registers a wager and performs its one ledger-placement callback while holding the lifecycle lock.
     /// Repeating the same wager ID and amount does not invoke the callback again.
