@@ -142,6 +142,9 @@ public sealed class BlackjackRulesTests
             new PlayingCard(CardSuit.Clubs, CardRank.Ten));
         var round = BlackjackRound.Start(deck, new BlackjackRules(), 10m, 20m);
         round.Act(BlackjackAction.DoubleDown);
+        Assert.Equal(2, round.WagerCommitments.Count);
+        Assert.Equal(BlackjackWagerCommitmentKind.DoubleDown, round.WagerCommitments[1].Kind);
+        Assert.Equal(10m, round.WagerCommitments[1].Amount);
         Assert.Equal(0m, round.RemainingBalance);
         Assert.Equal(BlackjackRoundPhase.DealerTurn, round.Phase);
         var result = round.PlayDealerAndComplete();
@@ -163,6 +166,8 @@ public sealed class BlackjackRulesTests
         var round = BlackjackRound.Start(deck, new BlackjackRules(maximumHands: 2), 10m, 30m);
         round.Act(BlackjackAction.Split);
         Assert.Equal(2, round.PlayerHands.Count);
+        Assert.Equal(BlackjackWagerCommitmentKind.Split, round.WagerCommitments[1].Kind);
+        Assert.Equal(1, round.WagerCommitments[1].HandId);
         Assert.Equal(10m, round.RemainingBalance);
         Assert.Contains(BlackjackAction.Stand, round.LegalActions);
 
