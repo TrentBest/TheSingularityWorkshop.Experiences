@@ -1,0 +1,32 @@
+name: blackjack
+
+on:
+  push:
+    branches: [master, development]
+    paths:
+      - "src/Games.Blackjack/**"
+      - "tests/Games.Blackjack.Tests/**"
+      - ".github/workflows/blackjack.yml"
+  pull_request:
+    paths:
+      - "src/Games.Blackjack/**"
+      - "tests/Games.Blackjack.Tests/**"
+      - ".github/workflows/blackjack.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore Blackjack tests and dependencies
+        run: dotnet restore tests/Games.Blackjack.Tests/TheSingularityWorkshop.Games.Blackjack.Tests.csproj
+      - name: Build Blackjack rules
+        run: dotnet build src/Games.Blackjack/TheSingularityWorkshop.Games.Blackjack.csproj --configuration Release --no-restore
+      - name: Run Blackjack rules tests
+        run: dotnet test tests/Games.Blackjack.Tests/TheSingularityWorkshop.Games.Blackjack.Tests.csproj --configuration Release --no-restore
