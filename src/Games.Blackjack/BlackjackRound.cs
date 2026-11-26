@@ -114,7 +114,7 @@ public sealed class BlackjackRound
     /// <summary>Gets the dealer's visible up-card.</summary>
     public PlayingCard DealerUpCard => _dealer[0];
     /// <summary>Gets a snapshot of dealer cards currently dealt.</summary>
-    public IReadOnlyList<PlayingCard> DealerCards => Array.AsReadOnly(_dealer.ToArray());
+    public IReadOnlyList<PlayingCard> DealerCards => Array.AsReadOnly((Phase == BlackjackRoundPhase.PlayerTurn ? _dealer.Take(1) : _dealer).ToArray());
     /// <summary>Gets the current player hand index.</summary>
     public int ActiveHandIndex => _activeHandIndex;
     /// <summary>Gets snapshots of all player hands.</summary>
@@ -143,7 +143,7 @@ public sealed class BlackjackRound
         if (!LegalActions.Contains(action))
             throw new InvalidOperationException($"Action {action} is not legal for the active hand.");
 
-        if (action is BlackjackAction.Hit or BlackjackAction.DoubleDown && _deck.Count < 1)
+        if ((action is BlackjackAction.Hit or BlackjackAction.DoubleDown) && _deck.Count < 1)
             throw new InvalidOperationException("The card shoe is empty.");
         if (action == BlackjackAction.Split && _deck.Count < 2)
             throw new InvalidOperationException("At least two cards must remain to split.");
