@@ -92,4 +92,104 @@ public sealed class BlackjackRulesTests
         Assert.Empty(rules.GetLegalActions(bust, 5m, 100m));
         Assert.Empty(rules.GetLegalActions(twentyOne, 5m, 100m));
     }
+    private static CardDeck OrderedDeck(params PlayingCard[] dealOrder) => new(dealOrder.Reverse());
+
+    [Fact]
+    public void Start_deals_in_alternating_order_and_resolves_natural_blackjack()
+    {
+        var deck = OrderedDeck(
+            new PlayingCard(CardSuit.Spades, CardRank.Ace),
+            new PlayingCard(CardSuit.Clubs, CardRank.Ten),
+            new PlayingCard(CardSuit.Hearts, CardRank.King),
+            new PlayingCard(CardSuit.Diamonds, CardRank.Seven));
+        var round = BlackjackRound.Start(deck, new BlackjackRules(), 10m, 20m);
+        Assert.Equal(BlackjackRoundPhase.DealerTurn, round.Phase);
+        Assert.Equal(new PlayingCard(CardSuit.Clubs, CardRank.Ten), round.DealerUpCard);
+
+        var result = round.PlayDealerAndComplete();
+        Assert.Equal(BlackjackRoundPhase.Completed, round.Phase);
+        Assert.Equal(BlackjackHandOutcome.NaturalBlackjack, result.Hands[0].Outcome);
+        Assert.Equal(25m, result.Hands[0].GrossReturn);
+    }
+
+    [Fact]
+    public void Stand_advances_to_dealer_and_returns_win_result()
+    {
+        var deck = OrderedDeck(
+            new PlayingCard(CardSuit.Spades, CardRank.Ten),
+            new PlayingCard(CardSuit.Clubs, CardRank.Ten),
+            new PlayingCard(CardSuit.Hearts, CardRank.Seven),
+            new PlayingCard(CardSuit.Diamonds, CardRank.Six),
+            new PlayingCard(CardSuit.Clubs, CardRank.Eight));
+        var round = BlackjackRound.Start(deck, new BlackjackRules(), 5m, 10m);
+        round.Act(BlackjackAction.Stand);
+        Assert.Equal(BlackjackRoundPhase.DealerTurn, round.Phase);
+
+        var result = round.PlayDealerAndComplete();
+        Assert.Equal(BlackjackHandOutcome.Win, result.Hands[0].Outcome);
+        Assert.Equal(10m, result.Hands[0].GrossReturn);
+    }
+
+    [Fact]
+    public void Double_down_commits_additional_wager_and_takes_exactly_one_card()
+    {
+        var deck = OrderedDeck(
+            new PlayingCard(CardSuit.Spades, CardRank.Five),
+            new PlayingCard(CardSuit.Clubs, CardRank.Ten),
+            new PlayingCard(CardSuit.Hearts, CardRank.Six),
+            new PlayingCard(CardSuit.Diamonds, CardRank.Seven),
+            new PlayingCard(CardSuit.Clubs, CardRank.Ten));
+        var round = BlackjackRound.Start(deck, new BlackjackRules(), 10m, 20m);
+        round.Act(BlackjackAction.DoubleDown);
+        Assert.Equal(0m, round.RemainingBalance);
+        Assert.Equal(BlackjackRoundPhase.DealerTurn, round.Phase);
+        var result = round.PlayDealerAndComplete();
+        Assert.Equal(20m, result.Hands[0].Wager);
+        Assert.Equal(BlackjackHandOutcome.Win, result.Hands[0].Outcome);
+        Assert.Equal(40m, result.Hands[0].GrossReturn);
+    }
+
+    [Fact]
+    public void Split_creates_two_independent_hands_and_commits_second_wager()
+    {
+        var deck = OrderedDeck(
+            new PlayingCard(CardSuit.Spades, CardRank.Eight),
+            new PlayingCard(CardSuit.Clubs, CardRank.Ten),
+            new PlayingCard(CardSuit.Hearts, CardRank.Eight),
+            new PlayingCard(CardSuit.Diamonds, CardRank.Seven),
+            new PlayingCard(CardSuit.Clubs, CardRank.Three),
+            new PlayingCard(CardSuit.Diamonds, CardRank.Two));
+        var round = BlackjackRound.Start(deck, new BlackjackRules(maximumHands: 2), 10m, 30m);
+        round.Act(BlackjackAction.Split);
+        Assert.Equal(2, round.PlayerHands.Count);
+        Assert.Equal(10m, round.RemainingBalance);
+        Assert.Contains(BlackjackAction.Stand, round.LegalActions);
+
+        round.Act(BlackjackAction.Stand);
+        Assert.Equal(1, round.ActiveHandIndex);
+        round.Act(BlackjackAction.Stand);
+        Assert.Equal(BlackjackRoundPhase.DealerTurn, round.Phase);
+        var result = round.PlayDealerAndComplete();
+        Assert.Equal(2, result.Hands.Count);
+        Assert.All(result.Hands, hand => Assert.Equal(10m, hand.Wager));
+    }
+
+    [Fact]
+    public void Split_aces_receive_one_card_each_and_cannot_act_again()
+    {
+        var deck = OrderedDeck(
+            new PlayingCard(CardSuit.Spades, CardRank.Ace),
+            new PlayingCard(CardSuit.Clubs, CardRank.Ten),
+            new PlayingCard(CardSuit.Hearts, CardRank.Ace),
+            new PlayingCard(CardSuit.Diamonds, CardRank.Seven),
+            new PlayingCard(CardSuit.Clubs, CardRank.Nine),
+            new PlayingCard(CardSuit.Diamonds, CardRank.Eight));
+        var round = BlackjackRound.Start(deck, new BlackjackRules(maximumHands: 2), 10m, 30m);
+        round.Act(BlackjackAction.Split);
+        Assert.Equal(BlackjackRoundPhase.DealerTurn, round.Phase);
+        Assert.Empty(round.LegalActions);
+        Assert.False(BlackjackRules.Evaluate(round.PlayerHands[0], isSplitHand: true).IsNatural);
+        Assert.False(BlackjackRules.Evaluate(round.PlayerHands[1], isSplitHand: true).IsNatural);
+    }
+
 }
