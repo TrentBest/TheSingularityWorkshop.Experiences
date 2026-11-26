@@ -81,4 +81,22 @@ public sealed class BlackjackWagerBookTests
         Assert.Equal(BlackjackWagerStatus.Open, book.Get("round-1:hand-0")!.Status);
         Assert.True(book.SettleOnce("round-1:hand-0", "settlement-a", 20m, SettledAt, () => true));
     }
+    [Fact]
+    public void IncreaseStakeOnce_updates_total_once_and_rejects_increases_after_settlement()
+    {
+        var book = new BlackjackWagerBook();
+        book.Register("round-5:hand-0", 10m);
+        var postCount = 0;
+        Assert.True(book.IncreaseStakeOnce("round-5:hand-0", "double-5", 10m, SettledAt,
+            () => { postCount++; return true; }));
+        Assert.False(book.IncreaseStakeOnce("round-5:hand-0", "double-5", 10m, SettledAt,
+            () => { postCount++; return true; }));
+        Assert.Equal(20m, book.Get("round-5:hand-0")!.Amount);
+        Assert.Equal(1, postCount);
+
+        book.SettleOnce("round-5:hand-0", "settle-5", 40m, SettledAt, () => true);
+        Assert.Throws<InvalidOperationException>(() =>
+            book.IncreaseStakeOnce("round-5:hand-0", "late-double", 10m, SettledAt, () => true));
+    }
+
 }
