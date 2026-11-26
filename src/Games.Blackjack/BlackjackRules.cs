@@ -3,10 +3,24 @@ using TheSingularityWorkshop.Games.Cards;
 namespace TheSingularityWorkshop.Games.Blackjack;
 
 /// <summary>Computed value of a Blackjack hand.</summary>
+/// <param name="Total">The best non-busting total, or the lowest total when bust.</param>
+/// <param name="IsSoft">Whether an ace is currently counted as eleven.</param>
+/// <param name="IsBust">Whether the hand exceeds 21.</param>
+/// <param name="IsNatural">Whether the original two-card hand is an ace plus a ten-value card.</param>
 public readonly record struct BlackjackHandValue(int Total, bool IsSoft, bool IsBust, bool IsNatural);
 
 /// <summary>Actions that can be offered by the first Blackjack rules slice.</summary>
-public enum BlackjackAction { Hit, Stand, DoubleDown, Split }
+public enum BlackjackAction
+{
+    /// <summary>Take one additional card.</summary>
+    Hit,
+    /// <summary>Keep the current hand total.</summary>
+    Stand,
+    /// <summary>Double the wager and take exactly one additional card.</summary>
+    DoubleDown,
+    /// <summary>Split an eligible initial pair into two hands.</summary>
+    Split
+}
 
 /// <summary>Deterministic Blackjack scoring and table-policy helpers.</summary>
 /// <remarks>
