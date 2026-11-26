@@ -58,6 +58,43 @@ public sealed class BlackjackCasinoLedgerAdapter
     }
 
     /// <summary>
+    /// Applies one ordered round commitment using deterministic IDs derived from the caller's round identity.
+    /// </summary>
+    /// <remarks>
+    /// Initial and split commitments create distinct hand wagers. A double-down commitment adds stake to the
+    /// existing wager for that stable hand ID.
+    /// </remarks>
+    public bool ApplyCommitment(
+        CasinoLedger ledger,
+        BlackjackWagerBook wagerBook,
+        string roundId,
+        BlackjackWagerCommitment commitment,
+        DateTimeOffset occurredAt,
+        string playerChipAccount,
+        string tableEscrowAccount,
+        string chipCurrency = "CHIP")
+    {
+        ArgumentNullException.ThrowIfNull(ledger);
+        ArgumentNullException.ThrowIfNull(wagerBook);
+        ArgumentNullException.ThrowIfNull(commitment);
+        if (string.IsNullOrWhiteSpace(roundId))
+            throw new ArgumentException("Round ID cannot be blank.", nameof(roundId));
+
+        var wagerId = $"blackjack:{roundId}:hand:{commitment.HandId}";
+        var transactionId = $"blackjack:{roundId}:commit:{commitment.Sequence}";
+        return commitment.Kind switch
+        {
+            BlackjackWagerCommitmentKind.Initial or BlackjackWagerCommitmentKind.Split =>
+                PlaceWager(ledger, wagerBook, wagerId, transactionId, occurredAt,
+                    playerChipAccount, tableEscrowAccount, commitment.Amount, chipCurrency),
+            BlackjackWagerCommitmentKind.DoubleDown =>
+                AddStake(ledger, wagerBook, wagerId, transactionId, occurredAt,
+                    playerChipAccount, tableEscrowAccount, commitment.Amount, chipCurrency),
+            _ => throw new ArgumentOutOfRangeException(nameof(commitment), "Unknown wager commitment kind.")
+        };
+    }
+
+    /// <summary>
     /// Settles a registered Blackjack wager once, regardless of subsequent transaction-ID changes.
     /// </summary>
     /// <returns>True when a new ledger posting was created; false for an exact replay.</returns>
