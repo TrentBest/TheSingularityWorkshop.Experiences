@@ -52,6 +52,7 @@ public enum BlackjackHandOutcome
 
 /// <summary>An immutable settlement-ready result for one hand; it does not post ledger entries.</summary>
 /// <param name="Cards">Final cards held by the hand.</param>
+/// <param name="HandId">Stable identity of the hand within this round.</param>
 /// <param name="Value">Final hand value.</param>
 /// <param name="Wager">Total virtual wager committed to this hand.</param>
 /// <param name="Outcome">Comparison outcome.</param>
