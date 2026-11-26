@@ -80,6 +80,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Expe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Experiences.GitHubLearningStudio.Issues.Tests", "tests\GitHubLearningStudio.Issues.Tests\TheSingularityWorkshop.Experiences.GitHubLearningStudio.Issues.Tests.csproj", "{E480A1C0-6A41-4C87-9E4D-202611020049}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Games.Blackjack.CasinoLedger", "src\Games.Blackjack.CasinoLedger\TheSingularityWorkshop.Games.Blackjack.CasinoLedger.csproj", "{E480A1C0-6A41-4C87-9E4D-202611020058}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Games.Blackjack.CasinoLedger.Tests", "tests\Games.Blackjack.CasinoLedger.Tests\TheSingularityWorkshop.Games.Blackjack.CasinoLedger.Tests.csproj", "{E480A1C0-6A41-4C87-9E4D-202611020059}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -242,5 +246,13 @@ Global
 		{E480A1C0-6A41-4C87-9E4D-202611020057}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E480A1C0-6A41-4C87-9E4D-202611020057}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E480A1C0-6A41-4C87-9E4D-202611020057}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020058}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020058}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020058}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020058}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020059}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020059}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020059}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E480A1C0-6A41-4C87-9E4D-202611020059}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
