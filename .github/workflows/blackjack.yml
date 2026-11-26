@@ -13,6 +13,8 @@ on:
     paths:
       - "src/Games.Blackjack/**"
       - "tests/Games.Blackjack.Tests/**"
+      - "src/Games.Blackjack.CasinoLedger/**"
+      - "tests/Games.Blackjack.CasinoLedger.Tests/**"
       - ".github/workflows/blackjack.yml"
 
 permissions:
