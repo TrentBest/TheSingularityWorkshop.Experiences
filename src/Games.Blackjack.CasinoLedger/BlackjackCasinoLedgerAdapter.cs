@@ -36,6 +36,28 @@ public sealed class BlackjackCasinoLedgerAdapter
     }
 
     /// <summary>
+    /// Escrows an additional stake for an existing open hand, such as the extra stake on double down.
+    /// </summary>
+    /// <returns>True when a new ledger posting was created; false for an exact replay.</returns>
+    public bool AddStake(
+        CasinoLedger ledger,
+        BlackjackWagerBook wagerBook,
+        string wagerId,
+        string transactionId,
+        DateTimeOffset occurredAt,
+        string playerChipAccount,
+        string tableEscrowAccount,
+        decimal amount,
+        string chipCurrency = "CHIP")
+    {
+        ArgumentNullException.ThrowIfNull(ledger);
+        ArgumentNullException.ThrowIfNull(wagerBook);
+        return wagerBook.IncreaseStakeOnce(wagerId, transactionId, amount, occurredAt, () =>
+            CasinoLedgerOperations.PlaceWager(ledger, transactionId, occurredAt,
+                playerChipAccount, tableEscrowAccount, amount, chipCurrency));
+    }
+
+    /// <summary>
     /// Settles a registered Blackjack wager once, regardless of subsequent transaction-ID changes.
     /// </summary>
     /// <returns>True when a new ledger posting was created; false for an exact replay.</returns>
