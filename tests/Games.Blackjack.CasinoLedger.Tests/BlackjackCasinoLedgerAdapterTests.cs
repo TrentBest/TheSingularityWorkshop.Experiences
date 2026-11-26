@@ -94,4 +94,26 @@ public sealed class BlackjackCasinoLedgerAdapterTests
             "table-escrow", "player", "house-reserve", "house-revenue", 20m));
         Assert.True(ledger.Reconcile().IsBalanced);
     }
+    [Fact]
+    public void Double_down_additional_stake_is_escrowed_once_and_settled_as_one_hand_wager()
+    {
+        var (ledger, book, adapter) = CreateSystem();
+        Assert.True(adapter.PlaceWager(ledger, book, "round-5:hand-0", "place-5", Now,
+            "player", "table-escrow", 10m));
+        Assert.True(adapter.AddStake(ledger, book, "round-5:hand-0", "double-5", Now,
+            "player", "table-escrow", 10m));
+        Assert.False(adapter.AddStake(ledger, book, "round-5:hand-0", "double-5", Now,
+            "player", "table-escrow", 10m));
+
+        Assert.Equal(20m, book.Get("round-5:hand-0")!.Amount);
+        Assert.Equal(20m, ledger.GetBalance("table-escrow", "CHIP"));
+        Assert.True(adapter.SettleWager(ledger, book, "round-5:hand-0", "settle-5", Now,
+            "table-escrow", "player", "house-reserve", "house-revenue", 40m));
+
+        Assert.Equal(120m, ledger.GetBalance("player", "CHIP"));
+        Assert.Equal(80m, ledger.GetBalance("house-reserve", "CHIP"));
+        Assert.Equal(0m, ledger.GetBalance("table-escrow", "CHIP"));
+        Assert.True(ledger.Reconcile().IsBalanced);
+    }
+
 }
