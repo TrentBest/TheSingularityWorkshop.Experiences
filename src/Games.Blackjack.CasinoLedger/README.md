@@ -23,6 +23,13 @@ adapter.PlaceWager(
     tableEscrowAccount: "table:blackjack:escrow",
     amount: 10m);
 
+// If that hand doubled down, escrow the additional amount against the same hand ID.
+adapter.AddStake(
+    ledger, book, "round-42:hand-0", "round-42:hand-0:double", occurredAt,
+    playerChipAccount: "player:42",
+    tableEscrowAccount: "table:blackjack:escrow",
+    amount: 10m);
+
 var handResult = roundResult.Hands[0];
 adapter.SettleWager(
     ledger, book, "round-42:hand-0", "round-42:hand-0:settle", occurredAt,
@@ -38,5 +45,6 @@ adapter.SettleWager(
 - This adapter moves fictional virtual chips only. It does not process payments, cash redemption, or real money.
 - The caller owns account registration, funding, authorization, and timestamps.
 - The wager book is in-memory and process-local. It is not durable and cannot coordinate multiple hosts.
+- Consume the round's incremental wager commitments in sequence order: initial stake creates a hand wager, split creates a new hand wager, and double down adds stake to the existing hand wager.
 - The settlement callback and ledger posting are serialized with the book lock inside one process, but this is not a distributed transaction.
 - If durable recovery is required, persist wager lifecycle and use a transactional outbox/idempotency contract before claiming exactly-once behavior across restarts.
