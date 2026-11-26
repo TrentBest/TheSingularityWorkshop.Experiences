@@ -39,6 +39,8 @@ public sealed class BlackjackWagerBook
     private readonly object _gate = new();
     private readonly Dictionary<string, BlackjackWagerRecord> _wagers = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _settlementOwners = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, (string WagerId, decimal Amount, DateTimeOffset OccurredAt)> _stakeIncreases = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, string> _stakeTransactionOwners = new(StringComparer.Ordinal);
 
     /// <summary>Registers a wager identity. Re-registering the same ID and amount is idempotent.</summary>
     /// <exception cref="ArgumentException">The ID is blank or already exists with a different amount.</exception>
@@ -92,6 +94,57 @@ public sealed class BlackjackWagerBook
 
             var newlyPosted = postWager();
             _wagers.Add(wagerId, new BlackjackWagerRecord(wagerId, amount, BlackjackWagerStatus.Open));
+            return newlyPosted;
+        }
+    }
+
+    /// <summary>
+    /// Adds an incremental stake to an open wager exactly once, for example when doubling down.
+    /// </summary>
+    /// <param name="wagerId">The stable logical hand-wager identity.</param>
+    /// <param name="transactionId">Unique ledger transaction ID for the additional escrow posting.</param>
+    /// <param name="amount">Positive incremental stake.</param>
+    /// <param name="occurredAt">Caller-supplied timestamp.</param>
+    /// <param name="postAdditionalStake">Callback that posts the additional escrow movement.</param>
+    /// <returns>True when newly posted; false for an exact replay.</returns>
+    public bool IncreaseStakeOnce(
+        string wagerId,
+        string transactionId,
+        decimal amount,
+        DateTimeOffset occurredAt,
+        Func<bool> postAdditionalStake)
+    {
+        if (string.IsNullOrWhiteSpace(wagerId))
+            throw new ArgumentException("Wager ID cannot be blank.", nameof(wagerId));
+        if (string.IsNullOrWhiteSpace(transactionId))
+            throw new ArgumentException("Transaction ID cannot be blank.", nameof(transactionId));
+        if (amount <= 0m)
+            throw new ArgumentOutOfRangeException(nameof(amount), "Additional stake must be positive.");
+        if (occurredAt == default)
+            throw new ArgumentException("Transaction timestamp must be supplied.", nameof(occurredAt));
+        ArgumentNullException.ThrowIfNull(postAdditionalStake);
+
+        lock (_gate)
+        {
+            if (!_wagers.TryGetValue(wagerId, out var existing))
+                throw new ArgumentException("Wager identity is not registered.", nameof(wagerId));
+
+            if (_stakeIncreases.TryGetValue(transactionId, out var prior))
+            {
+                if (prior.WagerId == wagerId && prior.Amount == amount && prior.OccurredAt == occurredAt)
+                    return false;
+                throw new InvalidOperationException("Additional-stake transaction ID was already used with different content.");
+            }
+
+            if (_stakeTransactionOwners.TryGetValue(transactionId, out var owner) && owner != wagerId)
+                throw new InvalidOperationException("Additional-stake transaction ID is already assigned to another wager.");
+            if (existing.Status != BlackjackWagerStatus.Open)
+                throw new InvalidOperationException("A settled wager cannot receive additional stake.");
+
+            var newlyPosted = postAdditionalStake();
+            _stakeIncreases.Add(transactionId, (wagerId, amount, occurredAt));
+            _stakeTransactionOwners.Add(transactionId, wagerId);
+            _wagers[wagerId] = existing with { Amount = checked(existing.Amount + amount) };
             return newlyPosted;
         }
     }
