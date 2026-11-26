@@ -193,4 +193,37 @@ public sealed class BlackjackRulesTests
         Assert.False(BlackjackRules.Evaluate(round.PlayerHands[1], isSplitHand: true).IsNatural);
     }
 
+    [Fact]
+    public void Split_ace_and_ten_value_hand_is_21_but_not_natural_and_auto_completes()
+    {
+        var deck = OrderedDeck(
+            new PlayingCard(CardSuit.Spades, CardRank.Ace),
+            new PlayingCard(CardSuit.Clubs, CardRank.Ten),
+            new PlayingCard(CardSuit.Hearts, CardRank.Ace),
+            new PlayingCard(CardSuit.Diamonds, CardRank.Seven),
+            new PlayingCard(CardSuit.Clubs, CardRank.King),
+            new PlayingCard(CardSuit.Diamonds, CardRank.Eight));
+        var round = BlackjackRound.Start(deck, new BlackjackRules(maximumHands: 2), 10m, 30m);
+        round.Act(BlackjackAction.Split);
+        Assert.Equal(21, BlackjackRules.Evaluate(round.PlayerHands[0], isSplitHand: true).Total);
+        Assert.False(BlackjackRules.Evaluate(round.PlayerHands[0], isSplitHand: true).IsNatural);
+        Assert.Equal(BlackjackRoundPhase.DealerTurn, round.Phase);
+    }
+
+    [Fact]
+    public void Dealer_does_not_draw_when_every_player_hand_has_busted()
+    {
+        var deck = OrderedDeck(
+            new PlayingCard(CardSuit.Spades, CardRank.Ten),
+            new PlayingCard(CardSuit.Clubs, CardRank.Five),
+            new PlayingCard(CardSuit.Hearts, CardRank.Eight),
+            new PlayingCard(CardSuit.Diamonds, CardRank.Six),
+            new PlayingCard(CardSuit.Clubs, CardRank.Ten));
+        var round = BlackjackRound.Start(deck, new BlackjackRules(), 5m, 10m);
+        round.Act(BlackjackAction.Hit);
+        var result = round.PlayDealerAndComplete();
+        Assert.Equal(11, result.DealerValue.Total);
+        Assert.Equal(BlackjackHandOutcome.Bust, result.Hands[0].Outcome);
+    }
+
 }
