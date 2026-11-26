@@ -6,6 +6,8 @@ on:
     paths:
       - "src/Games.Blackjack/**"
       - "tests/Games.Blackjack.Tests/**"
+      - "src/Games.Blackjack.CasinoLedger/**"
+      - "tests/Games.Blackjack.CasinoLedger.Tests/**"
       - ".github/workflows/blackjack.yml"
   pull_request:
     paths:
@@ -26,7 +28,11 @@ jobs:
           dotnet-version: 10.0.x
       - name: Restore Blackjack tests and dependencies
         run: dotnet restore tests/Games.Blackjack.Tests/TheSingularityWorkshop.Games.Blackjack.Tests.csproj
-      - name: Build Blackjack rules
-        run: dotnet build src/Games.Blackjack/TheSingularityWorkshop.Games.Blackjack.csproj --configuration Release --no-restore
+      - name: Restore Blackjack ledger adapter tests and dependencies
+        run: dotnet restore tests/Games.Blackjack.CasinoLedger.Tests/TheSingularityWorkshop.Games.Blackjack.CasinoLedger.Tests.csproj
+      - name: Build Blackjack rules and ledger adapter
+        run: dotnet build src/Games.Blackjack.CasinoLedger/TheSingularityWorkshop.Games.Blackjack.CasinoLedger.csproj --configuration Release --no-restore
       - name: Run Blackjack rules tests
         run: dotnet test tests/Games.Blackjack.Tests/TheSingularityWorkshop.Games.Blackjack.Tests.csproj --configuration Release --no-restore
+      - name: Run Blackjack ledger adapter tests
+        run: dotnet test tests/Games.Blackjack.CasinoLedger.Tests/TheSingularityWorkshop.Games.Blackjack.CasinoLedger.Tests.csproj --configuration Release --no-restore
