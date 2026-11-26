@@ -65,6 +65,37 @@ public sealed class BlackjackWagerBook
         }
     }
 
+    /// <summary>
+    /// Registers a wager and performs its one ledger-placement callback while holding the lifecycle lock.
+    /// Repeating the same wager ID and amount does not invoke the callback again.
+    /// </summary>
+    /// <param name="wagerId">Stable logical wager identity.</param>
+    /// <param name="amount">Positive virtual wager amount.</param>
+    /// <param name="postWager">Callback that posts the balanced escrow movement; false means an identical transaction already exists.</param>
+    /// <returns>True when the callback newly posted the wager; false when the wager identity was already registered or the ledger transaction was an exact replay.</returns>
+    public bool RegisterOnce(string wagerId, decimal amount, Func<bool> postWager)
+    {
+        if (string.IsNullOrWhiteSpace(wagerId))
+            throw new ArgumentException("Wager ID cannot be blank.", nameof(wagerId));
+        if (amount <= 0m)
+            throw new ArgumentOutOfRangeException(nameof(amount), "Wager amount must be positive.");
+        ArgumentNullException.ThrowIfNull(postWager);
+
+        lock (_gate)
+        {
+            if (_wagers.TryGetValue(wagerId, out var existing))
+            {
+                if (existing.Amount != amount)
+                    throw new ArgumentException("Wager ID is already registered with a different amount.", nameof(wagerId));
+                return false;
+            }
+
+            var newlyPosted = postWager();
+            _wagers.Add(wagerId, new BlackjackWagerRecord(wagerId, amount, BlackjackWagerStatus.Open));
+            return newlyPosted;
+        }
+    }
+
     /// <summary>Gets an immutable wager snapshot, or null when the identity is unknown.</summary>
     public BlackjackWagerRecord? Get(string wagerId)
     {
