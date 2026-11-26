@@ -9,6 +9,7 @@
     "codex/capsule-clinic-intent-smoke",
     "codex/experiences-branch-reconciliation-2026-11-12",
     "development",
+    "feature/blackjack-rules-kernel",
     "feature/ciai-v1-provenance-producer",
     "feature/epersteins-island",
     "feature/experience-microbundle-identity-map",
@@ -18,9 +19,9 @@
     "master",
     "work/experience-repository-binding"
   ],
-  "branch_count": 11,
+  "branch_count": 12,
   "status": "NON-COMPLIANT",
-  "evaluated_at": "2026-11-26T03:29:30Z",
-  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/45749219225",
-  "triggering_commit": "3f880e42d84d7510bf24efe906fd21e0aba472a2"
+  "evaluated_at": "2026-11-26T13:52:07Z",
+  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/45833301453",
+  "triggering_commit": "14ef54f3478dd9a3de8349afb86a051828c07852"
 }
