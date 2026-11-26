@@ -64,17 +64,15 @@ public sealed class BlackjackRound
     {
         public List<PlayingCard> Cards { get; } = cards;
         public decimal Wager { get; set; } = wager;
-        public bool IsSplit { get; } = isSplit;
+        public bool IsSplit { get; set; } = isSplit;
         public bool HasActed { get; set; }
         public bool IsComplete { get; set; }
-        public bool IsSplitAces { get; set; }
     }
 
     private readonly CardDeck _deck;
     private readonly BlackjackRules _rules;
     private readonly List<PlayingCard> _dealer = [];
     private readonly List<HandState> _hands = [];
-    private readonly decimal _initialBalance;
     private decimal _remainingBalance;
     private int _activeHandIndex;
 
@@ -82,7 +80,6 @@ public sealed class BlackjackRound
     {
         _deck = deck;
         _rules = rules;
-        _initialBalance = availableBalance;
         _remainingBalance = availableBalance - wager;
         InitialWager = wager;
 
@@ -146,6 +143,11 @@ public sealed class BlackjackRound
         if (!LegalActions.Contains(action))
             throw new InvalidOperationException($"Action {action} is not legal for the active hand.");
 
+        if (action is BlackjackAction.Hit or BlackjackAction.DoubleDown && _deck.Count < 1)
+            throw new InvalidOperationException("The card shoe is empty.");
+        if (action == BlackjackAction.Split && _deck.Count < 2)
+            throw new InvalidOperationException("At least two cards must remain to split.");
+
         var hand = _hands[_activeHandIndex];
         switch (action)
         {
@@ -201,15 +203,14 @@ public sealed class BlackjackRound
         original.Cards.Add(first);
         original.Cards.Add(DrawRequired());
         original.HasActed = false;
+        original.IsSplit = true;
         original.IsComplete = splitAces;
 
         var secondHand = new HandState([second, DrawRequired()], original.Wager, true)
         {
-            IsSplitAces = splitAces,
             IsComplete = splitAces
         };
         _hands.Insert(_activeHandIndex + 1, secondHand);
-        original.IsSplitAces = splitAces;
     }
 
     private void ResolveOpeningNaturals()
