@@ -13,6 +13,28 @@ public enum BlackjackRoundPhase
     Completed
 }
 
+/// <summary>Why additional virtual wager funds were committed during a round.</summary>
+public enum BlackjackWagerCommitmentKind
+{
+    /// <summary>The initial wager placed to start the round.</summary>
+    Initial,
+    /// <summary>The additional wager required to create a split hand.</summary>
+    Split,
+    /// <summary>The additional wager required to double down.</summary>
+    DoubleDown
+}
+
+/// <summary>An incremental virtual wager commitment that the host must escrow separately.</summary>
+/// <param name="Sequence">Monotonically increasing commitment sequence within the round.</param>
+/// <param name="HandIndex">Player hand receiving this wager amount.</param>
+/// <param name="Amount">Incremental amount to escrow, not the hand's cumulative wager.</param>
+/// <param name="Kind">Action that caused the commitment.</param>
+public sealed record BlackjackWagerCommitment(
+    int Sequence,
+    int HandIndex,
+    decimal Amount,
+    BlackjackWagerCommitmentKind Kind);
+
 /// <summary>The outcome of one player hand compared with the dealer.</summary>
 public enum BlackjackHandOutcome
 {
@@ -73,6 +95,7 @@ public sealed class BlackjackRound
     private readonly BlackjackRules _rules;
     private readonly List<PlayingCard> _dealer = [];
     private readonly List<HandState> _hands = [];
+    private readonly List<BlackjackWagerCommitment> _wagerCommitments = [];
     private decimal _remainingBalance;
     private int _activeHandIndex;
 
@@ -88,6 +111,7 @@ public sealed class BlackjackRound
         playerCards.Add(DrawRequired());
         _dealer.Add(DrawRequired());
         _hands.Add(new HandState(playerCards, wager, false));
+        _wagerCommitments.Add(new BlackjackWagerCommitment(0, 0, wager, BlackjackWagerCommitmentKind.Initial));
         Phase = BlackjackRoundPhase.PlayerTurn;
 
         ResolveOpeningNaturals();
@@ -117,6 +141,8 @@ public sealed class BlackjackRound
     public IReadOnlyList<PlayingCard> DealerCards => Array.AsReadOnly((Phase == BlackjackRoundPhase.PlayerTurn ? _dealer.Take(1) : _dealer).ToArray());
     /// <summary>Gets the current player hand index.</summary>
     public int ActiveHandIndex => _activeHandIndex;
+    /// <summary>Gets every incremental wager commitment in the order it was created.</summary>
+    public IReadOnlyList<BlackjackWagerCommitment> WagerCommitments => Array.AsReadOnly(_wagerCommitments.ToArray());
     /// <summary>Gets snapshots of all player hands.</summary>
     public IReadOnlyList<IReadOnlyList<PlayingCard>> PlayerHands =>
         Array.AsReadOnly(_hands.Select(hand => (IReadOnlyList<PlayingCard>)Array.AsReadOnly(hand.Cards.ToArray())).ToArray());
@@ -164,6 +190,7 @@ public sealed class BlackjackRound
                 break;
             case BlackjackAction.DoubleDown:
                 _remainingBalance -= hand.Wager;
+                _wagerCommitments.Add(new BlackjackWagerCommitment(_wagerCommitments.Count, _activeHandIndex, hand.Wager, BlackjackWagerCommitmentKind.DoubleDown));
                 hand.Wager *= 2m;
                 hand.Cards.Add(DrawRequired());
                 hand.HasActed = true;
@@ -218,6 +245,7 @@ public sealed class BlackjackRound
             IsComplete = splitAces || secondValue.Total >= 21
         };
         _hands.Insert(_activeHandIndex + 1, secondHand);
+        _wagerCommitments.Add(new BlackjackWagerCommitment(_wagerCommitments.Count, _activeHandIndex + 1, original.Wager, BlackjackWagerCommitmentKind.Split));
     }
 
     private void ResolveOpeningNaturals()
