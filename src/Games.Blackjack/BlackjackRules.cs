@@ -52,7 +52,9 @@ public sealed class BlackjackRules
     public int MaximumHands { get; }
 
     /// <summary>Evaluates a supplied hand, counting aces as eleven when that does not bust.</summary>
-    public static BlackjackHandValue Evaluate(IEnumerable<PlayingCard> cards)
+    /// <param name="cards">Cards currently held in the hand.</param>
+    /// <param name="isSplitHand">Whether this hand originated from a split; split hands cannot receive natural Blackjack status.</param>
+    public static BlackjackHandValue Evaluate(IEnumerable<PlayingCard> cards, bool isSplitHand = false)
     {
         ArgumentNullException.ThrowIfNull(cards);
         var hand = cards.ToArray();
@@ -73,7 +75,7 @@ public sealed class BlackjackRules
 
         while (total > 21 && aces > 0) { total -= 10; aces--; }
         var isBust = total > 21;
-        var isNatural = hand.Length == 2 && total == 21 && hand.Any(card => card.Rank == CardRank.Ace);
+        var isNatural = !isSplitHand && hand.Length == 2 && total == 21 && hand.Any(card => card.Rank == CardRank.Ace);
         return new BlackjackHandValue(total, aces > 0, isBust, isNatural);
     }
 
