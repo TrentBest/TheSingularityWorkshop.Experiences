@@ -187,7 +187,7 @@ public sealed class BlackjackRound
         var dealerNeedsToPlay = _hands.Any(hand =>
         {
             var value = BlackjackRules.Evaluate(hand.Cards, hand.IsSplit);
-            return !value.IsBust && !value.IsNatural;
+            return !value.IsBust && !value.IsNatural && value.Total < 21;
         });
         while (dealerNeedsToPlay && _rules.DealerMustHit(_dealer))
             _dealer.Add(DrawRequired());
@@ -228,11 +228,6 @@ public sealed class BlackjackRound
         {
             _hands[0].IsComplete = true;
             Phase = BlackjackRoundPhase.DealerTurn;
-            if (dealerNatural)
-            {
-                // A dealer natural ends the round immediately; no player action can change the result.
-                Phase = BlackjackRoundPhase.DealerTurn;
-            }
         }
     }
 
