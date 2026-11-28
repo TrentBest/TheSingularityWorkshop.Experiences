@@ -2,6 +2,8 @@
 
 # The Singularity Workshop — Experiences
 
+[![Experiences Observatory](https://img.shields.io/badge/Explore-Experiences%20Observatory-68e2f2?style=for-the-badge)](https://trentbest.github.io/TheSingularityWorkshop.Experiences/) [![Pages](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/workflows/pages.yml/badge.svg?branch=development)](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/workflows/pages.yml)
+
 
 [![Sith Policy](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Experiences/master/assets/sith-policy.svg)](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/workflows/sith-policy.yml)
 > **A home for independently authored Workshop Experiences and publishable MicroBundle artifacts.**
