@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080b16">
+<meta name="description" content="The Experiences Observatory — explore independent, immutable, multi-manifestation experiences from The Singularity Workshop.">
+<title>Experiences Observatory · The Singularity Workshop</title>
+<style>
+:root{color-scheme:dark;--ink:#edf3ff;--muted:#9ba9c4;--dim:#687894;--line:#26334d;--panel:#10182a;--panel2:#141f35;--cyan:#68e2f2;--violet:#b5a0ff;--gold:#f6cf82;--green:#8de5bd;--pink:#ff9fc5;--max:1240px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 12% 0%,#1c3150 0,transparent 38rem),radial-gradient(ellipse at 92% 22%,#30204b 0,transparent 34rem),#080b16;color:var(--ink);font:15px/1.65 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}a{color:var(--cyan);text-decoration:none}a:hover{text-decoration:underline}button{font:inherit;color:inherit}.shell{width:min(var(--max),calc(100% - 40px));margin:auto}.topbar{display:flex;justify-content:space-between;align-items:center;padding:22px 0;border-bottom:1px solid #ffffff16}.brand{display:flex;gap:12px;align-items:center;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}.sigil{width:34px;height:34px;border:1px solid #7de7f577;border-radius:11px;display:grid;place-items:center;color:var(--cyan);font-size:19px;box-shadow:0 0 28px #68e2f222}.nav{display:flex;gap:22px;font-size:12px;color:var(--muted)}.nav a{color:var(--muted)}.hero{padding:76px 0 50px;display:grid;grid-template-columns:1.2fr .8fr;gap:46px;align-items:center}.eyebrow{color:var(--cyan);font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:800}.hero h1{font-size:clamp(42px,6.4vw,82px);line-height:.99;letter-spacing:-.065em;margin:18px 0 22px;max-width:780px}.hero h1 span{background:linear-gradient(100deg,var(--cyan),#b8a4ff 58%,var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}.lede{max-width:670px;color:#b5c2d9;font-size:17px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.button{display:inline-flex;align-items:center;gap:9px;padding:11px 16px;border-radius:10px;border:1px solid #78ddec66;background:#12263a;color:#e9fbff;font-weight:700;font-size:13px}.button.secondary{background:#ffffff08;border-color:#ffffff24;color:var(--muted)}.orbit{min-height:330px;position:relative;display:grid;place-items:center}.orbit:before,.orbit:after{content:"";position:absolute;border:1px solid #80dfee33;border-radius:50%;width:270px;height:270px;transform:rotate(-24deg) scaleY(.48)}.orbit:after{width:340px;height:340px;border-color:#b5a0ff33;transform:rotate(36deg) scaleY(.48)}.core{width:148px;height:148px;border-radius:50%;display:grid;place-items:center;text-align:center;background:radial-gradient(circle at 35% 30%,#365d78,#17223c 60%,#0a1020);border:1px solid #8ce9f088;box-shadow:0 0 55px #68e2f233,inset 0 0 30px #8ce9f022;z-index:2}.core strong{display:block;font-size:14px;letter-spacing:.08em}.core small{color:var(--cyan);font-size:9px;letter-spacing:.16em}.sat{position:absolute;z-index:3;width:58px;height:58px;border-radius:18px;display:grid;place-items:center;background:#141e32;border:1px solid #ffffff2a;box-shadow:0 10px 35px #0008;font-size:20px}.s1{top:16px;left:calc(50% - 29px);color:var(--cyan)}.s2{right:8%;top:45%;color:var(--violet)}.s3{bottom:16px;left:calc(50% - 29px);color:var(--gold)}.s4{left:8%;top:45%;color:var(--green)}.section{padding:50px 0;border-top:1px solid #ffffff16}.section-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:25px}.section h2{font-size:clamp(26px,3.5vw,40px);letter-spacing:-.04em;line-height:1.1;margin:8px 0}.section-head p{color:var(--muted);max-width:520px;margin:0}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0 0}.stat{padding:17px;border:1px solid #ffffff18;background:#ffffff07;border-radius:14px}.stat strong{display:block;font-size:25px;letter-spacing:-.04em}.stat span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:24px 0}.search{flex:1;min-width:210px;padding:12px 14px;border:1px solid #ffffff25;background:#0e1728;border-radius:10px;color:var(--ink);outline:none}.search:focus{border-color:var(--cyan)}.filters{display:flex;gap:7px;flex-wrap:wrap}.filter{padding:8px 11px;border:1px solid #ffffff20;border-radius:999px;background:#ffffff08;color:var(--muted);font-size:11px;cursor:pointer}.filter[aria-pressed=true]{border-color:#68e2f288;color:var(--cyan);background:#68e2f214}.catalog{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:linear-gradient(145deg,#17243a,#0e1525);border:1px solid #ffffff1b;border-radius:16px;padding:19px;min-height:210px;display:flex;flex-direction:column;transition:transform .2s,border-color .2s}.card:hover{transform:translateY(-3px);border-color:#68e2f277}.card-top{display:flex;justify-content:space-between;gap:12px;align-items:center}.glyph{width:40px;height:40px;border-radius:12px;background:#ffffff0b;display:grid;place-items:center;font-size:20px}.tag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);border:1px solid #68e2f244;border-radius:999px;padding:4px 8px}.card h3{font-size:18px;margin:16px 0 6px;letter-spacing:-.02em}.card p{color:var(--muted);font-size:12px;margin:0 0 18px}.card button{margin-top:auto;align-self:flex-start;border:0;background:none;padding:0;color:var(--cyan);font-size:12px;font-weight:800;cursor:pointer}.empty{grid-column:1/-1;padding:40px;text-align:center;color:var(--muted);border:1px dashed #ffffff2a;border-radius:14px}.architecture{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch}.diagram{border:1px solid #ffffff20;border-radius:18px;background:#0d1525;padding:20px;overflow:hidden}.diagram svg{width:100%;height:auto;display:block}.explain{padding:12px 6px}.explain h3{font-size:23px;margin:0 0 12px}.explain p,.explain li{color:var(--muted);font-size:13px}.explain ul{padding-left:18px}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:20px}.flow button{border:1px solid #ffffff20;background:#101a2d;border-radius:12px;padding:14px 8px;cursor:pointer;text-align:center}.flow button[aria-pressed=true]{border-color:var(--cyan);background:#68e2f214}.flow b{display:block;font-size:12px}.flow small{color:var(--muted);font-size:10px}.inspector{margin-top:12px;padding:16px;border-left:2px solid var(--cyan);background:#68e2f20b;color:var(--muted);font-size:13px;min-height:74px}.manifest-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.manifest{padding:19px;border:1px solid #ffffff1b;border-radius:15px;background:#ffffff07}.manifest h3{margin:0 0 8px;font-size:15px}.manifest p{margin:0;color:var(--muted);font-size:12px}.code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#b5eaf1;font-size:11px}.principles{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.principle{padding:14px;border-top:1px solid #68e2f277;background:linear-gradient(180deg,#68e2f20b,transparent);font-size:12px;color:#c6d2e7}.principle b{display:block;color:var(--ink);margin-bottom:5px}.footer{padding:35px 0 55px;border-top:1px solid #ffffff18;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.modal{position:fixed;inset:0;background:#020611c9;display:none;place-items:center;padding:20px;z-index:10}.modal.open{display:grid}.modal-card{width:min(620px,100%);background:#121d31;border:1px solid #68e2f277;border-radius:18px;padding:25px;box-shadow:0 30px 100px #000b}.modal-head{display:flex;justify-content:space-between;gap:16px}.close{background:#ffffff12;border:1px solid #ffffff25;border-radius:9px;padding:5px 10px;cursor:pointer}.modal-card p,.modal-card li{color:var(--muted);font-size:13px}.modal-card h3{font-size:25px;margin:12px 0}.statusline{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}.fine{font-size:10px;color:var(--dim)}@media(max-width:850px){.hero{grid-template-columns:1fr;padding-top:55px}.orbit{min-height:270px}.catalog{grid-template-columns:repeat(2,1fr)}.architecture{grid-template-columns:1fr}.principles{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.shell{width:min(100% - 28px,var(--max))}.nav{gap:10px}.nav a:nth-child(2){display:none}.catalog,.manifest-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.section-head{display:block}.flow{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:48px}.orbit{min-height:235px}.orbit:after{width:280px;height:280px}.orbit:before{width:220px;height:220px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="shell topbar">
+  <a class="brand" href="#top"><span class="sigil">✳</span><span>THE SINGULARITY WORKSHOP<br><span style="color:var(--dim);font-size:9px">EXPERIENCES OBSERVATORY</span></span></a>
+  <nav class="nav" aria-label="Main navigation"><a href="#catalog">Experiences</a><a href="#architecture">Architecture</a><a href="#identity">Artifact identity</a><a href="https://github.com/TrentBest/TheSingularityWorkshop.Experiences">GitHub ↗</a></nav>
+</header>
+<main id="top" class="shell">
+<section class="hero">
+ <div>
+  <div class="eyebrow">Independent artifacts · Shared reality · Many doors</div>
+  <h1>One Experience.<br><span>Infinite manifestations.</span></h1>
+  <p class="lede">An Experience is not a browser page, a desktop window, or a VR scene. It is the identity that can inhabit all of them — carrying its meaning, artifacts, and state across distinct manifestations.</p>
+  <div class="actions"><a class="button" href="#catalog">Explore the collection <span>↓</span></a><a class="button secondary" href="https://github.com/TrentBest/TheSingularityWorkshop.Experiences/tree/development/docs">Read the architecture ↗</a></div>
+  <div class="stats">
+   <div class="stat"><strong>01</strong><span>Experience identity</span></div>
+   <div class="stat"><strong>∞</strong><span>Possible manifestations</span></div>
+   <div class="stat"><strong>SHA-256</strong><span>Content identity</span></div>
+   <div class="stat"><strong>10</strong><span>Architecture rules</span></div>
+  </div>
+ </div>
+ <div class="orbit" aria-label="An Experience at the center of four manifestations">
+  <div class="core"><div><strong>EXPERIENCE</strong><small>SHARED IDENTITY</small></div></div>
+  <div class="sat s1" title="WebApp">⌘</div><div class="sat s2" title="AnyApp">▣</div><div class="sat s3" title="MyVR">◉</div><div class="sat s4" title="Other hosts">◇</div>
+ </div>
+</section>
+<section class="section" id="catalog">
+ <div class="section-head"><div><div class="eyebrow">The collection</div><h2>Worlds under construction.</h2></div><p>Explore the projects and foundations housed in this repository. A project appearing here is not a claim that its complete playable or published experience already exists.</p></div>
+ <div class="toolbar"><input id="search" class="search" type="search" placeholder="Find an Experience, system, or idea…" aria-label="Search experiences"><div class="filters" id="filters" aria-label="Filter collection"></div></div>
+ <div class="catalog" id="catalogue" aria-live="polite"></div>
+ <p class="fine" style="margin-top:15px">Catalog entries describe repository scope and documented intent. Build, publication, and runtime readiness are separate states.</p>
+</section>
+<section class="section" id="architecture">
+ <div class="section-head"><div><div class="eyebrow">The architecture</div><h2>Different doors. Same Experience.</h2></div><p>Shared identity does not mean shared implementation. Every manifestation keeps its own strengths, constraints, and trust boundary.</p></div>
+ <div class="architecture">
+  <div class="diagram">
+   <svg viewBox="0 0 620 370" role="img" aria-labelledby="archTitle archDesc">
+    <title id="archTitle">Experience manifestation architecture</title><desc id="archDesc">One Experience identity connects to WebApp, AnyApp, and VR through explicit versioned contracts.</desc>
+    <defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#68e2f2"/><stop offset="1" stop-color="#b5a0ff"/></linearGradient></defs>
+    <rect x="210" y="18" width="200" height="66" rx="15" fill="#162b42" stroke="url(#g)" stroke-width="2"/><text x="310" y="46" fill="#edf3ff" text-anchor="middle" font-size="16" font-weight="700">EXPERIENCE</text><text x="310" y="66" fill="#68e2f2" text-anchor="middle" font-size="10" letter-spacing="2">IDENTITY + STATE</text>
+    <path d="M310 84 V126 M110 126 H510 M110 126 V168 M310 126 V168 M510 126 V168" fill="none" stroke="#68e2f2" stroke-width="2" stroke-dasharray="5 5"/>
+    <g><rect x="22" y="168" width="176" height="86" rx="13" fill="#111e32" stroke="#68e2f277"/><text x="110" y="201" fill="#edf3ff" text-anchor="middle" font-size="16" font-weight="700">WebApp</text><text x="110" y="224" fill="#9ba9c4" text-anchor="middle" font-size="11">Discovery · Browser · WebXR</text></g>
+    <g><rect x="222" y="168" width="176" height="86" rx="13" fill="#111e32" stroke="#b5a0ff88"/><text x="310" y="201" fill="#edf3ff" text-anchor="middle" font-size="16" font-weight="700">AnyApp</text><text x="310" y="224" fill="#9ba9c4" text-anchor="middle" font-size="11">Local compute · Services</text></g>
+    <g><rect x="422" y="168" width="176" height="86" rx="13" fill="#111e32" stroke="#f6cf8288"/><text x="510" y="201" fill="#edf3ff" text-anchor="middle" font-size="16" font-weight="700">MyVR</text><text x="510" y="224" fill="#9ba9c4" text-anchor="middle" font-size="11">Tracking · Rendering · Input</text></g>
+    <path d="M110 254 V286 H510 V254 M310 254 V286" fill="none" stroke="#52647f" stroke-width="1.5"/>
+    <rect x="110" y="300" width="400" height="48" rx="10" fill="#0c1728" stroke="#52647f"/><text x="310" y="321" fill="#68e2f2" text-anchor="middle" font-size="12" font-weight="700">VERSIONED CONTRACTS + SESSION IDENTITY</text><text x="310" y="337" fill="#9ba9c4" text-anchor="middle" font-size="10">Explicit events · Capabilities · Sequence · Verification</text>
+   </svg>
+  </div>
+  <div class="explain">
+   <h3>Follow the identity, not the window.</h3>
+   <p>The browser can discover an Experience and request that AnyApp open it. AnyApp resolves an immutable identity, verifies the artifact, and composes it locally. A VR client can participate without inheriting the browser's or desktop's implementation.</p>
+   <ul><li>WebApp distributes, discovers, visualizes, and interacts.</li><li>AnyApp supplies local resources, persistence, and heavier computation.</li><li>VR focuses on tracking, rendering, input, and latency-sensitive work.</li></ul>
+   <p>Choose a stage below to inspect its responsibility.</p>
+  </div>
+ </div>
+ <div class="flow" id="flow">
+  <button type="button" data-step="0" aria-pressed="true"><b>01 · Experience</b><small>Meaning & identity</small></button>
+  <button type="button" data-step="1" aria-pressed="false"><b>02 · Manifest</b><small>Declared composition</small></button>
+  <button type="button" data-step="2" aria-pressed="false"><b>03 · Artifact</b><small>Immutable bytes</small></button>
+  <button type="button" data-step="3" aria-pressed="false"><b>04 · Host</b><small>Verified execution</small></button>
+ </div>
+ <div class="inspector" id="inspector" aria-live="polite">An Experience is the logical thing the user chose. It remains itself even when its manifestation changes.</div>
+</section>
+<section class="section" id="identity">
+ <div class="section-head"><div><div class="eyebrow">The immutable seam</div><h2>Identity before execution.</h2></div><p>The repository stores and verifies opaque bytes. Composition belongs to the host. These responsibilities stay separate.</p></div>
+ <div class="manifest-grid">
+  <article class="manifest"><h3>01 / Declare</h3><p>A manifest describes the composition closure: bundle IDs, artifact versions, content hashes, and optional configuration.</p></article>
+  <article class="manifest"><h3>02 / Verify</h3><p>Resolve the immutable artifact address and verify the bytes before materialization. A name alone is not identity.</p></article>
+  <article class="manifest"><h3>03 / Compose</h3><p>The host materializes verified artifacts and binds them to the composition runtime. Storage does not become an execution engine.</p></article>
+ </div>
+ <div class="diagram" style="margin-top:15px">
+  <div class="code" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><span>EXPERIENCE → MANIFEST → ARTIFACT ADDRESS → VERIFIED BYTES → COMPOSITION</span><span style="color:var(--green)">TRUST BOUNDARY</span></div>
+  <div style="height:1px;background:linear-gradient(90deg,var(--cyan),var(--violet),transparent);margin:15px 0"></div>
+  <div class="code">BundleId&nbsp;&nbsp; + &nbsp;&nbsp;Version&nbsp;&nbsp; + &nbsp;&nbsp;SHA-256 ContentHash</div>
+ </div>
+</section>
+<section class="section">
+ <div class="section-head"><div><div class="eyebrow">Non-negotiable invariants</div><h2>Rules that make the wonderland safe.</h2></div></div>
+ <div class="principles">
+  <div class="principle"><b>Identity first</b>Know what is being opened.</div>
+  <div class="principle"><b>Manifest first</b>Declare what composition requires.</div>
+  <div class="principle"><b>Immutable artifacts</b>Published bytes do not mutate.</div>
+  <div class="principle"><b>Verify boundaries</b>Never trust an incoming artifact.</div>
+  <div class="principle"><b>Least capability</b>A manifestation exposes what it has.</div>
+ </div>
+</section>
+<section class="section">
+ <div class="section-head"><div><div class="eyebrow">Go deeper</div><h2>The workshop notes.</h2></div><p>The Observatory is a front door, not a replacement for the engineering record. Follow the source documents for contracts, theory, and implementation detail.</p></div>
+ <div class="manifest-grid">
+  <article class="manifest"><h3>Manifestation architecture</h3><p>How WebApp, AnyApp, and VR share an Experience without collapsing into one implementation.</p><p style="margin-top:12px"><a href="https://github.com/TrentBest/TheSingularityWorkshop.Experiences/blob/development/docs/MANIFESTATION_ARCHITECTURE.md">Open document ↗</a></p></article>
+  <article class="manifest"><h3>Security model</h3><p>Origin policy, launch authentication, session binding, message limits, capability negotiation, and artifact verification.</p><p style="margin-top:12px"><a href="https://github.com/TrentBest/TheSingularityWorkshop.Experiences/blob/development/docs/SECURITY_MODEL.md">Open document ↗</a></p></article>
+  <article class="manifest"><h3>Vertical-slice roadmap</h3><p>What is complete, what remains, and the sequence toward a genuinely co-entangled Experience.</p><p style="margin-top:12px"><a href="https://github.com/TrentBest/TheSingularityWorkshop.Experiences/blob/development/docs/ROADMAP.md">Open roadmap ↗</a></p></article>
+ </div>
+</section>
+</main>
+<footer class="shell footer"><span>✳ THE SINGULARITY WORKSHOP · EXPERIENCES</span><span>Built from the repository's documented architecture · <a href="https://github.com/TrentBest/TheSingularityWorkshop.Experiences">Source on GitHub ↗</a></span></footer>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-card"><div class="modal-head"><span class="statusline" id="modalStatus">REPOSITORY ENTRY</span><button class="close" id="close" type="button" aria-label="Close details">✕</button></div><h3 id="modalTitle"></h3><p id="modalDescription"></p><ul id="modalFacts"></ul><p class="fine">This card is an orientation to repository scope, not a runtime-readiness certification.</p></div></div>
+<script>
+const items=[
+ {name:"Forge",glyph:"⚒",kind:"Artifacts",tag:"Independent MicroBundle",desc:"A host-independent MicroBundle seed: an independently buildable Experience payload with immutable artifact identity.",facts:["Experience 3201","Independent project under src/Forge","Build output is staged as an artifact candidate","Repository publication remains a separate delivery action"]},
+ {name:"Moniker",glyph:"✳",kind:"Artifacts",tag:"Independent MicroBundle",desc:"A presentation-focused MicroBundle and motion vocabulary, designed to travel as an independently identified artifact.",facts:["Experience 3101","Independent project under src/Moniker","Motion.Wave project is present in the solution","Publication and composition are distinct lifecycle stages"]},
+ {name:"Story Forge",glyph:"⌛",kind:"Worldbuilding",tag:"Temporal authoring foundation",desc:"A renderer-independent temporal authoring foundation for stories, events, entities, editions, and diegetic timelines.",facts:["Named story-time coordinates and half-open ranges are defined","Immutable published-edition snapshots are part of the design","Manifest-driven timeline manifestation remains on the roadmap"]},
+ {name:"Castle Siege",glyph:"🏰",kind:"Games",tag:"Physics-backed game Experience",desc:"A preforge construct for a physics-backed siege game. Physics supplies verified outcomes; the host owns the scene manifestation.",facts:["Stable Experience and bundle identity reserved","Manifest contract, schema, and example documented","Entry surface distinguishes shell from working simulation","Real trajectory integration and playable combat remain roadmap work"]},
+ {name:"Domino Studio",glyph:"▦",kind:"Games",tag:"Project in solution",desc:"A dedicated Domino Studio project and test project are present in the repository solution.",facts:["Project: src/DominoStudio","Test project: tests/DominoStudio.Tests","This catalog does not imply a complete playable release"]},
+ {name:"Marble Run",glyph:"◉",kind:"Games",tag:"Project in solution",desc:"A dedicated Marble Run project and test project are present in the repository solution.",facts:["Project: src/MarbleRun","Test project: tests/MarbleRun.Tests","Physics integration and runtime maturity should be assessed from implementation"]},
+ {name:"Elements",glyph:"⚛",kind:"Knowledge",tag:"Atomic ontology corpus",desc:"Atomic element data designed to support multiple possible presentations and larger composed knowledge experiences.",facts:["Elements project is included in the solution","Part of the documented atomic ontology test corpus","Independent atoms can compose into larger Experiences"]},
+ {name:"Digital Logic",glyph:"⌁",kind:"Knowledge",tag:"Composable knowledge bundles",desc:"A semantic corpus spanning physical, combinational, sequential, modular, timing, programmable, and visualization bundles.",facts:["Named in the repository's atomic ontology corpus","Designed for composability rather than one monolithic experience"]},
+ {name:"Software Design Patterns",glyph:"◇",kind:"Knowledge",tag:"Composable knowledge bundles",desc:"Individually addressable design patterns that can remain independent and compose into larger pattern collections.",facts:["Named in the repository's atomic ontology corpus","Designed around atomic semantic building blocks"]},
+ {name:"Chemistry",glyph:"⚗",kind:"Knowledge",tag:"Project in solution",desc:"A Chemistry project is included in the solution, opening a home for chemistry-focused Experience content.",facts:["Project appears in the repository solution","Specific simulation capabilities are not asserted by this catalog"]},
+ {name:"GitHub Learning Studio",glyph:"⌘",kind:"Tools",tag:"Learning environment",desc:"A dedicated GitHub Learning Studio project with separate issue and pull-request areas and tests.",facts:["GitHubLearningStudio project is in the solution","Issues and PullRequests projects are separate","Tests are present for the studio and its subdomains"]},
+ {name:"Capsule Clinic",glyph:"✚",kind:"Tools",tag:"Project in solution",desc:"A dedicated Capsule Clinic project and test project are included in the solution.",facts:["Project: src/CapsuleClinic","Test project: tests/CapsuleClinic.Tests","The catalog makes no claim about production or clinical readiness"]}
+];
+const categories=["All","Artifacts","Worldbuilding","Games","Knowledge","Tools"];
+const filters=document.getElementById("filters"),catalogue=document.getElementById("catalogue"),search=document.getElementById("search");
+let active="All";
+categories.forEach((name,i)=>{const b=document.createElement("button");b.className="filter";b.type="button";b.textContent=name;b.setAttribute("aria-pressed",String(i===0));b.addEventListener("click",()=>{active=name;filters.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x.textContent===active)));render()});filters.append(b)});
+function render(){const q=search.value.trim().toLowerCase();const found=items.filter(x=>(active==="All"||x.kind===active)&&[x.name,x.desc,x.tag,x.kind].join(" ").toLowerCase().includes(q));catalogue.replaceChildren();if(!found.length){const e=document.createElement("div");e.className="empty";e.textContent="No matching entries. Try another term or category.";catalogue.append(e);return}found.forEach(x=>{const card=document.createElement("article");card.className="card";const top=document.createElement("div");top.className="card-top";const glyph=document.createElement("span");glyph.className="glyph";glyph.textContent=x.glyph;const tag=document.createElement("span");tag.className="tag";tag.textContent=x.tag;top.append(glyph,tag);const h=document.createElement("h3");h.textContent=x.name;const p=document.createElement("p");p.textContent=x.desc;const btn=document.createElement("button");btn.type="button";btn.textContent="Inspect entry →";btn.addEventListener("click",()=>openItem(x));card.append(top,h,p,btn);catalogue.append(card)})}
+function openItem(x){document.getElementById("modalTitle").textContent=x.name;document.getElementById("modalDescription").textContent=x.desc;document.getElementById("modalStatus").textContent=x.kind.toUpperCase()+" / "+x.tag.toUpperCase();const ul=document.getElementById("modalFacts");ul.replaceChildren();x.facts.forEach(f=>{const li=document.createElement("li");li.textContent=f;ul.append(li)});document.getElementById("modal").classList.add("open");document.getElementById("close").focus()}
+search.addEventListener("input",render);document.getElementById("close").addEventListener("click",()=>document.getElementById("modal").classList.remove("open"));document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")e.currentTarget.classList.remove("open")});document.addEventListener("keydown",e=>{if(e.key==="Escape")document.getElementById("modal").classList.remove("open")});render();
+const steps=[
+"An Experience is the logical thing the user chose. It remains itself even when its manifestation changes.",
+"The manifest declares the required composition: bundle identities, immutable versions, content hashes, and optional configuration. It is a contract, not executable browser input.",
+"The artifact address resolves to opaque bytes. The repository stores and verifies them; immutable identity lets consumers detect substitution or drift.",
+"The host verifies and materializes the artifact, then composes it using the capabilities actually available. Storage does not decide execution semantics."
+];
+document.querySelectorAll("#flow button").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("#flow button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));document.getElementById("inspector").textContent=steps[Number(b.dataset.step)]}));
+</script>
+</body>
+</html>
